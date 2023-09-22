@@ -44,7 +44,7 @@ public class ItemConfig extends JsonLoader {
 	public PinMode pinMode=PinMode.NONE;
 	public int alpha=255;
 	public boolean enabled=true;
-    public SelectionEffect selectionEffect = Build.VERSION.SDK_INT >=21 ? SelectionEffect.MATERIAL : SelectionEffect.HOLO;
+    public SelectionEffect selectionEffect = SelectionEffect.MATERIAL;
     public boolean selectionEffectMask = true;
 	public boolean rotate=false;
     public boolean hardwareAccelerated=true;

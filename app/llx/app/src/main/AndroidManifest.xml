@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     android:sharedUserId="net.pierrox.lightning_launcher" >
 
+    <uses-permission android:name="android.permission.BROADCAST_STICKY" />
     <uses-permission android:name="android.permission.EXPAND_STATUS_BAR" />
     <uses-permission android:name="android.permission.SET_WALLPAPER"/>
     <uses-permission android:name="android.permission.SET_WALLPAPER_HINTS"/>
@@ -48,6 +49,7 @@
     	android:label="@string/app_name">
 
         <activity
+            android:exported="true"
         	android:name="net.pierrox.lightning_launcher.activities.Dashboard"
             android:label="@string/app_name"
             android:launchMode="singleTask"
@@ -85,7 +87,8 @@
             android:theme="@style/AppLightNoActionBarWallpaper"
             android:excludeFromRecents="true"
             android:windowSoftInputMode="adjustNothing"
-			android:configChanges="keyboardHidden|orientation|screenSize|mcc|mnc">
+            android:configChanges="keyboardHidden|orientation|screenSize|mcc|mnc"
+            android:exported="true">
 
             <intent-filter>
                 <action android:name="net.pierrox.lightning_launcher.ALL_APPS" />
@@ -121,7 +124,8 @@
         <activity
             android:name="net.pierrox.lightning_launcher.activities.BackupRestore"
             android:excludeFromRecents="true"
-            android:configChanges="keyboardHidden|orientation|screenSize">
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true">
 
             <!--requires com.google.android.gm.permission.READ_GMAIL-->
             <!--<intent-filter>-->
@@ -181,7 +185,8 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="user"
             android:finishOnCloseSystemDialogs="true"
-            android:windowSoftInputMode="adjustResize|stateHidden">
+            android:windowSoftInputMode="adjustResize|stateHidden"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -195,7 +200,8 @@
             android:configChanges="keyboardHidden|orientation|screenSize"/>
 
 		<activity android:name="net.pierrox.lightning_launcher.activities.Shortcuts"
-            android:label="@string/shortcut_settings">
+            android:label="@string/shortcut_settings"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -211,6 +217,7 @@
                   android:configChanges="keyboardHidden|orientation|screenSize"/>
 
         <activity-alias
+            android:exported="true"
 		    android:name="net.pierrox.lightning_launcher.activities.ShortcutsA"
 		    android:targetActivity="net.pierrox.lightning_launcher.activities.EventActionSetup"
             android:label="@string/shortcut_actions">
@@ -221,6 +228,7 @@
         </activity-alias>
 
         <activity-alias
+            android:exported="true"
             android:name="net.pierrox.lightning_launcher.activities.ShortcutsT"
             android:targetActivity="net.pierrox.lightning_launcher.activities.EventActionSetup"
             android:label="@string/shortcut_actions">
@@ -230,6 +238,7 @@
         </activity-alias>
 
         <activity-alias
+            android:exported="true"
             android:name="net.pierrox.lightning_launcher.activities.ShortcutsTS"
             android:targetActivity="net.pierrox.lightning_launcher.activities.Shortcuts"
             android:label="@string/tss">
@@ -239,6 +248,7 @@
         </activity-alias>
 
         <activity-alias
+            android:exported="true"
             android:name="net.pierrox.lightning_launcher.activities.ShortcutsTV"
             android:targetActivity="net.pierrox.lightning_launcher.activities.Shortcuts"
             android:label="@string/tsv">
@@ -248,6 +258,7 @@
         </activity-alias>
 
         <activity-alias
+            android:exported="true"
             android:name="net.pierrox.lightning_launcher.activities.ShortcutsS"
             android:targetActivity="net.pierrox.lightning_launcher.activities.ScreenManager"
             android:label="@string/shortcut_screen">
@@ -258,6 +269,7 @@
         </activity-alias>
 
         <activity
+            android:exported="true"
             android:name="net.pierrox.lightning_launcher.activities.ApplyTemplate"
             android:excludeFromRecents="true"
             android:configChanges="keyboardHidden|orientation|screenSize">
@@ -289,7 +301,9 @@
                   android:theme="@style/AppDialog">
         </activity>
 
-		<receiver android:name="net.pierrox.lightning_launcher.util.MPReceiver">
+        <receiver
+            android:exported="true"
+            android:name="net.pierrox.lightning_launcher.util.MPReceiver">
 			<intent-filter>
 				<action android:name="android.intent.action.PACKAGE_REMOVED" />
 				<action android:name="android.intent.action.PACKAGE_REPLACED"/>
@@ -299,6 +313,7 @@
 		</receiver>
 
 		<receiver
+            android:exported="true"
 		    android:name="net.pierrox.lightning_launcher.util.ShortcutReceiver"
 		    android:permission="com.android.launcher.permission.INSTALL_SHORTCUT">
 		    <intent-filter>
@@ -316,6 +331,7 @@
 
 		<!-- Home reset -->
 		<activity
+            android:exported="true"
 		    android:name="net.pierrox.lightning_launcher.activities.dummy.D1"
 		    android:enabled="false">
 		    <intent-filter>
@@ -327,6 +343,7 @@
 
 		<!-- 		Default language pack -->
 		<activity
+            android:exported="false"
             android:name="net.pierrox.lightning_launcher.activities.dummy.D2"
             android:label="@string/default_pack_name"
             android:excludeFromRecents="true"
@@ -338,6 +355,7 @@
 
 		<!-- 		Browse script APKS-->
 		<activity
+            android:exported="false"
             android:name="net.pierrox.lightning_launcher.activities.dummy.D3"
             android:label="@string/ls_b"
             android:excludeFromRecents="true"
@@ -349,6 +367,7 @@
 
         <!-- 		No icon pack-->
 		<activity
+            android:exported="false"
             android:name="net.pierrox.lightning_launcher.activities.dummy.D4"
             android:label="@string/nip"
             android:excludeFromRecents="true"

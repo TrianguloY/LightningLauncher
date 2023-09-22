@@ -114,24 +114,14 @@ public class TransformLayout extends TouchEventInterceptor {
 	@Override
     public void dispatchDraw(Canvas canvas) {
         if(mLocalTransform==null) {
-            if(Build.VERSION.SDK_INT < 11) {
-                if(mChildView != null) {
-					mChildView.draw(canvas);
-				}
-            } else {
-                super.dispatchDraw(canvas);
-            }
+            super.dispatchDraw(canvas);
         } else {
             if(mFilterChildView) canvas.setDrawFilter(sPaintFlagDrawFilter);
 
             canvas.save();
             canvas.concat(mLocalTransform);
 //			canvas.clipRect(0, 0, mChildView.getWidth(), mChildView.getHeight());
-            if(Build.VERSION.SDK_INT < 11) {
-                mChildView.draw(canvas);
-            } else {
-                super.dispatchDraw(canvas);
-            }
+            super.dispatchDraw(canvas);
             canvas.restore();
 
             if(mFilterChildView) canvas.setDrawFilter(null);
@@ -173,25 +163,6 @@ public class TransformLayout extends TouchEventInterceptor {
 			
 			return result;
 		}
-	}
-	
-	@Override
-	public ViewParent invalidateChildInParent(final int[] location, final Rect dirty) {
-        if(Build.VERSION.SDK_INT < 11) {
-            if (mTransform == null || mLocalTransform == null) {
-                return super.invalidateChildInParent(location, dirty);
-            } else {
-                location[0] = getLeft();
-                location[1] = getTop();
-
-                mTempRectF.set(dirty);
-                mLocalTransform.mapRect(mTempRectF);
-                mTempRectF.roundOut(dirty);
-                return getParent();
-            }
-        } else {
-            return super.invalidateChildInParent(location, dirty);
-        }
 	}
 	
 	public Rect getTransformBoundingBox() {

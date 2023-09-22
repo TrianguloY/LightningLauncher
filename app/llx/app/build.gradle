@@ -42,7 +42,7 @@ if(project.hasProperty("signing.properties") && new File(project.property("signi
 }
 
 android {
-    compileSdkVersion 28
+    compileSdk 33
 
     defaultConfig {
         versionCode 330
@@ -50,8 +50,8 @@ android {
         buildConfigField "boolean", "IS_BETA", "false" //  change in core too
         buildConfigField "boolean", "HAS_UEC", "false"
 
-        minSdkVersion 14
-        targetSdkVersion 28
+        minSdk 28
+        targetSdk 33
     }
 
 //    dexOptions {

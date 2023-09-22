@@ -267,16 +267,14 @@ public class Utils {
 
 	public static Bitmap decodeScaledBitmapResource(Resources rsrc, int id, int max_size) {
     	try {
-    	    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                Drawable drawable = decodeDrawableResource(rsrc, id);
-                if(drawable instanceof AdaptiveIconDrawable) {
-                    Bitmap bitmap = Bitmap.createBitmap(max_size, max_size, Bitmap.Config.ARGB_8888);
-                    drawable.setBounds(0, 0, max_size, max_size);
-                    drawable.draw(new Canvas(bitmap));
-                    return bitmap;
-                }
+            Drawable drawable = decodeDrawableResource(rsrc, id);
+            if (drawable instanceof AdaptiveIconDrawable) {
+                Bitmap bitmap = Bitmap.createBitmap(max_size, max_size, Bitmap.Config.ARGB_8888);
+                drawable.setBounds(0, 0, max_size, max_size);
+                drawable.draw(new Canvas(bitmap));
+                return bitmap;
             }
-    		if(sGetDrawableForDensity!=null) {
+            if (sGetDrawableForDensity != null) {
 	    		try {
 	    			BitmapDrawable d=(BitmapDrawable) sGetDrawableForDensity.invoke(rsrc, id, sLauncherIconDensity);
 	    			return createStandardSizedIcon(d.getBitmap(), max_size);
@@ -836,18 +834,14 @@ public class Utils {
                 }
                 o = new BitmapFactory.Options();
                 o.inSampleSize = sample_size;
-                if(Build.VERSION.SDK_INT>=11) {
-                    o.inMutable = true;
-                }
+                o.inMutable = true;
                 Bitmap bitmap = BitmapFactory.decodeFile(path, o);
                 if(bitmap != null) {
                     if(sample_size > 1 && NinePatch.isNinePatchChunk(bitmap.getNinePatchChunk())) {
                         // too bad, this is a nine patch, need to decode it again with its full size
                         bitmap.recycle();
                         o = new BitmapFactory.Options();
-                        if(Build.VERSION.SDK_INT>=11) {
-                            o.inMutable = true;
-                        }
+                        o.inMutable = true;
                         bitmap = BitmapFactory.decodeFile(path, o);
                         if(bitmap == null) {
                             return null;
@@ -2469,7 +2463,7 @@ public class Utils {
             // failsafe
             return true;
         }
-        if(mode == LAYOUT_MODE_RECENT_APPS && Build.VERSION.SDK_INT>=21) {
+        if (mode == LAYOUT_MODE_RECENT_APPS) {
             return false;
         }
 

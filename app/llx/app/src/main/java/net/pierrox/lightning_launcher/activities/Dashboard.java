@@ -800,7 +800,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
         mEngine.cancelDelayedSaveData();
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && getClass() == Dashboard.class && mSystemConfig.hotwords && mHotwordServiceClient != null) {
+        if (getClass() == Dashboard.class && mSystemConfig.hotwords && mHotwordServiceClient != null) {
             mHotwordServiceClient.requestHotwordDetection(true);
         }
 
@@ -839,7 +839,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
             mDialog = null;
         }
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && getClass() == Dashboard.class && mSystemConfig.hotwords && mHotwordServiceClient != null) {
+        if (getClass() == Dashboard.class && mSystemConfig.hotwords && mHotwordServiceClient != null) {
             mHotwordServiceClient.requestHotwordDetection(false);
         }
 
@@ -915,7 +915,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && getClass() == Dashboard.class) {
+        if (getClass() == Dashboard.class) {
             if(mSystemConfig.hotwords) {
                 if (mHotwordServiceClient == null) {
                     mHotwordServiceClient = new HotwordServiceClient(this);
@@ -930,7 +930,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && getClass() == Dashboard.class) {
+        if (getClass() == Dashboard.class) {
             if(mSystemConfig.hotwords) {
                 mHotwordServiceClient.requestHotwordDetection(false);
                 mHotwordServiceClient.onDetachedFromWindow();
@@ -2508,10 +2508,9 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
     	}
     }
 
-    private static boolean MANUAL_LONG_KEY_PRESS_HANDLING =  Build.VERSION.SDK_INT >= 24;
     private int mLongPressKeyCode;
     private boolean mHasLongKeyPress;
-    private Runnable mLongKeyPressRunnable = !MANUAL_LONG_KEY_PRESS_HANDLING ? null : new Runnable() {
+    private final Runnable mLongKeyPressRunnable = new Runnable() {
         @Override
         public void run() {
             mHasLongKeyPress = true;
@@ -2520,18 +2519,16 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
     };
 
     private void startLongKeyPressTimer(int keyCode) {
-        if(MANUAL_LONG_KEY_PRESS_HANDLING) {
+
             // only one key managed at a time
             mLongPressKeyCode = keyCode;
             mHandler.removeCallbacks(mLongKeyPressRunnable);
             mHandler.postDelayed(mLongKeyPressRunnable, ViewConfiguration.getLongPressTimeout());
-        }
+
     }
 
     private void cancelLongKeyPressTimer() {
-        if(MANUAL_LONG_KEY_PRESS_HANDLING) {
-            mHandler.removeCallbacks(mLongKeyPressRunnable);
-        }
+        mHandler.removeCallbacks(mLongKeyPressRunnable);
     }
 
     @Override
@@ -2862,7 +2859,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
     }
 
     private void configureSystemBarsPadding(PageConfig c) {
-        if(Build.VERSION.SDK_INT>=19) {
+        {
             SystemBarTintManager.SystemBarConfig config = mScreen.getSystemBarTintManager().getConfig();
             int sbh = c.statusBarHide ? 0 : config.getStatusBarHeight();
             int abh = getActionBarHeight();
@@ -2892,10 +2889,6 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
             }
             findViewById(R.id.sb_padding).setPadding(0, padding_top, padding_right, padding_bottom);
             mEditControlsView.setPadding(0, sbh + abh, navigationAtBottom ? 0 : nbh, navigationAtBottom ? nbh : 0);
-        } else {
-            int abh = getActionBarHeight();
-            findViewById(R.id.sb_padding).setPadding(0, abh, 0, 0);
-            mEditControlsView.setPadding(0, abh, 0, 0);
         }
     }
 
@@ -3077,12 +3070,8 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 		mAllocatedAppWidgetId=LLApp.get().getAppWidgetHost().allocateAppWidgetId();
 
 		Intent pickIntent;
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            pickIntent = new Intent(this, AppWidgetPickerActivity.class);
-        } else {
-            pickIntent = new Intent(AppWidgetManager.ACTION_APPWIDGET_PICK);
-        }
-		pickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAllocatedAppWidgetId);
+        pickIntent = new Intent(this, AppWidgetPickerActivity.class);
+        pickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAllocatedAppWidgetId);
 		ArrayList<AppWidgetProviderInfo> customInfo = new ArrayList<AppWidgetProviderInfo>();
 		pickIntent.putParcelableArrayListExtra(AppWidgetManager.EXTRA_CUSTOM_INFO, customInfo);
 		ArrayList<Bundle> customExtras = new ArrayList<Bundle>();
@@ -3583,11 +3572,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 	}
 
     private void setAlphaOrVisibility(View view, float to) {
-        if(Build.VERSION.SDK_INT >= 11) {
-            view.setAlpha(to);
-        } else {
-            view.setVisibility(to==1 ? View.VISIBLE : View.GONE);
-        }
+        view.setAlpha(to);
     }
 
     /**
@@ -5400,7 +5385,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         lp.height = mEditBarsHeight;
         mEditBarHider.requestLayout();
 
-        if(mEditBarsVisible && mSystemConfig.hasSwitch(SystemConfig.SWITCH_CONTENT_ZOOMED) && Build.VERSION.SDK_INT >= 11) {
+        if (mEditBarsVisible && mSystemConfig.hasSwitch(SystemConfig.SWITCH_CONTENT_ZOOMED)) {
             View desktopView = mScreen.getDesktopView();
             desktopView.setScaleX(mEditBarsScale);
             desktopView.setScaleY(mEditBarsScale);
@@ -5474,7 +5459,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                 }
             }
 
-            if(mAnimateZoom && Build.VERSION.SDK_INT >= 11) {
+            if (mAnimateZoom) {
                 desktopView.setScaleX(sx);
                 desktopView.setScaleY(sy);
             }
@@ -6148,13 +6133,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
             return ScreenIdentity.HOME;
         }
 
-        @Override
-        protected boolean isAndroidActionBarSupported() {
-            // action bar introduced in API 11 but support in LL only starting at 21 because of additional options (see configureSystemBarsPadding)
-            return Build.VERSION.SDK_INT >= 21;
-        }
 
-        @TargetApi(Build.VERSION_CODES.HONEYCOMB)
         @Override
         public void showAndroidActionBar(Function onCreateOptionsMenu, Function onOptionsItemSelected) {
             if(isAndroidActionBarSupported() && !mIsAndroidActionBarDisplayed) {
@@ -6519,8 +6498,8 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
         @Override
         public void onItemLayoutAppShortcutDropped(ItemLayout itemLayout, Object shortcutInfoObject, float x, float y) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
-                ShortcutInfo shortcutInfo = (ShortcutInfo) shortcutInfoObject;
+
+            ShortcutInfo shortcutInfo = (ShortcutInfo) shortcutInfoObject;
                 CharSequence label = shortcutInfo.getLongLabel();
                 if(label == null || label.length() == 0) {
                     label = shortcutInfo.getShortLabel();
@@ -6534,7 +6513,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                 intent.putExtra(Shortcut.INTENT_EXTRA_APP_SHORTCUT_DISABLED_MSG, shortcutInfo.getDisabledMessage());
                 Utils.addShortcut(label.toString(), icon, intent, itemLayout.getPage(), x, y, 1, true);
             }
-        }
+
 
         @Override
         public void onHandlePressed(Handle h) {
@@ -7265,9 +7244,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                     break;
 
                 case GlobalConfig.SHOW_APP_SHORTCUTS:
-                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
-                        showAppShortcuts(itemView);
-                    }
+                    showAppShortcuts(itemView);
                     break;
 
                 case GlobalConfig.SEARCH:

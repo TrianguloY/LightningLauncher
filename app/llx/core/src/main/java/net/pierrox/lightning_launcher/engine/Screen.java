@@ -194,13 +194,11 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
                 @Override
                 public void onViewAttachedToWindow(View view) {
                     // select API 28 because this is linked with the display cutout stuff
-                    if (Build.VERSION.SDK_INT >= 28) {
-                        WindowInsets insets = mContentView.getRootWindowInsets();
-                        if (insets != null) {
+                    WindowInsets insets = mContentView.getRootWindowInsets();
+                    if (insets != null) {
                             mSystemBarTintManager.onConfigurationChanged(mWindow);
                             onSystemBarsSizeChanged();
                         }
-                    }
                 }
                 @Override
                 public void onViewDetachedFromWindow(View view) {
@@ -315,9 +313,7 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
 
     public void setWindow(Window window) {
         mWindow = window;
-        if(Build.VERSION.SDK_INT>=19) {
-            mSystemBarTintManager = new SystemBarTintManager(mWindow);
-        }
+        mSystemBarTintManager = new SystemBarTintManager(mWindow);
     }
 
     public void setVisibility(boolean visible) {
@@ -963,7 +959,7 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
                             opener.getViewHeight() - s[Box.MT] - s[Box.BT] - s[Box.PT] - s[Box.MB] - s[Box.BB] - s[Box.PB]
                     );
                     Rect r = computeItemViewBounds(openerView);
-                    if (!getCurrentRootPage().config.statusBarHide && Build.VERSION.SDK_INT >= 11) {
+                    if (!getCurrentRootPage().config.statusBarHide) {
                         // hackish and duplicate with Dashboard.leaveEditMode
                         Resources res = mContext.getResources();
                         int statusBarHeight = 0;
@@ -1038,7 +1034,7 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
         if(t != null) t.mapRect(bounds);
 
         traverseViews((View)il.getParent(), bounds);
-        if(il.getEditMode() && Build.VERSION.SDK_INT>=11) {
+        if (il.getEditMode()) {
             // pivot is always 0x0
             float sx = mDesktopView.getScaleX();
             float sy = mDesktopView.getScaleY();
@@ -1088,7 +1084,7 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
         il.getTransformForRect(r).mapRect(r);
         traverseViews((View)(il.getParent()), r);
         float[] coords = new float[] {r.left, r.top};
-        if(il.getEditMode() && Build.VERSION.SDK_INT>=11) {
+        if (il.getEditMode()) {
             // pivot is always 0x0
             coords[0] *= mDesktopView.getScaleX();
             coords[1] *= mDesktopView.getScaleY();
@@ -1606,7 +1602,7 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
             //noinspection ResourceType
             service  = mContext.getSystemService("statusbar");
             statusbarManager = Class.forName("android.app.StatusBarManager");
-            Method expand = statusbarManager.getMethod(Build.VERSION.SDK_INT>=17 ? "expandNotificationsPanel" : "expand");
+            Method expand = statusbarManager.getMethod("expandNotificationsPanel");
             expand.invoke(service);
         } catch(Exception e1) {
         }
@@ -1712,7 +1708,7 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
         }
 
         try {
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1 && Shortcut.INTENT_ACTION_APP_SHORTCUT.equals(intent.getAction())) {
+            if (Shortcut.INTENT_ACTION_APP_SHORTCUT.equals(intent.getAction())) {
                 LauncherApps launcherApps = (LauncherApps) mContext.getSystemService(Context.LAUNCHER_APPS_SERVICE);
                 String id = intent.getStringExtra(Shortcut.INTENT_EXTRA_APP_SHORTCUT_ID);
                 String pkg = intent.getStringExtra(Shortcut.INTENT_EXTRA_APP_SHORTCUT_PKG);
@@ -2121,11 +2117,7 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
         if(mWindow != null && (mCustomScreenWidth == 0 || mCustomScreenHeight == 0)) {
             DisplayMetrics dm = new DisplayMetrics();
             Display display = mWindow.getWindowManager().getDefaultDisplay();
-            if (Build.VERSION.SDK_INT >= 17) {
-                display.getRealMetrics(dm);
-            } else {
-                display.getMetrics(dm);
-            }
+            display.getRealMetrics(dm);
             out[0] = dm.widthPixels;
             out[1] = dm.heightPixels;
         } else {

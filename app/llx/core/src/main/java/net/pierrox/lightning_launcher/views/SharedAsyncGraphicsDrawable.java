@@ -402,9 +402,7 @@ public class SharedAsyncGraphicsDrawable extends Drawable implements Drawable.Ca
                 byte[] chunk = bitmap.getNinePatchChunk();
                 if(NinePatch.isNinePatchChunk(chunk)) {
                     mType = TYPE_NINE_PATCH;
-                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        bitmap.setDensity(DisplayMetrics.DENSITY_DEFAULT);
-                    }
+                    bitmap.setDensity(DisplayMetrics.DENSITY_DEFAULT);
                     NinePatch np = new NinePatch(bitmap, chunk, null);
                     mIntrinsicWidth = np.getWidth();
                     mIntrinsicHeight = np.getHeight();
