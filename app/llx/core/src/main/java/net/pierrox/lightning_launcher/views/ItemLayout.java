@@ -2250,11 +2250,6 @@ public class ItemLayout extends ViewGroup {
                 continue;
             }
 
-            // on API >= 11 views with alpha 0 need to be drawn so that View private flags are correctly handled
-            if(Build.VERSION.SDK_INT < 11 && item.getAlpha() == 0) {
-                continue;
-            }
-
             Matrix transform = getTransformForItemView(itemView);
 
             itemView.getHitRect(mTempRect);

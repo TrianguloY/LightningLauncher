@@ -441,10 +441,8 @@ public class Setup {
         config.defaultFolderConfig.outsideTapClose = true;
         config.gridPRowNum = config.gridLRowNum = 4;
         config.scrollingDirection = PageConfig.ScrollingDirection.X;
-        if(Build.VERSION.SDK_INT>=19) {
-            config.statusBarColor = resources.getColor(R.color.color_primary_dark);
-            config.navigationBarColor = Color.BLACK;
-        }
+        config.statusBarColor = resources.getColor(R.color.color_primary_dark);
+        config.navigationBarColor = Color.BLACK;
         config.screenOrientation = PageConfig.ScreenOrientation.PORTRAIT;
 //        config.defaultItemConfig.rotate = true;
 

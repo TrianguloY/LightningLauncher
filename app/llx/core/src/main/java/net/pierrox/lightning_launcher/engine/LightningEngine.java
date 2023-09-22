@@ -626,35 +626,29 @@ public class LightningEngine implements Page.PageListener {
     }
 
     private void loadAppShortcuts() {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
-            File appShortcutsFile = FileUtils.getPinnedAppShortcutsFile(mBaseDir);
-            mAppShortcuts = FileUtils.readJSONObjectFromFile(appShortcutsFile);
-            if (mAppShortcuts == null) {
-                mAppShortcuts = new JSONObject();
-            }
+        File appShortcutsFile = FileUtils.getPinnedAppShortcutsFile(mBaseDir);
+        mAppShortcuts = FileUtils.readJSONObjectFromFile(appShortcutsFile);
+        if (mAppShortcuts == null) {
+            mAppShortcuts = new JSONObject();
         }
     }
 
     private void saveAppShortcuts() {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
-            try {
-                File out = FileUtils.getPinnedAppShortcutsFile(mBaseDir);
-                FileUtils.saveStringToFile(mAppShortcuts.toString(), out);
-            } catch (Exception e) {
-                // pass
-            }
+        try {
+            File out = FileUtils.getPinnedAppShortcutsFile(mBaseDir);
+            FileUtils.saveStringToFile(mAppShortcuts.toString(), out);
+        } catch (Exception e) {
+            // pass
         }
     }
 
     /** Return null if this isn't a Android 7.1 app shortcut */
     private Intent getAppShortcutIntent(Item item) {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
-            if (item.getClass() == Shortcut.class) {
-                Shortcut shortcut = (Shortcut) item;
-                Intent intent = shortcut.getIntent();
-                if (intent != null && Shortcut.INTENT_ACTION_APP_SHORTCUT.equals(intent.getAction())) {
-                    return intent;
-                }
+        if (item.getClass() == Shortcut.class) {
+            Shortcut shortcut = (Shortcut) item;
+            Intent intent = shortcut.getIntent();
+            if (intent != null && Shortcut.INTENT_ACTION_APP_SHORTCUT.equals(intent.getAction())) {
+                return intent;
             }
         }
 

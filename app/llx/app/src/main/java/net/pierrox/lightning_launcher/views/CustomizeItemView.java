@@ -703,7 +703,7 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
         ArrayList<LLPreference> prefs_misc = new ArrayList<>();
         prefs_misc.add(mItemMiscName = new LLPreference(context, ID_mItemMiscName, R.string.in_t, R.string.in_s));
         prefs_misc.add(mItemMiscLaunchAnimation = new LLPreferenceList(context, ID_mItemMiscLaunchAnimation, R.string.m_la_t, R.array.m_la_e, 0));
-        prefs_misc.add(mItemMiscSelectionEffect = new LLPreferenceList(context, ID_mItemMiscSelectionEffect, R.string.m_sel_e_t, R.array.m_sel_e_e, Build.VERSION.SDK_INT >= 21 ? 3 : 2));
+        prefs_misc.add(mItemMiscSelectionEffect = new LLPreferenceList(context, ID_mItemMiscSelectionEffect, R.string.m_sel_e_t, R.array.m_sel_e_e, 3));
         prefs_misc.add(mItemMiscSelectionEffectMask = new LLPreferenceCheckBox(context, ID_mItemMiscSelectionEffectMask, R.string.i_rm_t, R.string.i_rm_s));
         prefs_misc.add(mItemMiscPinMode = new LLPreferenceList(context, ID_mItemMiscPinMode, R.string.m_pin_mode, R.array.m_pin_mode_e, 0));
 
@@ -1236,11 +1236,9 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
             if (mExpertMode) {
                 mItemMiscSelectionEffect.setValue(ic.selectionEffect, ic_def == null ? null : ic_def.selectionEffect);
                 mItemMiscSelectionEffect.setVisible(true);
-                if (Build.VERSION.SDK_INT >= 21) {
-                    mItemMiscSelectionEffectMask.setValue(ic.selectionEffectMask, ic_def == null ? null : ic_def.selectionEffectMask);
-                    mItemMiscSelectionEffectMask.setDisabled(ic.selectionEffect != ItemConfig.SelectionEffect.MATERIAL);
-                    mItemMiscSelectionEffectMask.setVisible(true);
-                }
+                mItemMiscSelectionEffectMask.setValue(ic.selectionEffectMask, ic_def == null ? null : ic_def.selectionEffectMask);
+                mItemMiscSelectionEffectMask.setDisabled(ic.selectionEffect != ItemConfig.SelectionEffect.MATERIAL);
+                mItemMiscSelectionEffectMask.setVisible(true);
             }
             if (mItem != null) {
                 mItemMiscPinMode.setValue(ic.pinMode, ic_def == null ? null : ic_def.pinMode);

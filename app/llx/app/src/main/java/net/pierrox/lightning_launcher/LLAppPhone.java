@@ -58,17 +58,15 @@ public abstract class LLAppPhone extends LLApp {
         // and a systematic check has to be made at startup.
         // TODO when the check is implemented, also delete the broadcast receiver entry in the manifest
         // and register the receiver here for all platform versions.
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            mMPReceiver = new MPReceiver();
+        mMPReceiver = new MPReceiver();
 
-            IntentFilter intent_filter = new IntentFilter();
-            intent_filter.addAction(Intent.ACTION_PACKAGE_REMOVED);
-            intent_filter.addAction(Intent.ACTION_PACKAGE_REPLACED);
-            intent_filter.addAction(Intent.ACTION_PACKAGE_ADDED);
-            intent_filter.addDataScheme("package");
+        IntentFilter intent_filter = new IntentFilter();
+        intent_filter.addAction(Intent.ACTION_PACKAGE_REMOVED);
+        intent_filter.addAction(Intent.ACTION_PACKAGE_REPLACED);
+        intent_filter.addAction(Intent.ACTION_PACKAGE_ADDED);
+        intent_filter.addDataScheme("package");
 
-            registerReceiver(mMPReceiver, intent_filter);
-        }
+        registerReceiver(mMPReceiver, intent_filter);
     }
 
     @Override

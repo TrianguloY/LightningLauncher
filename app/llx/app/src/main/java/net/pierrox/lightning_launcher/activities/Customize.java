@@ -219,9 +219,7 @@ public class Customize extends ResourceWrapperActivity implements
 
 		super.onCreate(savedInstanceState);
 
-        if(Build.VERSION.SDK_INT>=19) {
-            mSystemBarTintManager = new SystemBarTintManager(getWindow());
-        }
+		mSystemBarTintManager = new SystemBarTintManager(getWindow());
 
 		setContentView(R.layout.customize);
 
@@ -1101,11 +1099,9 @@ public class Customize extends ResourceWrapperActivity implements
 			mPreferencesPageBackground.add(mPGBackgroundSystemWallpaperScroll  = new LLPreferenceCheckBox(this, ID_mPGBackgroundSystemWallpaperScroll, R.string.wp_scroll_t, R.string.wp_scroll_s, pc.bgSystemWPScroll, null));
 			mPreferencesPageBackground.add(mPGBackgroundSystemWallpaperWidth = new LLPreferenceSlider(this, ID_mPGBackgroundSystemWallpaperWidth, R.string.wp_w_t, R.string.wp_auto, pc.bgSystemWPWidth, null, ValueType.INT, 0, 2000, 1, null));
 			mPreferencesPageBackground.add(mPGBackgroundSystemWallpaperHeight = new LLPreferenceSlider(this, ID_mPGBackgroundSystemWallpaperHeight, R.string.wp_h_t, R.string.wp_auto, pc.bgSystemWPHeight, null, ValueType.INT, 0, 2000, 1, null));
-			if(android.os.Build.VERSION.SDK_INT>=9) {
-				mPreferencesPageBackground.add(new LLPreferenceCategory(this, R.string.bg_screen_wp));
-				mPreferencesPageBackground.add(mPGBackgroundSelectScreenWallpaper = new LLPreference(this, ID_mPGBackgroundSelectScreenWallpaper, R.string.bg_screen_wp_select_t, R.string.bg_screen_wp_select_s));
-                mPreferencesPageBackground.add(mPGBackgroundScaleType = new LLPreferenceList(this, ID_mPGBackgroundScaleType, R.string.bg_st, R.array.bg_st_e, pc.bgScaleType, null));
-			}
+			mPreferencesPageBackground.add(new LLPreferenceCategory(this, R.string.bg_screen_wp));
+			mPreferencesPageBackground.add(mPGBackgroundSelectScreenWallpaper = new LLPreference(this, ID_mPGBackgroundSelectScreenWallpaper, R.string.bg_screen_wp_select_t, R.string.bg_screen_wp_select_s));
+			mPreferencesPageBackground.add(mPGBackgroundScaleType = new LLPreferenceList(this, ID_mPGBackgroundScaleType, R.string.bg_st, R.array.bg_st_e, pc.bgScaleType, null));
 			mPreferencesPageBackground.add(new LLPreferenceCategory(this, R.string.bg_more));
 			mPreferencesPageBackground.add(mPGBackgroundColor = new LLPreferenceColor(this, ID_mPGBackgroundColor, R.string.bg_more_color_t, R.string.bg_more_color_s, pc.bgColor, null, true));
 		}
@@ -1184,50 +1180,21 @@ public class Customize extends ResourceWrapperActivity implements
                     mPreferencesPageSystemBars.add(new LLPreferenceCategory(this, R.string.sb_c));
                     mPreferencesPageSystemBars.add(mPGSystemBarsHideStatusBar = new LLPreferenceCheckBox(this, ID_mPGSystemBarsHideStatusBar, R.string.hide_statusbar_t, 0, pc.statusBarHide, null));
 
-                    // try to detect status bar capabilities on devices < API 19
-                    boolean has_transparent_status_bar = false;
-                    if (Build.VERSION.SDK_INT < 19) {
-                        try {
-                            Class<?> statusbarManager = Class.forName("android.app.StatusBarManager");
-                            statusbarManager.getMethod("setStatusBarTransparent", boolean.class);
-                            has_transparent_status_bar = true;
-                        } catch (Exception e1) {
-                        }
 
-                        if (!has_transparent_status_bar) {
-                            try {
-                                Field field = View.class.getDeclaredField("SYSTEM_UI_FLAG_TRANSPARENT_BACKGROUND");
-                                Class<?> t = field.getType();
-                                if (t == int.class) {
-                                    field.getInt(null);
-                                    View.class.getMethod("setSystemUiVisibility", int.class);
-                                    has_transparent_status_bar = true;
-                                }
-                            } catch (Exception e) {
-                            }
-                        }
+					mPreferencesPageSystemBars.add(mPGSystemBarsStatusBarColor = new LLPreferenceColor(this, ID_mPGSystemBarsStatusBarColor, R.string.sbc_t, 0, pc.statusBarColor, null, true));
 
-                        if (has_transparent_status_bar) {
-                            mPreferencesPageSystemBars.add(mPGSystemBarsTransparentStatusBar = new LLPreferenceCheckBox(this, ID_mPGSystemBarsTransparentStatusBar, R.string.trans_statusbar_t, R.string.trans_statusbar_s, pc.statusBarColor == 0, null));
-                        }
-                    }
+					mPreferencesPageSystemBars.add(mPGSystemBarsStatusBarLight = new LLPreferenceCheckBox(this, ID_mPGSystemBarsStatusBarLight, R.string.sbl_t, 0, pc.statusBarLight, null));
 
-                    if (Build.VERSION.SDK_INT >= 19) {
-                        mPreferencesPageSystemBars.add(mPGSystemBarsStatusBarColor = new LLPreferenceColor(this, ID_mPGSystemBarsStatusBarColor, R.string.sbc_t, 0, pc.statusBarColor, null, true));
-						if (Build.VERSION.SDK_INT >= 23) {
-							mPreferencesPageSystemBars.add(mPGSystemBarsStatusBarLight = new LLPreferenceCheckBox(this, ID_mPGSystemBarsStatusBarLight, R.string.sbl_t, 0, pc.statusBarLight, null));
-						}
                         mPreferencesPageSystemBars.add(mPGSystemBarsStatusBarOverlap = new LLPreferenceCheckBox(this, ID_mPGSystemBarsStatusBarOverlap, R.string.sbo_t, 0, pc.statusBarOverlap, null));
 
                         if (mSystemBarTintManager == null || (mSystemBarTintManager != null && mSystemBarTintManager.getConfig().hasNavigationBar())) {
                             mPreferencesPageSystemBars.add(new LLPreferenceCategory(this, R.string.nb_c));
                             mPreferencesPageSystemBars.add(mPGSystemBarsNavigationBarColor = new LLPreferenceColor(this, ID_mPGSystemBarsNavigationBarColor, R.string.nbc_t, 0, pc.navigationBarColor, null, true));
-							if (Build.VERSION.SDK_INT >= 26) {
-								mPreferencesPageSystemBars.add(mPGSystemBarsNavigationBarLight = new LLPreferenceCheckBox(this, ID_mPGSystemBarsNavigationBarLight, R.string.nbl_t, 0, pc.navigationBarLight, null));
-							}
+							mPreferencesPageSystemBars.add(mPGSystemBarsNavigationBarLight = new LLPreferenceCheckBox(this, ID_mPGSystemBarsNavigationBarLight, R.string.nbl_t, 0, pc.navigationBarLight, null));
+
                             mPreferencesPageSystemBars.add(mPGSystemBarsNavBarOverlap = new LLPreferenceCheckBox(this, ID_mPGSystemBarsNavBarOverlap, R.string.nbo_t, 0, pc.navigationBarOverlap, null));
                         }
-                    }
+
 
                     if (is_app_drawer) {
                         mPreferencesPageSystemBars.add(new LLPreferenceCategory(this, R.string.ad_ab_c_t));
@@ -1357,9 +1324,6 @@ public class Customize extends ResourceWrapperActivity implements
             mPreferencesPageADModes.add(mPGADModeCustom = new LLPreferenceCheckBox(this, 0, R.string.mi_mode_custom, 0, Utils.hasAppDrawerMode(modes, Utils.LAYOUT_MODE_CUSTOM), null));
             mPreferencesPageADModes.add(mPGADModeByName = new LLPreferenceCheckBox(this, 0, R.string.mi_mode_by_name, 0, Utils.hasAppDrawerMode(modes, Utils.LAYOUT_MODE_BY_NAME), null));
             mPreferencesPageADModes.add(mPGADModeFrequentlyUsed = new LLPreferenceCheckBox(this, 0, R.string.mi_mode_frequently_used, 0, Utils.hasAppDrawerMode(modes, Utils.LAYOUT_MODE_FREQUENTLY_USED), null));
-            if(Build.VERSION.SDK_INT<21) {
-                mPreferencesPageADModes.add(mPGADModeRecentApps = new LLPreferenceCheckBox(this, 0, R.string.mi_mode_recent_apps, 0, Utils.hasAppDrawerMode(modes, Utils.LAYOUT_MODE_RECENT_APPS), null));
-            }
             mPreferencesPageADModes.add(mPGADModeRecentlyUpdated = new LLPreferenceCheckBox(this, 0, R.string.mi_mode_recently_updated, 0, Utils.hasAppDrawerMode(modes, Utils.LAYOUT_MODE_RECENTLY_UPDATED), null));
             mPreferencesPageADModes.add(mPGADModeRunning = new LLPreferenceCheckBox(this, 0, R.string.mi_mode_running, 0, Utils.hasAppDrawerMode(modes, Utils.LAYOUT_MODE_RUNNING), null));
         }
@@ -1409,24 +1373,23 @@ public class Customize extends ResourceWrapperActivity implements
 		mPreferencesGlobalConfig.add(mGCExpertMode = new LLPreferenceCheckBox(this, ID_mGCExpertMode, R.string.em_t, R.string.em_s, mSystemConfig.expertMode, null));
 		mPreferencesGlobalConfig.add(mGCLanguageCategory = new LLPreference(
 				this, ID_mGCLanguageCategory, R.string.language_t, R.string.language_s));
-        if(Build.VERSION.SDK_INT>=13) {
-            mPreferencesGlobalConfig.add(mGCAppStyle = new LLPreferenceList(this, ID_mGCAppStyle, R.string.gc_as_t, R.array.gc_as_e, mSystemConfig.appStyle, null));
-        }
+
+		mPreferencesGlobalConfig.add(mGCAppStyle = new LLPreferenceList(this, ID_mGCAppStyle, R.string.gc_as_t, R.array.gc_as_e, mSystemConfig.appStyle, null));
+
 		mPreferencesGlobalConfig.add(mGCEventsCategory = new LLPreference(this, ID_mGCEventsCategory,
 				R.string.events_t, R.string.events_s));
-        if(Build.VERSION.SDK_INT>=8) {
-            mPreferencesGlobalConfig.add(mGCLockScreenCategory = new LLPreference(this, ID_mGCLockScreenCategory, R.string.s_ls_t, R.string.s_ls_s));
-            mPreferencesGlobalConfigLockScreen = new ArrayList<LLPreference>(3);
-            mPreferencesGlobalConfigLockScreen.add(mGCLockScreenSelect = new LLPreference(this, ID_mGCLockScreenSelect, R.string.s_ls_s_t, R.string.s_ls_s_s));
-            mPreferencesGlobalConfigLockScreen.add(mGCLockScreenLaunchUnlock = new LLPreferenceCheckBox(this, ID_mGCLockScreenLaunchUnlock, R.string.s_ls_lu_t, R.string.s_ls_lu_s, mGlobalConfig.launchUnlock, null));
-            mPreferencesGlobalConfigLockScreen.add(mGCLockScreenDisableOverlay = new LLPreferenceCheckBox(this, ID_mGCLockScreenDisableOverlay, R.string.ldo_t, R.string.ldo_s, mGlobalConfig.lockDisableOverlay, null));
-        }
-        if(Build.VERSION.SDK_INT>=14) {
-            mPreferencesGlobalConfig.add(mGCOverlayCategory = new LLPreference(this, ID_mGCOverlayCategory, R.string.ov_t, R.string.ov_s));
-            mPreferencesGlobalConfigOverlay = new ArrayList<LLPreference>(3);
-            if(Build.VERSION.SDK_INT >= 23) {
-                mPreferencesGlobalConfigOverlay.add(mGCOverlayPermission = new LLPreference(this, ID_mGCOverlayPermission, R.string.ov_pt, R.string.ov_ps));
-            }
+
+		mPreferencesGlobalConfig.add(mGCLockScreenCategory = new LLPreference(this, ID_mGCLockScreenCategory, R.string.s_ls_t, R.string.s_ls_s));
+		mPreferencesGlobalConfigLockScreen = new ArrayList<LLPreference>(3);
+		mPreferencesGlobalConfigLockScreen.add(mGCLockScreenSelect = new LLPreference(this, ID_mGCLockScreenSelect, R.string.s_ls_s_t, R.string.s_ls_s_s));
+		mPreferencesGlobalConfigLockScreen.add(mGCLockScreenLaunchUnlock = new LLPreferenceCheckBox(this, ID_mGCLockScreenLaunchUnlock, R.string.s_ls_lu_t, R.string.s_ls_lu_s, mGlobalConfig.launchUnlock, null));
+		mPreferencesGlobalConfigLockScreen.add(mGCLockScreenDisableOverlay = new LLPreferenceCheckBox(this, ID_mGCLockScreenDisableOverlay, R.string.ldo_t, R.string.ldo_s, mGlobalConfig.lockDisableOverlay, null));
+
+		mPreferencesGlobalConfig.add(mGCOverlayCategory = new LLPreference(this, ID_mGCOverlayCategory, R.string.ov_t, R.string.ov_s));
+		mPreferencesGlobalConfigOverlay = new ArrayList<LLPreference>(3);
+
+		mPreferencesGlobalConfigOverlay.add(mGCOverlayPermission = new LLPreference(this, ID_mGCOverlayPermission, R.string.ov_pt, R.string.ov_ps));
+
             mPreferencesGlobalConfigOverlay.add(mGCOverlaySelect = new LLPreference(this, ID_mGCOverlaySelect, R.string.ov_st, R.string.ov_ss));
             mPreferencesGlobalConfigOverlay.add(mGCOverlayLaunchHide = new LLPreferenceCheckBox(this, ID_mGCOverlayLaunchHide, R.string.ov_lht, R.string.ov_lhs, mGlobalConfig.overlayLaunchHide, null));
             mPreferencesGlobalConfigOverlay.add(mGCOverlayDisplayHandles = new LLPreferenceCheckBox(this, ID_mGCOverlayDisplayHandles, R.string.ov_dht, R.string.ov_dhs, mGlobalConfig.overlayDisplayHandles, null));
@@ -1436,19 +1399,17 @@ public class Customize extends ResourceWrapperActivity implements
             mPreferencesGlobalConfigOverlay.add(mGCOverlayHideHandleSize = new LLPreferenceSlider(this, ID_mGCOverlayHandleSize, R.string.ov_hhs, 0, mGlobalConfig.overlayHideHandleSize, null, ValueType.FLOAT, 0, 1, 0.1f, "%"));
             mPreferencesGlobalConfigOverlay.add(mGCOverlayHideHandleWidth = new LLPreferenceSlider(this, ID_mGCOverlayHandleWidth, R.string.ov_hhw, 0, mGlobalConfig.overlayHideHandleWidth, null, ValueType.FLOAT, 0, 0.2f, 0.01f, "%"));
             mPreferencesGlobalConfigOverlay.add(mGCOverlayHideHandlePosition = new LLPreferenceList(this, ID_mGCOverlayHandlePosition, R.string.ov_hhp, R.array.ov_hp_e, mGlobalConfig.overlayHideHandlePosition, null));
-            if(Build.VERSION.SDK_INT >= 23) {
-                boolean disabled = !WindowService.isPermissionAllowed(this);
+
+		boolean disabled = !WindowService.isPermissionAllowed(this);
                 for (LLPreference p : mPreferencesGlobalConfigOverlay) {
                     if(p != mGCOverlayPermission) {
                         p.setDisabled(disabled);
                     }
                 }
-            }
-        }
+
 		mPreferencesGlobalConfig.add(mGCPageAnimation = new LLPreferenceList(this, ID_mGCPageAnimation, R.string.page_anim_t, R.array.page_anim_e, mGlobalConfig.pageAnimation, null));
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            mPreferencesGlobalConfig.add(mGCHotwords = new LLPreferenceCheckBox(this, ID_mGCHotwords, R.string.hw_t, R.string.hw_s, mSystemConfig.hotwords, null));
-        }
+		mPreferencesGlobalConfig.add(mGCHotwords = new LLPreferenceCheckBox(this, ID_mGCHotwords, R.string.hw_t, R.string.hw_s, mSystemConfig.hotwords, null));
+
         if(mSystemConfig.expertMode) {
 			mPreferencesGlobalConfig.add(mGCRunScripts = new LLPreferenceCheckBox(this, ID_mGCRunScripts, R.string.rs_t, R.string.rs_s, mGlobalConfig.runScripts && !LLApp.get().isFreeVersion(), null));
 			mPreferencesGlobalConfig.add(mGCKeepInMemory = new LLPreferenceCheckBox(this, ID_mGCKeepInMemory, R.string.keep_in_memory_t, R.string.keep_in_memory_s, mSystemConfig.keepInMemory, null));
@@ -1565,16 +1526,16 @@ public class Customize extends ResourceWrapperActivity implements
 		mGlobalConfig.launchUnlock = mGCLockScreenLaunchUnlock.isChecked();
 		mGlobalConfig.lockDisableOverlay = mGCLockScreenDisableOverlay.isChecked();
 
-        if(Build.VERSION.SDK_INT>=14) {
-            mGlobalConfig.overlayLaunchHide = mGCOverlayLaunchHide.isChecked();
-            mGlobalConfig.overlayDisplayHandles = mGCOverlayDisplayHandles.isChecked();
-            mGlobalConfig.overlayShowHandlePosition = (GlobalConfig.OverlayHandlePosition) mGCOverlayShowHandlePosition.getValueEnum();
-            mGlobalConfig.overlayShowHandleSize = mGCOverlayShowHandleSize.getValue();
-            mGlobalConfig.overlayShowHandleWidth = mGCOverlayShowHandleWidth.getValue();
-            mGlobalConfig.overlayHideHandlePosition = (GlobalConfig.OverlayHandlePosition) mGCOverlayHideHandlePosition.getValueEnum();
-            mGlobalConfig.overlayHideHandleSize = mGCOverlayHideHandleSize.getValue();
-            mGlobalConfig.overlayHideHandleWidth = mGCOverlayHideHandleWidth.getValue();
-        }
+
+		mGlobalConfig.overlayLaunchHide = mGCOverlayLaunchHide.isChecked();
+		mGlobalConfig.overlayDisplayHandles = mGCOverlayDisplayHandles.isChecked();
+		mGlobalConfig.overlayShowHandlePosition = (GlobalConfig.OverlayHandlePosition) mGCOverlayShowHandlePosition.getValueEnum();
+		mGlobalConfig.overlayShowHandleSize = mGCOverlayShowHandleSize.getValue();
+		mGlobalConfig.overlayShowHandleWidth = mGCOverlayShowHandleWidth.getValue();
+		mGlobalConfig.overlayHideHandlePosition = (GlobalConfig.OverlayHandlePosition) mGCOverlayHideHandlePosition.getValueEnum();
+		mGlobalConfig.overlayHideHandleSize = mGCOverlayHideHandleSize.getValue();
+		mGlobalConfig.overlayHideHandleWidth = mGCOverlayHideHandleWidth.getValue();
+
 
 		mGlobalConfig.homeKey = mGCEventHomeKey.getValue();
 		mGlobalConfig.menuKey = mGCEventMenuKey.getValue();

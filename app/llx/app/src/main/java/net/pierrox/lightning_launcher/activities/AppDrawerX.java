@@ -371,11 +371,9 @@ public class AppDrawerX extends Dashboard implements EditTextIme.OnEditTextImeLi
         super.configureActivity(page);
 
         mActionBar.setVisibility(mDrawerPage.config.adHideActionBar || mIsAndroidActionBarDisplayed ? View.GONE : View.VISIBLE);
-        if(Build.VERSION.SDK_INT>=19) {
-            //noinspection ResourceType
-            ((FrameLayout.LayoutParams) mActionBar.getLayoutParams()).topMargin = mDrawerPage.config.statusBarHide ? 0 : mScreen.getSystemBarTintManager().getConfig().getStatusBarHeight();
-            mActionBar.requestLayout();
-        }
+        //noinspection ResourceType
+        ((FrameLayout.LayoutParams) mActionBar.getLayoutParams()).topMargin = mDrawerPage.config.statusBarHide ? 0 : mScreen.getSystemBarTintManager().getConfig().getStatusBarHeight();
+        mActionBar.requestLayout();
 
         int ab_text_color = mDrawerPage.config.adActionBarTextColor;
         if(ab_text_color == 0) {
@@ -403,9 +401,7 @@ public class AppDrawerX extends Dashboard implements EditTextIme.OnEditTextImeLi
 
         if(mActionBarBackground == null) {
             int bg_res_id;
-            if(Build.VERSION.SDK_INT>=21) bg_res_id = R.color.color_primary;
-            else if(Build.VERSION.SDK_INT>=13) bg_res_id = R.drawable.ab_bg_v13;
-            else bg_res_id = R.drawable.ab_bg_v9;
+            bg_res_id = R.color.color_primary;
             mActionBarBackground = getResources().getDrawable(bg_res_id);
         }
 
