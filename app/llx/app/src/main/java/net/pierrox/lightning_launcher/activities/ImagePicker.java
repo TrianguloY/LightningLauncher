@@ -471,11 +471,9 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
             label = s+"/"+pkg.label;
             clip_text = "\""+s+"\", \""+pkg.label+"\"";
         }
-        if(Build.VERSION.SDK_INT>=11) {
-            ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-            ClipData clip = newPlainText("llx", clip_text);
-            clipboard.setPrimaryClip(clip);
-        }
+        ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+        ClipData clip = newPlainText("llx", clip_text);
+        clipboard.setPrimaryClip(clip);
         Toast.makeText(this, label, Toast.LENGTH_LONG).show();
         return true;
     }

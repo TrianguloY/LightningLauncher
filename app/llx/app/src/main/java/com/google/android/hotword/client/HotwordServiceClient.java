@@ -78,18 +78,8 @@ public class HotwordServiceClient {
 		}
 	}
 
-	private boolean isPreKitKatDevice() {
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-			Log.w(TAG, "Hotword service isn't usable on pre-Kitkat devices");
-			return true;
-		}
-		return false;
-	}
 
 	public final void onAttachedToWindow() {
-		if (isPreKitKatDevice())
-			return;
-
 		assertMainThread();
 		mActivity.getWindow().getDecorView().getWindowId().registerFocusObserver(mFocusObserver);
 		internalBind();
@@ -97,9 +87,6 @@ public class HotwordServiceClient {
 
 	@SuppressLint("MissingSuperCall")
 	public final void onDetachedFromWindow() {
-		if (isPreKitKatDevice())
-			return;
-
 		if (!mIsBound) {
 			return;
 		}
@@ -111,9 +98,6 @@ public class HotwordServiceClient {
 	}
 
 	public final void requestHotwordDetection(boolean detect) {
-		if (isPreKitKatDevice())
-			return;
-
 		assertMainThread();
 		mIsRequested = detect;
 		internalRequestHotword();

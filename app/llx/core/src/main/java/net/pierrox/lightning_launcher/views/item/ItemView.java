@@ -173,7 +173,7 @@ public abstract class ItemView extends TransformLayout implements TouchEventInte
         mAlpha = mItem.getAlpha();
         updateViewAlpha();
 
-        if(Build.VERSION.SDK_INT >= 21 && ic.selectionEffect == ItemConfig.SelectionEffect.MATERIAL) {
+        if (ic.selectionEffect == ItemConfig.SelectionEffect.MATERIAL) {
             ColorStateList colors = new ColorStateList(RIPPLE_STATES_LIST, new int[]{ic.box.ccs});
             RippleDrawable background = new RippleDrawable(colors, null, ic.selectionEffectMask ? new ColorDrawable(-1) : null);
             setBackgroundDrawable(background);

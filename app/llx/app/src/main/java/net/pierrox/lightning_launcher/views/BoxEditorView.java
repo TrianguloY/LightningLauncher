@@ -118,7 +118,7 @@ public class BoxEditorView extends View implements Runnable {
 		
 		mSelectedAreaPaint = new Paint();
 		mSelectedAreaPaint.setStyle(Paint.Style.FILL);
-		mSelectedAreaPaint.setColor(Build.VERSION.SDK_INT<11 ? 0xff8080ff : 0x808080ff); // workaround for a drawing bug on some devices
+        mSelectedAreaPaint.setColor(0x808080ff); // workaround for a drawing bug on some devices
 		
 		mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		mTextPaint.setColor(Color.BLACK);

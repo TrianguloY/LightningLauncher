@@ -225,9 +225,8 @@ public class SystemBarTintManager {
      *
      * @param alpha The alpha to use
      */
-    @TargetApi(11)
     public void setStatusBarAlpha(float alpha) {
-        if (mStatusBarAvailable && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+        if (mStatusBarAvailable) {
             mStatusBarTintView.setAlpha(alpha);
         }
     }
@@ -272,9 +271,8 @@ public class SystemBarTintManager {
      *
      * @param alpha The alpha to use
      */
-    @TargetApi(11)
     public void setNavigationBarAlpha(float alpha) {
-        if (mNavBarAvailable && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+        if (mNavBarAvailable) {
             mNavBarTintView.setAlpha(alpha);
         }
     }
@@ -369,7 +367,6 @@ public class SystemBarTintManager {
         private static int sSafeInsetWidth = 0;
         private static int sSafeInsetHeight = 0;
 
-        @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
         private SystemBarConfig(Window window) {
             Resources res = window.getContext().getResources();
 
@@ -377,11 +374,9 @@ public class SystemBarTintManager {
 
             mStatusBarHeight = getInternalDimensionSize(res, STATUS_BAR_HEIGHT_RES_NAME);
             int result = 0;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-                TypedValue tv = new TypedValue();
-                window.getContext().getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true);
-                result = TypedValue.complexToDimensionPixelSize(tv.data, res.getDisplayMetrics());
-            }
+            TypedValue tv = new TypedValue();
+            window.getContext().getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true);
+            result = TypedValue.complexToDimensionPixelSize(tv.data, res.getDisplayMetrics());
             mActionBarHeight = result;
 //            mNavigationBarWidth = getNavigationBarWidth(activity);
 

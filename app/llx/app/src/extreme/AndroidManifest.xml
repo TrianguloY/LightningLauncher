@@ -18,6 +18,7 @@
             android:configChanges="keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
 
         <service
+            android:exported="true"
             android:name="net.pierrox.lightning_launcher.util.LightningLWPService"
             android:enabled="true"
             android:label="@string/lwp"

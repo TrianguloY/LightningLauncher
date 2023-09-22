@@ -88,10 +88,8 @@ public class BoxLayout extends ViewGroup implements SharedAsyncGraphicsDrawable.
     public BoxLayout(Context context, AttributeSet attrs, boolean hardware_accelerated) {
 		super(context, attrs);
 
-        if(Build.VERSION.SDK_INT >= 11) {
-            if(hardware_accelerated) {
-                setLayerType(LAYER_TYPE_HARDWARE, new Paint());
-            }
+        if (hardware_accelerated) {
+            setLayerType(LAYER_TYPE_HARDWARE, new Paint());
         }
 
         mDensity = getResources().getDisplayMetrics().density;
@@ -108,7 +106,7 @@ public class BoxLayout extends ViewGroup implements SharedAsyncGraphicsDrawable.
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        if(Build.VERSION.SDK_INT >= 11 && (w > 2048 || h > 2048)) {
+        if (w > 2048 || h > 2048) {
             int layer_type = getLayerType();
             if(layer_type != LAYER_TYPE_NONE) {
                 setLayerType(LAYER_TYPE_NONE, null);
@@ -198,16 +196,6 @@ public class BoxLayout extends ViewGroup implements SharedAsyncGraphicsDrawable.
 
         requestLayout();
         invalidate();
-    }
-
-    @Override
-    public void setAlpha(float alpha) {
-        if(Build.VERSION.SDK_INT < 11) {
-            mAlpha = (int) (255 * alpha);
-            invalidate();
-        } else {
-            super.setAlpha(alpha);
-        }
     }
 
 	@Override
@@ -457,21 +445,7 @@ public class BoxLayout extends ViewGroup implements SharedAsyncGraphicsDrawable.
             canvas.clipRect(pl, pt, getWidth() - pr, getHeight() - pb);
 
             canvas.translate(mChildLeft, mChildTop);
-            if (Build.VERSION.SDK_INT < 11) {
-                if (mChildView.isDrawingCacheEnabled()) {
-                    try {
-                        Bitmap cache = mChildView.getDrawingCache();
-                        canvas.drawBitmap(cache, 0, 0, null);
-                    } catch (Exception e) {
-                        // this will happen if something failed with the cache creation (bitmap too large, other ?)
-                        mChildView.draw(canvas);
-                    }
-                } else {
-                    mChildView.draw(canvas);
-                }
-            } else {
-                mChildView.draw(canvas);
-            }
+            mChildView.draw(canvas);
             canvas.translate(-mChildLeft, -mChildTop);
             canvas.restore();
         }
@@ -492,10 +466,6 @@ public class BoxLayout extends ViewGroup implements SharedAsyncGraphicsDrawable.
 			sBorderPaint.setColor(mCurrentBorderBottomColor);
             canvas.drawPath(mBorderBottomPath, sBorderPaint);
 		}
-
-        if(mAlpha!=255 && Build.VERSION.SDK_INT < 11) {
-            canvas.restore();
-        }
 	}
 
     @Override
