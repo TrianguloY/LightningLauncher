@@ -152,9 +152,7 @@ public class EmptyService extends Service {
     public void onDestroy() {
         super.onDestroy();
 
-        if(Build.VERSION.SDK_INT>=8) {
-            unregisterReceiver(mBroadcastReceiver);
-        }
+        unregisterReceiver(mBroadcastReceiver);
     }
 
 

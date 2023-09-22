@@ -37,12 +37,10 @@ public abstract class ResourceWrapperActivity extends Activity {
         return super.getResources();
     }
 
-    @TargetApi(Build.VERSION_CODES.M)
     public boolean checkPermissions(String[] permissions, int[] rationales, final int requestCode) {
-        if(Build.VERSION.SDK_INT >= 23) {
-            final ArrayList<String> permissionsToRequest = new ArrayList<>();
-            final ArrayList<String> permissionsToExplain = new ArrayList<>();
-            for (String p : permissions) {
+        final ArrayList<String> permissionsToRequest = new ArrayList<>();
+        final ArrayList<String> permissionsToExplain = new ArrayList<>();
+        for (String p : permissions) {
                 if(checkSelfPermission(p) == PackageManager.PERMISSION_DENIED) {
                     if(shouldShowRequestPermissionRationale(p)) {
                         permissionsToExplain.add(p);
@@ -52,7 +50,7 @@ public abstract class ResourceWrapperActivity extends Activity {
                 }
             }
 
-            if(permissionsToExplain.size() == 0) {
+        if (permissionsToExplain.size() == 0) {
                 if(permissionsToRequest.size() > 0) {
                     requestPermissions(listToArray(permissionsToRequest), requestCode);
                     return false;
@@ -96,9 +94,6 @@ public abstract class ResourceWrapperActivity extends Activity {
                 builder.create().show();
                 return false;
             }
-        } else {
-            return true;
-        }
     }
 
     protected boolean areAllPermissionsGranted(int[] grantResults, int errorToast) {

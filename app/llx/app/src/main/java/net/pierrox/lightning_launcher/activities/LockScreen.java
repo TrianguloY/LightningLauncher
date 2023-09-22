@@ -104,9 +104,7 @@ public class LockScreen extends Dashboard {
 //                newUiOptions |= View.SYSTEM_UI_FLAG_LOW_PROFILE;
 //            }
 
-            if (Build.VERSION.SDK_INT >= 18) {
-                newUiOptions |= 0x00001000; //View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-            }
+            newUiOptions |= 0x00001000; //View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
 
             Method setSystemUiVisibility = decor_view.getClass().getMethod("setSystemUiVisibility", int.class);
             setSystemUiVisibility.invoke(decor_view, newUiOptions);

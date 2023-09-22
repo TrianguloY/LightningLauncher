@@ -27,12 +27,10 @@ public class NativeImage {
 	public static void init(Context context) {
         sAvailable = false;
 		try {
-			if(android.os.Build.VERSION.SDK_INT>=9) {
-                System.loadLibrary("ll");
-				nativeInit();
-				sAvailable = true;
-			}
-		} catch (Throwable e1) {
+            System.loadLibrary("ll");
+            nativeInit();
+            sAvailable = true;
+        } catch (Throwable e1) {
             sAvailable = false;
 		}
 	}

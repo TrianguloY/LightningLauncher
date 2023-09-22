@@ -13,9 +13,6 @@ public class IconView extends View implements SharedAsyncGraphicsDrawable.Shared
     private IconView(Context context) {
         super(context);
 
-        if( Build.VERSION.SDK_INT < 11) {
-            setDrawingCacheEnabled(true);
-        }
     }
 
 	public IconView(Context context, Bitmap bitmap, boolean filter) {

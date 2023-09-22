@@ -61,7 +61,9 @@ public class WindowService extends Service implements LightningEngine.GlobalConf
     private static final int OPEN_CLOSE_ANIMATION_DURATION = 300;
 
     private static final String NOTIFICATION_CHANNEL_ID = "LL_SERVICES";
-    private static final int NOTIFICATION_ID = 0;
+
+    // Notification ID cannot be 0
+    private static final int NOTIFICATION_ID = 102;
 
     private WindowScreen mScreen;
 
@@ -94,7 +96,7 @@ public class WindowService extends Service implements LightningEngine.GlobalConf
     private boolean mIsShown;
 
     public static boolean isPermissionAllowed(Context context) {
-        return Build.VERSION.SDK_INT<23 || Settings.canDrawOverlays(context);
+        return Settings.canDrawOverlays(context);
     }
 
     @Override
@@ -173,10 +175,8 @@ public class WindowService extends Service implements LightningEngine.GlobalConf
         mItemLayout=(ItemLayout) mWorkspaceView.findViewById(R.id.window_il);
         mScreen.takeItemLayoutOwnership(mItemLayout);
         mItemLayout.setHonourFocusChange(false);
-    
-        int windowType = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
-                ? WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
-                : WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
+
+        int windowType = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
     
         mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams(
@@ -340,30 +340,23 @@ public class WindowService extends Service implements LightningEngine.GlobalConf
 
         configureDrawer();
 
-        if (Build.VERSION.SDK_INT >= 26) {
-            CharSequence name = "Lightning Services";
-            String description = "Background Launcher activities";
-            int importance = NotificationManager.IMPORTANCE_LOW;
-            NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, name, importance);
-            channel.setDescription(description);
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
+        CharSequence name = "Lightning Services";
+        String description = "Background Launcher activities";
+        int importance = NotificationManager.IMPORTANCE_LOW;
+        NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, name, importance);
+        channel.setDescription(description);
+        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+        notificationManager.createNotificationChannel(channel);
 
         Intent notificationIntent = LLApp.get().getWindowServiceIntent();
         notificationIntent.setAction(WindowService.INTENT_ACTION_SHOW);
         PendingIntent pendingIntent = PendingIntent.getService(this, 0, notificationIntent, 0);
 
         Notification.Builder builder;
-        if (Build.VERSION.SDK_INT >= 26) {
-            builder = new Notification.Builder(this, NOTIFICATION_CHANNEL_ID);
-        } else {
-            builder = new Notification.Builder(this);
-        }
+        builder = new Notification.Builder(this, NOTIFICATION_CHANNEL_ID);
         builder.setContentTitle(getString(R.string.ov_r))
                 .setContentIntent(pendingIntent)
-                .setCategory(Notification.CATEGORY_SERVICE)
-                .setPriority(Notification.PRIORITY_LOW);
+                .setCategory(Notification.CATEGORY_SERVICE);
 
         Notification notification = builder.build();
 
