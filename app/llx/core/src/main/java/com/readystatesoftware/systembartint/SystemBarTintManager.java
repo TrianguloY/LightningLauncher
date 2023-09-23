@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.DisplayCutout;
@@ -380,10 +381,12 @@ private static int sSafeInsetWidth = 0;
 
             WindowInsets windowInsets = window.getDecorView().getRootWindowInsets();
             if (windowInsets != null) {
-                DisplayCutout cutout = windowInsets.getDisplayCutout();
-                if (cutout != null) {
-                    sSafeInsetWidth = cutout.getSafeInsetLeft() + cutout.getSafeInsetRight();
-                    sSafeInsetHeight = cutout.getSafeInsetTop() + cutout.getSafeInsetBottom();
+                if (Build.VERSION.SDK_INT >= 28) {
+                    DisplayCutout cutout = windowInsets.getDisplayCutout();
+                    if (cutout != null) {
+                        sSafeInsetWidth = cutout.getSafeInsetLeft() + cutout.getSafeInsetRight();
+                        sSafeInsetHeight = cutout.getSafeInsetTop() + cutout.getSafeInsetBottom();
+                    }
                 }
             }
             mIsNavigationAtBottom = realDm.widthPixels == dm.widthPixels;
