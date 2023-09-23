@@ -1,25 +1,25 @@
 package net.pierrox.lightning_launcher.util;
 
-	/*
-	 * NeuQuant Neural-Net Quantization Algorithm
-	 * ------------------------------------------
-	 *
-	 * Copyright (c) 1994 Anthony Dekker
-	 *
-	 * NEUQUANT Neural-Net quantization algorithm by Anthony Dekker, 1994. See
-	 * "Kohonen neural networks for optimal colour quantization" in "Network:
-	 * Computation in Neural Systems" Vol. 5 (1994) pp 351-367. for a discussion of
-	 * the algorithm.
-	 *
-	 * Any party obtaining a copy of these files from the author, directly or
-	 * indirectly, is granted, free of charge, a full and unrestricted irrevocable,
-	 * world-wide, paid up, royalty-free, nonexclusive right and license to deal in
-	 * this software and documentation files (the "Software"), including without
-	 * limitation the rights to use, copy, modify, merge, publish, distribute,
-	 * sublicense, and/or sell copies of the Software, and to permit persons who
-	 * receive copies from any such party to do so, with the only requirement being
-	 * that this copyright notice remain intact.
-	 */
+/*
+ * NeuQuant Neural-Net Quantization Algorithm
+ * ------------------------------------------
+ *
+ * Copyright (c) 1994 Anthony Dekker
+ *
+ * NEUQUANT Neural-Net quantization algorithm by Anthony Dekker, 1994. See
+ * "Kohonen neural networks for optimal colour quantization" in "Network:
+ * Computation in Neural Systems" Vol. 5 (1994) pp 351-367. for a discussion of
+ * the algorithm.
+ *
+ * Any party obtaining a copy of these files from the author, directly or
+ * indirectly, is granted, free of charge, a full and unrestricted irrevocable,
+ * world-wide, paid up, royalty-free, nonexclusive right and license to deal in
+ * this software and documentation files (the "Software"), including without
+ * limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons who
+ * receive copies from any such party to do so, with the only requirement being
+ * that this copyright notice remain intact.
+ */
 
 //	 ==============================================================================
 //	 Adapted from Jef Poskanzer's Java port by way of J. M. G. Elliott.
@@ -30,7 +30,7 @@ class NeuQuant {
     protected static final int netsize = 256; /* number of colours used */
 
     /* four primes near 500 - assume no image has a length so large */
-      /* that it is divisible by all four primes */
+    /* that it is divisible by all four primes */
     protected static final int prime1 = 499;
 
     protected static final int prime2 = 491;
@@ -41,19 +41,19 @@ class NeuQuant {
 
     protected static final int minpicturebytes = (3 * prime4);
 
-	  /* minimum size for input image */
+    /* minimum size for input image */
 
-	  /*
-	   * Program Skeleton ---------------- [select samplefac in range 1..30] [read
-	   * image from input file] pic = (unsigned char*) malloc(3*width*height);
-	   * initnet(pic,3*width*height,samplefac); learn(); unbiasnet(); [write output
-	   * image header, using writecolourmap(f)] inxbuild(); write output image using
-	   * inxsearch(b,g,r)
-	   */
+    /*
+     * Program Skeleton ---------------- [select samplefac in range 1..30] [read
+     * image from input file] pic = (unsigned char*) malloc(3*width*height);
+     * initnet(pic,3*width*height,samplefac); learn(); unbiasnet(); [write output
+     * image header, using writecolourmap(f)] inxbuild(); write output image using
+     * inxsearch(b,g,r)
+     */
 
-	  /*
-	   * Network Definitions -------------------
-	   */
+    /*
+     * Network Definitions -------------------
+     */
 
     protected static final int maxnetpos = (netsize - 1);
 
@@ -64,56 +64,44 @@ class NeuQuant {
     /* defs for freq and bias */
     protected static final int intbiasshift = 16; /* bias for fractions */
 
-    protected static final int intbias = (((int) 1) << intbiasshift);
-
-    protected static final int gammashift = 10; /* gamma = 1024 */
-
-    protected static final int gamma = (((int) 1) << gammashift);
-
+    protected static final int intbias = (1 << intbiasshift);
     protected static final int betashift = 10;
-
+    protected static final int gammashift = 10; /* gamma = 1024 */
     protected static final int beta = (intbias >> betashift); /* beta = 1/1024 */
-
     protected static final int betagamma = (intbias << (gammashift - betashift));
-
+    protected static final int gamma = (1 << gammashift);
     /* defs for decreasing radius factor */
     protected static final int initrad = (netsize >> 3); /*
-	                                                         * for 256 cols, radius
-	                                                         * starts
-	                                                         */
+     * for 256 cols, radius
+     * starts
+     */
 
     protected static final int radiusbiasshift = 6; /* at 32.0 biased by 6 bits */
 
-    protected static final int radiusbias = (((int) 1) << radiusbiasshift);
+    protected static final int radiusbias = (1 << radiusbiasshift);
 
     protected static final int initradius = (initrad * radiusbias); /*
-	                                                                   * and
-	                                                                   * decreases
-	                                                                   * by a
-	                                                                   */
+     * and
+     * decreases
+     * by a
+     */
 
     protected static final int radiusdec = 30; /* factor of 1/30 each cycle */
 
     /* defs for decreasing alpha factor */
     protected static final int alphabiasshift = 10; /* alpha starts at 1.0 */
 
-    protected static final int initalpha = (((int) 1) << alphabiasshift);
-
-    protected int alphadec; /* biased by 10 bits */
-
+    protected static final int initalpha = (1 << alphabiasshift);
     /* radbias and alpharadbias used for radpower calculation */
     protected static final int radbiasshift = 8;
-
-    protected static final int radbias = (((int) 1) << radbiasshift);
-
+    protected static final int radbias = (1 << radbiasshift);
     protected static final int alpharadbshift = (alphabiasshift + radbiasshift);
+    protected static final int alpharadbias = (1 << alpharadbshift);
+    protected int alphadec; /* biased by 10 bits */
 
-    protected static final int alpharadbias = (((int) 1) << alpharadbshift);
-
-	  /*
-	   * Types and Global Variables --------------------------
-	   */
-
+    /*
+     * Types and Global Variables --------------------------
+     */
     protected byte[] thepicture; /* the input image itself */
 
     protected int lengthcount; /* lengthcount = H*W*3 */
@@ -125,7 +113,7 @@ class NeuQuant {
 
     protected int[] netindex = new int[256];
 
-	  /* for network lookup - really 256 */
+    /* for network lookup - really 256 */
 
     protected int[] bias = new int[netsize];
 
@@ -134,7 +122,7 @@ class NeuQuant {
 
     protected int[] radpower = new int[initrad];
 
-	  /* radpower for precomputation */
+    /* radpower for precomputation */
 
     /*
      * Initialise network in range (0,0,0) to (255,255,255) and set parameters
@@ -192,7 +180,7 @@ class NeuQuant {
             p = network[i];
             smallpos = i;
             smallval = p[1]; /* index on g */
-	      /* find smallest in i..netsize-1 */
+            /* find smallest in i..netsize-1 */
             for (j = i + 1; j < netsize; j++) {
                 q = network[j];
                 if (q[1] < smallval) { /* index on g */
@@ -201,7 +189,7 @@ class NeuQuant {
                 }
             }
             q = network[smallpos];
-	      /* swap p (i) and q (smallpos) entries */
+            /* swap p (i) and q (smallpos) entries */
             if (i != smallpos) {
                 j = q[0];
                 q[0] = p[0];
@@ -216,7 +204,7 @@ class NeuQuant {
                 q[3] = p[3];
                 p[3] = j;
             }
-	      /* smallval entry is now in position i */
+            /* smallval entry is now in position i */
             if (smallval != previouscol) {
                 netindex[previouscol] = (startpos + i) >> 1;
                 for (j = previouscol + 1; j < smallval; j++)
@@ -276,7 +264,7 @@ class NeuQuant {
 
         i = 0;
         while (i < samplepixels) {
-            b = (p[pix + 0] & 0xff) << netbiasshift;
+            b = (p[pix] & 0xff) << netbiasshift;
             g = (p[pix + 1] & 0xff) << netbiasshift;
             r = (p[pix + 2] & 0xff) << netbiasshift;
             j = contest(b, g, r);
@@ -450,7 +438,7 @@ class NeuQuant {
      */
     protected void altersingle(int alpha, int i, int b, int g, int r) {
 
-	    /* alter hit neuron */
+        /* alter hit neuron */
         int[] n = network[i];
         n[0] -= (alpha * (n[0] - b)) / initalpha;
         n[1] -= (alpha * (n[1] - g)) / initalpha;
@@ -462,16 +450,16 @@ class NeuQuant {
      */
     protected int contest(int b, int g, int r) {
 
-	    /* finds closest neuron (min dist) and updates freq */
-	    /* finds best neuron (min dist-bias) and returns position */
-	    /* for frequently chosen neurons, freq[i] is high and bias[i] is negative */
-	    /* bias[i] = gamma*((1/netsize)-freq[i]) */
+        /* finds closest neuron (min dist) and updates freq */
+        /* finds best neuron (min dist-bias) and returns position */
+        /* for frequently chosen neurons, freq[i] is high and bias[i] is negative */
+        /* bias[i] = gamma*((1/netsize)-freq[i]) */
 
         int i, dist, a, biasdist, betafreq;
         int bestpos, bestbiaspos, bestd, bestbiasd;
         int[] n;
 
-        bestd = ~(((int) 1) << 31);
+        bestd = ~(1 << 31);
         bestbiasd = bestd;
         bestpos = -1;
         bestbiaspos = bestpos;

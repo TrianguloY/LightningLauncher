@@ -72,7 +72,7 @@ public class LightningLWPService extends WallpaperService {
 
     @Override
     public final Resources getResources() {
-        if(mResourcesWrapperHelper == null) {
+        if (mResourcesWrapperHelper == null) {
             mResourcesWrapperHelper = new ResourcesWrapperHelper(this, super.getResources());
         }
         return mResourcesWrapperHelper.getResources();
@@ -104,15 +104,15 @@ public class LightningLWPService extends WallpaperService {
             LightningEngine lightningEngine = app.getAppEngine();
             lightningEngine.registerGlobalConfigChangeListener(this);
             final GlobalConfig globalConfig = lightningEngine.getGlobalConfig();
-            mLWPDesktopId =globalConfig.lwpScreen;
+            mLWPDesktopId = globalConfig.lwpScreen;
 
             mScreen = new LightningLWPScreen(LightningLWPService.this, R.layout.lwp);
 
             mContentView = (EventFrameLayout) mScreen.getContentView();
-            mItemLayout = (ItemLayout) mContentView.findViewById(R.id.lwp_il);
+            mItemLayout = mContentView.findViewById(R.id.lwp_il);
             mScreen.takeItemLayoutOwnership(mItemLayout);
 
-            mNoDesktopView = (TextView) mContentView.findViewById(R.id.empty);
+            mNoDesktopView = mContentView.findViewById(R.id.empty);
             mNoDesktopView.setText(R.string.sd);
             mNoDesktopView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -125,14 +125,14 @@ public class LightningLWPService extends WallpaperService {
                 IBinder token = null;
                 final Field[] declaredFields = getClass().getSuperclass().getDeclaredFields();
                 for (Field f : declaredFields) {
-                    if(f.getName().equals("mWindowToken")) {
+                    if (f.getName().equals("mWindowToken")) {
                         f.setAccessible(true);
                         token = (IBinder) f.get(this);
                         break;
                     }
                 }
 
-                if(token != null) {
+                if (token != null) {
                     WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
                     WindowManager.LayoutParams attrs = new WindowManager.LayoutParams(
                             ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT,
@@ -184,7 +184,7 @@ public class LightningLWPService extends WallpaperService {
 
             mScreen.setCustomScreenSize(width, height);
 
-            if(!mUseWindow) {
+            if (!mUseWindow) {
                 layout();
                 draw();
             }
@@ -192,7 +192,7 @@ public class LightningLWPService extends WallpaperService {
 
         @Override
         public void onSurfaceRedrawNeeded(SurfaceHolder holder) {
-            if(!mUseWindow) {
+            if (!mUseWindow) {
                 draw();
             }
         }
@@ -200,9 +200,9 @@ public class LightningLWPService extends WallpaperService {
         @Override
         public void onOffsetsChanged(float xOffset, float yOffset, float xOffsetStep, float yOffsetStep, int xPixelOffset, int yPixelOffset) {
             Rect boundingBox = mItemLayout.getItemsBoundingBox();
-            float x = xOffset*(mItemLayout.getWidth()-boundingBox.width()) - boundingBox.left;
-            float y = yOffset*(mItemLayout.getHeight()-boundingBox.height()) - boundingBox.top;
-            if(mItemLayout.getCurrentX() != x || mItemLayout.getCurrentY() != y) {
+            float x = xOffset * (mItemLayout.getWidth() - boundingBox.width()) - boundingBox.left;
+            float y = yOffset * (mItemLayout.getHeight() - boundingBox.height()) - boundingBox.top;
+            if (mItemLayout.getCurrentX() != x || mItemLayout.getCurrentY() != y) {
                 mItemLayout.moveTo(x, y, 1);
             }
         }
@@ -211,13 +211,13 @@ public class LightningLWPService extends WallpaperService {
         public Bundle onCommand(String action, int x, int y, int z, Bundle extras, boolean resultRequested) {
             boolean isTap = WallpaperManager.COMMAND_TAP.equals(action);
             boolean isSecondaryTap = WallpaperManager.COMMAND_SECONDARY_TAP.equals(action);
-            if((isTap || isSecondaryTap) && !mMainPage.config.lwpStdEvents) {
+            if ((isTap || isSecondaryTap) && !mMainPage.config.lwpStdEvents) {
                 int[] offset = new int[2];
                 mContentView.getLocationOnScreen(offset);
                 x -= offset[0];
                 y -= offset[1];
 
-                if(mUseWindow) {
+                if (mUseWindow) {
                     boolean dispatch = mContentView.getDispatchEvent();
                     mContentView.setDispatchEvent(true);
 
@@ -229,11 +229,11 @@ public class LightningLWPService extends WallpaperService {
                     mContentView.dispatchTouchEvent(event);
 
                     mContentView.setDispatchEvent(dispatch);
-                } else if(mLWPDesktopId == Page.NONE){
+                } else if (mLWPDesktopId == Page.NONE) {
                     // preview mode, events won't perform click because the view needs to be attached to post click events, hence handle it manually
                     Rect r = new Rect();
                     mNoDesktopView.getHitRect(r);
-                    if(r.contains(x, y)) {
+                    if (r.contains(x, y)) {
                         startSettings();
                     }
                 }
@@ -269,9 +269,9 @@ public class LightningLWPService extends WallpaperService {
         }
 
         private void setVisibility(boolean visible) {
-            if(visible != mVisible) {
+            if (visible != mVisible) {
                 mVisible = visible;
-                if(mVisible) {
+                if (mVisible) {
                     mScreen.resume();
                 } else {
                     mScreen.pause();
@@ -280,7 +280,7 @@ public class LightningLWPService extends WallpaperService {
         }
 
         private void configurePage() {
-            if(!((LLAppExtreme)LLApp.get()).hasLWP()) {
+            if (!((LLAppExtreme) LLApp.get()).hasLWP()) {
                 mLWPDesktopId = Page.NONE;
             }
             boolean hasPage = mLWPDesktopId != Page.NONE;
@@ -296,11 +296,11 @@ public class LightningLWPService extends WallpaperService {
 
         @Override
         public void onGlobalConfigChanged(GlobalConfig newGlobalConfig) {
-            if(newGlobalConfig.lwpScreen != mLWPDesktopId) {
+            if (newGlobalConfig.lwpScreen != mLWPDesktopId) {
                 mLWPDesktopId = newGlobalConfig.lwpScreen;
                 configurePage();
 
-                if(!mUseWindow) {
+                if (!mUseWindow) {
                     layout();
                     draw();
                 }
@@ -324,7 +324,7 @@ public class LightningLWPService extends WallpaperService {
 
             @Override
             public void goToDesktopPosition(int page, float x, float y, float s, boolean animate, boolean absolute) {
-                if(Page.isDashboard(page) && page != getCurrentRootPage().id) {
+                if (Page.isDashboard(page) && page != getCurrentRootPage().id) {
                     LightningEngine engine = mMainPage.getEngine();
                     engine.getGlobalConfig().lwpScreen = page;
                     engine.notifyGlobalConfigChanged();
@@ -340,7 +340,7 @@ public class LightningLWPService extends WallpaperService {
 
             @Override
             public ItemLayout loadRootItemLayout(int page, boolean reset_navigation_history, boolean displayImmediately, boolean animate) {
-                if(mItemLayout.getPage().id == page) {
+                if (mItemLayout.getPage().id == page) {
                     return mItemLayout;
                 } else {
                     return loadRootItemLayoutOffscreen(page, reset_navigation_history, displayImmediately, animate);
@@ -380,7 +380,7 @@ public class LightningLWPService extends WallpaperService {
             public void onPageModified(Page page) {
                 super.onPageModified(page);
 
-                if(page == mMainPage) {
+                if (page == mMainPage) {
                     mContentView.setDispatchEvent(page.config.lwpStdEvents);
                 }
             }
@@ -389,7 +389,7 @@ public class LightningLWPService extends WallpaperService {
             public void setVisibility(boolean visible) {
                 int oldVisibility = mContentView.getVisibility();
                 int newVisibility = visible ? View.VISIBLE : View.GONE;
-                if(oldVisibility != newVisibility) {
+                if (oldVisibility != newVisibility) {
                     mContentView.setVisibility(newVisibility);
                     mContentView.startAnimation(AnimationUtils.loadAnimation(LightningLWPService.this, visible ? android.R.anim.fade_in : android.R.anim.fade_out));
                 }

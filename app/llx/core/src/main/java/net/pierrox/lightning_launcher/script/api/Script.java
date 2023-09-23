@@ -9,7 +9,7 @@ import java.util.HashMap;
 /**
  * This object is used to access script properties such as text, tag and menu attributes.
  * Warning: this API is currently experimental.
- *
+ * <p>
  * An instance of this object can be retrieved with {@link Lightning#getCurrentScript()}, {@link Lightning#getScriptByName(String)}, {@link Lightning#getScriptByPathAndName(String, String)}, {@link Lightning#getScriptById(String)}, {@link Lightning#createScript(String, String, String, int)} or {@link Lightning#getAllScriptMatching(int)}.
  */
 public class Script {
@@ -19,8 +19,8 @@ public class Script {
     public static final int FLAG_ITEM_MENU = net.pierrox.lightning_launcher.script.Script.FLAG_ITEM_MENU;
     public static final int FLAG_CUSTOM_MENU = net.pierrox.lightning_launcher.script.Script.FLAG_CUSTOM_MENU;
 
-    private LightningEngine mEngine;
-    private net.pierrox.lightning_launcher.script.Script mScript;
+    private final LightningEngine mEngine;
+    private final net.pierrox.lightning_launcher.script.Script mScript;
 
     /**
      * @hide
@@ -32,8 +32,9 @@ public class Script {
 
     /**
      * Run this script
+     *
      * @param screen screen in which to execute the script
-     * @param data optional data to send to the script. Use JSON to pass more than a string.
+     * @param data   optional data to send to the script. Use JSON to pass more than a string.
      */
     public void run(final Screen screen, final String data) {
         final ScriptExecutor scriptExecutor = mEngine.getScriptExecutor();
@@ -61,6 +62,7 @@ public class Script {
 
     /**
      * Change the script's name
+     *
      * @param name new name
      */
     public void setName(String name) {
@@ -69,18 +71,19 @@ public class Script {
     }
 
     /**
-     * Set the path of this script. This is useful to group scripts by owner and/or category.
-     * @param path use "/" as separator
-     */
-    public void setPath(String path) {
-        mScript.setRelativePath(path);
-    }
-
-    /**
      * Retrieve the path of the script. Default is "/".
      */
     public String getPath() {
         return mScript.getRelativePath();
+    }
+
+    /**
+     * Set the path of this script. This is useful to group scripts by owner and/or category.
+     *
+     * @param path use "/" as separator
+     */
+    public void setPath(String path) {
+        mScript.setRelativePath(path);
     }
 
     /**
@@ -113,6 +116,7 @@ public class Script {
 
     /**
      * Check for the presence of a given flag
+     *
      * @param flag one of FLAG_*
      * @return true if the flag is set
      */
@@ -122,20 +126,12 @@ public class Script {
 
     /**
      * Set a flag
+     *
      * @param flag one of FLAG_*
-     * @param on whether to set or clear the flag
+     * @param on   whether to set or clear the flag
      */
     public void setFlag(int flag, boolean on) {
         mScript.setFlag(flag, on);
-        save();
-    }
-
-    /**
-     * Set a persistent tag data for the currently executing script. This value will be saved and can be retrieved later using {@link #getTag()}, including after an application restart.
-     * @param tag data to store. Use JSON to pass more than a string.
-     */
-    public void setTag(String tag) {
-        mScript.tag = tag;
         save();
     }
 
@@ -147,12 +143,23 @@ public class Script {
     }
 
     /**
+     * Set a persistent tag data for the currently executing script. This value will be saved and can be retrieved later using {@link #getTag()}, including after an application restart.
+     *
+     * @param tag data to store. Use JSON to pass more than a string.
+     */
+    public void setTag(String tag) {
+        mScript.tag = tag;
+        save();
+    }
+
+    /**
      * Set a custom and persistent data for this container.
      * Using a null id is the same as using {@link #setTag(String)} without the id argument.
+     *
      * @see Item#setTag(String, String)
      */
     public void setTag(String id, String value) {
-        if(id == null) {
+        if (id == null) {
             setTag(value);
         } else {
             if (value == null) {
@@ -172,10 +179,11 @@ public class Script {
     /**
      * Returns the value associated with this container. Can be undefined if it has never been set.
      * Using a null id is the same as using {@link #getTag()} without argument.
+     *
      * @see Item#getTag(String)
      */
     public String getTag(String id) {
-        if(id == null) {
+        if (id == null) {
             return getTag();
         } else {
             return mScript.tags == null ? null : mScript.tags.get(id);

@@ -91,6 +91,35 @@ public class EventActionSetup extends ResourceWrapperActivity implements Adapter
     private boolean mEventActionForPickNew;
     private LightningEngine mAppEngine;
 
+    public static void startActivityForResult(Activity activity, EventAction ea, boolean forItem, int type, boolean forShortcut, int requestCode) {
+        Intent intent = new Intent(activity, EventActionSetup.class);
+        intent.putExtra(INTENT_EXTRA_FOR_ITEM, forItem);
+        intent.putExtra(INTENT_EXTRA_FOR_SHORTCUT, forShortcut);
+        intent.putExtra(INTENT_EXTRA_TYPE, type);
+        if (ea != null) {
+            JSONObject out = new JSONObject();
+            JsonLoader.toJSONObject(out, ea, null);
+            intent.putExtra(INTENT_EXTRA_EVENT_ACTION_LIST, out.toString());
+        }
+        activity.startActivityForResult(intent, requestCode);
+    }
+
+    public static EventAction getEventActionFromIntent(Intent intent) {
+        String s = intent.getStringExtra(INTENT_EXTRA_EVENT_ACTION_LIST);
+        if (s != null) {
+            try {
+                JSONObject json = new JSONObject(s);
+                EventAction ea = new EventAction();
+                JsonLoader.loadFieldsFromJSONObject(ea, json, null);
+                return ea;
+            } catch (JSONException e) {
+                // pass
+            }
+        }
+
+        return null;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Utils.setTheme(this, Utils.APP_THEME_NO_ACTION_BAR);
@@ -107,12 +136,12 @@ public class EventActionSetup extends ResourceWrapperActivity implements Adapter
         mType = intent.getIntExtra(INTENT_EXTRA_TYPE, Action.FLAG_TYPE_DESKTOP);
 
         String s;
-        if(savedInstanceState != null) {
+        if (savedInstanceState != null) {
             s = savedInstanceState.getString(INTENT_EXTRA_EVENT_ACTION_LIST);
 
             String p = savedInstanceState.getString(SIS_EVENT_ACTION_PICK);
             mEventActionForPickNew = savedInstanceState.getBoolean(SIS_EVENT_ACTION_PICK_NEW);
-            if(p != null) {
+            if (p != null) {
                 mEventActionForPick = new EventAction();
                 try {
                     JsonLoader.loadFieldsFromJSONObject(mEventActionForPick, new JSONObject(p), null);
@@ -161,13 +190,13 @@ public class EventActionSetup extends ResourceWrapperActivity implements Adapter
         Window window = getWindow();
         window.setBackgroundDrawable(decorView.getBackground());
         window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
-        View dialogContent = ((ViewGroup)decorView.findViewById(android.R.id.content)).getChildAt(0);
-        ((ViewGroup)dialogContent.getParent()).removeView(dialogContent);
+        View dialogContent = ((ViewGroup) decorView.findViewById(android.R.id.content)).getChildAt(0);
+        ((ViewGroup) dialogContent.getParent()).removeView(dialogContent);
         dialog.dismiss();
 
         setContentView(dialogContent);
 
-        final DragSortListView list = (DragSortListView) dialogContent.findViewById(android.R.id.list);
+        final DragSortListView list = dialogContent.findViewById(android.R.id.list);
         mAdapter = new EventActionAdapter(this, mEventActions);
         list.setAdapter(mAdapter);
         list.setOnItemClickListener(this);
@@ -196,7 +225,7 @@ public class EventActionSetup extends ResourceWrapperActivity implements Adapter
             }
         });
 
-        if(mEventActions.size() == 0) {
+        if (mEventActions.size() == 0) {
             addAction();
         }
     }
@@ -212,39 +241,10 @@ public class EventActionSetup extends ResourceWrapperActivity implements Adapter
 
         outState.putString(INTENT_EXTRA_EVENT_ACTION_LIST, serializeEventAction());
 
-        if(mEventActionForPick != null) {
+        if (mEventActionForPick != null) {
             outState.putString(SIS_EVENT_ACTION_PICK, JsonLoader.toJSONObject(mEventActionForPick, null).toString());
             outState.putBoolean(SIS_EVENT_ACTION_PICK_NEW, mEventActionForPickNew);
         }
-    }
-
-    public static void startActivityForResult(Activity activity, EventAction ea, boolean forItem, int type, boolean forShortcut, int requestCode) {
-        Intent intent = new Intent(activity, EventActionSetup.class);
-        intent.putExtra(INTENT_EXTRA_FOR_ITEM, forItem);
-        intent.putExtra(INTENT_EXTRA_FOR_SHORTCUT, forShortcut);
-        intent.putExtra(INTENT_EXTRA_TYPE, type);
-        if(ea != null) {
-            JSONObject out = new JSONObject();
-            JsonLoader.toJSONObject(out, ea, null);
-            intent.putExtra(INTENT_EXTRA_EVENT_ACTION_LIST, out.toString());
-        }
-        activity.startActivityForResult(intent, requestCode);
-    }
-
-    public static EventAction getEventActionFromIntent(Intent intent) {
-        String s = intent.getStringExtra(INTENT_EXTRA_EVENT_ACTION_LIST);
-        if(s != null) {
-            try {
-                JSONObject json = new JSONObject(s);
-                EventAction ea = new EventAction();
-                JsonLoader.loadFieldsFromJSONObject(ea, json, null);
-                return ea;
-            } catch (JSONException e) {
-                // pass
-            }
-        }
-
-        return null;
     }
 
     @Override
@@ -254,14 +254,14 @@ public class EventActionSetup extends ResourceWrapperActivity implements Adapter
 
     private void deserializeEventActionList(String s) {
         mEventActions = new ArrayList<>();
-        if(s != null) {
+        if (s != null) {
             try {
                 JSONObject json = new JSONObject(s);
                 EventAction ea = new EventAction();
                 JsonLoader.loadFieldsFromJSONObject(ea, json, null);
 
-                while(ea != null) {
-                    if(ea.action != GlobalConfig.UNSET) {
+                while (ea != null) {
+                    if (ea.action != GlobalConfig.UNSET) {
                         mEventActions.add(ea);
                     }
                     EventAction ea_tmp = ea.next;
@@ -278,8 +278,8 @@ public class EventActionSetup extends ResourceWrapperActivity implements Adapter
         EventAction current = null;
         EventAction first = null;
         for (EventAction ea : mEventActions) {
-            if(ea.action == GlobalConfig.UNSET) continue;
-            if(current == null) {
+            if (ea.action == GlobalConfig.UNSET) continue;
+            if (current == null) {
                 current = ea;
                 first = ea;
             } else {
@@ -288,7 +288,7 @@ public class EventActionSetup extends ResourceWrapperActivity implements Adapter
             }
         }
 
-        if(first == null) {
+        if (first == null) {
             first = new EventAction(GlobalConfig.UNSET, null);
         }
         JSONObject out = JsonLoader.toJSONObject(first, null);
@@ -304,7 +304,7 @@ public class EventActionSetup extends ResourceWrapperActivity implements Adapter
     private void saveAndFinish() {
         String serializedEventAction = serializeEventAction();
         Intent intent;
-        if(mForShortcut) {
+        if (mForShortcut) {
             Intent i = new Intent(this, Dashboard.class);
             i.putExtra(LightningIntent.INTENT_EXTRA_EVENT_ACTION, serializedEventAction);
             String name = mActions.getActionName(mEventActions.size() == 0 ? GlobalConfig.UNSET : mEventActions.get(0).action);
@@ -352,7 +352,10 @@ public class EventActionSetup extends ResourceWrapperActivity implements Adapter
             Intent i = new Intent(Intent.ACTION_PICK_ACTIVITY);
             i.putExtra(Intent.EXTRA_INTENT, new Intent(Intent.ACTION_CREATE_SHORTCUT));
             i.putExtra(Intent.EXTRA_TITLE, getString(R.string.tools_pick_shortcut));
-            try { startActivityForResult(i, REQUEST_PICK_SHORTCUT1); } catch (Exception e) { }
+            try {
+                startActivityForResult(i, REQUEST_PICK_SHORTCUT1);
+            } catch (Exception e) {
+            }
         } else if (new_action == GlobalConfig.RUN_SCRIPT) {
             ScriptPickerDialog dialog = new ScriptPickerDialog(this, mAppEngine, ea.data, Script.TARGET_NONE, new ScriptPickerDialog.OnScriptPickerEvent() {
                 @Override
@@ -363,7 +366,7 @@ public class EventActionSetup extends ResourceWrapperActivity implements Adapter
 
                 @Override
                 public void onScriptPickerCanceled() {
-                    if(mEventActionForPickNew) {
+                    if (mEventActionForPickNew) {
                         mEventActions.remove(mEventActionForPick);
                         mAdapter.notifyDataSetChanged();
                     }
@@ -380,7 +383,7 @@ public class EventActionSetup extends ResourceWrapperActivity implements Adapter
 
                 @Override
                 public void onNoFolderSelected() {
-                    if(mEventActionForPickNew) {
+                    if (mEventActionForPickNew) {
                         mEventActions.remove(mEventActionForPick);
                         mAdapter.notifyDataSetChanged();
                     }
@@ -401,7 +404,7 @@ public class EventActionSetup extends ResourceWrapperActivity implements Adapter
 
                 @Override
                 public void onSetVariableCancel() {
-                    if(mEventActionForPickNew) {
+                    if (mEventActionForPickNew) {
                         mEventActions.remove(mEventActionForPick);
                         mAdapter.notifyDataSetChanged();
                     }
@@ -416,7 +419,7 @@ public class EventActionSetup extends ResourceWrapperActivity implements Adapter
             if (resultCode == RESULT_OK) {
                 startActivityForResult(data, REQUEST_PICK_SHORTCUT2);
             } else {
-                if(mEventActionForPickNew) {
+                if (mEventActionForPickNew) {
                     mEventActions.remove(mEventActionForPick);
                     mAdapter.notifyDataSetChanged();
                 }
@@ -431,7 +434,7 @@ public class EventActionSetup extends ResourceWrapperActivity implements Adapter
                     e.printStackTrace();
                 }
             } else {
-                if(mEventActionForPickNew) {
+                if (mEventActionForPickNew) {
                     mEventActions.remove(mEventActionForPick);
                     mAdapter.notifyDataSetChanged();
                 }
@@ -441,58 +444,11 @@ public class EventActionSetup extends ResourceWrapperActivity implements Adapter
         }
     }
 
-    private class EventActionAdapter extends ArrayAdapter<EventAction> implements View.OnClickListener {
-
-        public EventActionAdapter(Context context, List<EventAction> objects) {
-            super(context, 0, objects);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if(convertView == null) {
-                convertView = getLayoutInflater().inflate(R.layout.event_action_item, parent, false);
-                TextView drag = (TextView) convertView.findViewById(R.id.drag);
-                drag.setTypeface(LLApp.get().getIconsTypeface());
-                TextView delete = (TextView) convertView.findViewById(R.id.delete);
-                delete.setOnClickListener(this);
-                delete.setTypeface(LLApp.get().getIconsTypeface());
-            }
-
-            EventAction ea = getItem(position);
-
-            TextView title = (TextView) convertView.findViewById(android.R.id.text1);
-            title.setText(mActions.getActionName(ea.action));
-
-            String summaryText = ea.describe(mAppEngine);
-            TextView summary = (TextView) convertView.findViewById(android.R.id.text2);
-            if(summaryText == null) {
-                title.setSingleLine(false);
-                title.setMaxLines(2);
-                summary.setVisibility(View.GONE);
-            } else {
-                title.setSingleLine(true);
-                summary.setVisibility(View.VISIBLE);
-                summary.setText(summaryText);
-            }
-
-            convertView.findViewById(R.id.delete).setTag(ea);
-
-            return convertView;
-        }
-
-        @Override
-        public void onClick(View view) {
-            EventAction ea = (EventAction) view.getTag();
-            mEventActions.remove(ea);
-            mAdapter.notifyDataSetChanged();
-        }
-    }
-
     private static class ActionsAdapter extends ArrayAdapter<Action> {
 
         private final LayoutInflater mInflater;
-        private int mPrefLayout;
-        private int mPrefCategoryLayout;
+        private final int mPrefLayout;
+        private final int mPrefCategoryLayout;
 
         public ActionsAdapter(Context context, ActionsDescription actionsDescription) {
             super(context, 0, filterActions(actionsDescription));
@@ -508,7 +464,7 @@ public class EventActionSetup extends ResourceWrapperActivity implements Adapter
             ArrayList<Action> filteredActions = new ArrayList<>(actions.size());
 
             for (Action action : actions) {
-                if(action.action != GlobalConfig.UNSET) {
+                if (action.action != GlobalConfig.UNSET) {
                     filteredActions.add(action);
                 }
             }
@@ -530,21 +486,68 @@ public class EventActionSetup extends ResourceWrapperActivity implements Adapter
         public View getView(int position, View convertView, ViewGroup parent) {
             Action action = getItem(position);
             boolean isCategory = action.action == GlobalConfig.CATEGORY;
-            if(convertView == null) {
+            if (convertView == null) {
                 convertView = mInflater.inflate(isCategory ? mPrefCategoryLayout : mPrefLayout, parent, false);
             }
 
-            TextView title_view = (TextView) convertView.findViewById(android.R.id.title);
+            TextView title_view = convertView.findViewById(android.R.id.title);
             title_view.setText(action.label);
-            if(!isCategory) {
+            if (!isCategory) {
                 title_view.setSingleLine(false);
                 title_view.setMaxLines(2);
                 convertView.findViewById(android.R.id.summary).setVisibility(View.GONE);
                 View icon = convertView.findViewById(android.R.id.icon);
-                if(icon != null) icon.setVisibility(View.GONE);
+                if (icon != null) icon.setVisibility(View.GONE);
             }
 
             return convertView;
+        }
+    }
+
+    private class EventActionAdapter extends ArrayAdapter<EventAction> implements View.OnClickListener {
+
+        public EventActionAdapter(Context context, List<EventAction> objects) {
+            super(context, 0, objects);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                convertView = getLayoutInflater().inflate(R.layout.event_action_item, parent, false);
+                TextView drag = convertView.findViewById(R.id.drag);
+                drag.setTypeface(LLApp.get().getIconsTypeface());
+                TextView delete = convertView.findViewById(R.id.delete);
+                delete.setOnClickListener(this);
+                delete.setTypeface(LLApp.get().getIconsTypeface());
+            }
+
+            EventAction ea = getItem(position);
+
+            TextView title = convertView.findViewById(android.R.id.text1);
+            title.setText(mActions.getActionName(ea.action));
+
+            String summaryText = ea.describe(mAppEngine);
+            TextView summary = convertView.findViewById(android.R.id.text2);
+            if (summaryText == null) {
+                title.setSingleLine(false);
+                title.setMaxLines(2);
+                summary.setVisibility(View.GONE);
+            } else {
+                title.setSingleLine(true);
+                summary.setVisibility(View.VISIBLE);
+                summary.setText(summaryText);
+            }
+
+            convertView.findViewById(R.id.delete).setTag(ea);
+
+            return convertView;
+        }
+
+        @Override
+        public void onClick(View view) {
+            EventAction ea = (EventAction) view.getTag();
+            mEventActions.remove(ea);
+            mAdapter.notifyDataSetChanged();
         }
     }
 }

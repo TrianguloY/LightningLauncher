@@ -185,43 +185,50 @@ import java.util.List;
 import java.util.Stack;
 
 
-
-
 public class Dashboard extends ResourceWrapperActivity implements OnLongClickListener, OnClickListener, View.OnTouchListener, Setup.OnFirstTimeInitEvent, UndoStack.UndoListener, HierarchyScreen.HierarchyScreenListener {
 
-    private static final int DIALOG_APP_NOT_INSTALLED=1;
-    private static final int DIALOG_FIRST_USE=202;
-    private static final int DIALOG_ADD=203;
-    private static final int DIALOG_IMPORT_LL=204;
-    private static final int DIALOG_STOP_POINT=206;
-    private static final int DIALOG_WRAP=207;
-    private static final int DIALOG_LAUNCHER_APPS_NO_HOST_PERMISSION =208;
+    public static final int REQUEST_FROM_CUSTOMIZE_VIEW = 100;
+    public static final String BROADCAST_ACTION_LOCKED = LLApp.LLX_PKG_NAME + ".ACTION_LOCKED";
+    public static final String BROADCAST_ACTION_UNLOCKED = LLApp.LLX_PKG_NAME + ".ACTION_UNLOCKED";
+    protected static final int BUBBLE_MODE_ITEM_EM = 2;
+    protected static final int BUBBLE_MODE_ITEM_POSITION = 4;
+    protected static final int BUBBLE_MODE_SETTINGS = 7;
+    protected static final int BUBBLE_MODE_ITEMS = 8;
+    protected static final int BUBBLE_MODE_ITEM_NO_EM = 12;
+    protected static final int BUBBLE_MODE_LIGHTNING_MENU_NO_EM = 13;
+    protected static final int BUBBLE_MODE_SELECT = 14;
+    protected static final int BUBBLE_MODE_APP_SHORTCUTS = 15;
+    private static final int DIALOG_APP_NOT_INSTALLED = 1;
+    private static final int DIALOG_FIRST_USE = 202;
+    private static final int DIALOG_ADD = 203;
+    private static final int DIALOG_IMPORT_LL = 204;
+    private static final int DIALOG_STOP_POINT = 206;
+    private static final int DIALOG_WRAP = 207;
+    private static final int DIALOG_LAUNCHER_APPS_NO_HOST_PERMISSION = 208;
+    private static final String SIS_NAVIGATION = "a";
+    private static final String SIS_ALLOCATED_APP_WIDGET_ID = "b";
+    private static final String SIS_TMP_ITEM_ID = "c";
+    private static final String SIS_MODIFYING_WIDGET = "d";
 
-	private static final String SIS_NAVIGATION="a";
-	private static final String SIS_ALLOCATED_APP_WIDGET_ID="b";
-	private static final String SIS_TMP_ITEM_ID="c";
-	private static final String SIS_MODIFYING_WIDGET="d";
-	private static final String SIS_TMP_COMPONENT_NAME ="i";
-	private static final String SIS_ACTIVITY_RESULT_SCRIPT_ID ="j";
-	private static final String SIS_ACTIVITY_RESULT_SCRIPT_TOKEN ="k";
-	private static final String SIS_EDIT_MODE = "l";
-	private static final String SIS_EDIT_ITEM_LAYOUT_PATH = "m";
-	private static final String SIS_EDIT_MASTER_SELECTED_ITEM_ID = "n";
+    //	private static final int EDIT_BACKGROUND_COLOR_SELECTED=0x80ffffff;
+//	private static final int EDIT_BACKGROUND_COLOR_MOVE_OK=0xa000a000;
+//	private static final int EDIT_BACKGROUND_COLOR_MOVE_KO=0xa0a00000;
+//	private static final int EDIT_BACKGROUND_COLOR_FOLDER=0xa0008000;
+    private static final String SIS_TMP_COMPONENT_NAME = "i";
+    private static final String SIS_ACTIVITY_RESULT_SCRIPT_ID = "j";
+    private static final String SIS_ACTIVITY_RESULT_SCRIPT_TOKEN = "k";
+    private static final String SIS_EDIT_MODE = "l";
+    private static final String SIS_EDIT_ITEM_LAYOUT_PATH = "m";
+    private static final String SIS_EDIT_MASTER_SELECTED_ITEM_ID = "n";
     private static final String SIS_HAVE_PROPERTIES_BOX = "o";
     private static final String SIS_PROPERTIES_BOX_VISIBLE = "p";
     private static final String SIS_EDIT_SELECTED_ITEMS_IDS = "q";
     private static final String SIS_SCRIPT_EXECUTOR_ENGINE_BASE_DIR_FOR_PICK = "r";
     private static final String SIS_EDIT_PAGE_ENGINE_DIR = "s";
-
-//	private static final int EDIT_BACKGROUND_COLOR_SELECTED=0x80ffffff;
-//	private static final int EDIT_BACKGROUND_COLOR_MOVE_OK=0xa000a000;
-//	private static final int EDIT_BACKGROUND_COLOR_MOVE_KO=0xa0a00000;
-//	private static final int EDIT_BACKGROUND_COLOR_FOLDER=0xa0008000;
-	
-	private static final int REQUEST_SELECT_APP_FOR_ADD = 0;
-	private static final int REQUEST_SELECT_SHORTCUT_FOR_ADD1 = 1;
-	private static final int REQUEST_SELECT_APP_WIDGET_FOR_ADD = 3;
-//    private static final int REQUEST_SELECT_LL_WIDGET_FOR_ADD = 4;
+    private static final int REQUEST_SELECT_APP_FOR_ADD = 0;
+    private static final int REQUEST_SELECT_SHORTCUT_FOR_ADD1 = 1;
+    private static final int REQUEST_SELECT_APP_WIDGET_FOR_ADD = 3;
+    //    private static final int REQUEST_SELECT_LL_WIDGET_FOR_ADD = 4;
     private static final int REQUEST_CREATE_APP_WIDGET = 5;
     private static final int REQUEST_SELECT_APP_FOR_PICK = 6;
     private static final int REQUEST_SELECT_SCREEN_FOR_MOVE = 7;
@@ -238,28 +245,14 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
     private static final int REQUEST_PICK_CUSTOM_ICON = 18;
     private static final int REQUEST_SCRIPT_CROP_IMAGE = 19;
     private static final int REQUEST_EDIT_LAUNCH_ACTION = 20;
-    public static final int REQUEST_FROM_CUSTOMIZE_VIEW = 100;
-
-    private static final String BROADCAST_ACTION_DISPLAY_PAGE = LLApp.LL_PKG_NAME+".ACTION_DISPLAY_PAGE";
-	private static final String BROADCAST_ACTION_RELOAD = LLApp.LLX_PKG_NAME+".ACTION_RELOAD";
-	public static final String BROADCAST_ACTION_LOCKED = LLApp.LLX_PKG_NAME+".ACTION_LOCKED";
-	public static final String BROADCAST_ACTION_UNLOCKED = LLApp.LLX_PKG_NAME+".ACTION_UNLOCKED";
-
-
+    private static final String BROADCAST_ACTION_DISPLAY_PAGE = LLApp.LL_PKG_NAME + ".ACTION_DISPLAY_PAGE";
+    private static final String BROADCAST_ACTION_RELOAD = LLApp.LLX_PKG_NAME + ".ACTION_RELOAD";
     private static final int BUBBLE_MODE_NONE = 0;
     private static final int BUBBLE_MODE_LIGHTNING_MENU_EM = 1;
-    protected static final int BUBBLE_MODE_ITEM_EM = 2;
     private static final int BUBBLE_MODE_ITEM_EDIT = 3;
-    protected static final int BUBBLE_MODE_ITEM_POSITION = 4;
     private static final int BUBBLE_MODE_ITEM_ACTIONS = 6;
-    protected static final int BUBBLE_MODE_SETTINGS = 7;
-    protected static final int BUBBLE_MODE_ITEMS = 8;
     private static final int BUBBLE_MODE_SCRIPTS = 9;
     private static final int BUBBLE_MODE_CUSTOM_MENU = 10;
-    protected static final int BUBBLE_MODE_ITEM_NO_EM = 12;
-    protected static final int BUBBLE_MODE_LIGHTNING_MENU_NO_EM = 13;
-    protected static final int BUBBLE_MODE_SELECT = 14;
-    protected static final int BUBBLE_MODE_APP_SHORTCUTS = 15;
     private static final int BUBBLE_MODE_HINT_APP_DRAWER = -1;
     private static final int BUBBLE_MODE_HINT_FOLDER = -2;
     private static final int BUBBLE_MODE_HINT_PANEL = -3;
@@ -270,92 +263,80 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
     private static final int BUBBLE_MODE_HINT_BOOKMARK = -8;
     private static final int BUBBLE_MODE_HINT_CUSTOM_VIEW = -9;
     private static final int BUBBLE_MODE_HINT_LOCKED = -10;
-    private static final int[][] BUBBLE_HINTS = new int[][] {
-            { BUBBLE_MODE_HINT_APP_DRAWER, SystemConfig.HINT_APP_DRAWER, R.string.h_ad},
-            { BUBBLE_MODE_HINT_FOLDER, SystemConfig.HINT_FOLDER, R.string.h_f},
-            { BUBBLE_MODE_HINT_PANEL, SystemConfig.HINT_PANEL, R.string.h_p},
-            { BUBBLE_MODE_HINT_DESKTOP, SystemConfig.HINT_DESKTOP, R.string.h_k},
-            { BUBBLE_MODE_HINT_SIDE_BAR, SystemConfig.HINT_SIDE_BAR, R.string.h_sb},
-            { BUBBLE_MODE_HINT_PAGE_INDICATOR, SystemConfig.HINT_PAGE_INDICATOR, R.string.h_pi},
-            { BUBBLE_MODE_HINT_STOP_POINT, SystemConfig.HINT_STOP_POINT, R.string.h_sp},
-            { BUBBLE_MODE_HINT_BOOKMARK, SystemConfig.HINT_BOOKMARK, R.string.h_b},
-            { BUBBLE_MODE_HINT_CUSTOM_VIEW, SystemConfig.HINT_CUSTOM_VIEW, R.string.h_cv},
-            { BUBBLE_MODE_HINT_LOCKED, SystemConfig.HINT_LOCKED, R.string.h_cl},
+    private static final int[][] BUBBLE_HINTS = new int[][]{
+            {BUBBLE_MODE_HINT_APP_DRAWER, SystemConfig.HINT_APP_DRAWER, R.string.h_ad},
+            {BUBBLE_MODE_HINT_FOLDER, SystemConfig.HINT_FOLDER, R.string.h_f},
+            {BUBBLE_MODE_HINT_PANEL, SystemConfig.HINT_PANEL, R.string.h_p},
+            {BUBBLE_MODE_HINT_DESKTOP, SystemConfig.HINT_DESKTOP, R.string.h_k},
+            {BUBBLE_MODE_HINT_SIDE_BAR, SystemConfig.HINT_SIDE_BAR, R.string.h_sb},
+            {BUBBLE_MODE_HINT_PAGE_INDICATOR, SystemConfig.HINT_PAGE_INDICATOR, R.string.h_pi},
+            {BUBBLE_MODE_HINT_STOP_POINT, SystemConfig.HINT_STOP_POINT, R.string.h_sp},
+            {BUBBLE_MODE_HINT_BOOKMARK, SystemConfig.HINT_BOOKMARK, R.string.h_b},
+            {BUBBLE_MODE_HINT_CUSTOM_VIEW, SystemConfig.HINT_CUSTOM_VIEW, R.string.h_cv},
+            {BUBBLE_MODE_HINT_LOCKED, SystemConfig.HINT_LOCKED, R.string.h_cl},
     };
 
-    private static DecimalFormat sGeometryEditValueFormat = new DecimalFormat("0.###");
+    private static final DecimalFormat sGeometryEditValueFormat = new DecimalFormat("0.###");
+    private static final long DROP_FOLDER_DELAY = 1000;
+    private static final int PAGER_ANIMATION_NONE = 0;
+    private static final int PAGER_ANIMATION_BACKWARD = 1;
+    private static final int PAGER_ANIMATION_FORWARD = 2;
+    private static final long ANIMATE_EDIT_BAR_DURATION = 200;
+    private static Method sBindAppWidgetIdIfAllowed;
 
+    static {
+        try {
+            sBindAppWidgetIdIfAllowed = AppWidgetManager.class.getMethod("bindAppWidgetIdIfAllowed", int.class, ComponentName.class);
+        } catch (NoSuchMethodException e) {
+        }
+    }
+
+    private final boolean mItemSwipeCaught = true;
+    private final SparseArray<SavedItemGeometry> mTrackedItemsGeometry = new SparseArray<>(1);
+    // indexed using the id of the item responsible for the swap
+    private final SparseArray<ArrayList<ItemView>> mSwappedItems = new SparseArray<>();
+    private final int[] mTempCoords = new int[2];
+    private final int[] mTmpInt = new int[2];
     protected LightningEngine mEngine;
     protected Screen mScreen;
 
+    //	private boolean mIsOptionsMenuOpened;
     protected Handler mHandler;
-
-    private boolean mSetupInProgress;
-
-	private ViewAnimator mViewAnimator;
-    private ViewGroup mEditControlsView;
-
-    private HierarchyScreen mHierarchyScreen;
-
-	protected SystemConfig mSystemConfig;
-
+    protected SystemConfig mSystemConfig;
     // TODO: usage of this should be reduced as much as possible
-	protected GlobalConfig mGlobalConfig;
-
+    protected GlobalConfig mGlobalConfig;
     protected Stack<Integer> mNavigationStack;
-
-    private Dialog mDialog;
-    
-	private long mOnPauseDate;
-	private boolean mNewIntent;
-	private boolean mEatNextHome;
-
-//	private boolean mIsOptionsMenuOpened;
-	
-	private Animation mFadeInAnim;
-	private Animation mFadeOutAnim;
-	private AnimationSet mSlideHLeftInAnim;
-	private AnimationSet mSlideHRightOutAnim;
-	private AnimationSet mSlideHRightInAnim;
-	private AnimationSet mSlideHLeftOutAnim;
-	private AnimationSet mSlideVUpInAnim;
-	private AnimationSet mSlideVDownOutAnim;
-	private AnimationSet mSlideVDownInAnim;
-	private AnimationSet mSlideVUpOutAnim;
-
-    private ItemConfig.LaunchAnimation mLastLaunchAnimation;
-
-
-    private Item mCopyStyleFromItem;
-    
-    private boolean mItemSwipeCaught=true;
-    
-    private int mAllocatedAppWidgetId;
-//    private int mReplacedAppWidgetId=-1;
-    
     protected boolean mEditMode;
-
-    private Page mEditPage;
     protected ItemLayout mEditItemLayout;
-
-    private SparseArray<SavedItemGeometry> mTrackedItemsGeometry = new SparseArray<>(1);
-
-    private float mCurrentMoveItemDx;
-    private float mCurrentMoveItemDy;
-    private Handle mTrackedHandle;
     protected boolean mMoveStarted;
-    private Item mItemLongTappedInNormalMode;
-
-    private ItemView mDropFolderView;
-    private ItemView mCandidateDropFolderView;
-    private int mOldItemAlpha;
-    private long mSelectDropFolderStartTime;
-    private Runnable mSelectDropFolder=new Runnable() {
+    protected SparseArray<SavedItemGeometry> mOriginalItemsGeometry = new SparseArray<>();
+    protected Rect mTempRect = new Rect();
+    protected RectF mTempRectF = new RectF();
+    protected UndoStack mUndoStack;
+    protected int mBubbleMode = BUBBLE_MODE_NONE;
+    protected BubbleLayout mBubble;
+    protected ItemLayout mBubbleItemLayout;
+    //    private int mReplacedAppWidgetId=-1;
+    protected ItemView mBubbleItemView;
+    protected boolean mIsAndroidActionBarDisplayed;
+    protected Function mABOnCreateOptionsMenu;
+    protected Function mABOnOptionsItemSelected;
+    private boolean mSetupInProgress;
+    private ViewAnimator mViewAnimator;
+    private ViewGroup mEditControlsView;
+    private HierarchyScreen mHierarchyScreen;
+    private Dialog mDialog;
+    private long mOnPauseDate;
+    private boolean mNewIntent;
+    private boolean mEatNextHome;
+    private Animation mFadeInAnim;
+    private Animation mFadeOutAnim;
+    private final Runnable mSelectDropFolder = new Runnable() {
         @Override
         public void run() {
             long now = SystemClock.uptimeMillis();
             long delta = now - mSelectDropFolderStartTime;
-            if(delta > DROP_FOLDER_DELAY) {
+            if (delta > DROP_FOLDER_DELAY) {
                 mDropFolderView = mCandidateDropFolderView;
                 mCandidateDropFolderView = null;
                 mDropFolderView.setBackgroundColor(0);
@@ -364,39 +345,41 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 //                mOldItemAlpha = mMasterSelectedItem.getAlpha();
 //                mMasterSelectedItem.setAlpha(120);
             } else {
-                int alpha = (int)(delta * 255 / DROP_FOLDER_DELAY);
+                int alpha = (int) (delta * 255 / DROP_FOLDER_DELAY);
                 int color = Color.argb(alpha, 255, 255, 255);
                 mCandidateDropFolderView.setBackgroundColor(color);
                 mHandler.post(mSelectDropFolder);
             }
         }
     };
-    private static final long DROP_FOLDER_DELAY = 1000;
-
-    // indexed using the id of the item responsible for the swap
-    private SparseArray<ArrayList<ItemView>> mSwappedItems = new SparseArray<>();
-
-    protected SparseArray<SavedItemGeometry> mOriginalItemsGeometry = new SparseArray<>();
-
+    private AnimationSet mSlideHLeftInAnim;
+    private AnimationSet mSlideHRightOutAnim;
+    private AnimationSet mSlideHRightInAnim;
+    private AnimationSet mSlideHLeftOutAnim;
+    private AnimationSet mSlideVUpInAnim;
+    private AnimationSet mSlideVDownOutAnim;
+    private AnimationSet mSlideVDownInAnim;
+    private AnimationSet mSlideVUpOutAnim;
+    private ItemConfig.LaunchAnimation mLastLaunchAnimation;
+    private Item mCopyStyleFromItem;
+    private int mAllocatedAppWidgetId;
+    private Page mEditPage;
+    private float mCurrentMoveItemDx;
+    private float mCurrentMoveItemDy;
+    private Handle mTrackedHandle;
+    private Item mItemLongTappedInNormalMode;
+    private ItemView mDropFolderView;
+    private ItemView mCandidateDropFolderView;
+    private int mOldItemAlpha;
+    private long mSelectDropFolderStartTime;
     private Item mTmpItem;
-
     private ComponentName mTmpComponentName;
-
     private int mActivityResultScriptId = Script.NO_ID;
     private String mActivityResultScriptToken;
-
     // the script executor to call back when a script issues a call that can be interrupted (activity destroyed/recreated while picking an image)
     private ScriptExecutor mScriptExecutorForCallback;
-
     // widget currently in modification (need to reload it on resume)
     private Item mModifyingWidget;
-
-	protected Rect mTempRect=new Rect();
-	protected RectF mTempRectF=new RectF();
-	private int[] mTempCoords=new int[2];
-
-    protected UndoStack mUndoStack;
-
     private LinearLayout mEditActionBox;
     private ViewGroup mEditPropertiesContainer;
     private View mEditPropertiesHandle;
@@ -408,78 +391,57 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
     private CustomizeItemView mEditPropertiesBox;
     private View mEditBarRight;
     private View mEditBarBottom;
-    private boolean mEditBarsVisible;
-    private EditBarHiderView mEditBarHider;
-    private float mEditBarsScale;
-    private int mEditBarsWidth;
-    private int mEditBarsHeight;
-    private int mEditBarsSize;
-
-    private View mGeometryBox;
-    private int mGeometryMode;
-    private Button mGeometryEdit1;
-    private Button mGeometryEdit2;
-    private int mGeometryEdit;
-    private boolean mHasGeometryRepeat;
-    private Runnable mGeometryRepeat = new Runnable() {
+    private final Runnable mGeometryRepeat = new Runnable() {
         @Override
         public void run() {
             boolean masterOnGrid = mEditItemLayout.getMasterSelectedItem().getItemConfig().onGrid;
             for (ItemView itemView : getSelectedItemViews()) {
-                if(itemView.getItem().getItemConfig().onGrid == masterOnGrid) {
+                if (itemView.getItem().getItemConfig().onGrid == masterOnGrid) {
                     incrementCurrentGeometryValue(itemView.getItem(), mGeometryEdit);
                 }
             }
             mGeometryBox.postDelayed(mGeometryRepeat, 50);
         }
     };
-
-
+    private boolean mEditBarsVisible;
+    private EditBarHiderView mEditBarHider;
+    private float mEditBarsScale;
+    private int mEditBarsWidth;
+    private int mEditBarsHeight;
+    private int mEditBarsSize;
+    private View mGeometryBox;
+    private int mGeometryMode;
+    private Button mGeometryEdit1;
+    private Button mGeometryEdit2;
+    private int mGeometryEdit;
+    private boolean mHasGeometryRepeat;
     private int mNoScriptCounter;
-
     private HotwordServiceClient mHotwordServiceClient;
-
     private boolean mPausedBecauseOfLaunch;
-
-    protected int mBubbleMode = BUBBLE_MODE_NONE;
     private Animation mBubbleAnimIn;
     private Animation mBubbleAnimOut;
-    protected BubbleLayout mBubble;
     private LinearLayout mBubbleContent;
-    protected ItemLayout mBubbleItemLayout;
-    protected ItemView mBubbleItemView;
-
-    private Shortcut mNotValidShortcut;
-
-    private WallpaperManager mWallpaperManager;
-
-    protected boolean mIsAndroidActionBarDisplayed;
-    protected Function mABOnCreateOptionsMenu;
-    protected Function mABOnOptionsItemSelected;
-
-    private ItemLayout mEditItemLayoutBeforeLock;
-    private SelectionState mSelectionStateBeforeLock;
-	private BroadcastReceiver mBroadcastReceiver=new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			String action=intent.getAction();
-			if(BROADCAST_ACTION_DISPLAY_PAGE.equals(action)) {
+    private final BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (BROADCAST_ACTION_DISPLAY_PAGE.equals(action)) {
                 // deprecated but still in use by pager widgets
-				int page=intent.getIntExtra("page", Page.FIRST_DASHBOARD_PAGE);
-				if(page< Page.FIRST_DASHBOARD_PAGE || page> Page.LAST_DASHBOARD_PAGE) {
-					page = Page.FIRST_DASHBOARD_PAGE;
-				}
-				removeStickyBroadcast(intent);
-				setPagerPage(page, Screen.PAGE_DIRECTION_HINT_AUTO);
-            } else if(BROADCAST_ACTION_UNLOCKED.equals(action)) {
-                if(mEditItemLayoutBeforeLock != null) {
+                int page = intent.getIntExtra("page", Page.FIRST_DASHBOARD_PAGE);
+                if (page < Page.FIRST_DASHBOARD_PAGE || page > Page.LAST_DASHBOARD_PAGE) {
+                    page = Page.FIRST_DASHBOARD_PAGE;
+                }
+                removeStickyBroadcast(intent);
+                setPagerPage(page, Screen.PAGE_DIRECTION_HINT_AUTO);
+            } else if (BROADCAST_ACTION_UNLOCKED.equals(action)) {
+                if (mEditItemLayoutBeforeLock != null) {
                     enterEditMode(mEditItemLayout, null);
                     setSelectionState(mSelectionStateBeforeLock);
                     mEditItemLayoutBeforeLock = null;
                     mSelectionStateBeforeLock = null;
                 }
-            } else if(BROADCAST_ACTION_LOCKED.equals(action)) {
-                if(mEditMode) {
+            } else if (BROADCAST_ACTION_LOCKED.equals(action)) {
+                if (mEditMode) {
                     // save edit mode state before to lock, it will be restablished after unlock
                     mEditItemLayoutBeforeLock = mEditItemLayout;
                     mSelectionStateBeforeLock = getSelectionState();
@@ -487,18 +449,39 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                 }
                 closeBubble();
             }
-		}
-	};
-
-    private static Method sBindAppWidgetIdIfAllowed;
-
-    static {
-        try {
-            sBindAppWidgetIdIfAllowed = AppWidgetManager.class.getMethod("bindAppWidgetIdIfAllowed", int.class, ComponentName.class);
-        } catch (NoSuchMethodException e) {
         }
-    }
-
+    };
+    private Shortcut mNotValidShortcut;
+    private WallpaperManager mWallpaperManager;
+    private ItemLayout mEditItemLayoutBeforeLock;
+    private SelectionState mSelectionStateBeforeLock;
+    private int mLongPressKeyCode;
+    private boolean mHasLongKeyPress;
+    private final Runnable mLongKeyPressRunnable = new Runnable() {
+        @Override
+        public void run() {
+            mHasLongKeyPress = true;
+            handleLongKeyPress(mLongPressKeyCode);
+        }
+    };
+    private Runnable mSetLiveWallpaperVisibility;
+    private View.OnClickListener mAppShortcutClickListener;
+    private View.OnLongClickListener mAppShortcutLongClickListener;
+    private View.OnClickListener mScriptMenuListener;
+    private SnappingContext mSnappingContext;
+    private int mInitialDownX;
+    private int mInitialDownY;
+    private int mInitialViewLeft;
+    private int mInitialViewTop;
+    private boolean mDraggingHandle;
+    private boolean mAnimateBars;
+    private boolean mAnimateZoom;
+    private boolean mAnimateEditBarHider;
+    private long mAnimateEditBarStart;
+    private Animation mEditActionBoxAnimIn;
+    private Animation mEditActionBoxAnimOut;
+    private Animation mEditPropertiesBoxAnimIn;
+    private Animation mEditPropertiesBoxAnimOut;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -514,22 +497,22 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         mSystemConfig = app.getSystemConfig();
 
         mEngine = app.getAppEngine();
-        mGlobalConfig=mEngine.getGlobalConfig();
+        mGlobalConfig = mEngine.getGlobalConfig();
 
         mScreen = createScreen();
         mScreen.setWindow(getWindow());
 
         View content_view = mScreen.getContentView();
 
-        mEditControlsView = (ViewGroup) content_view.findViewById(R.id.edit_controls);
+        mEditControlsView = content_view.findViewById(R.id.edit_controls);
 
         mHierarchyScreen = new HierarchyScreen(mEngine, mScreen, this);
 
         try {
-            Method getActionBar=getClass().getMethod("getActionBar");
-            Object action_bar=getActionBar.invoke(this, (Object[])null);
-            action_bar.getClass().getMethod("hide").invoke(action_bar, (Object[])null);
-        } catch(Exception e) {
+            Method getActionBar = getClass().getMethod("getActionBar");
+            Object action_bar = getActionBar.invoke(this, (Object[]) null);
+            action_bar.getClass().getMethod("hide").invoke(action_bar, (Object[]) null);
+        } catch (Exception e) {
             // pass, API level 11
         }
 
@@ -546,11 +529,11 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
         mEditBarsSize = getResources().getDimensionPixelSize(R.dimen.eb_bar_size);
 
-        mUndoStack = new UndoStack(this, new File(getCacheDir(), "undo-"+this.getClass().getSimpleName()), 100);
+        mUndoStack = new UndoStack(this, new File(getCacheDir(), "undo-" + this.getClass().getSimpleName()), 100);
         mUndoStack.setUndoListener(this);
 
 
-        if(BuildConfig.HAS_UEC) {
+        if (BuildConfig.HAS_UEC) {
             Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
                 @Override
                 public void uncaughtException(Thread paramThread, Throwable paramThrowable) {
@@ -593,11 +576,11 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
         createActivity(savedInstanceState);
 
-        if(savedInstanceState!=null) {
-            if(savedInstanceState.getBoolean(SIS_EDIT_MODE)) {
+        if (savedInstanceState != null) {
+            if (savedInstanceState.getBoolean(SIS_EDIT_MODE)) {
                 // FIXME: instead of SIS_EDIT_PAGE_ID there should be a full path in order to recover the edit mode in the right item layout
                 String path = savedInstanceState.getString(SIS_EDIT_ITEM_LAYOUT_PATH);
-                if(path != null) {
+                if (path != null) {
                     ItemLayout il = mScreen.prepareItemLayoutForPath(new ContainerPath(path));
 
                     int masterSelectedItemId = savedInstanceState.getInt(SIS_EDIT_MASTER_SELECTED_ITEM_ID);
@@ -623,19 +606,19 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
             }
 
             String baseDir = savedInstanceState.getString(SIS_SCRIPT_EXECUTOR_ENGINE_BASE_DIR_FOR_PICK);
-            if(baseDir != null) {
+            if (baseDir != null) {
                 mScriptExecutorForCallback = app.getEngine(new File(baseDir), true).getScriptExecutor();
             }
 
         }
 
-        if(savedInstanceState!=null) {
+        if (savedInstanceState != null) {
             mScreen.restoreInstanceState(savedInstanceState);
         }
 
         // apply activity configuration
         Page mainPage = mScreen.getCurrentRootPage();
-        if(mainPage != null && !mNewIntent) {
+        if (mainPage != null && !mNewIntent) {
             configureActivity(mainPage);
         }
     }
@@ -655,17 +638,17 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
     protected void createActivity(Bundle savedInstanceState) {
         createDesktopTransitionAnimations();
 
-        mViewAnimator=(ViewAnimator) findViewById(R.id.pager);
+        mViewAnimator = findViewById(R.id.pager);
 
-        mNavigationStack=new Stack<>();
-        if(savedInstanceState!=null) {
-    		mNavigationStack.addAll(savedInstanceState.getIntegerArrayList(SIS_NAVIGATION));
-        	mAllocatedAppWidgetId = savedInstanceState.getInt(SIS_ALLOCATED_APP_WIDGET_ID);
-        	if(savedInstanceState.containsKey(SIS_TMP_ITEM_ID)) {
-	        	int item_id = savedInstanceState.getInt(SIS_TMP_ITEM_ID);
-	        	mTmpItem = mEngine.getItemById(item_id);
-        	}
-            if(savedInstanceState.containsKey(SIS_MODIFYING_WIDGET)) {
+        mNavigationStack = new Stack<>();
+        if (savedInstanceState != null) {
+            mNavigationStack.addAll(savedInstanceState.getIntegerArrayList(SIS_NAVIGATION));
+            mAllocatedAppWidgetId = savedInstanceState.getInt(SIS_ALLOCATED_APP_WIDGET_ID);
+            if (savedInstanceState.containsKey(SIS_TMP_ITEM_ID)) {
+                int item_id = savedInstanceState.getInt(SIS_TMP_ITEM_ID);
+                mTmpItem = mEngine.getItemById(item_id);
+            }
+            if (savedInstanceState.containsKey(SIS_MODIFYING_WIDGET)) {
                 int item_id = savedInstanceState.getInt(SIS_MODIFYING_WIDGET);
                 mModifyingWidget = mEngine.getItemById(item_id);
             }
@@ -675,66 +658,69 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         }
 
 
-		IntentFilter intent_filter=new IntentFilter();
-		intent_filter.addAction(BROADCAST_ACTION_DISPLAY_PAGE);
-		intent_filter.addAction(BROADCAST_ACTION_RELOAD);
+        IntentFilter intent_filter = new IntentFilter();
+        intent_filter.addAction(BROADCAST_ACTION_DISPLAY_PAGE);
+        intent_filter.addAction(BROADCAST_ACTION_RELOAD);
         intent_filter.addAction(BROADCAST_ACTION_LOCKED);
         intent_filter.addAction(BROADCAST_ACTION_UNLOCKED);
-		registerReceiver(mBroadcastReceiver, intent_filter);
+        registerReceiver(mBroadcastReceiver, intent_filter);
 
-        if(mEngine.shouldDoFirstTimeInit()) {
+        if (mEngine.shouldDoFirstTimeInit()) {
             mSetupInProgress = true;
-			Setup.firstTimeInit(this);
-		} else {
-			int page=mEngine.readCurrentPage(mGlobalConfig.homeScreen);
-			setPagerPage(page, Screen.PAGE_DIRECTION_HINT_AUTO);
-		}
+            Setup.firstTimeInit(this);
+        } else {
+            int page = mEngine.readCurrentPage(mGlobalConfig.homeScreen);
+            setPagerPage(page, Screen.PAGE_DIRECTION_HINT_AUTO);
+        }
         Intent intent = getIntent();
-        if(LauncherApps.ACTION_CONFIRM_PIN_SHORTCUT.equals(intent.getAction())) {
+        if (LauncherApps.ACTION_CONFIRM_PIN_SHORTCUT.equals(intent.getAction())) {
             addPinnedShortcut(intent);
-        } else if(LauncherApps.ACTION_CONFIRM_PIN_APPWIDGET.equals(intent.getAction())) {
+        } else if (LauncherApps.ACTION_CONFIRM_PIN_APPWIDGET.equals(intent.getAction())) {
             addAppWidget(intent);
         }
-	}
+    }
 
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
 
-        if(mEditMode) {
+        if (mEditMode) {
             leaveEditMode();
         }
 
-        if(mEditPropertiesBox != null) {
+        if (mEditPropertiesBox != null) {
             mEditPropertiesBox.end();
         }
 
         mHierarchyScreen.destroy();
 
-		destroyActivity();
+        destroyActivity();
 
         mScreen.destroy();
 
         mUndoStack.clear();
-	}
+    }
 
     protected void destroyActivity() {
         unregisterReceiver(mBroadcastReceiver);
     }
 
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		ArrayList<Integer> l=new ArrayList<>();
-		l.addAll(mNavigationStack);
-		outState.putIntegerArrayList(SIS_NAVIGATION, l);
-		outState.putInt(SIS_ALLOCATED_APP_WIDGET_ID, mAllocatedAppWidgetId);
-		if(mTmpItem!=null) outState.putInt(SIS_TMP_ITEM_ID, mTmpItem.getId());
-		if(mModifyingWidget!=null) outState.putInt(SIS_MODIFYING_WIDGET, mModifyingWidget.getId());
-        if(mTmpComponentName != null) outState.putParcelable(SIS_TMP_COMPONENT_NAME, mTmpComponentName);
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        ArrayList<Integer> l = new ArrayList<>();
+        l.addAll(mNavigationStack);
+        outState.putIntegerArrayList(SIS_NAVIGATION, l);
+        outState.putInt(SIS_ALLOCATED_APP_WIDGET_ID, mAllocatedAppWidgetId);
+        if (mTmpItem != null) outState.putInt(SIS_TMP_ITEM_ID, mTmpItem.getId());
+        if (mModifyingWidget != null)
+            outState.putInt(SIS_MODIFYING_WIDGET, mModifyingWidget.getId());
+        if (mTmpComponentName != null)
+            outState.putParcelable(SIS_TMP_COMPONENT_NAME, mTmpComponentName);
         outState.putInt(SIS_ACTIVITY_RESULT_SCRIPT_ID, mActivityResultScriptId);
-        if(mActivityResultScriptToken !=null) outState.putString(SIS_ACTIVITY_RESULT_SCRIPT_TOKEN, mActivityResultScriptToken);
+        if (mActivityResultScriptToken != null)
+            outState.putString(SIS_ACTIVITY_RESULT_SCRIPT_TOKEN, mActivityResultScriptToken);
         outState.putBoolean(SIS_EDIT_MODE, mEditMode);
-        if(mEditMode) {
+        if (mEditMode) {
             Item masterSelectedItem = mEditItemLayout.getMasterSelectedItem();
             outState.putString(SIS_EDIT_ITEM_LAYOUT_PATH, new ContainerPath(mEditItemLayout).toString());
             outState.putString(SIS_EDIT_PAGE_ENGINE_DIR, mEditPage.getEngine().getBaseDir().getAbsolutePath());
@@ -754,12 +740,12 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                 mEditPropertiesBox.onSaveInstanceState(outState);
             }
         }
-        if(mScriptExecutorForCallback != null) {
+        if (mScriptExecutorForCallback != null) {
             outState.putString(SIS_SCRIPT_EXECUTOR_ENGINE_BASE_DIR_FOR_PICK, mScriptExecutorForCallback.getEngine().getBaseDir().getAbsolutePath());
         }
 
         mScreen.saveInstanceState(outState);
-	}
+    }
 
     @Override
     public void startActivity(Intent intent) {
@@ -783,12 +769,12 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
     }
 
     @Override
-	public void onResume() {
-		super.onResume();
+    public void onResume() {
+        super.onResume();
 
-        if(mPausedBecauseOfLaunch || mNewIntent) {
+        if (mPausedBecauseOfLaunch || mNewIntent) {
             ItemConfig.LaunchAnimation launchAnimation;
-            if(mPausedBecauseOfLaunch) {
+            if (mPausedBecauseOfLaunch) {
                 launchAnimation = mLastLaunchAnimation;
             } else {
                 Page page = mScreen.getTargetOrTopmostItemLayout().getPage();
@@ -804,36 +790,36 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
             mHotwordServiceClient.requestHotwordDetection(true);
         }
 
-		if(mModifyingWidget != null) {
+        if (mModifyingWidget != null) {
             // reload widget that may have been changed in another activity/process (out of the launcher control)
             mModifyingWidget.notifyChanged();
-		}
+        }
 
-		// a pause followed by a resume soon after, with a call to onNewIntent is considered as a home key press
-		if(mNewIntent) {
-			if((SystemClock.uptimeMillis()-mOnPauseDate)<500) {
-				if(mEatNextHome) {
-					mEatNextHome=false;
-				} else {
+        // a pause followed by a resume soon after, with a call to onNewIntent is considered as a home key press
+        if (mNewIntent) {
+            if ((SystemClock.uptimeMillis() - mOnPauseDate) < 500) {
+                if (mEatNextHome) {
+                    mEatNextHome = false;
+                } else {
                     Page mainPage = mScreen.getCurrentRootPage();
                     EventAction ea = mainPage.config.homeKey;
-                    mScreen.runAction(mainPage.getEngine(), "K_HOME", ea.action==GlobalConfig.UNSET ? mGlobalConfig.homeKey : ea);
-				}
-			}
-            mNewIntent=false;
+                    mScreen.runAction(mainPage.getEngine(), "K_HOME", ea.action == GlobalConfig.UNSET ? mGlobalConfig.homeKey : ea);
+                }
+            }
+            mNewIntent = false;
         }
 
         mScreen.resume();
 
         updateLightningLiveWallpaperVisibility();
-	}
+    }
 
     @Override
-	public void onPause() {
-		super.onPause();
+    public void onPause() {
+        super.onPause();
 
-        if(mDialog != null) {
-            if(mDialog.isShowing()) {
+        if (mDialog != null) {
+            if (mDialog.isShowing()) {
                 mDialog.dismiss();
             }
             mDialog = null;
@@ -850,44 +836,44 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
         mEngine.saveDataDelayed();
 
-		// this is used to detect home key press by filtering sequences of onPause/onNewIntent/onResume.
-		mOnPauseDate=SystemClock.uptimeMillis();
-	}
+        // this is used to detect home key press by filtering sequences of onPause/onNewIntent/onResume.
+        mOnPauseDate = SystemClock.uptimeMillis();
+    }
 
-	@Override
-	protected void onNewIntent(Intent intent) {
-        if(mSetupInProgress) {
+    @Override
+    protected void onNewIntent(Intent intent) {
+        if (mSetupInProgress) {
             return;
         }
 
-        if(LockScreen.sThis != null) {
+        if (LockScreen.sThis != null) {
             startActivity(new Intent(this, LockScreen.class));
             mEatNextHome = true;
             return;
         }
 
-        if(LauncherApps.ACTION_CONFIRM_PIN_SHORTCUT.equals(intent.getAction())) {
+        if (LauncherApps.ACTION_CONFIRM_PIN_SHORTCUT.equals(intent.getAction())) {
             addPinnedShortcut(intent);
-        } else if(LauncherApps.ACTION_CONFIRM_PIN_APPWIDGET.equals(intent.getAction())) {
+        } else if (LauncherApps.ACTION_CONFIRM_PIN_APPWIDGET.equals(intent.getAction())) {
             addAppWidget(intent);
-        } else if(intent.hasExtra(LightningIntent.INTENT_EXTRA_LOAD_SCRIPT_FROM_PACKAGE)) {
-            loadScriptFromPackage((Intent) intent.getParcelableExtra(LightningIntent.INTENT_EXTRA_LOAD_SCRIPT_FROM_PACKAGE), false);
+        } else if (intent.hasExtra(LightningIntent.INTENT_EXTRA_LOAD_SCRIPT_FROM_PACKAGE)) {
+            loadScriptFromPackage(intent.getParcelableExtra(LightningIntent.INTENT_EXTRA_LOAD_SCRIPT_FROM_PACKAGE), false);
         } else {
             mScreen.setTargetItemLayout(null);
             mEatNextHome = executeNewIntent(intent);
-            mNewIntent=true;
+            mNewIntent = true;
         }
-	}
+    }
 
     protected boolean executeNewIntent(Intent intent) {
         boolean handled = false;
 
         EventAction eventAction = Utils.decodeEventActionFromLightningIntent(intent);
-        if(eventAction != null) {
+        if (eventAction != null) {
             mScreen.runAction(mEngine, "SHORTCUT", eventAction);
             handled = true;
         } else {
-            if(intent.hasExtra(LightningIntent.INTENT_EXTRA_DESKTOP)) {
+            if (intent.hasExtra(LightningIntent.INTENT_EXTRA_DESKTOP)) {
                 mScreen.executeGoToDesktopPositionIntent(intent);
                 handled = true;
             }
@@ -896,16 +882,63 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
     }
 
     private void applyLaunchAnimation(ItemConfig.LaunchAnimation launchAnimation, boolean forLaunch) {
-        if(launchAnimation != null && launchAnimation != ItemConfig.LaunchAnimation.SYSTEM) {
+        if (launchAnimation != null && launchAnimation != ItemConfig.LaunchAnimation.SYSTEM) {
             int in, out;
             switch (launchAnimation) {
-                case SLIDE_UP: if (forLaunch) { in = R.anim.slide_up; out = R.anim.fade_out; } else { in = R.anim.fade_in; out = R.anim.slide_up_back; } break;
-                case SLIDE_DOWN: if (forLaunch) { in = R.anim.slide_down; out = R.anim.fade_out; } else { in = R.anim.fade_in; out = R.anim.slide_down_back; } break;
-                case SLIDE_RIGHT: if (forLaunch) { in = R.anim.slide_left; out = R.anim.fade_out; } else { in = R.anim.fade_in; out = R.anim.slide_left_back; } break;
-                case SLIDE_LEFT: if (forLaunch) { in = R.anim.slide_right; out = R.anim.fade_out; } else { in = R.anim.fade_in; out = R.anim.slide_right_back; } break;
-                case SCALE_CENTER: if (forLaunch) { in = R.anim.scale_in; out = R.anim.fade_out; } else { in = R.anim.fade_in; out = R.anim.scale_out; } break;
-                case FADE: in = android.R.anim.fade_in; out = android.R.anim.fade_out; break;
-                case NONE: default: in = 0; out = 0; break;
+                case SLIDE_UP:
+                    if (forLaunch) {
+                        in = R.anim.slide_up;
+                        out = R.anim.fade_out;
+                    } else {
+                        in = R.anim.fade_in;
+                        out = R.anim.slide_up_back;
+                    }
+                    break;
+                case SLIDE_DOWN:
+                    if (forLaunch) {
+                        in = R.anim.slide_down;
+                        out = R.anim.fade_out;
+                    } else {
+                        in = R.anim.fade_in;
+                        out = R.anim.slide_down_back;
+                    }
+                    break;
+                case SLIDE_RIGHT:
+                    if (forLaunch) {
+                        in = R.anim.slide_left;
+                        out = R.anim.fade_out;
+                    } else {
+                        in = R.anim.fade_in;
+                        out = R.anim.slide_left_back;
+                    }
+                    break;
+                case SLIDE_LEFT:
+                    if (forLaunch) {
+                        in = R.anim.slide_right;
+                        out = R.anim.fade_out;
+                    } else {
+                        in = R.anim.fade_in;
+                        out = R.anim.slide_right_back;
+                    }
+                    break;
+                case SCALE_CENTER:
+                    if (forLaunch) {
+                        in = R.anim.scale_in;
+                        out = R.anim.fade_out;
+                    } else {
+                        in = R.anim.fade_in;
+                        out = R.anim.scale_out;
+                    }
+                    break;
+                case FADE:
+                    in = android.R.anim.fade_in;
+                    out = android.R.anim.fade_out;
+                    break;
+                case NONE:
+                default:
+                    in = 0;
+                    out = 0;
+                    break;
             }
             overridePendingTransition(in, out);
         }
@@ -916,7 +949,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         super.onAttachedToWindow();
 
         if (getClass() == Dashboard.class) {
-            if(mSystemConfig.hotwords) {
+            if (mSystemConfig.hotwords) {
                 if (mHotwordServiceClient == null) {
                     mHotwordServiceClient = new HotwordServiceClient(this);
                 }
@@ -931,7 +964,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         super.onDetachedFromWindow();
 
         if (getClass() == Dashboard.class) {
-            if(mSystemConfig.hotwords) {
+            if (mSystemConfig.hotwords) {
                 mHotwordServiceClient.requestHotwordDetection(false);
                 mHotwordServiceClient.onDetachedFromWindow();
             }
@@ -943,323 +976,323 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         mScreen.setHasWindowFocus(hasFocus);
     }
 
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode < REQUEST_FROM_CUSTOMIZE_VIEW) {
-            if(resultCode==RESULT_OK) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode < REQUEST_FROM_CUSTOMIZE_VIEW) {
+            if (resultCode == RESULT_OK) {
                 ItemLayout il = mScreen.getTargetOrTopmostItemLayout();
                 Page page = il.getPage();
                 float scale = il.getCurrentScale();
                 Item newItem;
                 AppWidgetProviderInfo appWidget;
                 AppWidgetManager app_widget_manager;
-                switch(requestCode) {
-                case REQUEST_SELECT_APP_FOR_ADD:
-                    if(data.hasExtra(Utils.INTENT_EXTRA_ITEM_ID)) {
-                        int itemId=data.getIntExtra(Utils.INTENT_EXTRA_ITEM_ID, 0);
-                        Page itemPage = page.getEngine().getOrLoadPage(Utils.getPageForItemId(itemId));
-                        Item item = itemPage.findItemById(itemId);
-                        newItem=Utils.copyShortcut(item, page, mScreen.getLastTouchedAddX(), mScreen.getLastTouchedAddY(), scale);
-                    } else {
-                        newItem=Utils.addAndroidShortcutFromIntent(this, data, page, mScreen.getLastTouchedAddX(), mScreen.getLastTouchedAddY(), scale);
-                    }
-                    mUndoStack.storePageAddItem(newItem);
-                    editItem(il, newItem);
-                    break;
-
-                case REQUEST_SELECT_SHORTCUT_FOR_ADD1:
-                    ComponentName cn = data.getComponent();
-                    if(cn != null && cn.getClassName().endsWith(".activities.ShortcutsS")) {
-                        Intent shortcut = PhoneUtils.createDesktopBookmarkShortcut(this, il, null, null, null, true);
-                        newItem=Utils.addAndroidShortcutFromIntent(this, shortcut, page, mScreen.getLastTouchedAddX(), mScreen.getLastTouchedAddY(), scale);
-                        mUndoStack.storePageAddItem(newItem);
-                    } else {
-                        startActivityForResult(data, REQUEST_SELECT_SHORTCUT_FOR_ADD2);
-                    }
-                    break;
-
-
-                case REQUEST_SELECT_SHORTCUT_FOR_ADD2:
-                    newItem=Utils.addAndroidShortcutFromIntent(this, data, page, mScreen.getLastTouchedAddX(), mScreen.getLastTouchedAddY(), scale);
-                    mUndoStack.storePageAddItem(newItem);
-                    editItem(il, newItem);
-                    break;
-
-                case REQUEST_SELECT_APP_WIDGET_FOR_ADD:
-                    app_widget_manager = AppWidgetManager.getInstance(LLApp.get());
-                    appWidget = app_widget_manager.getAppWidgetInfo(mAllocatedAppWidgetId);
-
-                    if(appWidget != null) {
-                        if (appWidget.configure != null) {
-                            // Launch over to configure widget, if needed
-                            Intent intent = new Intent(AppWidgetManager.ACTION_APPWIDGET_CONFIGURE);
-                            intent.setComponent(appWidget.configure);
-                            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAllocatedAppWidgetId);
-
-                            try {
-                                startActivityForResult(intent, REQUEST_CREATE_APP_WIDGET);
-                            } catch(Exception e) {
-                                LLApp.get().getAppWidgetHost().deleteAppWidgetId(mAllocatedAppWidgetId);
-                            }
+                switch (requestCode) {
+                    case REQUEST_SELECT_APP_FOR_ADD:
+                        if (data.hasExtra(Utils.INTENT_EXTRA_ITEM_ID)) {
+                            int itemId = data.getIntExtra(Utils.INTENT_EXTRA_ITEM_ID, 0);
+                            Page itemPage = page.getEngine().getOrLoadPage(Utils.getPageForItemId(itemId));
+                            Item item = itemPage.findItemById(itemId);
+                            newItem = Utils.copyShortcut(item, page, mScreen.getLastTouchedAddX(), mScreen.getLastTouchedAddY(), scale);
                         } else {
-                            // Otherwise just add it
-                            if(mTmpItem==null) {
-                                newItem=Utils.addAppWidget(page, il, mAllocatedAppWidgetId, mScreen.getLastTouchedAddX(), mScreen.getLastTouchedAddY(), scale);
+                            newItem = Utils.addAndroidShortcutFromIntent(this, data, page, mScreen.getLastTouchedAddX(), mScreen.getLastTouchedAddY(), scale);
+                        }
+                        mUndoStack.storePageAddItem(newItem);
+                        editItem(il, newItem);
+                        break;
+
+                    case REQUEST_SELECT_SHORTCUT_FOR_ADD1:
+                        ComponentName cn = data.getComponent();
+                        if (cn != null && cn.getClassName().endsWith(".activities.ShortcutsS")) {
+                            Intent shortcut = PhoneUtils.createDesktopBookmarkShortcut(this, il, null, null, null, true);
+                            newItem = Utils.addAndroidShortcutFromIntent(this, shortcut, page, mScreen.getLastTouchedAddX(), mScreen.getLastTouchedAddY(), scale);
+                            mUndoStack.storePageAddItem(newItem);
+                        } else {
+                            startActivityForResult(data, REQUEST_SELECT_SHORTCUT_FOR_ADD2);
+                        }
+                        break;
+
+
+                    case REQUEST_SELECT_SHORTCUT_FOR_ADD2:
+                        newItem = Utils.addAndroidShortcutFromIntent(this, data, page, mScreen.getLastTouchedAddX(), mScreen.getLastTouchedAddY(), scale);
+                        mUndoStack.storePageAddItem(newItem);
+                        editItem(il, newItem);
+                        break;
+
+                    case REQUEST_SELECT_APP_WIDGET_FOR_ADD:
+                        app_widget_manager = AppWidgetManager.getInstance(LLApp.get());
+                        appWidget = app_widget_manager.getAppWidgetInfo(mAllocatedAppWidgetId);
+
+                        if (appWidget != null) {
+                            if (appWidget.configure != null) {
+                                // Launch over to configure widget, if needed
+                                Intent intent = new Intent(AppWidgetManager.ACTION_APPWIDGET_CONFIGURE);
+                                intent.setComponent(appWidget.configure);
+                                intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAllocatedAppWidgetId);
+
+                                try {
+                                    startActivityForResult(intent, REQUEST_CREATE_APP_WIDGET);
+                                } catch (Exception e) {
+                                    LLApp.get().getAppWidgetHost().deleteAppWidgetId(mAllocatedAppWidgetId);
+                                }
+                            } else {
+                                // Otherwise just add it
+                                if (mTmpItem == null) {
+                                    newItem = Utils.addAppWidget(page, il, mAllocatedAppWidgetId, mScreen.getLastTouchedAddX(), mScreen.getLastTouchedAddY(), scale);
+                                    mUndoStack.storePageAddItem(newItem);
+                                } else {
+                                    newItem = Utils.replaceAppWidget(mTmpItem.getPage(), mAllocatedAppWidgetId, mTmpItem.getId());
+                                }
+                                if (newItem != null) {
+                                    editItem(il, newItem);
+                                }
+                            }
+                        }
+                        break;
+
+                    case REQUEST_CREATE_APP_WIDGET:
+                        app_widget_manager = AppWidgetManager.getInstance(LLApp.get());
+                        appWidget = app_widget_manager.getAppWidgetInfo(mAllocatedAppWidgetId);
+                        if (appWidget != null) {
+                            if (mTmpItem == null) {
+                                newItem = Utils.addAppWidget(page, il, mAllocatedAppWidgetId, mScreen.getLastTouchedAddX(), mScreen.getLastTouchedAddY(), scale);
                                 mUndoStack.storePageAddItem(newItem);
                             } else {
-                                newItem = Utils.replaceAppWidget(mTmpItem.getPage(), mAllocatedAppWidgetId, mTmpItem.getId());
+                                newItem = mTmpItem;
+                                Utils.replaceAppWidget(page, mAllocatedAppWidgetId, mTmpItem.getId());
                             }
-                            if(newItem != null) {
+                            if (newItem != null) {
                                 editItem(il, newItem);
                             }
                         }
-                    }
-                    break;
+                        break;
 
-                case REQUEST_CREATE_APP_WIDGET:
-                    app_widget_manager = AppWidgetManager.getInstance(LLApp.get());
-                    appWidget = app_widget_manager.getAppWidgetInfo(mAllocatedAppWidgetId);
-                    if(appWidget != null) {
-                        if(mTmpItem==null) {
-                            newItem=Utils.addAppWidget(page, il, mAllocatedAppWidgetId, mScreen.getLastTouchedAddX(), mScreen.getLastTouchedAddY(), scale);
-                            mUndoStack.storePageAddItem(newItem);
+                    case REQUEST_SELECT_APP_FOR_PICK:
+                    case REQUEST_SELECT_SHORTCUT_FOR_PICK2:
+                        Intent intent;
+                        if (requestCode == REQUEST_SELECT_APP_FOR_PICK) {
+                            intent = data;
                         } else {
-                            newItem = mTmpItem;
-                            Utils.replaceAppWidget(page, mAllocatedAppWidgetId, mTmpItem.getId());
+                            intent = data.getParcelableExtra(Intent.EXTRA_SHORTCUT_INTENT);
                         }
-                        if(newItem != null) {
-                            editItem(il, newItem);
+
+                        mUndoStack.storeGroupStart();
+
+                        // TODO : hackish, the target items can either be the selected item in edit mode
+                        // or mTmpItem for instance when selecting another app when a shortcut is not
+                        // valid anymore.
+                        ArrayList<Item> items = getSelectedItems();
+                        if (items.size() == 0 && mTmpItem != null) {
+                            items.add(mTmpItem);
                         }
-                    }
-                    break;
 
-                case REQUEST_SELECT_APP_FOR_PICK:
-                case REQUEST_SELECT_SHORTCUT_FOR_PICK2:
-                    Intent intent;
-                    if(requestCode == REQUEST_SELECT_APP_FOR_PICK) {
-                        intent = data;
-                    } else {
-                        intent = data.getParcelableExtra(Intent.EXTRA_SHORTCUT_INTENT);
-                    }
-
-                    mUndoStack.storeGroupStart();
-
-                    // TODO : hackish, the target items can either be the selected item in edit mode
-                    // or mTmpItem for instance when selecting another app when a shortcut is not
-                    // valid anymore.
-                    ArrayList<Item> items = getSelectedItems();
-                    if(items.size() == 0 && mTmpItem != null) {
-                        items.add(mTmpItem);
-                    }
-
-                    for (Item item : items) {
-                        final Class<? extends Item> itemClass = item.getClass();
-                        if (itemClass == Shortcut.class || itemClass == DynamicText.class) {
-                            mUndoStack.storeItemState(item);
-                            ((Shortcut) item).setIntent(intent);
-                            page.setModified();
-                        }
-                    }
-                    mUndoStack.storeGroupEnd();
-                    break;
-
-                case REQUEST_SELECT_SHORTCUT_FOR_PICK1:
-                    startActivityForResult(data, REQUEST_SELECT_SHORTCUT_FOR_PICK2);
-                    break;
-
-                case REQUEST_SELECT_SCREEN_FOR_MOVE:
-                case REQUEST_SELECT_SCREEN_FOR_COPY:
-                    boolean copy = requestCode == REQUEST_SELECT_SCREEN_FOR_COPY;
-                    int page_to = data.getIntExtra(API.SCREEN_PICKER_INTENT_EXTRA_SCREEN, Page.FIRST_DASHBOARD_PAGE);
-
-                    ArrayList<ItemView> selectedItemViews = getSelectedItemViews();
-
-                    setPagerPage(page_to, Screen.PAGE_DIRECTION_HINT_AUTO);
-                    ItemLayout ilTo = mScreen.getCurrentRootItemLayout();
-
-                    mUndoStack.storeGroupStart();
-                    for (ItemView itemView : selectedItemViews) {
-                        Item item = itemView.getItem();
-                        int page_from = item.getPage().id;
-                        if (page_from != page_to || copy) {
-                            int item_id = item.getId();
-                            if (copy) {
-                                // clone the item first, then move it
-                                item = Utils.cloneItem(item);
-                                itemView = itemView.getParentItemLayout().getItemView(item);
-                                item_id = item.getId();
-                                mUndoStack.storePageAddItem(item);
+                        for (Item item : items) {
+                            final Class<? extends Item> itemClass = item.getClass();
+                            if (itemClass == Shortcut.class || itemClass == DynamicText.class) {
+                                mUndoStack.storeItemState(item);
+                                ((Shortcut) item).setIntent(intent);
+                                page.setModified();
                             }
-                            saveInitialItemViewGeometry(itemView);
-                            newItem = Utils.moveItem(item, ilTo.getPage(), Utils.POSITION_AUTO, Utils.POSITION_AUTO, 1, Item.NO_ID);
-                            mUndoStack.storePageItemMove(ilTo.getItemView(newItem), item_id, mOriginalItemsGeometry.get(item.getId()));
                         }
-                    }
-                    mUndoStack.storeGroupEnd();
+                        mUndoStack.storeGroupEnd();
+                        break;
+
+                    case REQUEST_SELECT_SHORTCUT_FOR_PICK1:
+                        startActivityForResult(data, REQUEST_SELECT_SHORTCUT_FOR_PICK2);
+                        break;
+
+                    case REQUEST_SELECT_SCREEN_FOR_MOVE:
+                    case REQUEST_SELECT_SCREEN_FOR_COPY:
+                        boolean copy = requestCode == REQUEST_SELECT_SCREEN_FOR_COPY;
+                        int page_to = data.getIntExtra(API.SCREEN_PICKER_INTENT_EXTRA_SCREEN, Page.FIRST_DASHBOARD_PAGE);
+
+                        ArrayList<ItemView> selectedItemViews = getSelectedItemViews();
+
+                        setPagerPage(page_to, Screen.PAGE_DIRECTION_HINT_AUTO);
+                        ItemLayout ilTo = mScreen.getCurrentRootItemLayout();
+
+                        mUndoStack.storeGroupStart();
+                        for (ItemView itemView : selectedItemViews) {
+                            Item item = itemView.getItem();
+                            int page_from = item.getPage().id;
+                            if (page_from != page_to || copy) {
+                                int item_id = item.getId();
+                                if (copy) {
+                                    // clone the item first, then move it
+                                    item = Utils.cloneItem(item);
+                                    itemView = itemView.getParentItemLayout().getItemView(item);
+                                    item_id = item.getId();
+                                    mUndoStack.storePageAddItem(item);
+                                }
+                                saveInitialItemViewGeometry(itemView);
+                                newItem = Utils.moveItem(item, ilTo.getPage(), Utils.POSITION_AUTO, Utils.POSITION_AUTO, 1, Item.NO_ID);
+                                mUndoStack.storePageItemMove(ilTo.getItemView(newItem), item_id, mOriginalItemsGeometry.get(item.getId()));
+                            }
+                        }
+                        mUndoStack.storeGroupEnd();
 
 //                        TODO restore selection of newly created/moved items if (mGlobalConfig.autoEdit) enterEditModeAndSelectItem(new_id);
-                    break;
+                        break;
 
-                case REQUEST_SELECT_SCREEN_FOR_GOTO:
-                    setPagerPage(data.getIntExtra(API.SCREEN_PICKER_INTENT_EXTRA_SCREEN, Page.FIRST_DASHBOARD_PAGE), Screen.PAGE_DIRECTION_HINT_AUTO);
-                    break;
+                    case REQUEST_SELECT_SCREEN_FOR_GOTO:
+                        setPagerPage(data.getIntExtra(API.SCREEN_PICKER_INTENT_EXTRA_SCREEN, Page.FIRST_DASHBOARD_PAGE), Screen.PAGE_DIRECTION_HINT_AUTO);
+                        break;
 
-                case REQUEST_BIND_APPWIDGET:
-                    ((Widget)mTmpItem).setAppWidgetId(mAllocatedAppWidgetId);
-                    mTmpItem.notifyChanged();
-                    break;
+                    case REQUEST_BIND_APPWIDGET:
+                        ((Widget) mTmpItem).setAppWidgetId(mAllocatedAppWidgetId);
+                        mTmpItem.notifyChanged();
+                        break;
 
-                case REQUEST_SELECT_SCRIPT_TO_LOAD:
-                    loadScriptFromPackage(data, false);
-                    break;
+                    case REQUEST_SELECT_SCRIPT_TO_LOAD:
+                        loadScriptFromPackage(data, false);
+                        break;
 
-                case REQUEST_QUERY_SCRIPT_INFOS:
-                    boolean ok = false;
-                    int raw_res_id = data.getIntExtra("i", 0);
-                    if(raw_res_id != 0) {
-                        Context remote_context = null;
-                        try {
-                            remote_context = createPackageContext(mTmpComponentName.getPackageName(), 0);
-                            Resources rsrc = remote_context.getResources();
-                            String script_text = FileUtils.readInputStreamContent(rsrc.openRawResource(raw_res_id));
-                            if(script_text != null) {
-                                boolean execute_on_load = data.getBooleanExtra("e", false);
-                                boolean delete_after_load = data.getBooleanExtra("d", false);
-                                int flags = data.getIntExtra("f", 0);
-                                String name = data.getStringExtra("n");
-                                String path = data.getStringExtra("p");
+                    case REQUEST_QUERY_SCRIPT_INFOS:
+                        boolean ok = false;
+                        int raw_res_id = data.getIntExtra("i", 0);
+                        if (raw_res_id != 0) {
+                            Context remote_context = null;
+                            try {
+                                remote_context = createPackageContext(mTmpComponentName.getPackageName(), 0);
+                                Resources rsrc = remote_context.getResources();
+                                String script_text = FileUtils.readInputStreamContent(rsrc.openRawResource(raw_res_id));
+                                if (script_text != null) {
+                                    boolean execute_on_load = data.getBooleanExtra("e", false);
+                                    boolean delete_after_load = data.getBooleanExtra("d", false);
+                                    int flags = data.getIntExtra("f", 0);
+                                    String name = data.getStringExtra("n");
+                                    String path = data.getStringExtra("p");
 
-                                if(name == null) {
-                                    PackageManager pm = getPackageManager();
-                                    name = pm.getActivityInfo(mTmpComponentName, 0).loadLabel(pm).toString();
+                                    if (name == null) {
+                                        PackageManager pm = getPackageManager();
+                                        name = pm.getActivityInfo(mTmpComponentName, 0).loadLabel(pm).toString();
+                                    }
+
+                                    ScriptManager sm = mEngine.getScriptManager();
+                                    Script script;
+                                    script = sm.getOrLoadScript(path, name);
+                                    if (script == null) {
+                                        script = sm.createScriptForFile(name, ScriptManager.sanitizeRelativePath(path));
+                                    }
+                                    script.flags = flags;
+                                    script.setSourceText(script_text);
+                                    sm.saveScript(script);
+
+                                    if (execute_on_load) {
+                                        mEngine.getScriptExecutor().runScript(mScreen, script.id, "APK", null);
+                                    }
+                                    if (delete_after_load) {
+                                        sm.deleteScript(script);
+                                    }
+                                    ok = true;
                                 }
-
-                                ScriptManager sm = mEngine.getScriptManager();
-                                Script script;
-                                script = sm.getOrLoadScript(path, name);
-                                if(script == null) {
-                                    script = sm.createScriptForFile(name, ScriptManager.sanitizeRelativePath(path));
-                                }
-                                script.flags = flags;
-                                script.setSourceText(script_text);
-                                sm.saveScript(script);
-
-                                if(execute_on_load) {
-                                    mEngine.getScriptExecutor().runScript(mScreen, script.id, "APK", null);
-                                }
-                                if(delete_after_load) {
-                                    sm.deleteScript(script);
-                                }
-                                ok = true;
+                            } catch (NameNotFoundException e) {
+                                // pass
                             }
-                        } catch (NameNotFoundException e) {
-                            // pass
                         }
-                    }
-                    Toast.makeText(this, ok ? R.string.ls_ok : R.string.ls_ko, Toast.LENGTH_SHORT).show();
-                    break;
+                        Toast.makeText(this, ok ? R.string.ls_ok : R.string.ls_ko, Toast.LENGTH_SHORT).show();
+                        break;
 
-                case REQUEST_FOR_SCRIPT:
-                    mScriptExecutorForCallback.runScriptActivityResult(mScreen, resultCode, data, mActivityResultScriptId, mActivityResultScriptToken);
-                    mScriptExecutorForCallback = null;
-                    mActivityResultScriptId = Script.NO_ID;
-                    mActivityResultScriptToken = null;
-                    break;
+                    case REQUEST_FOR_SCRIPT:
+                        mScriptExecutorForCallback.runScriptActivityResult(mScreen, resultCode, data, mActivityResultScriptId, mActivityResultScriptToken);
+                        mScriptExecutorForCallback = null;
+                        mActivityResultScriptId = Script.NO_ID;
+                        mActivityResultScriptToken = null;
+                        break;
 
-                case REQUEST_SCRIPT_PICK_IMAGE:
-                    mScriptExecutorForCallback.setFileForPickImage(Utils.getTmpImageFile());
-                    mScriptExecutorForCallback = null;
-                    break;
+                    case REQUEST_SCRIPT_PICK_IMAGE:
+                        mScriptExecutorForCallback.setFileForPickImage(Utils.getTmpImageFile());
+                        mScriptExecutorForCallback = null;
+                        break;
 
-                case REQUEST_SCRIPT_CROP_IMAGE:
-                    Bitmap bitmap = Utils.loadBitmap(Utils.getTmpImageFile(), 0, 0, 0);
-                    ImageBitmap image = new ImageBitmap(mScriptExecutorForCallback.getLightning(), bitmap);
-                    mScriptExecutorForCallback.setImageForCropImage(image);
-                    mScriptExecutorForCallback = null;
-                    break;
+                    case REQUEST_SCRIPT_CROP_IMAGE:
+                        Bitmap bitmap = Utils.loadBitmap(Utils.getTmpImageFile(), 0, 0, 0);
+                        ImageBitmap image = new ImageBitmap(mScriptExecutorForCallback.getLightning(), bitmap);
+                        mScriptExecutorForCallback.setImageForCropImage(image);
+                        mScriptExecutorForCallback = null;
+                        break;
 
-                case REQUEST_PICK_CUSTOM_ICON:
-                    mUndoStack.storeGroupStart();
-                    for (Item item : getSelectedItems()) {
-                        mUndoStack.storeItemState(item);
-                        if(item instanceof Shortcut) {
-                            Shortcut shortcut = (Shortcut) item;
-                            File icon_file = shortcut.getCustomIconFile();
-                            File tmp_image_file = Utils.getTmpImageFile();
-                            boolean copied = false;
-                            if (tmp_image_file.exists()) {
-                                FileOutputStream fos = null;
-                                try {
-                                    Utils.copyFile(new byte[1024], tmp_image_file, icon_file);
-                                    if (shortcut.getClass() == Folder.class) {
-                                        ((Folder) shortcut).modifyFolderConfig().iconStyle = FolderConfig.FolderIconStyle.NORMAL;
-                                        // hack, refresh the edit properties box if needed
-                                        if (isEditPropertiesBoxVisible() && mEditPropertiesBox.getItem() == shortcut) {
-                                            mEditPropertiesBox.updatePreferences();
+                    case REQUEST_PICK_CUSTOM_ICON:
+                        mUndoStack.storeGroupStart();
+                        for (Item item : getSelectedItems()) {
+                            mUndoStack.storeItemState(item);
+                            if (item instanceof Shortcut) {
+                                Shortcut shortcut = (Shortcut) item;
+                                File icon_file = shortcut.getCustomIconFile();
+                                File tmp_image_file = Utils.getTmpImageFile();
+                                boolean copied = false;
+                                if (tmp_image_file.exists()) {
+                                    FileOutputStream fos = null;
+                                    try {
+                                        Utils.copyFile(new byte[1024], tmp_image_file, icon_file);
+                                        if (shortcut.getClass() == Folder.class) {
+                                            ((Folder) shortcut).modifyFolderConfig().iconStyle = FolderConfig.FolderIconStyle.NORMAL;
+                                            // hack, refresh the edit properties box if needed
+                                            if (isEditPropertiesBoxVisible() && mEditPropertiesBox.getItem() == shortcut) {
+                                                mEditPropertiesBox.updatePreferences();
+                                            }
+                                        }
+                                        copied = true;
+                                    } catch (Throwable e) {
+                                        Toast.makeText(this, R.string.item_settings_icon_copy_failed, Toast.LENGTH_SHORT).show();
+                                    } finally {
+                                        if (fos != null) try {
+                                            fos.close();
+                                        } catch (Exception e) {
                                         }
                                     }
-                                    copied = true;
-                                } catch (Throwable e) {
-                                    Toast.makeText(this, R.string.item_settings_icon_copy_failed, Toast.LENGTH_SHORT).show();
-                                } finally {
-                                    if (fos != null) try {
-                                        fos.close();
-                                    } catch (Exception e) {
+                                }
+                                if (!copied) {
+                                    icon_file.delete();
+                                }
+                                shortcut.notifyChanged();
+                            }
+                        }
+                        mUndoStack.storeGroupEnd();
+                        break;
+
+                    case REQUEST_EDIT_LAUNCH_ACTION:
+                        items = getSelectedItems();
+                        if (items.size() == 0 && mTmpItem != null) {
+                            items.add(mTmpItem);
+                        }
+                        mUndoStack.storeGroupStart();
+                        for (Item item : items) {
+                            final Class<? extends Item> itemClass = item.getClass();
+                            if (itemClass == Shortcut.class || itemClass == DynamicText.class) {
+                                mUndoStack.storeItemState(item);
+
+                                Shortcut shortcut = (Shortcut) item;
+                                EventAction ea = EventActionSetup.getEventActionFromIntent(data);
+                                if ((ea.action == GlobalConfig.LAUNCH_APP || ea.action == GlobalConfig.LAUNCH_SHORTCUT) && ea.next == null) {
+                                    try {
+                                        shortcut.setIntent(Intent.parseUri(ea.data, 0));
+                                    } catch (URISyntaxException e) {
+                                        e.printStackTrace();
                                     }
+                                } else {
+                                    Intent i = new Intent(this, Dashboard.class);
+                                    i.putExtra(LightningIntent.INTENT_EXTRA_EVENT_ACTION, JsonLoader.toJSONObject(ea, null).toString());
+                                    shortcut.setIntent(i);
                                 }
+
+                                page.setModified();
                             }
-                            if (!copied) {
-                                icon_file.delete();
-                            }
-                            shortcut.notifyChanged();
                         }
-                    }
-                    mUndoStack.storeGroupEnd();
-                    break;
-
-                case REQUEST_EDIT_LAUNCH_ACTION:
-                    items = getSelectedItems();
-                    if(items.size() == 0 && mTmpItem != null) {
-                        items.add(mTmpItem);
-                    }
-                    mUndoStack.storeGroupStart();
-                    for (Item item : items) {
-                        final Class<? extends Item> itemClass = item.getClass();
-                        if (itemClass == Shortcut.class || itemClass == DynamicText.class) {
-                            mUndoStack.storeItemState(item);
-
-                            Shortcut shortcut = (Shortcut) item;
-                            EventAction ea = EventActionSetup.getEventActionFromIntent(data);
-                            if((ea.action == GlobalConfig.LAUNCH_APP || ea.action == GlobalConfig.LAUNCH_SHORTCUT) && ea.next == null) {
-                                try {
-                                    shortcut.setIntent(Intent.parseUri(ea.data, 0));
-                                } catch (URISyntaxException e) {
-                                    e.printStackTrace();
-                                }
-                            } else {
-                                Intent i = new Intent(this, Dashboard.class);
-                                i.putExtra(LightningIntent.INTENT_EXTRA_EVENT_ACTION, JsonLoader.toJSONObject(ea, null).toString());
-                                shortcut.setIntent(i);
-                            }
-
-                            page.setModified();
-                        }
-                    }
-                    mUndoStack.storeGroupEnd();
-                    break;
+                        mUndoStack.storeGroupEnd();
+                        break;
                 }
             } else {
                 mTmpItem = null;
-                if(requestCode==REQUEST_SELECT_APP_WIDGET_FOR_ADD || requestCode==REQUEST_CREATE_APP_WIDGET || requestCode==REQUEST_BIND_APPWIDGET) {
+                if (requestCode == REQUEST_SELECT_APP_WIDGET_FOR_ADD || requestCode == REQUEST_CREATE_APP_WIDGET || requestCode == REQUEST_BIND_APPWIDGET) {
                     LLApp.get().getAppWidgetHost().deleteAppWidgetId(mAllocatedAppWidgetId);
-                } else if(requestCode==REQUEST_FOR_SCRIPT) {
+                } else if (requestCode == REQUEST_FOR_SCRIPT) {
                     mScriptExecutorForCallback.runScriptActivityResult(mScreen, resultCode, data, mActivityResultScriptId, mActivityResultScriptToken);
                     mScriptExecutorForCallback = null;
                     mActivityResultScriptId = Script.NO_ID;
                     mActivityResultScriptToken = null;
-                } else if(requestCode==REQUEST_SCRIPT_PICK_IMAGE) {
+                } else if (requestCode == REQUEST_SCRIPT_PICK_IMAGE) {
                     mScriptExecutorForCallback.setFileForPickImage(null);
                     mScriptExecutorForCallback = null;
-                } else if(requestCode==REQUEST_SCRIPT_CROP_IMAGE) {
+                } else if (requestCode == REQUEST_SCRIPT_CROP_IMAGE) {
                     mScriptExecutorForCallback.setImageForCropImage(null);
                     mScriptExecutorForCallback = null;
                 }
@@ -1268,45 +1301,45 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
             // relay activity results to the customize item view
             mEditPropertiesBox.myOnActivityResult(requestCode, resultCode, data);
         }
-	}
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if(requestCode == REQUEST_PERMISSION_FONT_PICKER) {
+        if (requestCode == REQUEST_PERMISSION_FONT_PICKER) {
             // should be transmitted to the CustomizeItemView instance
-            if(grantResults[0] == PackageManager.PERMISSION_DENIED) {
+            if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
                 Toast.makeText(this, R.string.pr_f2, Toast.LENGTH_LONG).show();
             }
-        } else if(requestCode == REQUEST_PERMISSION_BASE) {
-             if(grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                 String msg;
-                 if(permissions[0].equals(Error.MISSING_PERMISSION_READ_CALL_LOG.getPermission()) ||
-                    permissions[0].equals(Error.MISSING_PERMISSION_READ_SMS.getPermission())) {
-                     msg = getString(R.string.pr_rcl_rms);
-                 } else {
-                     msg = getString(R.string.pr_f);
-                     for (String p : permissions) {
-                         msg += "\n - " + p;
-                     }
-                     msg += "\n" + getString(R.string.pr_inst);
-                 }
-                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                 builder.setMessage(msg);
-                 builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                     @Override
-                     public void onClick(DialogInterface dialogInterface, int i) {
-                         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Version.PERMISSIONS_INFO)));
-                     }
-                 });
-                 builder.setNegativeButton(android.R.string.cancel, null);
-                 builder.show();
+        } else if (requestCode == REQUEST_PERMISSION_BASE) {
+            if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                String msg;
+                if (permissions[0].equals(Error.MISSING_PERMISSION_READ_CALL_LOG.getPermission()) ||
+                        permissions[0].equals(Error.MISSING_PERMISSION_READ_SMS.getPermission())) {
+                    msg = getString(R.string.pr_rcl_rms);
+                } else {
+                    msg = getString(R.string.pr_f);
+                    for (String p : permissions) {
+                        msg += "\n - " + p;
+                    }
+                    msg += "\n" + getString(R.string.pr_inst);
+                }
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage(msg);
+                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Version.PERMISSIONS_INFO)));
+                    }
+                });
+                builder.setNegativeButton(android.R.string.cancel, null);
+                builder.show();
             }
         }
     }
 
     private void loadScriptFromPackage(Intent script_intent, boolean isPlugin) {
         mTmpComponentName = script_intent.getComponent();
-        if(mTmpComponentName.getPackageName().equals(getPackageName())) {
+        if (mTmpComponentName.getPackageName().equals(getPackageName())) {
             startActivity(Intent.createChooser(new Intent(Intent.ACTION_VIEW, isPlugin ? Version.BROWSE_PLUGINS_URI : Version.BROWSE_SCRIPTS_URI), null));
         } else {
             startActivityForResult(script_intent, REQUEST_QUERY_SCRIPT_INFOS);
@@ -1314,10 +1347,10 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
     }
 
     @Override
-	public void onConfigurationChanged(Configuration newConfig) {
-		super.onConfigurationChanged(newConfig);
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
 
-        if(mSetupInProgress) {
+        if (mSetupInProgress) {
             return;
         }
 
@@ -1326,12 +1359,12 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         configureSystemBarsPadding(mScreen.getCurrentRootPage().config);
 
         closeBubble();
-	}
+    }
 
-	@Override
-	public void onClick(View v) {
-		boolean close_bubble=true;
-		int index, old_index = 0, new_index = 0;
+    @Override
+    public void onClick(View v) {
+        boolean close_bubble = true;
+        int index, old_index = 0, new_index = 0;
 
         int view_id = v.getId();
         Page page;
@@ -1342,21 +1375,21 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         ItemLayout targetItemLayout;
         Item targetItem;
         ItemView targetItemView;
-        if(mEditMode) {
+        if (mEditMode) {
             targetItemLayout = mEditItemLayout;
             targetItemView = mEditItemLayout.getMasterSelectedItemView();
             targetItem = mEditItemLayout.getMasterSelectedItem();
         } else {
             targetItemLayout = mBubbleItemLayout;
             targetItemView = mBubbleItemView;
-            targetItem = mBubbleItemView==null ? null : mBubbleItemView.getItem();
+            targetItem = mBubbleItemView == null ? null : mBubbleItemView.getItem();
         }
-        if(targetItem != null) {
+        if (targetItem != null) {
             targetItemClass = targetItem.getClass();
             targetItemPackageName = Utils.getPackageNameForItem(targetItem);
         }
 
-        switch(view_id) {
+        switch (view_id) {
             case R.id.mi_app_details:
                 startPackageDetails(targetItemPackageName);
                 break;
@@ -1380,15 +1413,15 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                     boolean killMe = false;
                     for (Item item : getActionItems()) {
                         final String packageNameForItem = Utils.getPackageNameForItem(item);
-                        if(packageNameForItem != null) {
-                            if(packageNameForItem.equals(LLApp.LLX_PKG_NAME)) {
+                        if (packageNameForItem != null) {
+                            if (packageNameForItem.equals(LLApp.LLX_PKG_NAME)) {
                                 killMe = true;
                             } else {
                                 am.restartPackage(packageNameForItem);
                             }
                         }
                     }
-                    if(killMe) {
+                    if (killMe) {
                         Toast.makeText(this, "I'll be back!", Toast.LENGTH_SHORT).show();
                         mHandler.postDelayed(new Runnable() {
                             @Override
@@ -1493,7 +1526,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                 break;
 
             case R.id.mi_edit_launch_action:
-                editShortcutLaunchAction((Shortcut)targetItem);
+                editShortcutLaunchAction((Shortcut) targetItem);
                 break;
 
             case R.id.mi_pick_widget:
@@ -1514,7 +1547,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                 ItemLayout ilFrom = itemViews.get(0).getParentItemLayout();
                 ItemView openerItemView = ilFrom.getOpenerItemView();
                 ItemLayout ilTo = openerItemView.getParentItemLayout();
-                if((openerItemView instanceof EmbeddedFolderView)) {
+                if ((openerItemView instanceof EmbeddedFolderView)) {
                     FolderView fv = mScreen.findFolderView(ilFrom, true);
                     mScreen.closeFolder(fv, true);
                     if (mEditMode) {
@@ -1529,16 +1562,20 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                     mUndoStack.storePageItemMove(ilTo.getItemView(newItem), old_id, mOriginalItemsGeometry.get(old_id));
                 }
                 mUndoStack.storeGroupEnd();
-            break;
+                break;
 
-        case R.id.mi_actions:
-            close_bubble=false;
-            openBubble(BUBBLE_MODE_ITEM_ACTIONS, targetItemView);
-            break;
+            case R.id.mi_actions:
+                close_bubble = false;
+                openBubble(BUBBLE_MODE_ITEM_ACTIONS, targetItemView);
+                break;
 
-		case R.id.mi_remove: menuActionConfirmRemoveItem(); break;
+            case R.id.mi_remove:
+                menuActionConfirmRemoveItem();
+                break;
 
-		case R.id.mi_geometry: menuActionToggleGeometryBox(); break;
+            case R.id.mi_geometry:
+                menuActionToggleGeometryBox();
+                break;
 
 //		case R.id.mi_share:
 //			Shortcut s=(Shortcut)mDialogSelectedItem;
@@ -1548,355 +1585,375 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 //			share_intent.putExtra(android.content.Intent.EXTRA_TEXT, s.getIntent().getComponent().getPackageName());
 //			break;
 
-		case R.id.mi_widget_options:
-            mModifyingWidget = targetItem;
-            ((Widget) targetItem).onConfigure(this);
-			break;
+            case R.id.mi_widget_options:
+                mModifyingWidget = targetItem;
+                ((Widget) targetItem).onConfigure(this);
+                break;
 
-        case R.id.mi_ef_edit_layout:
-            if(mEditMode) {
-                // assume the master selected item is an embedded folder since this menu item is enabled
-                enterEditMode(((EmbeddedFolderView)mEditItemLayout.getMasterSelectedItemView()).getEmbeddedItemLayout(), null);
-            } else {
-                enterEditMode(mScreen.getTargetOrTopmostItemLayout(), null);
-            }
-            break;
+            case R.id.mi_ef_edit_layout:
+                if (mEditMode) {
+                    // assume the master selected item is an embedded folder since this menu item is enabled
+                    enterEditMode(((EmbeddedFolderView) mEditItemLayout.getMasterSelectedItemView()).getEmbeddedItemLayout(), null);
+                } else {
+                    enterEditMode(mScreen.getTargetOrTopmostItemLayout(), null);
+                }
+                break;
 
 //		case R.id.mi_folder_options:
 //            PhoneUtils.startSettings(this, ((Folder) targetItem).getFolderPageId(), false);
 //			break;
 
-		case R.id.move_bottom:
-        case R.id.move_down:
-        case R.id.move_up:
-        case R.id.move_top:
-            ArrayList<Item> pageItems = mEditPage.items;
-            ArrayList<Item> selectedItems = getSelectedItems();
-            if(view_id == R.id.move_top || view_id == R.id.move_down) {
-                Collections.reverse(selectedItems);
-            }
-            mUndoStack.storeGroupStart();
-            for (Item item : selectedItems) {
-                switch (view_id) {
-                    case R.id.move_bottom:
-                        old_index = pageItems.indexOf(item);
-                        new_index = 0;
-                        break;
-
-                    case R.id.move_down:
-                        old_index = index = pageItems.indexOf(item);
-                        new_index = index > 0 ? index - 1 : index;
-                        break;
-
-                    case R.id.move_up:
-                        old_index = index = pageItems.indexOf(item);
-                        new_index = index < pageItems.size() - 1 ? index + 1 : index;
-                        break;
-
-                    case R.id.move_top:
-                        old_index = pageItems.indexOf(item);
-                        new_index = pageItems.size() - 1;
-                        break;
+            case R.id.move_bottom:
+            case R.id.move_down:
+            case R.id.move_up:
+            case R.id.move_top:
+                ArrayList<Item> pageItems = mEditPage.items;
+                ArrayList<Item> selectedItems = getSelectedItems();
+                if (view_id == R.id.move_top || view_id == R.id.move_down) {
+                    Collections.reverse(selectedItems);
                 }
-                if(old_index != new_index) {
-                    mEditPage.setItemZIndex(item, new_index);
-                    mUndoStack.storePageItemZOrder(mEditPage, item, old_index);
-                }
-            }
-            mUndoStack.storeGroupEnd();
-            break;
-
-        case R.id.mi_dm_add:
-            menuActionAddItem();
-            break;
-
-        case R.id.mi_i:
-            close_bubble=false;
-            openBubble(BUBBLE_MODE_ITEMS, mBubbleItemLayout, null);
-            break;
-
-        case R.id.mi_h:
-            mHierarchyScreen.show(new ContainerPath(targetItemLayout));
-        	break;
-
-        case R.id.mi_if:
-        	Toast.makeText(this, "Not implemented yet", Toast.LENGTH_SHORT).show();
-        	break;
-
-        case R.id.mi_ic:
-        case R.id.mi_isa:
-        case R.id.mi_isd:
-            page = targetItemLayout.getPage();
-            Comparator c = null;
-            switch(view_id) {
-                case R.id.mi_isa: c = Utils.sItemComparatorByNameAsc; break;
-                case R.id.mi_isd: c = Utils.sItemComparatorByNameDesc; break;
-            }
-            if(c != null) Collections.sort(page.items, c);
-            Utils.layoutItemsInTable(page.config, page.items, mScreen.isPortrait());
-            page.notifyModified();
-            break;
-
-        case R.id.mi_android_settings:
-            Intent settings=new Intent(android.provider.Settings.ACTION_SETTINGS);
-            settings.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-            try { startActivity(settings); } catch(ActivityNotFoundException e) {}
-            break;
-
-        case R.id.mi_dm_customize:
-            close_bubble=false;
-            openBubble(BUBBLE_MODE_SETTINGS, mBubbleItemLayout, null);
-            break;
-
-        case R.id.mi_dmc_r:
-            menuActionSettingsGlobal();
-            break;
-
-        case R.id.mi_dmc_c:
-            menuActionSettingsContainer(false);
-            break;
-
-        case R.id.mi_l:
-            close_bubble = !menuActionLockUnlock();
-            break;
-
-        case R.id.mi_dm_edit_layout:
-            if(mEditMode && mEditItemLayout == mBubbleItemLayout) {
-                leaveEditMode();
-            } else {
-                enterEditMode(mBubbleItemLayout, null);
-            }
-            break;
-
-        case R.id.gb_e1:
-        case R.id.gb_e2:
-            mGeometryEdit = view_id;
-            final Item masterSelectedItem = mEditItemLayout.getMasterSelectedItem();
-            if(masterSelectedItem != null) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setMessage(getGeometryEditTitle(mGeometryEdit));
-                final EditText edit_text = new EditText(this);
-                edit_text.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_NUMBER_FLAG_SIGNED);
-                edit_text.setText(getGeometryEditText(masterSelectedItem, mGeometryEdit));
-                edit_text.setSelection(edit_text.length());
-                FrameLayout l = new FrameLayout(this);
-                l.setPadding(10, 10, 10, 10);
-                l.addView(edit_text);
-                builder.setView(l);
-                builder.setPositiveButton(android.R.string.ok,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface arg0, int arg1) {
-                                float value;
-                                try {
-                                    String text = edit_text.getText().toString();
-                                    text = text.replace(',', '.');
-                                    value = Float.parseFloat(text);
-                                } catch(Exception e) {
-                                    value = getGeometryEditValue(mEditItemLayout.getMasterSelectedItem(), mGeometryEdit);
-                                }
-
-                                boolean is_x = mGeometryEdit == R.id.gb_e1;
-                                mUndoStack.storeGroupStart();
-                                for (ItemView itemView : getSelectedItemViews()) {
-                                    Item item = itemView.getItem();
-                                    saveInitialItemViewGeometry(itemView);
-                                    updateGeometryValue(item, mGeometryMode, is_x ? value : getGeometryEditValue(item, R.id.gb_e1), is_x ? getGeometryEditValue(item, R.id.gb_e2) : value, false);
-                                    storeUndoForGeometryBoxChange(itemView);
-                                }
-                                mUndoStack.storeGroupEnd();
-                                updateGeometryBox();
-                                arg0.dismiss();
-                            }
-                        });
-                builder.setNegativeButton(android.R.string.cancel, null);
-                mDialog = builder.create();
-                mDialog.show();
-            }
-            break;
-
-        case R.id.gb_hm:
-        case R.id.gb_hp:
-        case R.id.gb_vm:
-        case R.id.gb_vp:
-            mGeometryBox.removeCallbacks(mGeometryRepeat);
-            if(!mHasGeometryRepeat) {
                 mUndoStack.storeGroupStart();
-            }
-            boolean masterOnGrid = mEditItemLayout.getMasterSelectedItem().getItemConfig().onGrid;
-            for (ItemView itemView : getSelectedItemViews()) {
-                Item item = itemView.getItem();
-                if(item.getItemConfig().onGrid == masterOnGrid) {
-                    if (!mHasGeometryRepeat) {
-                        saveInitialItemViewGeometry(itemView);
+                for (Item item : selectedItems) {
+                    switch (view_id) {
+                        case R.id.move_bottom:
+                            old_index = pageItems.indexOf(item);
+                            new_index = 0;
+                            break;
+
+                        case R.id.move_down:
+                            old_index = index = pageItems.indexOf(item);
+                            new_index = index > 0 ? index - 1 : index;
+                            break;
+
+                        case R.id.move_up:
+                            old_index = index = pageItems.indexOf(item);
+                            new_index = index < pageItems.size() - 1 ? index + 1 : index;
+                            break;
+
+                        case R.id.move_top:
+                            old_index = pageItems.indexOf(item);
+                            new_index = pageItems.size() - 1;
+                            break;
                     }
-                    incrementCurrentGeometryValue(item, view_id);
-                    storeUndoForGeometryBoxChange(itemView);
+                    if (old_index != new_index) {
+                        mEditPage.setItemZIndex(item, new_index);
+                        mUndoStack.storePageItemZOrder(mEditPage, item, old_index);
+                    }
                 }
-            }
-            mUndoStack.storeGroupEnd();
-            mHasGeometryRepeat = false;
-            break;
+                mUndoStack.storeGroupEnd();
+                break;
 
-        case R.id.gb_m:
-            if(targetItemClass != StopPoint.class) {
-                if(targetItem.getItemConfig().onGrid) {
-                    mGeometryMode = mGeometryMode == Item.GEOMETRY_CTRL_SIZE ? Item.GEOMETRY_CTRL_POSITION : Item.GEOMETRY_CTRL_SIZE;
+            case R.id.mi_dm_add:
+                menuActionAddItem();
+                break;
+
+            case R.id.mi_i:
+                close_bubble = false;
+                openBubble(BUBBLE_MODE_ITEMS, mBubbleItemLayout, null);
+                break;
+
+            case R.id.mi_h:
+                mHierarchyScreen.show(new ContainerPath(targetItemLayout));
+                break;
+
+            case R.id.mi_if:
+                Toast.makeText(this, "Not implemented yet", Toast.LENGTH_SHORT).show();
+                break;
+
+            case R.id.mi_ic:
+            case R.id.mi_isa:
+            case R.id.mi_isd:
+                page = targetItemLayout.getPage();
+                Comparator c = null;
+                switch (view_id) {
+                    case R.id.mi_isa:
+                        c = Utils.sItemComparatorByNameAsc;
+                        break;
+                    case R.id.mi_isd:
+                        c = Utils.sItemComparatorByNameDesc;
+                        break;
+                }
+                if (c != null) Collections.sort(page.items, c);
+                Utils.layoutItemsInTable(page.config, page.items, mScreen.isPortrait());
+                page.notifyModified();
+                break;
+
+            case R.id.mi_android_settings:
+                Intent settings = new Intent(android.provider.Settings.ACTION_SETTINGS);
+                settings.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+                try {
+                    startActivity(settings);
+                } catch (ActivityNotFoundException e) {
+                }
+                break;
+
+            case R.id.mi_dm_customize:
+                close_bubble = false;
+                openBubble(BUBBLE_MODE_SETTINGS, mBubbleItemLayout, null);
+                break;
+
+            case R.id.mi_dmc_r:
+                menuActionSettingsGlobal();
+                break;
+
+            case R.id.mi_dmc_c:
+                menuActionSettingsContainer(false);
+                break;
+
+            case R.id.mi_l:
+                close_bubble = !menuActionLockUnlock();
+                break;
+
+            case R.id.mi_dm_edit_layout:
+                if (mEditMode && mEditItemLayout == mBubbleItemLayout) {
+                    leaveEditMode();
                 } else {
-                    mGeometryMode = (mGeometryMode == Item.GEOMETRY_CTRL_SKEW ? Item.GEOMETRY_CTRL_SIZE : mGeometryMode + 1);
+                    enterEditMode(mBubbleItemLayout, null);
                 }
-                updateGeometryBox();
-            }
-            break;
+                break;
 
-        case R.id.mi_s:
-        	close_bubble=false;
-            if(LLApp.get().isFreeVersion()) {
-                LLApp.get().showFeatureLockedDialog(this);
-            } else {
-                if (targetItem != null) {
-                    openBubble(BUBBLE_MODE_SCRIPTS, targetItemView);
+            case R.id.gb_e1:
+            case R.id.gb_e2:
+                mGeometryEdit = view_id;
+                final Item masterSelectedItem = mEditItemLayout.getMasterSelectedItem();
+                if (masterSelectedItem != null) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setMessage(getGeometryEditTitle(mGeometryEdit));
+                    final EditText edit_text = new EditText(this);
+                    edit_text.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_NUMBER_FLAG_SIGNED);
+                    edit_text.setText(getGeometryEditText(masterSelectedItem, mGeometryEdit));
+                    edit_text.setSelection(edit_text.length());
+                    FrameLayout l = new FrameLayout(this);
+                    l.setPadding(10, 10, 10, 10);
+                    l.addView(edit_text);
+                    builder.setView(l);
+                    builder.setPositiveButton(android.R.string.ok,
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface arg0, int arg1) {
+                                    float value;
+                                    try {
+                                        String text = edit_text.getText().toString();
+                                        text = text.replace(',', '.');
+                                        value = Float.parseFloat(text);
+                                    } catch (Exception e) {
+                                        value = getGeometryEditValue(mEditItemLayout.getMasterSelectedItem(), mGeometryEdit);
+                                    }
+
+                                    boolean is_x = mGeometryEdit == R.id.gb_e1;
+                                    mUndoStack.storeGroupStart();
+                                    for (ItemView itemView : getSelectedItemViews()) {
+                                        Item item = itemView.getItem();
+                                        saveInitialItemViewGeometry(itemView);
+                                        updateGeometryValue(item, mGeometryMode, is_x ? value : getGeometryEditValue(item, R.id.gb_e1), is_x ? getGeometryEditValue(item, R.id.gb_e2) : value, false);
+                                        storeUndoForGeometryBoxChange(itemView);
+                                    }
+                                    mUndoStack.storeGroupEnd();
+                                    updateGeometryBox();
+                                    arg0.dismiss();
+                                }
+                            });
+                    builder.setNegativeButton(android.R.string.cancel, null);
+                    mDialog = builder.create();
+                    mDialog.show();
+                }
+                break;
+
+            case R.id.gb_hm:
+            case R.id.gb_hp:
+            case R.id.gb_vm:
+            case R.id.gb_vp:
+                mGeometryBox.removeCallbacks(mGeometryRepeat);
+                if (!mHasGeometryRepeat) {
+                    mUndoStack.storeGroupStart();
+                }
+                boolean masterOnGrid = mEditItemLayout.getMasterSelectedItem().getItemConfig().onGrid;
+                for (ItemView itemView : getSelectedItemViews()) {
+                    Item item = itemView.getItem();
+                    if (item.getItemConfig().onGrid == masterOnGrid) {
+                        if (!mHasGeometryRepeat) {
+                            saveInitialItemViewGeometry(itemView);
+                        }
+                        incrementCurrentGeometryValue(item, view_id);
+                        storeUndoForGeometryBoxChange(itemView);
+                    }
+                }
+                mUndoStack.storeGroupEnd();
+                mHasGeometryRepeat = false;
+                break;
+
+            case R.id.gb_m:
+                if (targetItemClass != StopPoint.class) {
+                    if (targetItem.getItemConfig().onGrid) {
+                        mGeometryMode = mGeometryMode == Item.GEOMETRY_CTRL_SIZE ? Item.GEOMETRY_CTRL_POSITION : Item.GEOMETRY_CTRL_SIZE;
+                    } else {
+                        mGeometryMode = (mGeometryMode == Item.GEOMETRY_CTRL_SKEW ? Item.GEOMETRY_CTRL_SIZE : mGeometryMode + 1);
+                    }
+                    updateGeometryBox();
+                }
+                break;
+
+            case R.id.mi_s:
+                close_bubble = false;
+                if (LLApp.get().isFreeVersion()) {
+                    LLApp.get().showFeatureLockedDialog(this);
                 } else {
-                    openBubble(BUBBLE_MODE_SCRIPTS, mBubbleItemLayout, null);
+                    if (targetItem != null) {
+                        openBubble(BUBBLE_MODE_SCRIPTS, targetItemView);
+                    } else {
+                        openBubble(BUBBLE_MODE_SCRIPTS, mBubbleItemLayout, null);
+                    }
                 }
-            }
-            break;
+                break;
 
-        case R.id.mi_ls:
-            Intent ip=new Intent(Intent.ACTION_PICK_ACTIVITY);
-            ip.putExtra(Intent.EXTRA_TITLE, getString(R.string.mi_ls));
-            Intent filter=new Intent("net.pierrox.lightning_launcher.script.ENUMERATE");
-            ip.putExtra(Intent.EXTRA_INTENT, filter);
-            startActivityForResult(ip, REQUEST_SELECT_SCRIPT_TO_LOAD);
-            break;
+            case R.id.mi_ls:
+                Intent ip = new Intent(Intent.ACTION_PICK_ACTIVITY);
+                ip.putExtra(Intent.EXTRA_TITLE, getString(R.string.mi_ls));
+                Intent filter = new Intent("net.pierrox.lightning_launcher.script.ENUMERATE");
+                ip.putExtra(Intent.EXTRA_INTENT, filter);
+                startActivityForResult(ip, REQUEST_SELECT_SCRIPT_TO_LOAD);
+                break;
 
-        case R.id.mi_nos:
-            int msg_res;
-            mNoScriptCounter++;
-            switch(mNoScriptCounter) {
-                case 1: msg_res = R.string.mi_nos1; break;
-                case 2: msg_res = R.string.mi_nos2; break;
-                case 3: msg_res = R.string.mi_nos3; break;
-                case 4: msg_res = R.string.mi_nos4; break;
-                default:msg_res = R.string.mi_nos5; break;
-            }
-            Toast toast =Toast.makeText(this, msg_res, Toast.LENGTH_LONG);
-            toast.setGravity(Gravity.CENTER, 0, 0);
-            toast.show();
-            if(mNoScriptCounter == 5) {
-                ScriptManager sm = mEngine.getScriptManager();
-                Script easter_egg = sm.createScriptForFile(getString(R.string.mi_nost), "/"+getPackageName().replace('.', '/'));
-                easter_egg.setSourceText("bindClass('android.view.animation.AccelerateDecelerateInterpolator');\n" +
-                        "bindClass('android.view.animation.AnimationUtils');\n" +
-                        "\n" +
-                        "var item = getEvent().getItem();\n" +
-                        "\n" +
-                        "var properties = item.getProperties();\n" +
-                        "var was_on_grid = properties.getBoolean('i.onGrid');\n" +
-                        "var old_cell = item.getCell();\n" +
-                        "var interpolator = new AccelerateDecelerateInterpolator();\n" +
-                        "\n" +
-                        "if(was_on_grid) {\n" +
-                        "    properties.edit().setBoolean('i.onGrid', false).commit();\n" +
-                        "}\n" +
-                        "\n" +
-                        "var start = AnimationUtils.currentAnimationTimeMillis();\n" +
-                        "var duration = 2000;\n" +
-                        "var turn = 10;\n" +
-                        "\n" +
-                        "rotate();\n" +
-                        "\n" +
-                        "function rotate() {\n" +
-                        "    var now = AnimationUtils.currentAnimationTimeMillis();\n" +
-                        "    var s = (now-start)/duration;\n" +
-                        "    if(s > 1) s = 1;\n" +
-                        "\n" +
-                        "    item.setRotation(interpolator.getInterpolation(s)*360*turn);\n" +
-                        "\n" +
-                        "    if(s<1) {\n" +
-                        "        setTimeout(rotate, 0);\n" +
-                        "    } else {\n" +
-                        "      if(was_on_grid) {\n" +
-                        "        properties.edit().setBoolean('i.onGrid', true).commit();\n" +
-                        "        item.setCell(old_cell.getLeft(), old_cell.getTop(), old_cell.getRight(), old_cell.getBottom());\n" +
-                        "      }\n" +
-                        "    }\n" +
-                        "}\n");
-                easter_egg.setFlag(Script.FLAG_ITEM_MENU, true);
-                sm.saveScript(easter_egg);
-            }
-            break;
+            case R.id.mi_nos:
+                int msg_res;
+                mNoScriptCounter++;
+                switch (mNoScriptCounter) {
+                    case 1:
+                        msg_res = R.string.mi_nos1;
+                        break;
+                    case 2:
+                        msg_res = R.string.mi_nos2;
+                        break;
+                    case 3:
+                        msg_res = R.string.mi_nos3;
+                        break;
+                    case 4:
+                        msg_res = R.string.mi_nos4;
+                        break;
+                    default:
+                        msg_res = R.string.mi_nos5;
+                        break;
+                }
+                Toast toast = Toast.makeText(this, msg_res, Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+                if (mNoScriptCounter == 5) {
+                    ScriptManager sm = mEngine.getScriptManager();
+                    Script easter_egg = sm.createScriptForFile(getString(R.string.mi_nost), "/" + getPackageName().replace('.', '/'));
+                    easter_egg.setSourceText("bindClass('android.view.animation.AccelerateDecelerateInterpolator');\n" +
+                            "bindClass('android.view.animation.AnimationUtils');\n" +
+                            "\n" +
+                            "var item = getEvent().getItem();\n" +
+                            "\n" +
+                            "var properties = item.getProperties();\n" +
+                            "var was_on_grid = properties.getBoolean('i.onGrid');\n" +
+                            "var old_cell = item.getCell();\n" +
+                            "var interpolator = new AccelerateDecelerateInterpolator();\n" +
+                            "\n" +
+                            "if(was_on_grid) {\n" +
+                            "    properties.edit().setBoolean('i.onGrid', false).commit();\n" +
+                            "}\n" +
+                            "\n" +
+                            "var start = AnimationUtils.currentAnimationTimeMillis();\n" +
+                            "var duration = 2000;\n" +
+                            "var turn = 10;\n" +
+                            "\n" +
+                            "rotate();\n" +
+                            "\n" +
+                            "function rotate() {\n" +
+                            "    var now = AnimationUtils.currentAnimationTimeMillis();\n" +
+                            "    var s = (now-start)/duration;\n" +
+                            "    if(s > 1) s = 1;\n" +
+                            "\n" +
+                            "    item.setRotation(interpolator.getInterpolation(s)*360*turn);\n" +
+                            "\n" +
+                            "    if(s<1) {\n" +
+                            "        setTimeout(rotate, 0);\n" +
+                            "    } else {\n" +
+                            "      if(was_on_grid) {\n" +
+                            "        properties.edit().setBoolean('i.onGrid', true).commit();\n" +
+                            "        item.setCell(old_cell.getLeft(), old_cell.getTop(), old_cell.getRight(), old_cell.getBottom());\n" +
+                            "      }\n" +
+                            "    }\n" +
+                            "}\n");
+                    easter_egg.setFlag(Script.FLAG_ITEM_MENU, true);
+                    sm.saveScript(easter_egg);
+                }
+                break;
 
-        case R.id.mi_sel:
-            close_bubble=false;
-            openBubble(BUBBLE_MODE_SELECT, mBubbleItemLayout, null);
-            break;
+            case R.id.mi_sel:
+                close_bubble = false;
+                openBubble(BUBBLE_MODE_SELECT, mBubbleItemLayout, null);
+                break;
 
-        case R.id.mi_sa:
-            for(Item item : mEditPage.items) {
-                mEditItemLayout.getItemView(item).setSelected(true);
-            }
-            break;
+            case R.id.mi_sa:
+                for (Item item : mEditPage.items) {
+                    mEditItemLayout.getItemView(item).setSelected(true);
+                }
+                break;
 
-        case R.id.mi_sn:
-            for(Item item : mEditPage.items) {
-                mEditItemLayout.getItemView(item).setSelected(false);
-            }
-            break;
+            case R.id.mi_sn:
+                for (Item item : mEditPage.items) {
+                    mEditItemLayout.getItemView(item).setSelected(false);
+                }
+                break;
 
-        case R.id.mi_ss:
-            RectF itemBounds = new RectF();
-            RectF ilBounds = new RectF(0, 0, mEditItemLayout.getWidth(), mEditItemLayout.getHeight());
-            mEditItemLayout.getLocalInverseTransform().mapRect(ilBounds);
-            for(Item item : mEditPage.items) {
-                ItemView itemView = mEditItemLayout.getItemView(item);
-                Utils.getItemViewBoundsInItemLayout(itemView, itemBounds);
-                itemView.setSelected(itemBounds.intersect(ilBounds));
-            }
-            break;
+            case R.id.mi_ss:
+                RectF itemBounds = new RectF();
+                RectF ilBounds = new RectF(0, 0, mEditItemLayout.getWidth(), mEditItemLayout.getHeight());
+                mEditItemLayout.getLocalInverseTransform().mapRect(ilBounds);
+                for (Item item : mEditPage.items) {
+                    ItemView itemView = mEditItemLayout.getItemView(item);
+                    Utils.getItemViewBoundsInItemLayout(itemView, itemBounds);
+                    itemView.setSelected(itemBounds.intersect(ilBounds));
+                }
+                break;
 
-        case R.id.mi_si:
-            for(Item item : mEditPage.items) {
-                ItemView itemView = mEditItemLayout.getItemView(item);
-                itemView.setSelected(!itemView.isSelected());
-            }
-            break;
+            case R.id.mi_si:
+                for (Item item : mEditPage.items) {
+                    ItemView itemView = mEditItemLayout.getItemView(item);
+                    itemView.setSelected(!itemView.isSelected());
+                }
+                break;
 
-        case R.id.mi_sr:
-            // TODO
-            break;
+            case R.id.mi_sr:
+                // TODO
+                break;
 
-		default:
-			Object tag = v.getTag();
-			if(tag != null && tag.getClass() == Script.class) {
-				final Script f_script = (Script)tag;
-				final Item f_item = targetItem;
-				final ItemLayout f_il = targetItemLayout;
-                final String f_source;
-                if(mBubbleMode == BUBBLE_MODE_CUSTOM_MENU) {
-                    f_source = "MENU_CUSTOM";
+            default:
+                Object tag = v.getTag();
+                if (tag != null && tag.getClass() == Script.class) {
+                    final Script f_script = (Script) tag;
+                    final Item f_item = targetItem;
+                    final ItemLayout f_il = targetItemLayout;
+                    final String f_source;
+                    if (mBubbleMode == BUBBLE_MODE_CUSTOM_MENU) {
+                        f_source = "MENU_CUSTOM";
+                    } else {
+                        f_source = f_item == null ? "MENU_APP" : "MENU_ITEM";
+                    }
+                    // avoid closing a menu which has been open by the script
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Page p = f_il.getPage();
+                            p.getEngine().getScriptExecutor().runScript(mScreen, f_script, f_source, null, f_il, f_item == null ? null : f_il.getItemView(f_item));
+                        }
+                    });
                 } else {
-                    f_source = f_item==null ? "MENU_APP":"MENU_ITEM";
+                    // not a known id, must be a dynamically added item with the tag object being an intent to launch
+                    try {
+                        startActivity((Intent) v.getTag());
+                    } catch (Exception e) {
+                    }
                 }
-				// avoid closing a menu which has been open by the script
-				mHandler.post(new Runnable() {
-					@Override
-					public void run() {
-                        Page p = f_il.getPage();
-                        p.getEngine().getScriptExecutor().runScript(mScreen, f_script, f_source, null, f_il, f_item==null ? null : f_il.getItemView(f_item));
-					}
-				});
-			} else {
-                // not a known id, must be a dynamically added item with the tag object being an intent to launch
-                try { startActivity((Intent)v.getTag()); } catch(Exception e) {}
-			}
-			break;
-		}
+                break;
+        }
 
-		if(close_bubble) {
-			closeBubble();
-		}
-	}
+        if (close_bubble) {
+            closeBubble();
+        }
+    }
 
     private void menuActionPickCustomIcon(ItemLayout il, Shortcut shortcut) {
         enterEditMode(il, shortcut);
@@ -1909,13 +1966,13 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
             public void onTextInputDone(String value) {
                 mUndoStack.storeGroupStart();
                 ArrayList<Item> selectedItems = getSelectedItems();
-                if(!selectedItems.contains(shortcut)) {
+                if (!selectedItems.contains(shortcut)) {
                     selectedItems.add(shortcut);
                 }
                 for (Item item : selectedItems) {
-                    if(item instanceof Shortcut) {
+                    if (item instanceof Shortcut) {
                         mUndoStack.storeItemState(item);
-                        ((Shortcut)item).setLabel(value);
+                        ((Shortcut) item).setLabel(value);
                         item.notifyChanged();
                     }
                 }
@@ -1932,7 +1989,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
     private void menuActionPasteStyle() {
         Item item_from = mCopyStyleFromItem;
 
-        if(item_from == null) {
+        if (item_from == null) {
             return;
         }
 
@@ -1942,14 +1999,14 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
             Item item_to = item_view_to.getItem();
 
-            if(item_to == item_from) {
+            if (item_to == item_from) {
                 continue;
             }
 
             mUndoStack.storeItemState(item_to);
 
             int id_to = item_to.getId();
-            Page page_to =item_to.getPage();
+            Page page_to = item_to.getPage();
             if (item_to instanceof StopPoint) {
                 if (item_from instanceof StopPoint) {
                     StopPoint from = (StopPoint) item_from;
@@ -2033,7 +2090,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         mUndoStack.storeGroupStart();
         for (ItemView itemView : itemViews) {
             Item item = itemView.getItem();
-            if(!(item instanceof StopPoint)) {
+            if (!(item instanceof StopPoint)) {
                 saveInitialItemViewGeometry(itemView);
 
                 ItemConfig ic = item.getItemConfig();
@@ -2062,7 +2119,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
             saveInitialItemViewGeometry(itemView);
             Item item = itemView.getItem();
             boolean was_on_grid = item.getItemConfig().onGrid;
-            if(was_on_grid != new_on_grid) {
+            if (was_on_grid != new_on_grid) {
                 itemView.setOnGrid(!was_on_grid);
                 mUndoStack.storeItemGridAttachment(itemView, was_on_grid, mOriginalItemsGeometry.get(item.getId()));
             }
@@ -2077,7 +2134,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         for (Item item : items) {
             if (item instanceof Folder) {
                 widget = ((Folder) item).hasWidget();
-                if(widget) {
+                if (widget) {
                     break;
                 }
             } else if (item instanceof Widget) {
@@ -2086,7 +2143,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
             }
         }
 
-        if(widget) {
+        if (widget) {
             showConfirmWidgetDeletionDialog(new Runnable() {
                 @Override
                 public void run() {
@@ -2112,13 +2169,16 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
     }
 
     protected void menuActionAddItem() {
-        try { removeDialog(DIALOG_ADD); } catch(Exception e) {}
+        try {
+            removeDialog(DIALOG_ADD);
+        } catch (Exception e) {
+        }
         showDialog(DIALOG_ADD);
     }
 
     protected void menuActionEdit() {
-        if(mBubbleItemView == null) {
-            if(mEditMode) {
+        if (mBubbleItemView == null) {
+            if (mEditMode) {
                 leaveEditMode();
             } else {
                 enterEditMode(mScreen.getTargetOrTopmostItemLayout(), null);
@@ -2126,7 +2186,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         } else {
             Class<?> cls = mBubbleItemView.getClass();
             enterEditMode(mBubbleItemLayout, mBubbleItemView.getItem());
-            if(cls == StopPoint.class || cls == Unlocker.class || cls == PageIndicator.class || cls == CustomView.class) {
+            if (cls == StopPoint.class || cls == Unlocker.class || cls == PageIndicator.class || cls == CustomView.class) {
                 showEditPropertiesBox();
             } else {
                 final ItemView finalItemView = mBubbleItemView;
@@ -2135,15 +2195,14 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                     public void run() {
                         openBubble(BUBBLE_MODE_ITEM_EDIT, finalItemView);
                     }
-                }, ANIMATE_EDIT_BAR_DURATION+10);
+                }, ANIMATE_EDIT_BAR_DURATION + 10);
             }
         }
     }
 
-
     private void menuActionCloneItem() {
         ItemView mainItemView = mEditMode ? mEditItemLayout.getMasterSelectedItemView() : mBubbleItemView;
-        if(mainItemView == null) {
+        if (mainItemView == null) {
             // object deleted in the meantime
             return;
         }
@@ -2157,19 +2216,19 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         for (Item item : actionItems) {
             final Item newItem = Utils.cloneItem(item);
             mUndoStack.storePageAddItem(newItem);
-            if(mainItem == item) {
+            if (mainItem == item) {
                 mainNewItem = newItem;
             }
             newItems[i++] = newItem;
         }
         mUndoStack.storeGroupEnd();
 
-        enterEditMode(mEditMode?mEditItemLayout:mBubbleItemLayout, mainNewItem);
-        if(mEditMode) {
+        enterEditMode(mEditMode ? mEditItemLayout : mBubbleItemLayout, mainNewItem);
+        if (mEditMode) {
             for (Item item : newItems) {
                 ItemView itemView = mEditItemLayout.getItemView(item);
                 itemView.setSelected(true);
-                if(item == mainNewItem) {
+                if (item == mainNewItem) {
                     configureHandlesForItemView(itemView, HandleView.Mode.CONTENT_SIZE, true);
                 }
             }
@@ -2185,7 +2244,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
     private boolean menuActionToggleGeometryBox() {
         boolean visibility = isGeometryBoxVisible();
-        if(visibility) {
+        if (visibility) {
             hideGeometryBox();
         } else {
             showGeometryBox();
@@ -2201,7 +2260,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         ContainerPath path;
         ItemLayout il;
         ItemView masterSelectedItemView = mEditMode ? mEditItemLayout.getMasterSelectedItemView() : null;
-        if(masterSelectedItemView != null && masterSelectedItemView.getItem() instanceof Folder) {
+        if (masterSelectedItemView != null && masterSelectedItemView.getItem() instanceof Folder) {
             path = new ContainerPath(masterSelectedItemView);
         } else {
             path = new ContainerPath(use_edit_page ? mEditItemLayout : mScreen.getTargetOrTopmostItemLayout());
@@ -2211,10 +2270,10 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
     private boolean menuActionLockUnlock() {
         boolean isOpeningBubble = false;
-        if(mGlobalConfig.itemLongTap.action != GlobalConfig.NOTHING) {
+        if (mGlobalConfig.itemLongTap.action != GlobalConfig.NOTHING) {
             mGlobalConfig.itemLongTap.action = GlobalConfig.NOTHING;
             leaveEditMode();
-            if((mSystemConfig.hints & SystemConfig.HINT_LOCKED)==0) {
+            if ((mSystemConfig.hints & SystemConfig.HINT_LOCKED) == 0) {
                 mScreen.setLastTouchEventForMenuBottom(false);
                 openBubble(BUBBLE_MODE_HINT_LOCKED);
                 isOpeningBubble = true;
@@ -2230,10 +2289,10 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
     private boolean menuActionToggleMultiSelection() {
         boolean multi_selection = !mSystemConfig.hasSwitch(SystemConfig.SWITCH_MULTI_SELECTION);
         mSystemConfig.setSwitch(SystemConfig.SWITCH_MULTI_SELECTION, multi_selection);
-        if(!multi_selection) {
+        if (!multi_selection) {
             ItemView masterSelectedItemView = mEditItemLayout.getMasterSelectedItemView();
             for (ItemView itemView : getSelectedItemViews()) {
-                if(itemView != masterSelectedItemView) {
+                if (itemView != masterSelectedItemView) {
                     itemView.setSelected(false);
                 }
             }
@@ -2262,10 +2321,10 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         ItemConfig.PinMode prev_pin_mode = ic.pinMode;
         Page page = item.getPage();
         ItemLayout itemLayout = itemView.getParentItemLayout();
-        if(mSystemConfig.hasSwitch(SystemConfig.SWITCH_HONOUR_PINNED_ITEMS)) {
+        if (mSystemConfig.hasSwitch(SystemConfig.SWITCH_HONOUR_PINNED_ITEMS)) {
             Utils.convertPinnedItemPosition(itemLayout, item, prev_pin_mode, new_pin_mode);
         }
-        ic.pinMode=new_pin_mode;
+        ic.pinMode = new_pin_mode;
         page.setModified();
         itemLayout.invalidate();
         itemLayout.requestLayout();
@@ -2273,158 +2332,192 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         updateEditActionBox();
     }
 
-	@Override
-	public boolean onMenuOpened(int featureId, Menu menu) {
+    @Override
+    public boolean onMenuOpened(int featureId, Menu menu) {
 //		mIsOptionsMenuOpened=true;
-		return super.onMenuOpened(featureId, menu);
-	}
+        return super.onMenuOpened(featureId, menu);
+    }
 
-	@Override
-	public void onOptionsMenuClosed(Menu menu) {
+    @Override
+    public void onOptionsMenuClosed(Menu menu) {
 //		mIsOptionsMenuOpened=false;
-		mScreen.hideStatusBarIfNeeded();
-	}
+        mScreen.hideStatusBarIfNeeded();
+    }
 
-	@Override
+    @Override
     protected Dialog onCreateDialog(int id) {
         AlertDialog.Builder builder;
 
         switch (id) {
-        case DIALOG_APP_NOT_INSTALLED:
-            if(mNotValidShortcut != null) {
-                builder=new AlertDialog.Builder(this);
-                builder.setMessage(R.string.app_not_valid);
-                final ComponentName cn=mNotValidShortcut.getIntent().getComponent();
-                if(cn != null) {
-                    builder.setPositiveButton(R.string.app_store, new DialogInterface.OnClickListener() {
+            case DIALOG_APP_NOT_INSTALLED:
+                if (mNotValidShortcut != null) {
+                    builder = new AlertDialog.Builder(this);
+                    builder.setMessage(R.string.app_not_valid);
+                    final ComponentName cn = mNotValidShortcut.getIntent().getComponent();
+                    if (cn != null) {
+                        builder.setPositiveButton(R.string.app_store, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Version.APP_STORE_INSTALL_PREFIX + cn.getPackageName()));
+                                Utils.startActivitySafely(Dashboard.this, intent, R.string.start_activity_error);
+                                mNotValidShortcut = null;
+                            }
+                        });
+                    }
+                    builder.setNeutralButton(R.string.mi_pick_app, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            Intent intent=new Intent(Intent.ACTION_VIEW, Uri.parse(Version.APP_STORE_INSTALL_PREFIX+cn.getPackageName()));
-                            Utils.startActivitySafely(Dashboard.this, intent, R.string.start_activity_error);
-                            mNotValidShortcut=null;
+                            replaceShortcutApp(mNotValidShortcut);
+                            mNotValidShortcut = null;
                         }
                     });
+                    builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            mNotValidShortcut = null;
+                        }
+                    });
+                    return builder.create();
                 }
-                builder.setNeutralButton(R.string.mi_pick_app, new DialogInterface.OnClickListener() {
+                break;
+
+            case DIALOG_FIRST_USE:
+                builder = new AlertDialog.Builder(this);
+                builder.setTitle(R.string.first_use_title);
+                builder.setMessage(LLApp.get().isTrialVersion() && BuildConfig.IS_TRIAL ? R.string.tr_w : R.string.first_use_message);
+                builder.setPositiveButton(android.R.string.ok, null);
+                builder.setCancelable(false);
+                return builder.create();
+
+            case DIALOG_IMPORT_LL:
+                builder = new AlertDialog.Builder(this);
+                builder.setTitle(R.string.ll_import_title);
+                builder.setMessage(R.string.ll_import_message);
+                builder.setPositiveButton(android.R.string.ok, null);
+                builder.setCancelable(false);
+                return builder.create();
+
+            case DIALOG_ADD:
+                return new AddItemDialog(this, showPluginsInAddItemDialog(), new AddItemDialog.AddItemDialogInterface() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        replaceShortcutApp(mNotValidShortcut);
-                        mNotValidShortcut=null;
+                    public boolean isDialogAddItemEnabled(int id) {
+                        return Dashboard.this.isDialogAddItemEnabled(id);
+                    }
+
+                    @Override
+                    public void onBuiltinItemClicked(int id) {
+                        switch (id) {
+                            case AddItemDialog.AI_APP:
+                                selectAppForAdd();
+                                break;
+                            case AddItemDialog.AI_SHORTCUT:
+                                selectShortcutForAddOrPick(null);
+                                break;
+                            case AddItemDialog.AI_TEXT:
+                                addItemText();
+                                break;
+                            case AddItemDialog.AI_ICON:
+                                addItemIcon();
+                                break;
+                            case AddItemDialog.AI_DUMMY:
+                                addDummyShortcut();
+                                break;
+                            case AddItemDialog.AI_FOLDER:
+                                addFolder();
+                                break;
+                            case AddItemDialog.AI_PANEL:
+                                addEmbeddedFolder();
+                                break;
+                            case AddItemDialog.AI_SIDE_BAR:
+                                addSideBar();
+                                break;
+                            case AddItemDialog.AI_WIDGET:
+                                selectAppWidgetForAdd();
+                                break;
+//                        case AI_LLWIDGET: selectLLWidgetForAdd(); break;
+                            case AddItemDialog.AI_BADGE:
+                                addBadge();
+                                break;
+                            case AddItemDialog.AI_DYNAMIC_TEXT:
+                                addDynamicText();
+                                break;
+                            case AddItemDialog.AI_PAGE_INDICATOR:
+                                addPageIndicator();
+                                break;
+                            case AddItemDialog.AI_UNLOCKER:
+                                addUnlocker();
+                                break;
+                            case AddItemDialog.AI_STOP_POINT:
+                                addStopPoint();
+                                break;
+                            case AddItemDialog.AI_BOOKMARK:
+                                addBookmark();
+                                break;
+                            case AddItemDialog.AI_LIGHTNING_ACTION:
+                                addLightningAction();
+                                break;
+                            case AddItemDialog.AI_CUSTOM_VIEW:
+                                addCustomView();
+                                break;
+                        }
+                    }
+
+                    @Override
+                    public void onPluginClicked(AddItemDialog.Plugin plugin) {
+                        loadScriptFromPackage(plugin.intent, true);
+                    }
+
+                    @Override
+                    public void onPluginLongClicked(AddItemDialog.Plugin plugin) {
+                        final Uri uri = Uri.parse(Version.APP_STORE_INSTALL_PREFIX + plugin.intent.getComponent().getPackageName());
+                        startActivity(Intent.createChooser(new Intent(Intent.ACTION_VIEW, uri), null));
                     }
                 });
-                builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+
+            case DIALOG_STOP_POINT:
+                builder = new AlertDialog.Builder(this);
+                builder.setTitle(R.string.tab_stop_point);
+                builder.setMessage(R.string.sp_w);
+                builder.setPositiveButton(android.R.string.ok, null);
+                return builder.create();
+
+            case DIALOG_LAUNCHER_APPS_NO_HOST_PERMISSION:
+                builder = new AlertDialog.Builder(this);
+                builder.setTitle(R.string.as_no_hp_t);
+                builder.setMessage(R.string.as_no_hp_m);
+                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        mNotValidShortcut=null;
+                        PhoneUtils.selectLauncher(Dashboard.this, true);
                     }
                 });
+                builder.setNegativeButton(android.R.string.cancel, null);
                 return builder.create();
-            }
-            break;
 
-        case DIALOG_FIRST_USE:
-        	builder=new AlertDialog.Builder(this);
-        	builder.setTitle(R.string.first_use_title);
-        	builder.setMessage(LLApp.get().isTrialVersion() && BuildConfig.IS_TRIAL ? R.string.tr_w : R.string.first_use_message);
-        	builder.setPositiveButton(android.R.string.ok, null);
-        	builder.setCancelable(false);
-        	return builder.create();
-
-        case DIALOG_IMPORT_LL:
-        	builder=new AlertDialog.Builder(this);
-        	builder.setTitle(R.string.ll_import_title);
-        	builder.setMessage(R.string.ll_import_message);
-        	builder.setPositiveButton(android.R.string.ok, null);
-        	builder.setCancelable(false);
-        	return builder.create();
-
-        case DIALOG_ADD:
-            return new AddItemDialog(this, showPluginsInAddItemDialog(), new AddItemDialog.AddItemDialogInterface() {
-                @Override
-                public boolean isDialogAddItemEnabled(int id) {
-                    return Dashboard.this.isDialogAddItemEnabled(id);
-                }
-
-                @Override
-                public void onBuiltinItemClicked(int id) {
-                    switch(id) {
-                        case AddItemDialog.AI_APP: selectAppForAdd(); break;
-                        case AddItemDialog.AI_SHORTCUT: selectShortcutForAddOrPick(null); break;
-                        case AddItemDialog.AI_TEXT: addItemText(); break;
-                        case AddItemDialog.AI_ICON: addItemIcon(); break;
-                        case AddItemDialog.AI_DUMMY: addDummyShortcut(); break;
-                        case AddItemDialog.AI_FOLDER: addFolder(); break;
-                        case AddItemDialog.AI_PANEL: addEmbeddedFolder(); break;
-                        case AddItemDialog.AI_SIDE_BAR: addSideBar(); break;
-                        case AddItemDialog.AI_WIDGET: selectAppWidgetForAdd(); break;
-//                        case AI_LLWIDGET: selectLLWidgetForAdd(); break;
-                        case AddItemDialog.AI_BADGE: addBadge(); break;
-                        case AddItemDialog.AI_DYNAMIC_TEXT: addDynamicText(); break;
-                        case AddItemDialog.AI_PAGE_INDICATOR: addPageIndicator(); break;
-                        case AddItemDialog.AI_UNLOCKER: addUnlocker(); break;
-                        case AddItemDialog.AI_STOP_POINT: addStopPoint(); break;
-                        case AddItemDialog.AI_BOOKMARK: addBookmark(); break;
-                        case AddItemDialog.AI_LIGHTNING_ACTION: addLightningAction(); break;
-                        case AddItemDialog.AI_CUSTOM_VIEW: addCustomView(); break;
-                    }
-                }
-
-                @Override
-                public void onPluginClicked(AddItemDialog.Plugin plugin) {
-                    loadScriptFromPackage(plugin.intent, true);
-                }
-
-                @Override
-                public void onPluginLongClicked(AddItemDialog.Plugin plugin) {
-                    final Uri uri = Uri.parse(Version.APP_STORE_INSTALL_PREFIX + plugin.intent.getComponent().getPackageName());
-                    startActivity(Intent.createChooser(new Intent(Intent.ACTION_VIEW, uri), null));
-                }
-            });
-
-        case DIALOG_STOP_POINT:
-            builder = new AlertDialog.Builder(this);
-            builder.setTitle(R.string.tab_stop_point);
-            builder.setMessage(R.string.sp_w);
-            builder.setPositiveButton(android.R.string.ok, null);
-            return builder.create();
-
-        case DIALOG_LAUNCHER_APPS_NO_HOST_PERMISSION:
-            builder = new AlertDialog.Builder(this);
-            builder.setTitle(R.string.as_no_hp_t);
-            builder.setMessage(R.string.as_no_hp_m);
-            builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    PhoneUtils.selectLauncher(Dashboard.this, true);
-                }
-            });
-            builder.setNegativeButton(android.R.string.cancel, null);
-            return builder.create();
-
-        case DIALOG_WRAP:
-            builder = new AlertDialog.Builder(this);
-            builder.setTitle(R.string.dialog_help_hint_t);
-            builder.setMessage(R.string.h_w);
-            final CheckBox dsa = new CheckBox(this);
-            dsa.setText(R.string.dialog_help_hint_dsa);
-            builder.setView(dsa);
-            builder.setPositiveButton(android.R.string.ok,
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            if(dsa.isChecked()) {
-                                mSystemConfig.hints |= SystemConfig.HINT_WRAP;
+            case DIALOG_WRAP:
+                builder = new AlertDialog.Builder(this);
+                builder.setTitle(R.string.dialog_help_hint_t);
+                builder.setMessage(R.string.h_w);
+                final CheckBox dsa = new CheckBox(this);
+                dsa.setText(R.string.dialog_help_hint_dsa);
+                builder.setView(dsa);
+                builder.setPositiveButton(android.R.string.ok,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (dsa.isChecked()) {
+                                    mSystemConfig.hints |= SystemConfig.HINT_WRAP;
+                                }
                             }
-                        }
-                    });
-            return builder.create();
+                        });
+                return builder.create();
         }
 
         return super.onCreateDialog(id);
-	}
+    }
 
     private void showConfirmWidgetDeletionDialog(final Runnable action_ok) {
-        if((mSystemConfig.hints & SystemConfig.HINT_WIDGET_DELETION) != 0) {
+        if ((mSystemConfig.hints & SystemConfig.HINT_WIDGET_DELETION) != 0) {
             action_ok.run();
         } else {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -2436,7 +2529,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
             builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    if(dsa.isChecked()) {
+                    if (dsa.isChecked()) {
                         mSystemConfig.hints |= SystemConfig.HINT_WIDGET_DELETION;
                     }
                     action_ok.run();
@@ -2445,7 +2538,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
             builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    if(dsa.isChecked()) {
+                    if (dsa.isChecked()) {
                         mSystemConfig.hints |= SystemConfig.HINT_WIDGET_DELETION;
                     }
                 }
@@ -2466,7 +2559,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
     public boolean onSearchRequested() {
         Page mainPage = mScreen.getCurrentRootPage();
         EventAction ea = mainPage.config.searchKey;
-    	return mScreen.runAction(mainPage.getEngine(), "K_SEARCH", ea.action == GlobalConfig.UNSET ? mGlobalConfig.searchKey : ea);
+        return mScreen.runAction(mainPage.getEngine(), "K_SEARCH", ea.action == GlobalConfig.UNSET ? mGlobalConfig.searchKey : ea);
     }
 
     /**
@@ -2497,33 +2590,23 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
     }
 
     private void zoomToOriginOrBubbleInContainer(ItemLayout il) {
-    	if(!mScreen.zoomToOrigin(il) && il.getPage().isFolder()) {
-    		ItemView opener = il.getOpenerItemView();
-    		if(opener != null) {
+        if (!mScreen.zoomToOrigin(il) && il.getPage().isFolder()) {
+            ItemView opener = il.getOpenerItemView();
+            if (opener != null) {
                 ItemLayout parentIl = opener.getParentItemLayout();
-    			if(parentIl != null) {
+                if (parentIl != null) {
                     zoomToOriginOrBubbleInContainer(parentIl);
                 }
-    		}
-    	}
-    }
-
-    private int mLongPressKeyCode;
-    private boolean mHasLongKeyPress;
-    private final Runnable mLongKeyPressRunnable = new Runnable() {
-        @Override
-        public void run() {
-            mHasLongKeyPress = true;
-            handleLongKeyPress(mLongPressKeyCode);
+            }
         }
-    };
+    }
 
     private void startLongKeyPressTimer(int keyCode) {
 
-            // only one key managed at a time
-            mLongPressKeyCode = keyCode;
-            mHandler.removeCallbacks(mLongKeyPressRunnable);
-            mHandler.postDelayed(mLongKeyPressRunnable, ViewConfiguration.getLongPressTimeout());
+        // only one key managed at a time
+        mLongPressKeyCode = keyCode;
+        mHandler.removeCallbacks(mLongKeyPressRunnable);
+        mHandler.postDelayed(mLongKeyPressRunnable, ViewConfiguration.getLongPressTimeout());
 
     }
 
@@ -2532,8 +2615,8 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event)  {
-        if(!mSetupInProgress) {
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (!mSetupInProgress) {
             if (keyCode == KeyEvent.KEYCODE_BACK) {
                 event.startTracking();
                 startLongKeyPressTimer(keyCode);
@@ -2552,13 +2635,62 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         return super.onKeyDown(keyCode, event);
     }
 
-	@Override
-    public boolean onKeyUp(int keyCode, KeyEvent event)  {
-        if(mSetupInProgress) {
+//	@SuppressLint("WorldReadableFiles")
+//	private void shareScreenshot() {
+//		mContentView.setDrawingCacheEnabled(true);
+//		try {
+//			FileOutputStream out=openFileOutput("screenshot.png", MODE_WORLD_READABLE);
+//			mContentView.getDrawingCache().compress(CompressFormat.PNG, 100, out);
+//			Intent intent = new Intent(Intent.ACTION_SEND);
+//			intent.putExtra(Intent.EXTRA_SUBJECT, "Some Subject Line");
+//			intent.putExtra(Intent.EXTRA_TEXT, "Body of the message, woot!");
+//			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+//			intent.setType("image/png");
+//		    Uri uri = Uri.parse(FileProvider.CONTENT_URI + FileProvider.SCREENSHOT_FILE);
+//		    intent.putExtra(Intent.EXTRA_STREAM, uri);
+//		    startActivity(Intent.createChooser(intent, "How do you want to share?"));
+//		} catch(IOException e) {
+//			e.printStackTrace();
+//		}
+//	}
+
+
+    //	private int getPageWithRotation(int page) {
+//		int p;
+//		File f;
+//		switch (mDisplayRotation) {
+//		case Surface.ROTATION_90:
+//		case Surface.ROTATION_180:
+//			p=Utils.getPageForRotation(page, mDisplayRotation);
+//			f=Utils.getWorkspaceConfigFile(this, p);
+//			if(f.exists()) {
+//				return p;
+//			}
+//			break;
+//
+//		case Surface.ROTATION_270:
+//			p=Utils.getPageForRotation(page, mDisplayRotation);
+//			f=Utils.getWorkspaceConfigFile(this, p);
+//			if(f.exists()) {
+//				return p;
+//			}
+//			p=Utils.getPageForRotation(page, Surface.ROTATION_90);
+//			f=Utils.getWorkspaceConfigFile(this, p);
+//			if(f.exists()) {
+//				return p;
+//			}
+//		}
+//
+//		return Utils.getPageForRotation(page, Surface.ROTATION_0);
+//	}
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (mSetupInProgress) {
             return false;
         }
 
-        if(!mHasLongKeyPress) {
+        if (!mHasLongKeyPress) {
             cancelLongKeyPressTimer();
             if (event.isTracking() && !event.isCanceled()) {
                 Page mainPage = mScreen.getCurrentRootPage();
@@ -2585,19 +2717,19 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         } else {
             mHasLongKeyPress = false;
         }
-		return super.onKeyUp(keyCode, event);
-	}
+        return super.onKeyUp(keyCode, event);
+    }
 
     private boolean handleLongKeyPress(int keyCode) {
-        if(mSetupInProgress) {
+        if (mSetupInProgress) {
             return false;
         }
         Page mainPage = mScreen.getCurrentRootPage();
-        if(keyCode==KeyEvent.KEYCODE_MENU) {
+        if (keyCode == KeyEvent.KEYCODE_MENU) {
             EventAction ea = mainPage.config.longMenuKey;
             mScreen.runAction(mainPage.getEngine(), "K_MENU_L", ea.action == GlobalConfig.UNSET ? mGlobalConfig.longMenuKey : ea);
             return true;
-        } else if(keyCode==KeyEvent.KEYCODE_BACK) {
+        } else if (keyCode == KeyEvent.KEYCODE_BACK) {
             EventAction ea = mainPage.config.longBackKey;
             mScreen.runAction(mainPage.getEngine(), "K_BACK_L", ea.action == GlobalConfig.UNSET ? mGlobalConfig.longBackKey : ea);
             return true;
@@ -2611,7 +2743,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
     }
 
     @Override
-	public boolean onLongClick(View v) {
+    public boolean onLongClick(View v) {
         int view_id = v.getId();
         switch (view_id) {
             case R.id.gb_hm:
@@ -2621,7 +2753,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                 mUndoStack.storeGroupStart();
                 boolean masterOnGrid = mEditItemLayout.getMasterSelectedItem().getItemConfig().onGrid;
                 for (ItemView itemView : getSelectedItemViews()) {
-                    if(itemView.getItem().getItemConfig().onGrid == masterOnGrid) {
+                    if (itemView.getItem().getItemConfig().onGrid == masterOnGrid) {
                         saveInitialItemViewGeometry(itemView);
                     }
                 }
@@ -2631,63 +2763,63 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                 return false;
 
             case R.id.gb_m:
-                mGeometryMode = (mGeometryMode == Item.GEOMETRY_CTRL_SIZE ? Item.GEOMETRY_CTRL_SKEW : mGeometryMode-1);
+                mGeometryMode = (mGeometryMode == Item.GEOMETRY_CTRL_SIZE ? Item.GEOMETRY_CTRL_SKEW : mGeometryMode - 1);
                 updateGeometryBox();
                 return true;
 
             default:
                 return false;
         }
-	}
+    }
 
-	private void createDesktopTransitionAnimations() {
-		AlphaAnimation aa_in=new AlphaAnimation(0, 1);
-		aa_in.setDuration(400);
-		AlphaAnimation aa_out=new AlphaAnimation(1, 0);
-		aa_out.setDuration(400);
+    private void createDesktopTransitionAnimations() {
+        AlphaAnimation aa_in = new AlphaAnimation(0, 1);
+        aa_in.setDuration(400);
+        AlphaAnimation aa_out = new AlphaAnimation(1, 0);
+        aa_out.setDuration(400);
 
 
-        mFadeInAnim=new AlphaAnimation(0, 1);
+        mFadeInAnim = new AlphaAnimation(0, 1);
         mFadeInAnim.setDuration(400);
-        mFadeOutAnim=new AlphaAnimation(1, 0);
+        mFadeOutAnim = new AlphaAnimation(1, 0);
         mFadeOutAnim.setDuration(400);
 
-        mSlideHLeftInAnim=generateSlide(true, -1f, 0, 0, 0);
-        mSlideHRightOutAnim=generateSlide(false, 0, 1f, 0, 0);
+        mSlideHLeftInAnim = generateSlide(true, -1f, 0, 0, 0);
+        mSlideHRightOutAnim = generateSlide(false, 0, 1f, 0, 0);
 
-        mSlideHRightInAnim=generateSlide(true, 1f, 0, 0, 0);
-        mSlideHLeftOutAnim=generateSlide(false, 0, -1f, 0, 0);
+        mSlideHRightInAnim = generateSlide(true, 1f, 0, 0, 0);
+        mSlideHLeftOutAnim = generateSlide(false, 0, -1f, 0, 0);
 
-        mSlideVUpInAnim=generateSlide(true, 0, 0, -1f, 0);
-        mSlideVDownOutAnim=generateSlide(false, 0, 0, 0, 1f);
+        mSlideVUpInAnim = generateSlide(true, 0, 0, -1f, 0);
+        mSlideVDownOutAnim = generateSlide(false, 0, 0, 0, 1f);
 
-        mSlideVDownInAnim=generateSlide(true, 0, 0, 1f, 0);
-        mSlideVUpOutAnim=generateSlide(false, 0, 0, 0, -1f);
-	}
+        mSlideVDownInAnim = generateSlide(true, 0, 0, 1f, 0);
+        mSlideVUpOutAnim = generateSlide(false, 0, 0, 0, -1f);
+    }
 
-	private AnimationSet generateSlide(boolean in, float fx, float tx, float fy, float ty) {
-		AnimationSet as=new AnimationSet(true);
+    private AnimationSet generateSlide(boolean in, float fx, float tx, float fy, float ty) {
+        AnimationSet as = new AnimationSet(true);
         //as.addAnimation(in ? mFadeInAnim : mFadeOutAnim);
         TranslateAnimation t = new TranslateAnimation(Animation.RELATIVE_TO_SELF, fx, Animation.RELATIVE_TO_SELF, tx, Animation.RELATIVE_TO_SELF, fy, Animation.RELATIVE_TO_SELF, ty);
         t.setDuration(400);
         as.addAnimation(t);
         return as;
-	}
+    }
 
     protected ItemLayout setPagerPage(int pageId, int direction_hint) {
         Page currentPage = mScreen.getCurrentRootPage();
-        int currentPageId = currentPage==null ? Page.NONE : currentPage.id;
-        if(currentPageId == pageId) {
+        int currentPageId = currentPage == null ? Page.NONE : currentPage.id;
+        if (currentPageId == pageId) {
             return mScreen.getCurrentRootItemLayout();
         }
 
-        if(direction_hint != Screen.PAGE_DIRECTION_HINT_DONT_MOVE) {
-            if(currentPageId != Page.NONE) {
-                if(!mScreen.isPaused()) {
+        if (direction_hint != Screen.PAGE_DIRECTION_HINT_DONT_MOVE) {
+            if (currentPageId != Page.NONE) {
+                if (!mScreen.isPaused()) {
                     mScreen.getCurrentRootItemLayout().pause();
                 }
                 mNavigationStack.push(currentPageId);
-                if(mEditMode) {
+                if (mEditMode) {
                     leaveEditMode();
                 }
                 closeBubble();
@@ -2729,14 +2861,14 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         Page page = pm.getOrLoadPage(pageId);
 
         ItemLayout itemLayout = null;
-        for(int i=mViewAnimator.getChildCount()-1; i>=0; i--) {
+        for (int i = mViewAnimator.getChildCount() - 1; i >= 0; i--) {
             ItemLayout il = (ItemLayout) mViewAnimator.getChildAt(i);
-            if(il.getPage().id == pageId) {
+            if (il.getPage().id == pageId) {
                 itemLayout = il;
                 break;
             }
         }
-        if(itemLayout == null) {
+        if (itemLayout == null) {
             ItemLayout il = new ItemLayout(this, null);
             mScreen.takeItemLayoutOwnership(il);
             mViewAnimator.addView(il, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
@@ -2745,7 +2877,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
             itemLayout = il;
         }
 
-        if(direction_hint != Screen.PAGE_DIRECTION_HINT_DONT_MOVE) {
+        if (direction_hint != Screen.PAGE_DIRECTION_HINT_DONT_MOVE) {
             int i = mViewAnimator.indexOfChild(itemLayout);
             if (i != mViewAnimator.getDisplayedChild()) {
                 mViewAnimator.setDisplayedChild(i);
@@ -2763,7 +2895,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
             mEngine.writeCurrentPage(pageId);
         }
 
-        if(mGlobalConfig.reAddScreenIfNeeded(pageId)) {
+        if (mGlobalConfig.reAddScreenIfNeeded(pageId)) {
             mEngine.notifyGlobalConfigChanged();
         }
 
@@ -2775,9 +2907,9 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
     }
 
     private void updateLightningLiveWallpaperVisibility() {
-        if(this.getClass() == Dashboard.class) {
+        if (this.getClass() == Dashboard.class) {
             Page page = mScreen.getCurrentRootPage();
-            if(page != null) {
+            if (page != null) {
                 boolean visible = page.id == Page.NONE || page.id != page.getEngine().getGlobalConfig().lwpScreen;
                 setLightningLiveWallpaperVisibility(visible, 0);
             }
@@ -2785,14 +2917,14 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
     }
 
     private void setLightningLiveWallpaperVisibility(final boolean visible, int delay) {
-        if(this.getClass() == Dashboard.class) {
-            if(mSetLiveWallpaperVisibility != null) {
+        if (this.getClass() == Dashboard.class) {
+            if (mSetLiveWallpaperVisibility != null) {
                 mHandler.removeCallbacks(mSetLiveWallpaperVisibility);
                 mSetLiveWallpaperVisibility = null;
             }
             final Screen lwp = LLApp.get().getScreen(ScreenIdentity.LIVE_WALLPAPER);
-            if(lwp != null) {
-                if(delay != 0) {
+            if (lwp != null) {
+                if (delay != 0) {
                     mSetLiveWallpaperVisibility = new Runnable() {
                         @Override
                         public void run() {
@@ -2807,16 +2939,14 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         }
     }
 
-    private Runnable mSetLiveWallpaperVisibility;
-
     @SuppressWarnings("deprecation")
     protected void configureActivity(Page page) {
         PageConfig c = page.config;
-        Window w=getWindow();
+        Window w = getWindow();
 
         int width, height;
 
-        Display display=getWindowManager().getDefaultDisplay();
+        Display display = getWindowManager().getDefaultDisplay();
 
         Class<?> display_class = Display.class;
         try {
@@ -2827,27 +2957,39 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
             height = metrics.heightPixels;
         } catch (Exception e1) {
             // getRealMetrics starts at API 17
-            width=display.getWidth();
-            height=display.getHeight();
+            width = display.getWidth();
+            height = display.getHeight();
         }
 
-        if(c.bgSystemWPWidth==0 || c.bgSystemWPHeight==0) {
-            if(width>height) { int tmp=width; width=height; height=tmp; }
-            width=height;
+        if (c.bgSystemWPWidth == 0 || c.bgSystemWPHeight == 0) {
+            if (width > height) {
+                int tmp = width;
+                width = height;
+                height = tmp;
+            }
+            width = height;
         } else {
-            width=c.bgSystemWPWidth;
-            height=c.bgSystemWPHeight;
+            width = c.bgSystemWPWidth;
+            height = c.bgSystemWPHeight;
         }
         mWallpaperManager.suggestDesiredDimensions(width, height);
 
         mScreen.configureStatusBarVisibility(c);
 
         int o;
-        switch(c.screenOrientation) {
-            case PORTRAIT: o = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT; break;
-            case LANDSCAPE: o = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE; break;
-            case SYSTEM: o=ActivityInfo.SCREEN_ORIENTATION_USER; break;
-            default: o=ActivityInfo.SCREEN_ORIENTATION_SENSOR; break;
+        switch (c.screenOrientation) {
+            case PORTRAIT:
+                o = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+                break;
+            case LANDSCAPE:
+                o = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+                break;
+            case SYSTEM:
+                o = ActivityInfo.SCREEN_ORIENTATION_USER;
+                break;
+            default:
+                o = ActivityInfo.SCREEN_ORIENTATION_SENSOR;
+                break;
         }
         setRequestedOrientation(o);
 
@@ -2875,12 +3017,12 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                     padding_right = nbh;
                 }
             }
-            if(mIsAndroidActionBarDisplayed) {
+            if (mIsAndroidActionBarDisplayed) {
                 try {
                     View v = getWindow().getDecorView();
                     int resId = getResources().getIdentifier("action_bar_container", "id", "android");
                     ViewGroup v1 = v.findViewById(resId);
-                    ((View)v1.getParent()).setPadding(0, sbh, 0, 0);
+                    ((View) v1.getParent()).setPadding(0, sbh, 0, 0);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -2896,41 +3038,52 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         return 0;
     }
 
-    private static final int PAGER_ANIMATION_NONE = 0;
-    private static final int PAGER_ANIMATION_BACKWARD = 1;
-    private static final int PAGER_ANIMATION_FORWARD = 2;
     private void configureViewAnimator(int direction) {
-		Animation in, out;
-        if(direction == PAGER_ANIMATION_NONE) {
+        Animation in, out;
+        if (direction == PAGER_ANIMATION_NONE) {
             in = null;
             out = null;
         } else {
             boolean forward = direction == PAGER_ANIMATION_FORWARD;
-            switch(mGlobalConfig.pageAnimation) {
-            case FADE: in=mFadeInAnim; out=mFadeOutAnim; break;
-            case SLIDE_H:
-                if(forward) { in=mSlideHRightInAnim; out=mSlideHLeftOutAnim; }
-                else { in=mSlideHLeftInAnim; out=mSlideHRightOutAnim; }
-                break;
-            case SLIDE_V:
-                if(forward) { in=mSlideVUpInAnim; out=mSlideVDownOutAnim; }
-                else { in=mSlideVDownInAnim; out=mSlideVUpOutAnim; }
-                break;
-            default: return;
+            switch (mGlobalConfig.pageAnimation) {
+                case FADE:
+                    in = mFadeInAnim;
+                    out = mFadeOutAnim;
+                    break;
+                case SLIDE_H:
+                    if (forward) {
+                        in = mSlideHRightInAnim;
+                        out = mSlideHLeftOutAnim;
+                    } else {
+                        in = mSlideHLeftInAnim;
+                        out = mSlideHRightOutAnim;
+                    }
+                    break;
+                case SLIDE_V:
+                    if (forward) {
+                        in = mSlideVUpInAnim;
+                        out = mSlideVDownOutAnim;
+                    } else {
+                        in = mSlideVDownInAnim;
+                        out = mSlideVUpOutAnim;
+                    }
+                    break;
+                default:
+                    return;
             }
-		}
-		mViewAnimator.setInAnimation(in);
-		mViewAnimator.setOutAnimation(out);
-	}
+        }
+        mViewAnimator.setInAnimation(in);
+        mViewAnimator.setOutAnimation(out);
+    }
 
-	private void editItem(ItemLayout il, Item item) {
-        if(mSystemConfig.autoEdit) {
+    private void editItem(ItemLayout il, Item item) {
+        if (mSystemConfig.autoEdit) {
             enterEditMode(il, item);
             if (!mEditBarsVisible) {
                 showEditBars(false);
             }
         } else {
-            if(mEditMode) {
+            if (mEditMode) {
                 mEditItemLayout.setMasterSelectedItem(item);
                 ItemView itemView = mEditItemLayout.getItemView(item);
                 if (itemView != null) {
@@ -2939,106 +3092,59 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                 }
             }
         }
-        if(mEditMode) {
+        if (mEditMode) {
             showEditPropertiesBox();
             updateEditPropertiesBox(item.getPage(), item);
             updateEditBars();
         }
-	}
+    }
 
     @Override
     public void openOptionsMenu() {
         openBubble(mEditMode ? BUBBLE_MODE_LIGHTNING_MENU_EM : BUBBLE_MODE_LIGHTNING_MENU_NO_EM);
     }
 
-	private void gotoPage(int direction) {
+    private void gotoPage(int direction) {
         long t1 = BuildConfig.DEBUG ? SystemClock.uptimeMillis() : 0;
-		int p = mScreen.getNextPage(mGlobalConfig, direction);
-		setPagerPage(p, direction);
-        if(BuildConfig.DEBUG) {
-            Log.i("LL", "gotoPage " + (SystemClock.uptimeMillis() - t1)+"ms");
+        int p = mScreen.getNextPage(mGlobalConfig, direction);
+        setPagerPage(p, direction);
+        if (BuildConfig.DEBUG) {
+            Log.i("LL", "gotoPage " + (SystemClock.uptimeMillis() - t1) + "ms");
         }
-	}
-
-//	@SuppressLint("WorldReadableFiles")
-//	private void shareScreenshot() {
-//		mContentView.setDrawingCacheEnabled(true);
-//		try {
-//			FileOutputStream out=openFileOutput("screenshot.png", MODE_WORLD_READABLE);
-//			mContentView.getDrawingCache().compress(CompressFormat.PNG, 100, out);
-//			Intent intent = new Intent(Intent.ACTION_SEND);
-//			intent.putExtra(Intent.EXTRA_SUBJECT, "Some Subject Line");
-//			intent.putExtra(Intent.EXTRA_TEXT, "Body of the message, woot!");
-//			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-//			intent.setType("image/png");
-//		    Uri uri = Uri.parse(FileProvider.CONTENT_URI + FileProvider.SCREENSHOT_FILE);
-//		    intent.putExtra(Intent.EXTRA_STREAM, uri);
-//		    startActivity(Intent.createChooser(intent, "How do you want to share?"));
-//		} catch(IOException e) {
-//			e.printStackTrace();
-//		}
-//	}
-
-
-
-    //	private int getPageWithRotation(int page) {
-//		int p;
-//		File f;
-//		switch (mDisplayRotation) {
-//		case Surface.ROTATION_90:
-//		case Surface.ROTATION_180:
-//			p=Utils.getPageForRotation(page, mDisplayRotation);
-//			f=Utils.getWorkspaceConfigFile(this, p);
-//			if(f.exists()) {
-//				return p;
-//			}
-//			break;
-//
-//		case Surface.ROTATION_270:
-//			p=Utils.getPageForRotation(page, mDisplayRotation);
-//			f=Utils.getWorkspaceConfigFile(this, p);
-//			if(f.exists()) {
-//				return p;
-//			}
-//			p=Utils.getPageForRotation(page, Surface.ROTATION_90);
-//			f=Utils.getWorkspaceConfigFile(this, p);
-//			if(f.exists()) {
-//				return p;
-//			}
-//		}
-//
-//		return Utils.getPageForRotation(page, Surface.ROTATION_0);
-//	}
+    }
 
     protected void replaceShortcutApp(Item item) {
-        mTmpItem=item;
+        mTmpItem = item;
         Intent picker = new Intent(this, AppDrawerX.class);
         picker.setAction(Intent.ACTION_PICK_ACTIVITY);
         startActivityForResult(picker, REQUEST_SELECT_APP_FOR_PICK);
     }
 
-	private void selectAppForAdd() {
-		Intent intent=new Intent(this, AppDrawerX.class);
+    private void selectAppForAdd() {
+        Intent intent = new Intent(this, AppDrawerX.class);
         intent.putExtra(AppDrawerX.INTENT_EXTRA_SELECT_FOR_ADD, true);
         startActivityForResult(intent, REQUEST_SELECT_APP_FOR_ADD);
-	}
+    }
 
     // item==null: add, item!=null: replace
     private void selectShortcutForAddOrPick(Item item) {
-        mTmpItem=item;
-        Intent i=new Intent(Intent.ACTION_PICK_ACTIVITY);
+        mTmpItem = item;
+        Intent i = new Intent(Intent.ACTION_PICK_ACTIVITY);
         i.putExtra(Intent.EXTRA_INTENT, new Intent(Intent.ACTION_CREATE_SHORTCUT));
         i.putExtra(Intent.EXTRA_TITLE, getString(R.string.tools_pick_shortcut));
-        try { startActivityForResult(i, item==null ? REQUEST_SELECT_SHORTCUT_FOR_ADD1 : REQUEST_SELECT_SHORTCUT_FOR_PICK1); } catch(Exception e) {}
+        try {
+            startActivityForResult(i, item == null ? REQUEST_SELECT_SHORTCUT_FOR_ADD1 : REQUEST_SELECT_SHORTCUT_FOR_PICK1);
+        } catch (Exception e) {
+        }
     }
 
     private void editShortcutLaunchAction(Shortcut shortcut) {
         mTmpItem = shortcut;
         Intent intent = shortcut.getIntent();
         EventAction eventAction;
-        if(LLApp.get().isLightningIntent(intent)) {
+        if (LLApp.get().isLightningIntent(intent)) {
             eventAction = Utils.decodeEventActionFromLightningIntent(intent);
-            if(eventAction == null) {
+            if (eventAction == null) {
                 eventAction = new EventAction(GlobalConfig.LAUNCH_SHORTCUT, intent.toUri(0));
             }
         } else {
@@ -3046,9 +3152,9 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
             String uri = intent.toUri(0);
             Page appDrawerPage = mEngine.getOrLoadPage(Page.APP_DRAWER_PAGE);
             for (Item item : appDrawerPage.items) {
-                if(item instanceof Shortcut) {
+                if (item instanceof Shortcut) {
                     Intent i = ((Shortcut) item).getIntent();
-                    if(i != null && i.toUri(0).equals(uri)) {
+                    if (i != null && i.toUri(0).equals(uri)) {
                         isApp = true;
                         break;
                     }
@@ -3061,38 +3167,41 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         EventActionSetup.startActivityForResult(this, eventAction, true, Action.FLAG_TYPE_DESKTOP, false, REQUEST_EDIT_LAUNCH_ACTION);
     }
 
-	private void selectAppWidgetForAdd() {
-		selectAppWidgetForReplace(null);
-	}
+    private void selectAppWidgetForAdd() {
+        selectAppWidgetForReplace(null);
+    }
 
-	private void selectAppWidgetForReplace(Item replaced_item) {
-		mTmpItem = replaced_item;
-		mAllocatedAppWidgetId=LLApp.get().getAppWidgetHost().allocateAppWidgetId();
+    private void selectAppWidgetForReplace(Item replaced_item) {
+        mTmpItem = replaced_item;
+        mAllocatedAppWidgetId = LLApp.get().getAppWidgetHost().allocateAppWidgetId();
 
-		Intent pickIntent;
+        Intent pickIntent;
         pickIntent = new Intent(this, AppWidgetPickerActivity.class);
         pickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAllocatedAppWidgetId);
-		ArrayList<AppWidgetProviderInfo> customInfo = new ArrayList<AppWidgetProviderInfo>();
-		pickIntent.putParcelableArrayListExtra(AppWidgetManager.EXTRA_CUSTOM_INFO, customInfo);
-		ArrayList<Bundle> customExtras = new ArrayList<Bundle>();
-		pickIntent.putParcelableArrayListExtra(AppWidgetManager.EXTRA_CUSTOM_EXTRAS, customExtras);
+        ArrayList<AppWidgetProviderInfo> customInfo = new ArrayList<AppWidgetProviderInfo>();
+        pickIntent.putParcelableArrayListExtra(AppWidgetManager.EXTRA_CUSTOM_INFO, customInfo);
+        ArrayList<Bundle> customExtras = new ArrayList<Bundle>();
+        pickIntent.putParcelableArrayListExtra(AppWidgetManager.EXTRA_CUSTOM_EXTRAS, customExtras);
 
-		try { startActivityForResult(pickIntent, REQUEST_SELECT_APP_WIDGET_FOR_ADD); } catch(Exception e) {}
-	}
+        try {
+            startActivityForResult(pickIntent, REQUEST_SELECT_APP_WIDGET_FOR_ADD);
+        } catch (Exception e) {
+        }
+    }
 
-	protected void addFolder() {
+    protected void addFolder() {
         ItemLayout il = mScreen.getTargetOrTopmostItemLayout();
         Page page = il.getPage();
-		Item item = Utils.addFolder(page, mScreen.getLastTouchedAddX(), mScreen.getLastTouchedAddY(), il.getCurrentScale(), true, getString(net.pierrox.lightning_launcher.R.string.default_folder_name));
+        Item item = Utils.addFolder(page, mScreen.getLastTouchedAddX(), mScreen.getLastTouchedAddY(), il.getCurrentScale(), true, getString(net.pierrox.lightning_launcher.R.string.default_folder_name));
         mUndoStack.storePageAddItem(item);
         boolean wasInEditMode = il.getEditMode();
-		editItem(il, item);
+        editItem(il, item);
 
         openBubbleHint(SystemConfig.HINT_FOLDER, il.getItemView(item), wasInEditMode);
-	}
+    }
 
     protected void addPageIndicator() {
-        if(LLApp.get().isFreeVersion()) {
+        if (LLApp.get().isFreeVersion()) {
             LLApp.get().showFeatureLockedDialog(this);
             return;
         }
@@ -3116,7 +3225,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
     }
 
     private void addDynamicText() {
-        if(LLApp.get().isFreeVersion()) {
+        if (LLApp.get().isFreeVersion()) {
             LLApp.get().showFeatureLockedDialog(this);
             return;
         }
@@ -3134,18 +3243,18 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         mEditPropertiesBox.gotoPageDynamicText();
     }
 
-	private void addStopPoint() {
+    private void addStopPoint() {
         ItemLayout il = mScreen.getTargetOrTopmostItemLayout();
         Page page = il.getPage();
 
         boolean found = false;
-        for(Item i : page.items) {
-            if(i.getClass() == StopPoint.class) {
+        for (Item i : page.items) {
+            if (i.getClass() == StopPoint.class) {
                 found = true;
                 break;
             }
         }
-        if(!found && page.config.snapToPages) {
+        if (!found && page.config.snapToPages) {
             page.config.snapToPages = false;
             page.setModified();
             showDialog(DIALOG_STOP_POINT);
@@ -3153,13 +3262,13 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
         float itemLayoutScale = il.getCurrentScale();
         Item item;
-        if(il.getPage().config.newOnGrid) {
-        	int x = mScreen.getLastTouchedAddX();
-        	int y = mScreen.getLastTouchedAddY();
-        	if(x != Utils.POSITION_AUTO) {
-        		x += (int)(il.getCellWidth()/2);
-        		y += (int)(il.getCellHeight()/2);
-        	}
+        if (il.getPage().config.newOnGrid) {
+            int x = mScreen.getLastTouchedAddX();
+            int y = mScreen.getLastTouchedAddY();
+            if (x != Utils.POSITION_AUTO) {
+                x += (int) (il.getCellWidth() / 2);
+                y += (int) (il.getCellHeight() / 2);
+            }
             item = Utils.addStopPoint(page, x, y, itemLayoutScale, true);
         } else {
             item = Utils.addStopPoint(page, mScreen.getLastTouchedAddX(), mScreen.getLastTouchedAddY(), itemLayoutScale, true);
@@ -3175,13 +3284,13 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         mSystemConfig.autoEdit = old_autoEdit;
 
         openBubbleHint(SystemConfig.HINT_STOP_POINT, il.getItemView(item), wasInEditMode);
-	}
+    }
 
     private void addEmbeddedFolder() {
         ItemLayout il = mScreen.getTargetOrTopmostItemLayout();
         Page page = il.getPage();
         int width = il.getWidth();
-        if(width == 0) {
+        if (width == 0) {
             // workaround if resuming activity while the add dialog was displayed but the views has not yet been layout
             DisplayMetrics metrics = new DisplayMetrics();
             getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -3190,7 +3299,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         Item item;
         float itemLayoutScale = il.getCurrentScale();
         int cellHeight = (int) il.getCellHeight();
-        if(page.config.newOnGrid) {
+        if (page.config.newOnGrid) {
             item = Utils.addEmbeddedFolder(page, (int) Math.floor(mScreen.getLastTouchedAddX() / (double) width) * width, mScreen.getLastTouchedAddY(), width, cellHeight, itemLayoutScale, true);
         } else {
             item = Utils.addEmbeddedFolder(page, mScreen.getLastTouchedAddX(), mScreen.getLastTouchedAddY(), width, cellHeight, itemLayoutScale, true);
@@ -3203,7 +3312,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
     }
 
     private void addUnlocker() {
-        if(LLApp.get().isFreeVersion()) {
+        if (LLApp.get().isFreeVersion()) {
             LLApp.get().showFeatureLockedDialog(this);
             return;
         }
@@ -3213,16 +3322,16 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         float cw = page.getCurrentViewCellWidth();
         float ch = page.getCurrentViewCellHeight();
         Item item;
-        if(page.config.newOnGrid) {
-            item = Utils.addUnlocker(page, (int)(mScreen.getLastTouchedAddX()-cw), (int)(mScreen.getLastTouchedAddY()-ch), (int) (cw *3), (int) (ch *3), itemLayoutScale, true);
+        if (page.config.newOnGrid) {
+            item = Utils.addUnlocker(page, (int) (mScreen.getLastTouchedAddX() - cw), (int) (mScreen.getLastTouchedAddY() - ch), (int) (cw * 3), (int) (ch * 3), itemLayoutScale, true);
         } else {
-            item = Utils.addUnlocker(page, mScreen.getLastTouchedAddX(), mScreen.getLastTouchedAddY(), (int) (cw *3), (int) (ch *3), itemLayoutScale, true);
+            item = Utils.addUnlocker(page, mScreen.getLastTouchedAddX(), mScreen.getLastTouchedAddY(), (int) (cw * 3), (int) (ch * 3), itemLayoutScale, true);
         }
         mUndoStack.storePageAddItem(item);
         editItem(il, item);
     }
 
-    private  Intent getDoNothingIntent() {
+    private Intent getDoNothingIntent() {
         Intent intent = new Intent(this, Dashboard.class);
         intent.putExtra(LightningIntent.INTENT_EXTRA_ACTION, GlobalConfig.NOTHING);
         return intent;
@@ -3264,7 +3373,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
     }
 
     private void addBadge() {
-        if(LLApp.get().isFreeVersion()) {
+        if (LLApp.get().isFreeVersion()) {
             LLApp.get().showFeatureLockedDialog(this);
             return;
         }
@@ -3278,7 +3387,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         Utils.copyResourceToFile(resources, R.drawable.badge_red, Box.getBoxBackgroundSelected(iconDir, id));
         Utils.copyResourceToFile(resources, R.drawable.badge_red, Box.getBoxBackgroundFocused(iconDir, id));
         final Box box = item.getItemConfig().box;
-        box.size[Box.PT] = box.size[Box.PL] =box.size[Box.PB] =box.size[Box.PR] = (int) (5 * resources.getDisplayMetrics().density);
+        box.size[Box.PT] = box.size[Box.PL] = box.size[Box.PB] = box.size[Box.PR] = (int) (5 * resources.getDisplayMetrics().density);
         item.getItemConfig().box_s = box.toString(page.config.defaultItemConfig.box);
         box.loadAssociatedDrawables(iconDir, id, true);
         Utils.setItemPosition(page, item, mScreen.getLastTouchedAddX(), mScreen.getLastTouchedAddY(), il.getCurrentScale(), true);
@@ -3339,7 +3448,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
     @TargetApi(Build.VERSION_CODES.O)
     private void addPinnedShortcut(Intent intent) {
         Utils.ShortcutDescription sd = Utils.createPinItemRequestFromIntent(this, intent);
-        if(sd != null) {
+        if (sd != null) {
             final ItemLayout il = mScreen.getTargetOrTopmostItemLayout();
             Page page = il.getPage();
             float scale = il.getCurrentScale();
@@ -3359,7 +3468,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
     @TargetApi(Build.VERSION_CODES.O)
     private void addAppWidget(Intent intent) {
         Parcelable extra = intent.getParcelableExtra(LauncherApps.EXTRA_PIN_ITEM_REQUEST);
-        if(extra instanceof LauncherApps.PinItemRequest) {
+        if (extra instanceof LauncherApps.PinItemRequest) {
             LauncherApps.PinItemRequest request = (LauncherApps.PinItemRequest) extra;
             AppWidgetProviderInfo info = request.getAppWidgetProviderInfo(this);
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
@@ -3396,16 +3505,16 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
     public void enterEditMode(ItemLayout il, Item selected_item) {
         // check that the selected belongs to the item layout, otherwise ignore it
-        if(selected_item != null && il.getItemView(selected_item) == null) {
+        if (selected_item != null && il.getItemView(selected_item) == null) {
             selected_item = null;
         }
 
-        if(mEditMode && mEditItemLayout == il) {
+        if (mEditMode && mEditItemLayout == il) {
             unselectAllItems();
-            if(selected_item != null) {
+            if (selected_item != null) {
                 mEditItemLayout.setMasterSelectedItem(selected_item);
                 ItemView itemView = mEditItemLayout.getItemView(selected_item);
-                if(itemView != null) {
+                if (itemView != null) {
                     itemView.setSelected(true);
                     configureHandlesForItemView(itemView, HandleView.Mode.CONTENT_SIZE, true);
                 }
@@ -3414,13 +3523,13 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         }
 
         final LLApp app = LLApp.get();
-        if(app.isTrialVersionExpired()) {
+        if (app.isTrialVersionExpired()) {
             app.showFeatureLockedDialog(this);
             return;
         }
 
         boolean was_in_edit_mode = mEditMode;
-        if(was_in_edit_mode) {
+        if (was_in_edit_mode) {
             leaveEditMode(false);
         }
 
@@ -3429,11 +3538,11 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
         boolean is_folder = il.getOpenerItemView() != null;
         boolean is_embedded_folder = il.getOpenerItemView() instanceof EmbeddedFolderView;
-        if(is_folder) {
-            if(is_embedded_folder) {
+        if (is_folder) {
+            if (is_embedded_folder) {
                 // hackish : in case of a panel, open it like a folder and use the item layout of the folder window
                 ItemView openerItemView = il.getOpenerItemView();
-                ItemLayout newIl = mScreen.openFolder((Folder)openerItemView.getItem(), openerItemView, null, true).getItemLayout();
+                ItemLayout newIl = mScreen.openFolder((Folder) openerItemView.getItem(), openerItemView, null, true).getItemLayout();
                 newIl.setLocalTransform(il.getLocalTransform());
                 il = newIl;
             }
@@ -3443,28 +3552,28 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         }
 
 
-		mEditMode=true;
+        mEditMode = true;
 
         mOriginalItemsGeometry.clear();
 
-		mEditPage = page;
+        mEditPage = page;
         mEditItemLayout.setAllowWrap(false);
         mEditItemLayout.setEditMode(true, is_folder && !is_embedded_folder);
         mEditItemLayout.setDisplayInvisibleItems(mSystemConfig.hasSwitch(SystemConfig.SWITCH_DISPLAY_INVISIBLE_ITEMS));
-        if(is_embedded_folder) {
+        if (is_embedded_folder) {
             ItemLayout itemLayoutForPage = mScreen.getCurrentRootItemLayout();
             setAlphaOrVisibility(itemLayoutForPage, 0.1f);
             for (FolderView fv : mScreen.getFolderViews()) {
-                if(fv.isOpen() && fv.getItemLayout() != mEditItemLayout) {
+                if (fv.isOpen() && fv.getItemLayout() != mEditItemLayout) {
                     setAlphaOrVisibility(fv, 0.1f);
                 }
             }
         }
-        if((page.config.wrapX || page.config.wrapY) && (mSystemConfig.hints& SystemConfig.HINT_WRAP)==0) {
+        if ((page.config.wrapX || page.config.wrapY) && (mSystemConfig.hints & SystemConfig.HINT_WRAP) == 0) {
             showDialog(DIALOG_WRAP);
         }
 
-        if(selected_item!=null) {
+        if (selected_item != null) {
             mEditItemLayout.setMasterSelectedItem(selected_item);
             ItemView itemView = mEditItemLayout.getItemView(selected_item);
             itemView.setSelected(true);
@@ -3473,7 +3582,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
         mScreen.setTargetItemLayout(mEditItemLayout);
 
-        if(!was_in_edit_mode) {
+        if (!was_in_edit_mode) {
             if (mSystemConfig.hasSwitch(SystemConfig.SWITCH_EDIT_BARS)) {
                 showEditBars(true);
             } else {
@@ -3484,34 +3593,33 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
             updateGeometryBox();
         }
 
-        if(isEditPropertiesBoxVisible()) {
+        if (isEditPropertiesBoxVisible()) {
             updateEditPropertiesBox(mEditPage, mEditItemLayout.getMasterSelectedItem());
         }
-	}
+    }
 
-
-	protected void leaveEditMode() {
+    protected void leaveEditMode() {
         leaveEditMode(true);
     }
 
-	protected void leaveEditMode(boolean hide_edit_controls) {
-		if(mEditMode) {
+    protected void leaveEditMode(boolean hide_edit_controls) {
+        if (mEditMode) {
             unselectAllItems();
 
-            mEditMode=false;
+            mEditMode = false;
             boolean is_folder = mEditPage.isFolder();
             boolean is_embedded_folder = mEditItemLayout.getOpenerItemView() instanceof EmbeddedFolderView;
-            if(is_folder) {
+            if (is_folder) {
                 mScreen.setFolderEditMode(mEditItemLayout, false);
             }
             mEditItemLayout.setAllowWrap(true);
-			mEditItemLayout.setEditMode(false, false);
+            mEditItemLayout.setEditMode(false, false);
             mEditItemLayout.setDisplayInvisibleItems(false);
 //			mEditItemLayout.grabEvent(null);
 
-			mEditItemLayout.hideHandleView();
-			//mEditItemLayout.setTrackedItem(null);
-            if(hide_edit_controls) {
+            mEditItemLayout.hideHandleView();
+            //mEditItemLayout.setTrackedItem(null);
+            if (hide_edit_controls) {
                 hideGeometryBox();
                 if (mEditBarsVisible) {
                     hideEditBars(true);
@@ -3520,12 +3628,12 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                 }
             }
 
-            if(is_embedded_folder) {
+            if (is_embedded_folder) {
                 float x = 0, y = 0, scale = 1;
                 ItemLayout mainItemLayout = mScreen.getCurrentRootItemLayout();
                 setAlphaOrVisibility(mainItemLayout, 1);
                 for (FolderView fv : mScreen.getFolderViews()) {
-                    if(fv.getItemLayout() == mEditItemLayout) {
+                    if (fv.getItemLayout() == mEditItemLayout) {
                         ItemLayout il = fv.getItemLayout();
                         x = il.getCurrentX();
                         y = il.getCurrentY();
@@ -3568,8 +3676,8 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
             }
 
             mEditPage.leaveEditMode();
-		}
-	}
+        }
+    }
 
     private void setAlphaOrVisibility(View view, float to) {
         view.setAlpha(to);
@@ -3579,9 +3687,9 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
      * Open the bubble for the currently "focused" container using the last touched position
      */
     protected void openBubble(int mode) {
-        if(!closeBubble() || mBubbleMode!=mode) {
+        if (!closeBubble() || mBubbleMode != mode) {
             Rect focus;
-            if(mScreen.getLastTouchedMenuX() != Utils.POSITION_AUTO) {
+            if (mScreen.getLastTouchedMenuX() != Utils.POSITION_AUTO) {
                 mTempRectF.set(mScreen.getLastTouchedMenuX(), mScreen.getLastTouchedMenuY(), mScreen.getLastTouchedMenuX(), mScreen.getLastTouchedMenuY());
                 mTempRectF.round(mTempRect);
                 focus = mTempRect;
@@ -3595,7 +3703,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
     }
 
     protected void openBubbleHint(final int hint, final ItemView itemView, boolean wasInEditMode) {
-        if((mSystemConfig.hints & hint) != 0) {
+        if ((mSystemConfig.hints & hint) != 0) {
             return;
         }
 
@@ -3606,15 +3714,15 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                 break;
             }
         }
-        if(mode == BUBBLE_MODE_NONE) {
+        if (mode == BUBBLE_MODE_NONE) {
             // bubble mode not found, this is a coding error
             throw new RuntimeException("Bubble mode not found");
         }
 
         // if not in edit mode, wait a bit for the edit bar animation to finish
         long delay;
-        if(!wasInEditMode && mSystemConfig.hasSwitch(SystemConfig.SWITCH_EDIT_BARS)) {
-            delay = ANIMATE_EDIT_BAR_DURATION+10;
+        if (!wasInEditMode && mSystemConfig.hasSwitch(SystemConfig.SWITCH_EDIT_BARS)) {
+            delay = ANIMATE_EDIT_BAR_DURATION + 10;
         } else {
             delay = 0;
         }
@@ -3631,7 +3739,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
      * Open the bubble for a given ItemView
      */
     protected void openBubble(int mode, ItemView itemView) {
-        if(itemView == null || itemView.getParentItemLayout() == null) {
+        if (itemView == null || itemView.getParentItemLayout() == null) {
             // view deleted in the meantime
             return;
         }
@@ -3640,6 +3748,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
     /**
      * Open the bubble for a container and an optional focus
+     *
      * @param focus new bubble target point, reuse the previous one if null
      */
     protected void openBubble(int mode, ItemLayout itemLayout, Rect focus) {
@@ -3654,10 +3763,10 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
      * Do not use directly, use the other versions of openBubble
      */
     protected void openBubble(int mode, ItemLayout itemLayout, ItemView itemView, Rect focus, List shortcuts) {
-        if(mBubble == null) {
-            mBubble=(BubbleLayout) getLayoutInflater().inflate(R.layout.bubble, null);
+        if (mBubble == null) {
+            mBubble = (BubbleLayout) getLayoutInflater().inflate(R.layout.bubble, null);
             mEditControlsView.addView(mBubble);
-            mBubbleContent=(LinearLayout)mBubble.findViewById(R.id.bubble_content);
+            mBubbleContent = mBubble.findViewById(R.id.bubble_content);
             mBubble.findViewById(R.id.bbl_clone).setContentDescription(getString(R.string.eb_pr));
             mBubble.findViewById(R.id.bbl_rm).setContentDescription(getString(R.string.mi_remove));
             mBubble.findViewById(R.id.bbl_add).setContentDescription(getString(R.string.menu_add));
@@ -3665,9 +3774,9 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
             mBubble.findViewById(R.id.bbl_edit).setContentDescription(getString(R.string.menu_objects_layout));
 
             Typeface typeface = LLApp.get().getIconsTypeface();
-            int[] bbl_buttons = new int[] { R.id.bbl_edit, R.id.bbl_add, R.id.bbl_clone, R.id.bbl_rm, R.id.bbl_settings};
-            for(int id : bbl_buttons) {
-                Button btn = (Button) mBubble.findViewById(id);
+            int[] bbl_buttons = new int[]{R.id.bbl_edit, R.id.bbl_add, R.id.bbl_clone, R.id.bbl_rm, R.id.bbl_settings};
+            for (int id : bbl_buttons) {
+                Button btn = mBubble.findViewById(id);
                 btn.setTypeface(typeface);
                 btn.setOnClickListener(mEditBarClick);
                 btn.setOnLongClickListener(mEditBarLongClick);
@@ -3677,21 +3786,29 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
             getWindowManager().getDefaultDisplay().getMetrics(metrics);
             mBubble.setDensity(metrics.density);
 
-            try { mBubbleAnimIn = AnimationUtils.loadAnimation(this, android.R.anim.fade_in); } catch (Exception e) { mBubbleAnimIn = null; }
-            try { mBubbleAnimOut = AnimationUtils.loadAnimation(this, android.R.anim.fade_out); } catch (Exception e) { mBubbleAnimOut = null; }
+            try {
+                mBubbleAnimIn = AnimationUtils.loadAnimation(this, android.R.anim.fade_in);
+            } catch (Exception e) {
+                mBubbleAnimIn = null;
+            }
+            try {
+                mBubbleAnimOut = AnimationUtils.loadAnimation(this, android.R.anim.fade_out);
+            } catch (Exception e) {
+                mBubbleAnimOut = null;
+            }
         }
         mBubbleMode = mode;
 
         mBubbleItemLayout = itemLayout;
         mBubbleItemView = itemView;
 
-        Item item = itemView==null ? null : itemView.getItem();
+        Item item = itemView == null ? null : itemView.getItem();
 
         boolean for_item = item != null;
         boolean is_app_drawer = getClass() == AppDrawerX.class;
         mBubble.findViewById(R.id.bbl_add).setVisibility(for_item && !is_app_drawer ? View.GONE : View.VISIBLE);
         mBubble.findViewById(R.id.bbl_clone).setVisibility(for_item && !is_app_drawer ? View.VISIBLE : View.GONE);
-        Button delete_button = (Button) mBubble.findViewById(R.id.bbl_rm);
+        Button delete_button = mBubble.findViewById(R.id.bbl_rm);
         delete_button.setVisibility(for_item ? View.VISIBLE : View.GONE);
         boolean uninstall = item != null && item.getClass() == Shortcut.class && is_app_drawer;
         delete_button.setText(uninstall ? "E" : "4");
@@ -3707,34 +3824,34 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         titleGroup.setVisibility(displayBubbleTitleForMode(mode) ? View.VISIBLE : View.GONE);
         buttonsGroup.setVisibility(displayBubbleButtonsForMode(mode) ? View.VISIBLE : View.GONE);
 
-        if(mode < 0)  {
+        if (mode < 0) {
             for (int[] hint : BUBBLE_HINTS) {
                 if (hint[0] == mode) {
                     addBubbleHint(hint[1], hint[2]);
                     break;
                 }
             }
-            if(mode == BUBBLE_MODE_HINT_DESKTOP || mode == BUBBLE_MODE_HINT_APP_DRAWER) {
+            if (mode == BUBBLE_MODE_HINT_DESKTOP || mode == BUBBLE_MODE_HINT_APP_DRAWER) {
                 mBubble.findViewById(R.id.dsa).setVisibility(View.GONE);
             }
         } else {
             String text;
-            if(itemView == null) {
+            if (itemView == null) {
                 text = Utils.formatItemLayoutName(itemLayout);
                 configureBubbleForContainer(mode, itemLayout);
             } else {
                 text = Utils.formatItemName(itemView.getItem(), 20, getSelectedItemViews().size());
                 configureBubbleForItem(mode, itemView, shortcuts);
             }
-            ((TextView)mBubble.findViewById(R.id.bbl_ttl)).setText(text);
+            ((TextView) mBubble.findViewById(R.id.bbl_ttl)).setText(text);
         }
 
         mBubble.setScreenPadding(mEditControlsView.getPaddingTop());
-        if(focus != null) {
+        if (focus != null) {
             mBubble.setItemBounds(focus);
         }
-        if(mBubble.getVisibility()==View.GONE) {
-            if(mBubbleAnimIn != null) {
+        if (mBubble.getVisibility() == View.GONE) {
+            if (mBubbleAnimIn != null) {
                 mBubble.startAnimation(mBubbleAnimIn);
             }
             mBubble.setVisibility(View.VISIBLE);
@@ -3751,8 +3868,8 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
     protected void addScriptBubbleItems(int criteria) {
         ArrayList<Script> scripts = mEngine.getScriptManager().getAllScriptMatching(criteria);
-        if(scripts.size() == 0) {
-            if(criteria == Script.FLAG_ITEM_MENU) {
+        if (scripts.size() == 0) {
+            if (criteria == Script.FLAG_ITEM_MENU) {
                 addBubbleItem(R.id.mi_nos, R.string.mi_nos);
             }
         } else {
@@ -3782,26 +3899,26 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         final View view = getLayoutInflater().inflate(R.layout.two_lines_list_item, null);
         final Drawable iconDrawable = launcherApps.getShortcutIconDrawable(shortcut, Utils.getLauncherIconDensity());
         Bitmap icon = Utils.createBitmapFromDrawable(iconDrawable);
-        ImageView iconView = (ImageView) view.findViewById(android.R.id.icon);
+        ImageView iconView = view.findViewById(android.R.id.icon);
         iconView.setImageBitmap(icon);
 
 
         CharSequence label = shortcut.getLongLabel();
-        if(label == null || label.length() == 0) {
+        if (label == null || label.length() == 0) {
             label = shortcut.getShortLabel();
         }
-        ((TextView)view.findViewById(android.R.id.text1)).setText(label);
+        ((TextView) view.findViewById(android.R.id.text1)).setText(label);
         view.findViewById(android.R.id.text2).setVisibility(View.GONE);
         Drawable background = getDrawable(R.drawable.bubble_item_bg);
         view.setBackground(background);
 
-        if(mAppShortcutClickListener == null) {
+        if (mAppShortcutClickListener == null) {
             mAppShortcutClickListener = new OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     closeBubble();
 
-                    if(launcherApps.hasShortcutHostPermission()) {
+                    if (launcherApps.hasShortcutHostPermission()) {
                         ShortcutInfo shortcutInfo = (ShortcutInfo) view.getTag();
                         Rect bounds = new Rect();
                         view.getHitRect(bounds);
@@ -3813,7 +3930,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
             };
         }
 
-        if(mAppShortcutLongClickListener == null) {
+        if (mAppShortcutLongClickListener == null) {
             mAppShortcutLongClickListener = new OnLongClickListener() {
                 @TargetApi(Build.VERSION_CODES.N_MR1)
                 @Override
@@ -3837,15 +3954,12 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         mBubbleContent.addView(view);
     }
 
-    private View.OnClickListener mAppShortcutClickListener;
-    private View.OnLongClickListener mAppShortcutLongClickListener;
-
     protected View addBubbleItem(int id, int title) {
         return addBubbleItem(id, getString(title));
     }
 
     protected View addBubbleItem(int id, CharSequence title) {
-        Button b=(Button)getLayoutInflater().inflate(R.layout.bubble_item, null);
+        Button b = (Button) getLayoutInflater().inflate(R.layout.bubble_item, null);
         b.setId(id);
         b.setText(title);
         b.setOnClickListener(this);
@@ -3854,7 +3968,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
     }
 
     protected View addBubbleItem(CharSequence title, View.OnClickListener listener) {
-        Button b=(Button)getLayoutInflater().inflate(R.layout.bubble_item, null);
+        Button b = (Button) getLayoutInflater().inflate(R.layout.bubble_item, null);
         b.setText(title);
         b.setOnClickListener(listener);
         mBubbleContent.addView(b);
@@ -3866,9 +3980,9 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
      */
     protected void addBubbleHint(int hint, int hint_text_id) {
         View v = getLayoutInflater().inflate(R.layout.hint, null);
-        ((TextView)v.findViewById(R.id.h_ttl)).setText(R.string.h_t);
-        ((TextView)v.findViewById(R.id.h_t)).setText(hint_text_id);
-        TextView dsa = (TextView) v.findViewById(R.id.dsa);
+        ((TextView) v.findViewById(R.id.h_ttl)).setText(R.string.h_t);
+        ((TextView) v.findViewById(R.id.h_t)).setText(hint_text_id);
+        TextView dsa = v.findViewById(R.id.dsa);
         dsa.setText(R.string.dialog_help_hint_dsa);
         dsa.setTag(Integer.valueOf(hint));
         v.setOnClickListener(this);
@@ -3877,28 +3991,29 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
     protected void addBubbleItemActions(Shortcut shortcut) {
         // as of today only shortcut is supported
-        PackageManager pm=getPackageManager();
-        Uri data=null;
-        ComponentName cn=shortcut.getIntent().getComponent();
-        if(cn!=null) {
-            data=Uri.parse("pkg://"+cn.getPackageName());
+        PackageManager pm = getPackageManager();
+        Uri data = null;
+        ComponentName cn = shortcut.getIntent().getComponent();
+        if (cn != null) {
+            data = Uri.parse("pkg://" + cn.getPackageName());
         }
-        Intent intent=new Intent(LLApp.INTENT_ITEM_ACTION, data);
-        final String category="Shortcut";
+        Intent intent = new Intent(LLApp.INTENT_ITEM_ACTION, data);
+        final String category = "Shortcut";
         intent.addCategory(category);
 
-        List<ResolveInfo> r=pm.queryIntentActivities(intent, 0);
-        int s=r.size();
-        for(int i=0; i<s; i++) {
-            ResolveInfo ri=r.get(i);
-            if(ri.activityInfo.packageName.equals("net.pierrox.lightning_launcher.item_action.app_killer")) continue;
+        List<ResolveInfo> r = pm.queryIntentActivities(intent, 0);
+        int s = r.size();
+        for (int i = 0; i < s; i++) {
+            ResolveInfo ri = r.get(i);
+            if (ri.activityInfo.packageName.equals("net.pierrox.lightning_launcher.item_action.app_killer"))
+                continue;
 
-            String label=ri.loadLabel(pm).toString();
-            intent=new Intent(LLApp.INTENT_ITEM_ACTION, data);
+            String label = ri.loadLabel(pm).toString();
+            intent = new Intent(LLApp.INTENT_ITEM_ACTION, data);
             intent.addCategory(category);
             intent.setComponent(new ComponentName(ri.activityInfo.packageName, ri.activityInfo.name));
 
-            Button btn=(Button) getLayoutInflater().inflate(R.layout.bubble_item, null);
+            Button btn = (Button) getLayoutInflater().inflate(R.layout.bubble_item, null);
             btn.setText(label);
             btn.setTag(intent);
             btn.setOnClickListener(this);
@@ -3907,13 +4022,13 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
     }
 
     private void addBubbleItemScript(final ItemLayout il, final ItemView itemView, final int mode, EventAction ea) {
-        if(ea.action == GlobalConfig.RUN_SCRIPT) {
+        if (ea.action == GlobalConfig.RUN_SCRIPT) {
             final LightningEngine engine = il == null ? itemView.getItem().getPage().getEngine() : il.getPage().getEngine();
             Pair<Integer, String> pair = Script.decodeIdAndData(ea.data);
             int id = pair.first;
             Script script = engine.getScriptManager().getOrLoadScript(id);
-            if(script != null && !script.hasFlag(Script.FLAG_DISABLED)) {
-                if(mScriptMenuListener == null) {
+            if (script != null && !script.hasFlag(Script.FLAG_DISABLED)) {
+                if (mScriptMenuListener == null) {
                     mScriptMenuListener = new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -3955,29 +4070,27 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                 se.runScriptMenu(getScreen(), id, il, itemView, menu, pair.second);
             }
         }
-        if(ea.next != null) {
+        if (ea.next != null) {
             addBubbleItemScript(il, itemView, mode, ea.next);
         }
     }
 
-    private View.OnClickListener mScriptMenuListener;
-
     protected boolean closeBubble() {
-        if(mBubble!=null) {
+        if (mBubble != null) {
             View dsa_view = mBubbleContent.findViewById(R.id.dsa);
-            if(dsa_view != null) {
-                boolean dsa = ((CheckBox)dsa_view).isChecked();
-                if(dsa) {
+            if (dsa_view != null) {
+                boolean dsa = ((CheckBox) dsa_view).isChecked();
+                if (dsa) {
                     int hint = (Integer) dsa_view.getTag();
                     mSystemConfig.hints |= hint;
                 }
             }
-            int l=mBubbleContent.getChildCount();
-            for(int i=0; i<l; i++) {
+            int l = mBubbleContent.getChildCount();
+            for (int i = 0; i < l; i++) {
                 View v = mBubbleContent.getChildAt(i);
                 v.setEnabled(false);
             }
-            if(mBubbleMode == BUBBLE_MODE_HINT_APP_DRAWER) {
+            if (mBubbleMode == BUBBLE_MODE_HINT_APP_DRAWER) {
                 Rect focus = new Rect();
                 mScreen.getContentView().getHitRect(focus);
                 int cx = focus.centerX();
@@ -3985,9 +4098,9 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                 focus.set(cx, cy, cx, cy);
                 openBubble(BUBBLE_MODE_HINT_DESKTOP, mScreen.getCurrentRootItemLayout(), focus);
             } else {
-                if(mBubble.getVisibility()==View.VISIBLE) {
+                if (mBubble.getVisibility() == View.VISIBLE) {
                     mBubble.setVisibility(View.GONE);
-                    if(mBubbleAnimOut != null) {
+                    if (mBubbleAnimOut != null) {
                         mBubble.startAnimation(mBubbleAnimOut);
                     }
                     return true;
@@ -4007,33 +4120,35 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         Item item = itemView.getItem();
         Class<?> item_class = item.getClass();
 
-        if(mode == BUBBLE_MODE_ITEM_EM) {
+        if (mode == BUBBLE_MODE_ITEM_EM) {
             addBubbleItem(R.id.mi_edit, R.string.mi_customize);
             addBubbleItem(R.id.mi_position, R.string.mi_position);
             addBubbleItem(R.id.mi_actions, R.string.mi_actions);
-        } else if(mode == BUBBLE_MODE_ITEM_NO_EM) {
-            Page page=item.getPage();
+        } else if (mode == BUBBLE_MODE_ITEM_NO_EM) {
+            Page page = item.getPage();
             boolean is_folder_page = page.isFolder();
             boolean is_in_embedded_folder = itemView.getParentItemLayout().getOpenerItemView() instanceof EmbeddedFolderView;
-            if(is_folder_page && page.id != Page.USER_MENU_PAGE && canMoveOutOfFolder()) addBubbleItem(R.id.mi_move_out_of_folder, is_in_embedded_folder ? R.string.mi_mop : R.string.mi_move_out_of_folder);
+            if (is_folder_page && page.id != Page.USER_MENU_PAGE && canMoveOutOfFolder())
+                addBubbleItem(R.id.mi_move_out_of_folder, is_in_embedded_folder ? R.string.mi_mop : R.string.mi_move_out_of_folder);
 
-            if(getClass() == AppDrawerX.class && item_class != PageIndicator.class) {
+            if (getClass() == AppDrawerX.class && item_class != PageIndicator.class) {
                 addBubbleItem(R.id.mi_add_to_launcher, R.string.mi_add_to_launcher);
                 addBubbleItem(R.id.mi_hide_unhide, R.string.mi_hide_unhide);
             }
-            if(item_class == Shortcut.class || item_class == Widget.class || item_class == DynamicText.class) {
-                boolean has_widget_options = item_class == Widget.class && ((Widget)item).hasConfigurationScreen();
-                if(has_widget_options) addBubbleItem(R.id.mi_widget_options, R.string.mi_widget_options);
+            if (item_class == Shortcut.class || item_class == Widget.class || item_class == DynamicText.class) {
+                boolean has_widget_options = item_class == Widget.class && ((Widget) item).hasConfigurationScreen();
+                if (has_widget_options)
+                    addBubbleItem(R.id.mi_widget_options, R.string.mi_widget_options);
 
                 String pkg = Utils.getPackageNameForItem(item);
-                if(pkg != null) {
+                if (pkg != null) {
                     addBubbleItem(R.id.mi_app_details, R.string.mi_app_details);
                     addBubbleItem(R.id.mi_app_store, R.string.mi_app_store);
                     addBubbleItem(R.id.mi_kill, pkg.equals(getPackageName()) ? R.string.an_re : R.string.mi_kill);
                     addBubbleItem(R.id.mi_uninstall, R.string.mi_uninstall);
                 }
-            } else if(getClass()!=AppDrawerX.class) {
-                if(false) {
+            } else if (getClass() != AppDrawerX.class) {
+                if (false) {
                     if (item_class == Folder.class) {
                         addBubbleItem(R.id.mi_cfp, R.string.mi_cfp);
                     } else if (item_class == EmbeddedFolder.class) {
@@ -4042,43 +4157,47 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                 }
             }
 
-            if(mGlobalConfig.runScripts) {
+            if (mGlobalConfig.runScripts) {
                 addBubbleItem(R.id.mi_s, R.string.mi_s);
             }
-        } else if(mode == BUBBLE_MODE_ITEM_EDIT) {
-            boolean is_shortcut=(item_class==Shortcut.class || item_class==Folder.class);
-            boolean is_widget = item_class==Widget.class;
+        } else if (mode == BUBBLE_MODE_ITEM_EDIT) {
+            boolean is_shortcut = (item_class == Shortcut.class || item_class == Folder.class);
+            boolean is_widget = item_class == Widget.class;
             boolean is_embedded_folder = itemView.getClass() == EmbeddedFolderView.class;
-            boolean has_widget_options = is_widget && ((Widget)item).hasConfigurationScreen();
+            boolean has_widget_options = is_widget && ((Widget) item).hasConfigurationScreen();
 
-            if(is_shortcut) {
+            if (is_shortcut) {
                 addBubbleItem(R.id.mi_edit_icon, R.string.mi_edit_icon);
                 addBubbleItem(R.id.mi_edit_label, R.string.mi_edit_label);
             }
-            if((item_class==Shortcut.class || item_class==DynamicText.class) && this.getClass()!=AppDrawerX.class) {
+            if ((item_class == Shortcut.class || item_class == DynamicText.class) && this.getClass() != AppDrawerX.class) {
                 addBubbleItem(R.id.mi_edit_launch_action, R.string.mi_eda);
             }
-            if(is_widget) addBubbleItem(R.id.mi_pick_widget, R.string.mi_pick_widget);
-            if(has_widget_options) addBubbleItem(R.id.mi_widget_options, R.string.mi_widget_options);
-            if(getClass()==AppDrawerX.class) {
+            if (is_widget) addBubbleItem(R.id.mi_pick_widget, R.string.mi_pick_widget);
+            if (has_widget_options)
+                addBubbleItem(R.id.mi_widget_options, R.string.mi_widget_options);
+            if (getClass() == AppDrawerX.class) {
                 addBubbleItem(R.id.mi_hide_unhide, R.string.mi_hide_unhide);
             }
-            if(is_embedded_folder) addBubbleItem(R.id.mi_ef_edit_layout, R.string.menu_objects_layout);
+            if (is_embedded_folder)
+                addBubbleItem(R.id.mi_ef_edit_layout, R.string.menu_objects_layout);
             addBubbleItem(R.id.mi_edit_more, R.string.mi_edit_more);
-        } else if(mode == BUBBLE_MODE_ITEM_POSITION) {
-            boolean is_stop_point = item_class==StopPoint.class;
+        } else if (mode == BUBBLE_MODE_ITEM_POSITION) {
+            boolean is_stop_point = item_class == StopPoint.class;
             Page page = item.getPage();
             boolean is_folder_page = page.isFolder();
             boolean is_in_embedded_folder = itemView.getParentItemLayout().getOpenerItemView() instanceof EmbeddedFolderView;
             ItemConfig ic = item.getItemConfig();
             addBubbleItem(R.id.mi_lm, ic.onGrid ? R.string.mi_lmg : R.string.mi_lmf);
-            if(!is_stop_point) addBubbleItem(R.id.mi_pin, ic.pinMode!= ItemConfig.PinMode.NONE ? R.string.mi_unpin : R.string.mi_pin);
-            if(is_folder_page && page.id != Page.USER_MENU_PAGE) addBubbleItem(R.id.mi_move_out_of_folder, is_in_embedded_folder ? R.string.mi_mop : R.string.mi_move_out_of_folder);
+            if (!is_stop_point)
+                addBubbleItem(R.id.mi_pin, ic.pinMode != ItemConfig.PinMode.NONE ? R.string.mi_unpin : R.string.mi_pin);
+            if (is_folder_page && page.id != Page.USER_MENU_PAGE)
+                addBubbleItem(R.id.mi_move_out_of_folder, is_in_embedded_folder ? R.string.mi_mop : R.string.mi_move_out_of_folder);
             addBubbleItem(R.id.mi_move_to_screen, R.string.mi_move_to_screen);
             addBubbleItem(R.id.mi_copy_to_screen, R.string.mi_copy_to_screen);
-        } else if(mode == BUBBLE_MODE_ITEM_ACTIONS) {
-            if(getClass()!=AppDrawerX.class) {
-                if(false) {
+        } else if (mode == BUBBLE_MODE_ITEM_ACTIONS) {
+            if (getClass() != AppDrawerX.class) {
+                if (false) {
                     if (item_class == Folder.class) {
                         addBubbleItem(R.id.mi_cfp, R.string.mi_cfp);
                     } else if (item_class == EmbeddedFolder.class) {
@@ -4087,26 +4206,26 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                 }
             }
             String pkg = Utils.getPackageNameForItem(item);
-            if(pkg != null) {
+            if (pkg != null) {
                 addBubbleItem(R.id.mi_app_details, R.string.mi_app_details);
                 addBubbleItem(R.id.mi_app_store, R.string.mi_app_store);
                 addBubbleItem(R.id.mi_kill, pkg.equals(getPackageName()) ? R.string.an_re : R.string.mi_kill);
                 addBubbleItem(R.id.mi_uninstall, R.string.mi_uninstall);
             }
-            if(mGlobalConfig.runScripts) {
+            if (mGlobalConfig.runScripts) {
                 addBubbleItem(R.id.mi_s, R.string.mi_s);
             }
-        } else if(mode == BUBBLE_MODE_CUSTOM_MENU) {
+        } else if (mode == BUBBLE_MODE_CUSTOM_MENU) {
             addScriptBubbleItems(Script.FLAG_CUSTOM_MENU);
             addBubbleItem(R.id.mi_dm_customize, R.string.menu_customize);
-        } else if(mode == BUBBLE_MODE_SCRIPTS) {
+        } else if (mode == BUBBLE_MODE_SCRIPTS) {
             addScriptBubbleItems(Script.FLAG_ITEM_MENU);
-        } else if(mode == BUBBLE_MODE_APP_SHORTCUTS) {
+        } else if (mode == BUBBLE_MODE_APP_SHORTCUTS) {
             addAppShortcutBubbleItems(shortcuts);
         }
 
-        if(item!=null && item_class == Shortcut.class && mBubbleMode!= BUBBLE_MODE_ITEM_EDIT) {
-            addBubbleItemActions((Shortcut)item);
+        if (item != null && item_class == Shortcut.class && mBubbleMode != BUBBLE_MODE_ITEM_EDIT) {
+            addBubbleItemActions((Shortcut) item);
         }
 
         EventAction ea = item.getItemConfig().menu;
@@ -4114,30 +4233,30 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
     }
 
     protected void configureBubbleForContainer(int mode, ItemLayout il) {
-        if(mode == BUBBLE_MODE_LIGHTNING_MENU_EM) {
-            addBubbleItem(R.id.mi_l, mGlobalConfig.itemLongTap.action==GlobalConfig.NOTHING ? R.string.mi_ul : R.string.mi_l);
+        if (mode == BUBBLE_MODE_LIGHTNING_MENU_EM) {
+            addBubbleItem(R.id.mi_l, mGlobalConfig.itemLongTap.action == GlobalConfig.NOTHING ? R.string.mi_ul : R.string.mi_l);
             addBubbleItem(R.id.mi_i, R.string.mi_i);
-            if(mSystemConfig.hasSwitch(SystemConfig.SWITCH_MULTI_SELECTION)) {
+            if (mSystemConfig.hasSwitch(SystemConfig.SWITCH_MULTI_SELECTION)) {
                 addBubbleItem(R.id.mi_sel, R.string.mi_sel);
             }
-            if(mGlobalConfig.runScripts) {
+            if (mGlobalConfig.runScripts) {
                 addBubbleItem(R.id.mi_s, R.string.mi_s);
             }
             addBubbleItem(R.id.mi_dm_customize, R.string.mi_es_settings);
-        } else if(mode == BUBBLE_MODE_LIGHTNING_MENU_NO_EM) {
-            addBubbleItem(R.id.mi_l, mGlobalConfig.itemLongTap.action==GlobalConfig.NOTHING ? R.string.mi_ul : R.string.mi_l);
+        } else if (mode == BUBBLE_MODE_LIGHTNING_MENU_NO_EM) {
+            addBubbleItem(R.id.mi_l, mGlobalConfig.itemLongTap.action == GlobalConfig.NOTHING ? R.string.mi_ul : R.string.mi_l);
             addBubbleItem(R.id.mi_i, R.string.mi_i);
-            if(mGlobalConfig.runScripts) {
+            if (mGlobalConfig.runScripts) {
                 addBubbleItem(R.id.mi_s, R.string.mi_s);
             }
             addBubbleItem(R.id.mi_dm_customize, R.string.mi_es_settings);
-        } else if(mode == BUBBLE_MODE_SETTINGS) {
+        } else if (mode == BUBBLE_MODE_SETTINGS) {
             int text_res_id;
             Page page = il.getPage();
-            if(page.isFolder()) {
+            if (page.isFolder()) {
                 boolean is_embedded_folder = il.getOpenerItemView() instanceof EmbeddedFolderView;
                 text_res_id = is_embedded_folder ? R.string.mc_ef : R.string.menu_customize_folder;
-            } else if(page.id == Page.APP_DRAWER_PAGE) {
+            } else if (page.id == Page.APP_DRAWER_PAGE) {
                 text_res_id = R.string.app_drawer_t;
             } else {
                 text_res_id = R.string.dashboard_t;
@@ -4145,18 +4264,18 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
             addBubbleItem(R.id.mi_dmc_c, text_res_id);
             addBubbleItem(R.id.mi_dmc_r, R.string.lightning);
             addBubbleItem(R.id.mi_android_settings, R.string.menu_settings);
-        } else if(mode == BUBBLE_MODE_ITEMS) {
+        } else if (mode == BUBBLE_MODE_ITEMS) {
             addBubbleItem(R.id.mi_h, R.string.mi_h);
             addBubbleItem(R.id.mi_ic, R.string.mi_ic);
             addBubbleItem(R.id.mi_isa, R.string.mi_isa);
             addBubbleItem(R.id.mi_isd, R.string.mi_isd);
-        } else if(mode == BUBBLE_MODE_CUSTOM_MENU) {
+        } else if (mode == BUBBLE_MODE_CUSTOM_MENU) {
             addScriptBubbleItems(Script.FLAG_CUSTOM_MENU);
             addBubbleItem(R.id.mi_dm_customize, R.string.menu_customize);
-        } else if(mode == BUBBLE_MODE_SCRIPTS) {
+        } else if (mode == BUBBLE_MODE_SCRIPTS) {
             addBubbleItem(R.id.mi_ls, R.string.mi_ls);
             addScriptBubbleItems(Script.FLAG_APP_MENU);
-        } else if(mode == BUBBLE_MODE_SELECT) {
+        } else if (mode == BUBBLE_MODE_SELECT) {
             addBubbleItem(R.id.mi_sa, R.string.mi_sa);
             addBubbleItem(R.id.mi_sn, R.string.mi_sn);
             addBubbleItem(R.id.mi_ss, R.string.mi_ss);
@@ -4165,7 +4284,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         }
 
         EventAction ea = il.getPage().config.menu;
-        if(ea.action == GlobalConfig.UNSET) {
+        if (ea.action == GlobalConfig.UNSET) {
             ea = mGlobalConfig.menu;
         }
         addBubbleItemScript(il, null, mode, ea);
@@ -4174,7 +4293,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
     @TargetApi(Build.VERSION_CODES.N_MR1)
     private void showAppShortcuts(ItemView itemView) {
         LauncherApps launcherApps = (LauncherApps) getSystemService(LAUNCHER_APPS_SERVICE);
-        if(!launcherApps.hasShortcutHostPermission()) {
+        if (!launcherApps.hasShortcutHostPermission()) {
             showDialog(DIALOG_LAUNCHER_APPS_NO_HOST_PERMISSION);
             return;
         }
@@ -4183,27 +4302,27 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
         ComponentName activity = null;
         final Item item = itemView.getItem();
-        if(item instanceof Shortcut) {
-            activity = ((Shortcut)item).getIntent().getComponent();
-        } else if(item instanceof Widget) {
+        if (item instanceof Shortcut) {
+            activity = ((Shortcut) item).getIntent().getComponent();
+        } else if (item instanceof Widget) {
             final ComponentName cn = ((Widget) item).getComponentName();
-            if(cn != null) {
+            if (cn != null) {
                 final List<LauncherActivityInfo> activityList = launcherApps.getActivityList(cn.getPackageName(), userHandle);
-                if(activityList.size() > 0) {
+                if (activityList.size() > 0) {
                     activity = activityList.get(0).getComponentName();
                 }
             }
         }
 
         List<ShortcutInfo> shortcuts = null;
-        if(activity != null) {
+        if (activity != null) {
             LauncherApps.ShortcutQuery query = new LauncherApps.ShortcutQuery();
             query.setQueryFlags(LauncherApps.ShortcutQuery.FLAG_MATCH_MANIFEST | LauncherApps.ShortcutQuery.FLAG_MATCH_DYNAMIC | LauncherApps.ShortcutQuery.FLAG_MATCH_PINNED);
             query.setActivity(activity);
             shortcuts = launcherApps.getShortcuts(query, userHandle);
         }
 
-        if(shortcuts == null || shortcuts.size() == 0) {
+        if (shortcuts == null || shortcuts.size() == 0) {
             Toast.makeText(this, R.string.as_no_s, Toast.LENGTH_SHORT).show();
         } else {
             openBubbleAppShortcuts(itemView, shortcuts);
@@ -4212,163 +4331,163 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
     private void moveHandleGrid(ItemView itemView, float fdx, float fdy) {
         Item item = itemView.getItem();
-        int dx=(int)fdx;
-		int dy=(int)fdy;
-		float cw=mEditItemLayout.getCellWidth();
-		float ch=mEditItemLayout.getCellHeight();
+        int dx = (int) fdx;
+        int dy = (int) fdy;
+        float cw = mEditItemLayout.getCellWidth();
+        float ch = mEditItemLayout.getCellHeight();
         final SavedItemGeometry tig = mTrackedItemsGeometry.get(item.getId());
         mTempRect.set(tig.cell);
-		switch(mTrackedHandle) {
-		case TOP:
-			mTempRect.top=(int) ((mTempRect.top*ch+dy+ch/2)/ch);
-			if(mTempRect.top>=mTempRect.bottom) mTempRect.top=mTempRect.bottom-1;
-			break;
-			
-		case RIGHT:
-			mTempRect.right=(int) ((mTempRect.right*cw+dx+cw/2)/cw);
-			if(mTempRect.right<=mTempRect.left) mTempRect.right=mTempRect.left+1;
-			break;
-			
-		case BOTTOM:
-			mTempRect.bottom=(int) ((mTempRect.bottom*ch+dy+ch/2)/ch);
-			if(mTempRect.bottom<=mTempRect.top) mTempRect.bottom=mTempRect.top+1;
-			break;
-			
-		case LEFT:
-			mTempRect.left=(int) ((mTempRect.left*cw+dx+cw/2)/cw);
-			if(mTempRect.left>=mTempRect.right) mTempRect.left=mTempRect.right-1;
-			break;
-		}
+        switch (mTrackedHandle) {
+            case TOP:
+                mTempRect.top = (int) ((mTempRect.top * ch + dy + ch / 2) / ch);
+                if (mTempRect.top >= mTempRect.bottom) mTempRect.top = mTempRect.bottom - 1;
+                break;
+
+            case RIGHT:
+                mTempRect.right = (int) ((mTempRect.right * cw + dx + cw / 2) / cw);
+                if (mTempRect.right <= mTempRect.left) mTempRect.right = mTempRect.left + 1;
+                break;
+
+            case BOTTOM:
+                mTempRect.bottom = (int) ((mTempRect.bottom * ch + dy + ch / 2) / ch);
+                if (mTempRect.bottom <= mTempRect.top) mTempRect.bottom = mTempRect.top + 1;
+                break;
+
+            case LEFT:
+                mTempRect.left = (int) ((mTempRect.left * cw + dx + cw / 2) / cw);
+                if (mTempRect.left >= mTempRect.right) mTempRect.left = mTempRect.right - 1;
+                break;
+        }
         item.getCell().set(mTempRect);
-	}
-	
-	private float moveHandleFree(ItemView itemView, float dx, float dy, boolean master, float angle_or_scale) {
+    }
+
+    private float moveHandleFree(ItemView itemView, float dx, float dy, boolean master, float angle_or_scale) {
         Item item = itemView.getItem();
         SavedItemGeometry tig = mTrackedItemsGeometry.get(item.getId());
-		Matrix m=new Matrix(tig.transform);
+        Matrix m = new Matrix(tig.transform);
         HandleView hv = mEditItemLayout.getHandleView();
         final Rect bounds = tig.bounds;
-        if(hv.getMode()==HandleView.Mode.SCALE) {
-			float scale = master ? 0 : angle_or_scale;
+        if (hv.getMode() == HandleView.Mode.SCALE) {
+            float scale = master ? 0 : angle_or_scale;
             float tracked_item_width = bounds.width();
             float tracked_item_height = bounds.height();
-            switch(mTrackedHandle) {
-			case TOP:
-				if(master) scale=(tracked_item_height -dy)/ tracked_item_height;
-				m.postScale(1, scale, bounds.left, bounds.bottom);
-				break;
-				
-			case RIGHT:
-                if(master) scale=(tracked_item_width +dx)/tracked_item_width;
-				m.postScale(scale, 1, bounds.left, bounds.top);
-				break;
-				
-			case BOTTOM:
-                if(master) scale=(tracked_item_height +dy)/ tracked_item_height;
-				m.postScale(1, scale, bounds.left, bounds.top);
-				break;
-				
-			case LEFT:
-                if(master) scale=(tracked_item_width -dx)/tracked_item_width;
-				m.postScale(scale, 1, bounds.right, bounds.top);
-				break;
+            switch (mTrackedHandle) {
+                case TOP:
+                    if (master) scale = (tracked_item_height - dy) / tracked_item_height;
+                    m.postScale(1, scale, bounds.left, bounds.bottom);
+                    break;
 
-			case TOP_LEFT:
-                if(master) scale=(tracked_item_height -dy)/ tracked_item_height;
-				m.postScale(scale, scale, bounds.right, bounds.bottom);
-				break;
+                case RIGHT:
+                    if (master) scale = (tracked_item_width + dx) / tracked_item_width;
+                    m.postScale(scale, 1, bounds.left, bounds.top);
+                    break;
 
-			case TOP_RIGHT:
-                if(master) scale=(tracked_item_width +dx)/tracked_item_width;
-				m.postScale(scale, scale, bounds.left, bounds.bottom);
-				break;
+                case BOTTOM:
+                    if (master) scale = (tracked_item_height + dy) / tracked_item_height;
+                    m.postScale(1, scale, bounds.left, bounds.top);
+                    break;
 
-			case BOTTOM_LEFT:
-                if(master) scale=(tracked_item_height +dy)/ tracked_item_height;
-				m.postScale(scale, scale, bounds.right, bounds.top);
-				break;
+                case LEFT:
+                    if (master) scale = (tracked_item_width - dx) / tracked_item_width;
+                    m.postScale(scale, 1, bounds.right, bounds.top);
+                    break;
 
-			case BOTTOM_RIGHT:
-                if(master) scale=(tracked_item_width +dx)/tracked_item_width;
-				m.postScale(scale, scale, bounds.left, bounds.top);
-				break;
-			}
-            if(mSnappingContext != null && master) {
+                case TOP_LEFT:
+                    if (master) scale = (tracked_item_height - dy) / tracked_item_height;
+                    m.postScale(scale, scale, bounds.right, bounds.bottom);
+                    break;
+
+                case TOP_RIGHT:
+                    if (master) scale = (tracked_item_width + dx) / tracked_item_width;
+                    m.postScale(scale, scale, bounds.left, bounds.bottom);
+                    break;
+
+                case BOTTOM_LEFT:
+                    if (master) scale = (tracked_item_height + dy) / tracked_item_height;
+                    m.postScale(scale, scale, bounds.right, bounds.top);
+                    break;
+
+                case BOTTOM_RIGHT:
+                    if (master) scale = (tracked_item_width + dx) / tracked_item_width;
+                    m.postScale(scale, scale, bounds.left, bounds.top);
+                    break;
+            }
+            if (mSnappingContext != null && master) {
                 mSnappingContext.computeSnaps(m);
-                if(mSnappingContext.min_dx != Float.MAX_VALUE) {
+                if (mSnappingContext.min_dx != Float.MAX_VALUE) {
                     float v = mSnappingContext.min_dx / mSnappingContext.item_layout.getCurrentScale();
                     m.set(tig.transform);
                     float sdx;
                     switch (mTrackedHandle) {
                         case RIGHT:
-                            scale=(tracked_item_width+dx+v)/tracked_item_width;
+                            scale = (tracked_item_width + dx + v) / tracked_item_width;
                             m.postScale(scale, 1, bounds.left, bounds.top);
                             break;
 
                         case LEFT:
-                            scale=(tracked_item_width-dx-v)/tracked_item_width;
+                            scale = (tracked_item_width - dx - v) / tracked_item_width;
                             m.postScale(scale, 1, bounds.right, bounds.top);
                             break;
 
                         case TOP_LEFT:
-                            sdx = (tracked_item_height-dy)/tracked_item_height*tracked_item_width - tracked_item_width;
-                            scale=(tracked_item_width+sdx-v)/tracked_item_width;
+                            sdx = (tracked_item_height - dy) / tracked_item_height * tracked_item_width - tracked_item_width;
+                            scale = (tracked_item_width + sdx - v) / tracked_item_width;
                             m.postScale(scale, scale, bounds.right, bounds.bottom);
                             break;
 
                         case TOP_RIGHT:
-                            scale=(tracked_item_width+dx+v)/tracked_item_width;
+                            scale = (tracked_item_width + dx + v) / tracked_item_width;
                             m.postScale(scale, scale, bounds.left, bounds.bottom);
                             break;
 
                         case BOTTOM_LEFT:
-                            sdx = (tracked_item_height+dy)/tracked_item_height*tracked_item_width - tracked_item_width;
-                            scale=(tracked_item_width+sdx-v)/tracked_item_width;
+                            sdx = (tracked_item_height + dy) / tracked_item_height * tracked_item_width - tracked_item_width;
+                            scale = (tracked_item_width + sdx - v) / tracked_item_width;
                             m.postScale(scale, scale, bounds.right, bounds.top);
                             break;
 
                         case BOTTOM_RIGHT:
-                            scale=(tracked_item_width +dx+v)/tracked_item_width;
+                            scale = (tracked_item_width + dx + v) / tracked_item_width;
                             m.postScale(scale, scale, bounds.left, bounds.top);
                             break;
                     }
                     item.setTransform(m, false);
                 }
 
-                if(mSnappingContext.min_dy != Float.MAX_VALUE) {
+                if (mSnappingContext.min_dy != Float.MAX_VALUE) {
                     float v = mSnappingContext.min_dy / mSnappingContext.item_layout.getCurrentScale();
                     m.set(tig.transform);
                     float sdy;
                     switch (mTrackedHandle) {
                         case BOTTOM:
-                            scale=(tracked_item_height+dy+v)/tracked_item_height;
+                            scale = (tracked_item_height + dy + v) / tracked_item_height;
                             m.postScale(1, scale, bounds.left, bounds.top);
                             break;
 
                         case TOP:
-                            scale=(tracked_item_height-dy-v)/tracked_item_height;
+                            scale = (tracked_item_height - dy - v) / tracked_item_height;
                             m.postScale(1, scale, bounds.left, bounds.bottom);
                             break;
 
                         case TOP_LEFT:
-                            scale=(tracked_item_height-dy-v)/ tracked_item_height;
+                            scale = (tracked_item_height - dy - v) / tracked_item_height;
                             m.postScale(scale, scale, bounds.right, bounds.bottom);
                             break;
 
                         case TOP_RIGHT:
-                            sdy = (tracked_item_width+dx)/tracked_item_width*tracked_item_height - tracked_item_height;
-                            scale=(tracked_item_height+sdy-v)/tracked_item_height;
+                            sdy = (tracked_item_width + dx) / tracked_item_width * tracked_item_height - tracked_item_height;
+                            scale = (tracked_item_height + sdy - v) / tracked_item_height;
                             m.postScale(scale, scale, bounds.left, bounds.bottom);
                             break;
 
                         case BOTTOM_LEFT:
-                            scale=(tracked_item_height+dy+v)/ tracked_item_height;
+                            scale = (tracked_item_height + dy + v) / tracked_item_height;
                             m.postScale(scale, scale, bounds.right, bounds.top);
                             break;
 
                         case BOTTOM_RIGHT:
-                            sdy = (tracked_item_width+dx)/tracked_item_width*tracked_item_height - tracked_item_height;
-                            scale=(tracked_item_height+sdy+v)/tracked_item_height;
+                            sdy = (tracked_item_width + dx) / tracked_item_width * tracked_item_height - tracked_item_height;
+                            scale = (tracked_item_height + sdy + v) / tracked_item_height;
                             m.postScale(scale, scale, bounds.left, bounds.top);
                             break;
                     }
@@ -4377,88 +4496,107 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
                 mSnappingContext.applySnaps(m);
             }
-            if(master) {
+            if (master) {
                 angle_or_scale = scale;
             }
-		} else if(hv.getMode()==HandleView.Mode.ROTATE) {
+        } else if (hv.getMode() == HandleView.Mode.ROTATE) {
             float angle;
             final int cx = bounds.centerX();
             final int cy = bounds.centerY();
-            if(master) {
+            if (master) {
                 int ax = 0, ay = 0;
                 switch (mTrackedHandle) {
-                    case TOP: ax = cx; ay = bounds.top; break;
-                    case RIGHT: ax = bounds.right; ay = cy; break;
-                    case BOTTOM: ax = cx; ay = bounds.bottom; break;
-                    case LEFT: ax = bounds.left; ay = cy; break;
+                    case TOP:
+                        ax = cx;
+                        ay = bounds.top;
+                        break;
+                    case RIGHT:
+                        ax = bounds.right;
+                        ay = cy;
+                        break;
+                    case BOTTOM:
+                        ax = cx;
+                        ay = bounds.bottom;
+                        break;
+                    case LEFT:
+                        ax = bounds.left;
+                        ay = cy;
+                        break;
                 }
                 double a = Math.atan2(ay + dy - cy, ax + dx - cx) * 180 / Math.PI;
                 switch (mTrackedHandle) {
-                    case TOP: a += 90; break;
-                    case RIGHT: break;
-                    case BOTTOM: a -= 90; break;
-                    case LEFT: a -= 180; break;
+                    case TOP:
+                        a += 90;
+                        break;
+                    case RIGHT:
+                        break;
+                    case BOTTOM:
+                        a -= 90;
+                        break;
+                    case LEFT:
+                        a -= 180;
+                        break;
                 }
                 angle = Math.round(a / 5) * 5;
                 angle_or_scale = angle;
             } else {
                 angle = angle_or_scale;
             }
-			m.postRotate(angle, cx, cy);
-		} else if(hv.getMode()==HandleView.Mode.CONTENT_SIZE) {
+            m.postRotate(angle, cx, cy);
+        } else if (hv.getMode() == HandleView.Mode.CONTENT_SIZE) {
             TransformLayout tl = itemView;
 
-			int tx=0;
-			int ty=0;
-			int width=tig.transformedViewWidth;
-			int height=tig.transformedViewHeight;
-			switch(mTrackedHandle) {
-			case TOP: 
-				height-=dy;
-				if(height<0) height=0;
-				ty=tig.transformedViewHeight-height;
-				break;
-				
-			case RIGHT: 
-				width+=dx;
-				if(width<0) width=0;
-				break;
-				
-			case BOTTOM: 
-				height+=dy;
-				if(height<0) height=0;
-				break;
-				
-			case LEFT:
-				width-=dx;
-				if(width<0) width=0;
-				tx=tig.transformedViewWidth-width;
-				break;
-			}
-			
-			m.postTranslate(tx, ty);
+            int tx = 0;
+            int ty = 0;
+            int width = tig.transformedViewWidth;
+            int height = tig.transformedViewHeight;
+            switch (mTrackedHandle) {
+                case TOP:
+                    height -= dy;
+                    if (height < 0) height = 0;
+                    ty = tig.transformedViewHeight - height;
+                    break;
+
+                case RIGHT:
+                    width += dx;
+                    if (width < 0) width = 0;
+                    break;
+
+                case BOTTOM:
+                    height += dy;
+                    if (height < 0) height = 0;
+                    break;
+
+                case LEFT:
+                    width -= dx;
+                    if (width < 0) width = 0;
+                    tx = tig.transformedViewWidth - width;
+                    break;
+            }
+
+            m.postTranslate(tx, ty);
             item.setViewWidth(width);
             item.setViewHeight(height);
 
-            if(mSnappingContext != null && master) {
+            if (mSnappingContext != null && master) {
                 mSnappingContext.computeSnaps(m);
 
-                if(mSnappingContext.min_dx != Float.MAX_VALUE) {
+                if (mSnappingContext.min_dx != Float.MAX_VALUE) {
                     float v = mSnappingContext.min_dx / mSnappingContext.item_layout.getCurrentScale();
-                    if(mTrackedHandle == Handle.RIGHT) {
+                    if (mTrackedHandle == Handle.RIGHT) {
                         width += v;
-                    } else if(mTrackedHandle == Handle.LEFT) {
+                    } else if (mTrackedHandle == Handle.LEFT) {
                         m.postTranslate(v, 0);
                         width -= v;
                     }
                     item.setViewWidth(width);
                 }
 
-                if(mSnappingContext.min_dy != Float.MAX_VALUE) {
+                if (mSnappingContext.min_dy != Float.MAX_VALUE) {
                     float v = mSnappingContext.min_dy / mSnappingContext.item_layout.getCurrentScale();
-                    if(mTrackedHandle == Handle.BOTTOM) {
+                    if (mTrackedHandle == Handle.BOTTOM) {
                         height += v;
-                    } else if(mTrackedHandle == Handle.TOP) {
+                    } else if (mTrackedHandle == Handle.TOP) {
                         m.postTranslate(0, v);
                         height -= v;
                     }
@@ -4467,29 +4605,26 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
                 mSnappingContext.applySnaps(m);
             }
-			
 
-			tl.requestLayout();
-		}
+
+            tl.requestLayout();
+        }
 
         item.setTransform(m, false);
 
         return angle_or_scale;
-	}
+    }
 
     protected void saveInitialItemViewGeometry(ItemView itemView) {
         mOriginalItemsGeometry.put(itemView.getItem().getId(), new SavedItemGeometry(itemView));
     }
-
-    private SnappingContext mSnappingContext;
-
 
     private void startSnapping(ItemView itemView, int snap_what) {
         mSnappingContext = new SnappingContext(itemView, ViewConfiguration.get(this).getScaledTouchSlop(), snap_what);
     }
 
     private void stopSnapping() {
-        if(mSnappingContext != null) {
+        if (mSnappingContext != null) {
             mSnappingContext.stop();
             mSnappingContext = null;
         }
@@ -4497,20 +4632,20 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
     private void cancelSelectDropFolder() {
         mHandler.removeCallbacks(mSelectDropFolder);
-        if(mCandidateDropFolderView != null) {
+        if (mCandidateDropFolderView != null) {
             mCandidateDropFolderView.setBackgroundColor(0);
             mCandidateDropFolderView = null;
         }
     }
 
-	private void dropItemView(final ItemView droppedItemView) {
+    private void dropItemView(final ItemView droppedItemView) {
         boolean is_embedded_folder = mDropFolderView instanceof EmbeddedFolderView;
         Item droppedItem = droppedItemView.getItem();
         boolean on_grid = droppedItem.getItemConfig().onGrid;
 
 
         final SavedItemGeometry oldGeometry = mOriginalItemsGeometry.get(droppedItem.getId());
-        if(mDropFolderView == null) {
+        if (mDropFolderView == null) {
             if (on_grid) {
                 ItemLayout il = droppedItemView.getParentItemLayout();
                 getItemViewCell(droppedItemView, mCurrentMoveItemDx, mCurrentMoveItemDy, mTempCoords);
@@ -4533,7 +4668,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                 mUndoStack.storeItemSetTransform(droppedItemView, oldGeometry);
             }
         } else {
-            if(!is_embedded_folder) {
+            if (!is_embedded_folder) {
                 final Rect dropFolderBounds = mScreen.computeItemViewBounds(mDropFolderView);
                 final Rect droppedItemBounds = mScreen.computeItemViewBounds(droppedItemView);
                 float dx1, dx2, dy1, dy2;
@@ -4553,22 +4688,22 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         }
 
         stopTracking(droppedItemView);
-	}
-	
-	private void getItemViewCell(ItemView itemView, float dx, float dy, int[] coords) {
+    }
+
+    private void getItemViewCell(ItemView itemView, float dx, float dy, int[] coords) {
         ItemLayout il = itemView.getParentItemLayout();
         Item item = itemView.getItem();
-        float x= item.getCell().left+dx/ il.getCellWidth();
-		float y= item.getCell().top+dy/ il.getCellHeight();
-		coords[0]=Math.round(x);
-		coords[1]=Math.round(y);
-	}
+        float x = item.getCell().left + dx / il.getCellWidth();
+        float y = item.getCell().top + dy / il.getCellHeight();
+        coords[0] = Math.round(x);
+        coords[1] = Math.round(y);
+    }
 
     protected void unselectAllItems() {
-        if(mEditMode) {
-            for(int i=0; i<mEditItemLayout.getChildCount(); i++) {
-                View v= mEditItemLayout.getChildAt(i);
-                if(v instanceof ItemView) {
+        if (mEditMode) {
+            for (int i = 0; i < mEditItemLayout.getChildCount(); i++) {
+                View v = mEditItemLayout.getChildAt(i);
+                if (v instanceof ItemView) {
                     ItemView itemView = (ItemView) v;
                     if (itemView.isSelected()) {
                         itemView.setSelected(false);
@@ -4582,14 +4717,14 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         ArrayList<ItemView> itemViews = getSelectedItemViews();
         int count = itemViews.size();
         ArrayList<Item> items = new ArrayList<>(count);
-        for(int n=0; n<count; n++) {
+        for (int n = 0; n < count; n++) {
             items.add(itemViews.get(n).getItem());
         }
         return items;
     }
 
     public ArrayList<ItemView> getSelectedItemViews() {
-        if(mEditMode) {
+        if (mEditMode) {
             ArrayList<ItemView> itemViews = mEditItemLayout.getSelectedItems();
             final ArrayList<Item> pageItems = mEditItemLayout.getPage().items;
 
@@ -4600,8 +4735,8 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                 public int compare(ItemView lhs, ItemView rhs) {
                     final int li = pageItems.indexOf(lhs.getItem());
                     final int ri = pageItems.indexOf(rhs.getItem());
-                    if(ri < li) return -1;
-                    if(li > ri) return 1;
+                    if (ri < li) return -1;
+                    if (li > ri) return 1;
                     return 0;
                 }
             });
@@ -4614,11 +4749,11 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
     // returns the list of selected items or the bubble item, depending on whether we are in edit mode or not
     protected ArrayList<Item> getActionItems() {
-        if(mEditMode) {
+        if (mEditMode) {
             return getSelectedItems();
         } else {
             ArrayList<Item> item = new ArrayList<>(1);
-            if(mBubbleItemView != null) {
+            if (mBubbleItemView != null) {
                 item.add(mBubbleItemView.getItem());
             }
             return item;
@@ -4626,11 +4761,11 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
     }
 
     protected ArrayList<ItemView> getActionItemViews() {
-        if(mEditMode) {
+        if (mEditMode) {
             return getSelectedItemViews();
         } else {
             ArrayList<ItemView> itemViews = new ArrayList<>(1);
-            if(mBubbleItemView != null) {
+            if (mBubbleItemView != null) {
                 itemViews.add(mBubbleItemView);
             }
             return itemViews;
@@ -4638,7 +4773,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
     }
 
     public SelectionState getSelectionState() {
-        if(mEditMode) {
+        if (mEditMode) {
             return new SelectionState(mEditItemLayout.getMasterSelectedItem(), getSelectedItemViews(), mEditItemLayout.getHandleView().getMode());
         } else {
             return new SelectionState(null, new ArrayList<ItemView>(0), null);
@@ -4646,18 +4781,18 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
     }
 
     public void setSelectionState(SelectionState state) {
-        if(mEditMode) {
+        if (mEditMode) {
             // unselect items that are no more in the new selection state list
             for (ItemView itemView : getSelectedItemViews()) {
                 int id = itemView.getItem().getId();
                 boolean found = false;
                 for (int sid : state.selectedItemsIds) {
-                    if(id == sid) {
+                    if (id == sid) {
                         found = true;
                         break;
                     }
                 }
-                if(!found) {
+                if (!found) {
                     itemView.setSelected(false);
                 }
             }
@@ -4675,17 +4810,17 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         }
     }
 
-	private void startTracking(ItemView itemView) {
+    private void startTracking(ItemView itemView) {
         ItemLayout il = itemView.getParentItemLayout();
         Item item = itemView.getItem();
-		if(item.getPage().config.allowDualPosition) {
-			item.differentiatePosition(mScreen.getResourcesOrientation());
-		}
+        if (item.getPage().config.allowDualPosition) {
+            item.differentiatePosition(mScreen.getResourcesOrientation());
+        }
 
         mTrackedItemsGeometry.put(item.getId(), new SavedItemGeometry(itemView));
 
-		il.trackItemView(itemView);
-	}
+        il.trackItemView(itemView);
+    }
 
     private void stopTracking(ItemView itemView) {
         mTrackedItemsGeometry.remove(itemView.getItem().getId());
@@ -4694,9 +4829,9 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
     private void rearrangeItems(Page page) {
         PageConfig c = page.config;
-        boolean horizontal = c.scrollingDirection==PageConfig.ScrollingDirection.X;
+        boolean horizontal = c.scrollingDirection == PageConfig.ScrollingDirection.X;
         int x_max, y_max;
-        if(mScreen.getResourcesOrientation() == Configuration.ORIENTATION_LANDSCAPE) {
+        if (mScreen.getResourcesOrientation() == Configuration.ORIENTATION_LANDSCAPE) {
             x_max = c.gridLColumnNum;
             y_max = c.gridLRowNum;
         } else {
@@ -4704,56 +4839,56 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
             y_max = c.gridPRowNum;
         }
 
-        int min=Integer.MAX_VALUE;
-        int max=Integer.MIN_VALUE;
+        int min = Integer.MAX_VALUE;
+        int max = Integer.MIN_VALUE;
         SparseArray<ArrayList<Item>> items = new SparseArray<>();
-        for(Item i : page.items) {
+        for (Item i : page.items) {
             Class<? extends Item> cl = i.getClass();
-            if(cl != Shortcut.class && cl != Folder.class) continue;
-            if(!i.getItemConfig().onGrid) continue;
-            if(!i.isVisible()) continue;
-            if(i.getItemConfig().pinMode!= ItemConfig.PinMode.NONE) continue;
+            if (cl != Shortcut.class && cl != Folder.class) continue;
+            if (!i.getItemConfig().onGrid) continue;
+            if (!i.isVisible()) continue;
+            if (i.getItemConfig().pinMode != ItemConfig.PinMode.NONE) continue;
             Rect cell = i.getCell();
             int key;
-            if(horizontal) {
-                key = (cell.left/x_max) * (x_max*y_max) + cell.left%x_max + cell.top*x_max;
+            if (horizontal) {
+                key = (cell.left / x_max) * (x_max * y_max) + cell.left % x_max + cell.top * x_max;
             } else {
-                key = cell.left+cell.top*x_max;
+                key = cell.left + cell.top * x_max;
             }
             ArrayList<Item> slot = items.get(key);
-            if(slot==null) {
+            if (slot == null) {
                 slot = new ArrayList<Item>();
                 items.put(key, slot);
             }
             slot.add(i);
-            if(key>max) max=key;
-            if(key<min) min=key;
+            if (key > max) max = key;
+            if (key < min) min = key;
         }
 
-        int x=0, y=0, px=0;
-        for(int key=min; key<=max; key++) {
+        int x = 0, y = 0, px = 0;
+        for (int key = min; key <= max; key++) {
             ArrayList<Item> slot = items.get(key);
-            if(slot != null) {
-                for(Item i : slot) {
+            if (slot != null) {
+                for (Item i : slot) {
                     i.setCellT(null);
-                    i.getCell().set(new Rect(x, y, x+1, y+1));
+                    i.getCell().set(new Rect(x, y, x + 1, y + 1));
 
-                    if(horizontal) {
+                    if (horizontal) {
                         px++;
                         x++;
-                        if(px==x_max) {
-                            px=0;
-                            x-=x_max;
+                        if (px == x_max) {
+                            px = 0;
+                            x -= x_max;
                             y++;
-                            if(y==y_max) {
-                                y=0;
-                                x+=x_max;
+                            if (y == y_max) {
+                                y = 0;
+                                x += x_max;
                             }
                         }
                     } else {
                         x++;
-                        if(x==x_max) {
-                            x=0;
+                        if (x == x_max) {
+                            x = 0;
                             y++;
                         }
                     }
@@ -4763,13 +4898,13 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
     }
 
     private void updateGeometryBox() {
-        if(mGeometryBox != null && mGeometryBox.getVisibility() == View.VISIBLE) {
+        if (mGeometryBox != null && mGeometryBox.getVisibility() == View.VISIBLE) {
             Item masterSelectedItem = mEditItemLayout.getMasterSelectedItem();
             boolean e = false;
-            if(masterSelectedItem != null) {
+            if (masterSelectedItem != null) {
                 e = true;
-                if(masterSelectedItem.getClass() == StopPoint.class) {
-                    if(mGeometryMode != Item.GEOMETRY_CTRL_POSITION) {
+                if (masterSelectedItem.getClass() == StopPoint.class) {
+                    if (mGeometryMode != Item.GEOMETRY_CTRL_POSITION) {
                         mGeometryMode = Item.GEOMETRY_CTRL_POSITION;
                     }
                 } else if (masterSelectedItem.getItemConfig().onGrid) {
@@ -4778,7 +4913,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                     }
                 }
             }
-            boolean is_rotate = mGeometryMode== Item.GEOMETRY_CTRL_ROTATE;
+            boolean is_rotate = mGeometryMode == Item.GEOMETRY_CTRL_ROTATE;
             mGeometryEdit1.setText(e ? getGeometryEditLabel(masterSelectedItem, R.id.gb_e1) : "");
             mGeometryEdit2.setText(e ? getGeometryEditLabel(masterSelectedItem, R.id.gb_e2) : "");
             mGeometryEdit2.setVisibility(is_rotate ? View.GONE : View.VISIBLE);
@@ -4796,7 +4931,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
             v.setEnabled(e);
             v.setVisibility(is_rotate ? View.INVISIBLE : View.VISIBLE);
 
-            final boolean zorder_enable= masterSelectedItem !=null;
+            final boolean zorder_enable = masterSelectedItem != null;
             mGeometryBox.findViewById(R.id.move_bottom).setEnabled(zorder_enable);
             mGeometryBox.findViewById(R.id.move_down).setEnabled(zorder_enable);
             mGeometryBox.findViewById(R.id.move_up).setEnabled(zorder_enable);
@@ -4812,12 +4947,23 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         int label_res;
         boolean e1 = geometry_edit == R.id.gb_e1;
         switch (mGeometryMode) {
-            case Item.GEOMETRY_CTRL_POSITION: label_res = e1 ? R.string.gb_l : R.string.gb_t; break;
-            case Item.GEOMETRY_CTRL_SIZE: label_res = e1 ? R.string.gb_w : R.string.gb_h; break;
-            case Item.GEOMETRY_CTRL_ROTATE: label_res = R.string.gb_a; break;
-            case Item.GEOMETRY_CTRL_SCALE: label_res = e1 ? R.string.gb_sx : R.string.gb_sy; break;
-            case Item.GEOMETRY_CTRL_SKEW: label_res = e1 ? R.string.gb_kx : R.string.gb_ky; break;
-            default: return "";
+            case Item.GEOMETRY_CTRL_POSITION:
+                label_res = e1 ? R.string.gb_l : R.string.gb_t;
+                break;
+            case Item.GEOMETRY_CTRL_SIZE:
+                label_res = e1 ? R.string.gb_w : R.string.gb_h;
+                break;
+            case Item.GEOMETRY_CTRL_ROTATE:
+                label_res = R.string.gb_a;
+                break;
+            case Item.GEOMETRY_CTRL_SCALE:
+                label_res = e1 ? R.string.gb_sx : R.string.gb_sy;
+                break;
+            case Item.GEOMETRY_CTRL_SKEW:
+                label_res = e1 ? R.string.gb_kx : R.string.gb_ky;
+                break;
+            default:
+                return "";
         }
 
         return getString(label_res);
@@ -4839,7 +4985,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         boolean e1 = geometry_edit == R.id.gb_e1;
         switch (mGeometryMode) {
             case Item.GEOMETRY_CTRL_POSITION:
-                if(on_grid) {
+                if (on_grid) {
                     Rect r = item.getCell();
                     value = e1 ? r.left : r.top;
                 } else {
@@ -4848,28 +4994,34 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                 }
                 break;
             case Item.GEOMETRY_CTRL_SIZE:
-                if(on_grid) {
+                if (on_grid) {
                     Rect r = item.getCell();
                     value = e1 ? r.width() : r.height();
                 } else {
                     value = e1 ? item.getViewWidth() : item.getViewHeight();
                 }
                 break;
-            case Item.GEOMETRY_CTRL_ROTATE: value = Utils.getRotateForMatrix(m); break;
-            case Item.GEOMETRY_CTRL_SCALE: value = Utils.getScaleforMatrix(m, e1); break;
-            case Item.GEOMETRY_CTRL_SKEW: value = Utils.getSkewforMatrix(m, e1); break; //values[e1 ? Matrix.MSKEW_X : Matrix.MSKEW_Y]; break;
+            case Item.GEOMETRY_CTRL_ROTATE:
+                value = Utils.getRotateForMatrix(m);
+                break;
+            case Item.GEOMETRY_CTRL_SCALE:
+                value = Utils.getScaleforMatrix(m, e1);
+                break;
+            case Item.GEOMETRY_CTRL_SKEW:
+                value = Utils.getSkewforMatrix(m, e1);
+                break; //values[e1 ? Matrix.MSKEW_X : Matrix.MSKEW_Y]; break;
         }
 
         return value;
     }
 
     private void showGeometryBox() {
-        if(mGeometryBox == null) {
+        if (mGeometryBox == null) {
             mGeometryBox = findViewById(R.id.gb);
             mGeometryBox.setOnTouchListener(this);
-            mGeometryEdit1 = (Button)mGeometryBox.findViewById(R.id.gb_e1);
+            mGeometryEdit1 = mGeometryBox.findViewById(R.id.gb_e1);
             mGeometryEdit1.setOnClickListener(this);
-            mGeometryEdit2 = (Button)mGeometryBox.findViewById(R.id.gb_e2);
+            mGeometryEdit2 = mGeometryBox.findViewById(R.id.gb_e2);
             mGeometryEdit2.setOnClickListener(this);
             mGeometryBox.findViewById(R.id.gb_hm).setOnClickListener(this);
             mGeometryBox.findViewById(R.id.gb_hm).setOnLongClickListener(this);
@@ -4893,7 +5045,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
     }
 
     private void hideGeometryBox() {
-        if(mGeometryBox != null) {
+        if (mGeometryBox != null) {
             mGeometryBox.setVisibility(View.GONE);
         }
     }
@@ -4903,7 +5055,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
     }
 
     public void updateGeometryValue(Item item, int what, float value_x, float value_y, boolean fast) {
-        if(item.getClass() == StopPoint.class && what != Item.GEOMETRY_CTRL_POSITION) {
+        if (item.getClass() == StopPoint.class && what != Item.GEOMETRY_CTRL_POSITION) {
             return;
         }
 
@@ -4919,64 +5071,92 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
     }
 
     private void incrementCurrentGeometryValue(Item item, int view_id) {
-        if(item.getClass() == StopPoint.class && mGeometryMode != Item.GEOMETRY_CTRL_POSITION) {
+        if (item.getClass() == StopPoint.class && mGeometryMode != Item.GEOMETRY_CTRL_POSITION) {
             return;
         }
 
         boolean on_grid = item.getItemConfig().onGrid;
         Matrix m = item.getTransform();
         Rect cell = item.getCell();
-        float x=0, y=0;
+        float x = 0, y = 0;
         switch (mGeometryMode) {
             case Item.GEOMETRY_CTRL_POSITION:
                 RectF r = Utils.getTransformedItemBoxforMatrix(item, m);
-                if(on_grid) {
+                if (on_grid) {
                     x = cell.left;
                     y = cell.top;
                 } else {
                     x = r.left;
                     y = r.top;
                 }
-                switch(view_id) {
-                    case R.id.gb_hm: x--; break;
-                    case R.id.gb_hp: x++; break;
-                    case R.id.gb_vm: y--; break;
-                    case R.id.gb_vp: y++; break;
+                switch (view_id) {
+                    case R.id.gb_hm:
+                        x--;
+                        break;
+                    case R.id.gb_hp:
+                        x++;
+                        break;
+                    case R.id.gb_vm:
+                        y--;
+                        break;
+                    case R.id.gb_vp:
+                        y++;
+                        break;
                 }
                 break;
 
             case Item.GEOMETRY_CTRL_SIZE:
-                if(on_grid) {
+                if (on_grid) {
                     x = cell.width();
                     y = cell.height();
                 } else {
                     x = item.getViewWidth();
                     y = item.getViewHeight();
                 }
-                switch(view_id) {
-                    case R.id.gb_hm: x--; break;
-                    case R.id.gb_hp: x++; break;
-                    case R.id.gb_vm: y--; break;
-                    case R.id.gb_vp: y++; break;
+                switch (view_id) {
+                    case R.id.gb_hm:
+                        x--;
+                        break;
+                    case R.id.gb_hp:
+                        x++;
+                        break;
+                    case R.id.gb_vm:
+                        y--;
+                        break;
+                    case R.id.gb_vp:
+                        y++;
+                        break;
                 }
                 break;
 
             case Item.GEOMETRY_CTRL_ROTATE:
                 x = Utils.getRotateForMatrix(m);
-                switch(view_id) {
-                    case R.id.gb_hm: x--; break;
-                    case R.id.gb_hp: x++; break;
+                switch (view_id) {
+                    case R.id.gb_hm:
+                        x--;
+                        break;
+                    case R.id.gb_hp:
+                        x++;
+                        break;
                 }
                 break;
 
             case Item.GEOMETRY_CTRL_SCALE:
                 x = Utils.getScaleforMatrix(m, true);
                 y = Utils.getScaleforMatrix(m, false);
-                switch(view_id) {
-                    case R.id.gb_hm: x-=0.1f; break;
-                    case R.id.gb_hp: x+=0.1f; break;
-                    case R.id.gb_vm: y-=0.1f; break;
-                    case R.id.gb_vp: y+=0.1f; break;
+                switch (view_id) {
+                    case R.id.gb_hm:
+                        x -= 0.1f;
+                        break;
+                    case R.id.gb_hp:
+                        x += 0.1f;
+                        break;
+                    case R.id.gb_vm:
+                        y -= 0.1f;
+                        break;
+                    case R.id.gb_vp:
+                        y += 0.1f;
+                        break;
                 }
                 break;
 
@@ -4990,20 +5170,25 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
     private void storeUndoForGeometryBoxChange(ItemView itemView) {
         Item item = itemView.getItem();
         final SavedItemGeometry oldGeometry = mOriginalItemsGeometry.get(item.getId());
-        if(item.getItemConfig().onGrid) {
+        if (item.getItemConfig().onGrid) {
             mUndoStack.storeItemSetCell(itemView, oldGeometry);
         } else {
-            if(mGeometryMode == Item.GEOMETRY_CTRL_SIZE) {
+            if (mGeometryMode == Item.GEOMETRY_CTRL_SIZE) {
                 mUndoStack.storeItemSetViewSize(itemView, oldGeometry);
             } else {
                 mUndoStack.storeItemSetTransform(itemView, oldGeometry);
             }
         }
     }
-
+//
+//
+//    protected void customize(int page) {
+//        // for folder, go directly to the workspace settings screen, instead of the general setting screen
+//        PhoneUtils.startSettings(this, page, !Page.isFolder(page));
+//    }
 
     public void adjustGeometryBoxPosition() {
-        if(mGeometryBox != null) {
+        if (mGeometryBox != null) {
             boolean fix_position = false;
             FrameLayout.LayoutParams old_lp = (FrameLayout.LayoutParams) mGeometryBox.getLayoutParams();
             FrameLayout.LayoutParams new_lp = new FrameLayout.LayoutParams(old_lp.width, old_lp.height);
@@ -5013,27 +5198,124 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
             View contentView = mScreen.getContentView();
             int width = contentView.getWidth();
             int height = contentView.getHeight();
-            if(mGeometryBox.getRight()>width) {
+            if (mGeometryBox.getRight() > width) {
                 fix_position = true;
                 new_lp.leftMargin = width - old_lp.width;
             }
-            if(mGeometryBox.getBottom()>height) {
+            if (mGeometryBox.getBottom() > height) {
                 fix_position = true;
                 new_lp.topMargin = height - old_lp.height;
             }
-            if(fix_position) {
+            if (fix_position) {
                 mGeometryBox.setLayoutParams(new_lp);
                 mGeometryBox.requestLayout();
             }
         }
     }
 
-    private int[] mTmpInt = new int[2];
-    private int mInitialDownX;
-    private int mInitialDownY;
-    private int mInitialViewLeft;
-    private int mInitialViewTop;
-    private boolean mDraggingHandle;
+    private final OnClickListener mEditBarClick = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            closeBubble();
+//            mLastTouchedAddX = Utils.POSITION_AUTO;
+//            mLastTouchedAddY = Utils.POSITION_AUTO;
+//            mLightningEngine.setTouchPosition(mLastTouchedAddX, mLastTouchedAddY);
+            switch (v.getId()) {
+                case R.id.eb_undo:
+                case R.id.eb_redo:
+                    final boolean undo = v.getId() == R.id.eb_undo;
+                    if (mUndoStack.willDeleteWidget(undo)) {
+                        showConfirmWidgetDeletionDialog(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (undo) mUndoStack.undo();
+                                else mUndoStack.redo();
+                            }
+                        });
+                    } else {
+                        if (undo) mUndoStack.undo();
+                        else mUndoStack.redo();
+                    }
+                    break;
+                case R.id.eb_edit:
+                    toggleEditActionBox(SystemConfig.EDIT_BOX_PROPERTIES);
+                    break;
+                case R.id.eb_action:
+                    toggleEditActionBox(SystemConfig.EDIT_BOX_ACTION);
+                    break;
+                case R.id.eb_pos:
+                    toggleEditActionBox(SystemConfig.EDIT_BOX_POSITION);
+                    break;
+                case R.id.eb_clone:
+                case R.id.bbl_clone:
+                    menuActionCloneItem();
+                    break;
+                case R.id.eb_add:
+                case R.id.bbl_add:
+                    menuActionAddItem();
+                    break;
+                case R.id.eb_rm:
+                case R.id.bbl_rm:
+                    menuActionConfirmRemoveItem();
+                    break;
+                case R.id.eb_ms:
+                    v.setSelected(menuActionToggleMultiSelection());
+                    break;
+                case R.id.eb_sh:
+                    v.setSelected(menuActionToggleDisplayInvisibleItems());
+                    break;
+                case R.id.eb_snap:
+                    v.setSelected(menuActionToggleSnap());
+                    break;
+                case R.id.eb_prop:
+                    v.setSelected(toggleEditPropertiesBox());
+                    break;
+                case R.id.eb_ge:
+                    v.setSelected(menuActionToggleGeometryBox());
+                    break;
+                case R.id.eb_lock:
+                    menuActionLockUnlock();
+                    break;
+                case R.id.eb_gs:
+                    menuActionSettingsGlobal();
+                    break;
+                case R.id.eb_cs:
+                    menuActionSettingsContainer(true);
+                    break;
+                case R.id.eb_h:
+                    mHierarchyScreen.show(null);
+                    break;
+                case R.id.eb_hider:
+                    toggleEditBars();
+                    break;
+                case R.id.eb_cstyle:
+                    menuActionCopyStyle();
+                    break;
+                case R.id.eb_pstyle:
+                    menuActionPasteStyle();
+                    break;
+                case R.id.edit_prop_mode:
+                    mEditPropertiesBox.showGotoPageDialog();
+                    break;
+                case R.id.bbl_settings:
+                    menuActionSettingsContainer(false);
+                    break;
+                case R.id.bbl_edit:
+                    menuActionEdit();
+                    break;
+                case R.id.edit_prop_pos:
+                    setEditPropertiesPosition(!mEditPropertiesOnTop);
+                    break;
+                case R.id.eb_hp:
+                    boolean honor = !mSystemConfig.hasSwitch(SystemConfig.SWITCH_HONOUR_PINNED_ITEMS);
+                    mEditItemLayout.setHonourPinnedItems(honor);
+                    mSystemConfig.setSwitch(SystemConfig.SWITCH_HONOUR_PINNED_ITEMS, honor);
+                    v.setSelected(honor);
+                    break;
+            }
+        }
+    };
+
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         // used to drag boxes
@@ -5047,7 +5329,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                     mInitialDownX = mTmpInt[0];
                     mInitialDownY = mTmpInt[1];
 
-                    if(is_geometry_box) {
+                    if (is_geometry_box) {
                         FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) v.getLayoutParams();
                         mInitialViewLeft = layoutParams.leftMargin;
                         mInitialViewTop = layoutParams.topMargin;
@@ -5058,10 +5340,10 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
                 case MotionEvent.ACTION_MOVE:
                     int x = mInitialViewLeft + mTmpInt[0] - mInitialDownX;
-                    if(x < 0) x = 0;
+                    if (x < 0) x = 0;
                     int y = mInitialViewTop + mTmpInt[1] - mInitialDownY;
-                    if(y < 0) y = 0;
-                    if(is_geometry_box) {
+                    if (y < 0) y = 0;
+                    if (is_geometry_box) {
                         FrameLayout.LayoutParams fl = new FrameLayout.LayoutParams(mGeometryBox.getWidth(), mGeometryBox.getHeight());
                         fl.leftMargin = x;
                         fl.topMargin = y;
@@ -5071,7 +5353,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                     } else {
                         ViewGroup.LayoutParams lp = mEditPropertiesContainer.getLayoutParams();
                         int delta = mEditPropertiesOnTop ? mTmpInt[1] - mInitialDownY : mInitialDownY - mTmpInt[1];
-                        if(mDraggingHandle || Math.abs(delta) > ViewConfiguration.get(this).getScaledTouchSlop()) {
+                        if (mDraggingHandle || Math.abs(delta) > ViewConfiguration.get(this).getScaledTouchSlop()) {
                             lp.height = checkEditPropertiesHeight(mInitialViewTop + delta);
                             mEditPropertiesContainer.requestLayout();
                             mDraggingHandle = true;
@@ -5081,8 +5363,8 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                     break;
 
                 case MotionEvent.ACTION_UP:
-                    if(!is_geometry_box) {
-                        if(mDraggingHandle) {
+                    if (!is_geometry_box) {
+                        if (mDraggingHandle) {
                             mDraggingHandle = false;
                         } else {
                             Toast.makeText(this, mEditPropertiesTitle.getText(), Toast.LENGTH_LONG).show();
@@ -5096,8 +5378,65 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         return false;
     }
 
+    private final OnLongClickListener mEditBarLongClick = new OnLongClickListener() {
+        @Override
+        public boolean onLongClick(View v) {
+            CharSequence label;
+            int label_res = 0;
+            Item masterSelectedItem = mEditMode ? mEditItemLayout.getMasterSelectedItem() : null;
+            switch (v.getId()) {
+                case R.id.eb_lock:
+                    label_res = mGlobalConfig.itemLongTap.action == GlobalConfig.NOTHING ? R.string.mi_ul : R.string.mi_l;
+                    break;
+                case R.id.eb_cs:
+                case R.id.bbl_settings:
+                    if (masterSelectedItem != null && masterSelectedItem instanceof Folder) {
+                        label_res = masterSelectedItem.getClass() == EmbeddedFolder.class ? R.string.mc_ef : R.string.menu_customize_folder;
+                    } else if (mScreen.getTargetItemLayout().getPage().isFolder()) {
+                        boolean is_embedded_folder = mScreen.getTargetItemLayout().getOpenerItemView() instanceof EmbeddedFolderView;
+                        label_res = is_embedded_folder ? R.string.mc_ef : R.string.menu_customize_folder;
+                    } else if (mScreen.getTargetItemLayout().getPage().id == Page.APP_DRAWER_PAGE) {
+                        label_res = R.string.ads;
+                    } else {
+                        label_res = R.string.ds;
+                    }
+                    break;
+
+                case R.id.bbl_edit:
+                    if (masterSelectedItem == null) {
+                        ItemLayout il = mScreen.getTargetOrTopmostItemLayout();
+                        label_res = il.getEditMode() ? R.string.mi_exel : R.string.menu_objects_layout;
+                    } else {
+                        label_res = R.string.mi_customize;
+                    }
+                    break;
+
+                case R.id.eb_hider:
+                    if (mEditBarsVisible) {
+                        boolean content_zoomed = !mSystemConfig.hasSwitch(SystemConfig.SWITCH_CONTENT_ZOOMED);
+                        animateEditBars(content_zoomed, false, false, true);
+                        mSystemConfig.setSwitch(SystemConfig.SWITCH_CONTENT_ZOOMED, content_zoomed);
+                    }
+                    break;
+            }
+            if (label_res == 0) {
+                label = v.getContentDescription();
+            } else {
+                label = getString(label_res);
+            }
+            if (label != null) {
+                int[] location = new int[2];
+                v.getLocationOnScreen(location);
+                Toast toast = Toast.makeText(Dashboard.this, label, Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.TOP | Gravity.LEFT, location[0], location[1]);
+                toast.show();
+            }
+            return true;
+        }
+    };
+
     private int checkEditPropertiesHeight(int height) {
-        if(height <= 0) {
+        if (height <= 0) {
             // special values, don't interpret this as a number of pixels
             return height;
         }
@@ -5128,7 +5467,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         mScreen.getDesktopView().findViewById(R.id.setup_progress).setVisibility(View.GONE);
         setPagerPage(mGlobalConfig.homeScreen, Screen.PAGE_DIRECTION_HINT_AUTO);
 
-        if(!was_import) {
+        if (!was_import) {
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -5144,142 +5483,26 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
     private void startPackageDetails(String pkg) {
         // 2.3 style
-        Intent intent=new Intent("android.settings.APPLICATION_DETAILS_SETTINGS");
-        intent.setData(Uri.parse("package:"+pkg));
-        if(!Utils.startActivitySafely(this, intent, 0)) {
+        Intent intent = new Intent("android.settings.APPLICATION_DETAILS_SETTINGS");
+        intent.setData(Uri.parse("package:" + pkg));
+        if (!Utils.startActivitySafely(this, intent, 0)) {
             // <=2.2 style
-            intent=new Intent();
+            intent = new Intent();
             intent.setComponent(ComponentName.unflattenFromString("com.android.settings/.InstalledAppDetails"));
             intent.putExtra("pkg", pkg); // 2.2
             intent.putExtra("com.android.settings.ApplicationPkgName", pkg); // 1.5
             Utils.startActivitySafely(this, intent, R.string.start_activity_error);
         }
     }
-//
-//
-//    protected void customize(int page) {
-//        // for folder, go directly to the workspace settings screen, instead of the general setting screen
-//        PhoneUtils.startSettings(this, page, !Page.isFolder(page));
-//    }
-
-
-    private OnClickListener mEditBarClick = new OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            closeBubble();
-//            mLastTouchedAddX = Utils.POSITION_AUTO;
-//            mLastTouchedAddY = Utils.POSITION_AUTO;
-//            mLightningEngine.setTouchPosition(mLastTouchedAddX, mLastTouchedAddY);
-            switch(v.getId()) {
-                case R.id.eb_undo:
-                case R.id.eb_redo:
-                    final boolean undo = v.getId() == R.id.eb_undo;
-                    if(mUndoStack.willDeleteWidget(undo)) {
-                        showConfirmWidgetDeletionDialog(new Runnable() {
-                            @Override
-                            public void run() {
-                                if(undo) mUndoStack.undo(); else mUndoStack.redo();
-                            }
-                        });
-                    } else {
-                        if(undo) mUndoStack.undo(); else mUndoStack.redo();
-                    }
-                    break;
-                case R.id.eb_edit: toggleEditActionBox(SystemConfig.EDIT_BOX_PROPERTIES); break;
-                case R.id.eb_action: toggleEditActionBox(SystemConfig.EDIT_BOX_ACTION); break;
-                case R.id.eb_pos: toggleEditActionBox(SystemConfig.EDIT_BOX_POSITION); break;
-                case R.id.eb_clone: case R.id.bbl_clone: menuActionCloneItem(); break;
-                case R.id.eb_add: case R.id.bbl_add: menuActionAddItem(); break;
-                case R.id.eb_rm: case R.id.bbl_rm: menuActionConfirmRemoveItem(); break;
-                case R.id.eb_ms: v.setSelected(menuActionToggleMultiSelection()); break;
-                case R.id.eb_sh: v.setSelected(menuActionToggleDisplayInvisibleItems()); break;
-                case R.id.eb_snap: v.setSelected(menuActionToggleSnap()); break;
-                case R.id.eb_prop: v.setSelected(toggleEditPropertiesBox()); break;
-                case R.id.eb_ge: v.setSelected(menuActionToggleGeometryBox()); break;
-                case R.id.eb_lock: menuActionLockUnlock(); break;
-                case R.id.eb_gs: menuActionSettingsGlobal(); break;
-                case R.id.eb_cs: menuActionSettingsContainer(true); break;
-                case R.id.eb_h: mHierarchyScreen.show(null); break;
-                case R.id.eb_hider: toggleEditBars(); break;
-                case R.id.eb_cstyle: menuActionCopyStyle(); break;
-                case R.id.eb_pstyle: menuActionPasteStyle(); break;
-                case R.id.edit_prop_mode: mEditPropertiesBox.showGotoPageDialog(); break;
-                case R.id.bbl_settings: menuActionSettingsContainer(false); break;
-                case R.id.bbl_edit: menuActionEdit(); break;
-                case R.id.edit_prop_pos: setEditPropertiesPosition(!mEditPropertiesOnTop); break;
-                case R.id.eb_hp:
-                    boolean honor = !mSystemConfig.hasSwitch(SystemConfig.SWITCH_HONOUR_PINNED_ITEMS);
-                    mEditItemLayout.setHonourPinnedItems(honor);
-                    mSystemConfig.setSwitch(SystemConfig.SWITCH_HONOUR_PINNED_ITEMS, honor);
-                    v.setSelected(honor);
-                    break;
-            }
-        }
-    };
-
-    private OnLongClickListener mEditBarLongClick = new OnLongClickListener() {
-        @Override
-        public boolean onLongClick(View v) {
-            CharSequence label;
-            int label_res = 0;
-            Item masterSelectedItem = mEditMode ? mEditItemLayout.getMasterSelectedItem() : null;
-            switch(v.getId()) {
-                case R.id.eb_lock: label_res = mGlobalConfig.itemLongTap.action==GlobalConfig.NOTHING ? R.string.mi_ul : R.string.mi_l; break;
-                case R.id.eb_cs:
-                case R.id.bbl_settings:
-                    if(masterSelectedItem != null && masterSelectedItem instanceof Folder) {
-                        label_res = masterSelectedItem.getClass() == EmbeddedFolder.class ? R.string.mc_ef : R.string.menu_customize_folder;
-                    } else if(mScreen.getTargetItemLayout().getPage().isFolder()) {
-                        boolean is_embedded_folder = mScreen.getTargetItemLayout().getOpenerItemView() instanceof EmbeddedFolderView;
-                        label_res = is_embedded_folder ? R.string.mc_ef : R.string.menu_customize_folder;
-                    } else if(mScreen.getTargetItemLayout().getPage().id == Page.APP_DRAWER_PAGE) {
-                        label_res = R.string.ads;
-                    } else {
-                        label_res = R.string.ds;
-                    }
-                    break;
-
-                case R.id.bbl_edit:
-                    if(masterSelectedItem == null) {
-                        ItemLayout il = mScreen.getTargetOrTopmostItemLayout();
-                        label_res = il.getEditMode() ? R.string.mi_exel : R.string.menu_objects_layout;
-                    } else {
-                        label_res = R.string.mi_customize;
-                    }
-                    break;
-
-                case R.id.eb_hider:
-                    if(mEditBarsVisible) {
-                        boolean content_zoomed = !mSystemConfig.hasSwitch(SystemConfig.SWITCH_CONTENT_ZOOMED);
-                        animateEditBars(content_zoomed ? true : false, false, false, true);
-                        mSystemConfig.setSwitch(SystemConfig.SWITCH_CONTENT_ZOOMED, content_zoomed);
-                    }
-                    break;
-            }
-            if(label_res == 0) {
-                label = v.getContentDescription();
-            } else {
-                label = getString(label_res);
-            }
-            if(label != null) {
-                int[] location = new int[2];
-                v.getLocationOnScreen(location);
-                Toast toast = Toast.makeText(Dashboard.this, label, Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.TOP|Gravity.LEFT, location[0], location[1]);
-                toast.show();
-            }
-            return true;
-        }
-    };
 
     private void setupEditControlsIfNeeded() {
-        if(mEditControlsView.findViewById(R.id.eb_top) == null) {
+        if (mEditControlsView.findViewById(R.id.eb_top) == null) {
             getLayoutInflater().inflate(R.layout.edit_controls, mEditControlsView);
         }
     }
 
     private void showEditBars(boolean with_hider) {
-        if(mEditBarRight == null) {
+        if (mEditBarRight == null) {
             setupEditControlsIfNeeded();
             mEditBarRight = mEditControlsView.findViewById(R.id.eb_top);
             mEditBarBottom = mEditControlsView.findViewById(R.id.eb_bottom);
@@ -5311,11 +5534,11 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
             mEditBarBottom.findViewById(R.id.eb_lock).setContentDescription(getString(R.string.mi_l));
             mEditBarBottom.findViewById(R.id.eb_h).setContentDescription(getString(R.string.an_ohs));
         }
-        if(mEditBarHider == null) {
+        if (mEditBarHider == null) {
             setupEditBarHider();
         }
         updateEditBarsOrientation();
-        if(!mEditBarsVisible) {
+        if (!mEditBarsVisible) {
             mEditBarRight.setVisibility(View.VISIBLE);
             mEditBarBottom.setVisibility(View.VISIBLE);
             if (with_hider) {
@@ -5326,14 +5549,14 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 //        if(mSystemConfig.hasSwitch(SystemConfig.SWITCH_PROPERTIES_BOX)) {
 //            showEditPropertiesBox();
 //        }
-        if(mSystemConfig.editBoxMode != SystemConfig.EDIT_BOX_NONE) {
+        if (mSystemConfig.editBoxMode != SystemConfig.EDIT_BOX_NONE) {
             showEditActionBox();
         }
         updateEditBars();
     }
 
     private void hideEditBars(boolean hide_hider) {
-        if(mEditBarsVisible) {
+        if (mEditBarsVisible) {
             animateEditBars(false, hide_hider, true, mSystemConfig.hasSwitch(SystemConfig.SWITCH_CONTENT_ZOOMED));
             hideEditActionBox();
             hideEditPropertiesBox();
@@ -5341,7 +5564,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
     }
 
     private void toggleEditBars() {
-        if(mEditBarsVisible) {
+        if (mEditBarsVisible) {
             hideEditBars(false);
         } else {
             showEditBars(false);
@@ -5355,7 +5578,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
         FrameLayout.LayoutParams lp;
 
-        if(mEditBarsVisible) {
+        if (mEditBarsVisible) {
             lp = (FrameLayout.LayoutParams) mEditBarRight.getLayoutParams();
             lp.width = mEditBarsWidth;
             lp.bottomMargin = mEditBarsHeight;
@@ -5366,13 +5589,13 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
             mEditBarBottom.requestLayout();
         }
 
-        if(mEditActionBox != null) {
+        if (mEditActionBox != null) {
             lp = (FrameLayout.LayoutParams) mEditActionBox.getLayoutParams();
             lp.rightMargin = mEditBarsWidth;
             mEditActionBox.requestLayout();
             setupEditActionBoxAnimations();
         }
-        if(mEditPropertiesContainer != null) {
+        if (mEditPropertiesContainer != null) {
             lp = (FrameLayout.LayoutParams) mEditPropertiesContainer.getLayoutParams();
             lp.rightMargin = mEditBarsWidth;
             lp.bottomMargin = mEditBarsHeight;
@@ -5397,52 +5620,80 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         mAnimateBars = animate_bars;
         mAnimateZoom = animate_zoom;
         mAnimateEditBarStart = AnimationUtils.currentAnimationTimeMillis();
-        if(animate_bars) {
+        if (animate_bars) {
             mEditBarsVisible = show;
         }
         mHandler.removeCallbacks(mAnimateEditBarRunnable);
         mAnimateEditBarRunnable.run();
     }
 
-    private boolean mAnimateBars;
-    private boolean mAnimateZoom;
-    private boolean mAnimateEditBarHider;
-    private long mAnimateEditBarStart;
-    private static final long ANIMATE_EDIT_BAR_DURATION = 200;
-    private Runnable mAnimateEditBarRunnable = new Runnable() {
+    private void showEditBarsHider() {
+        if (mEditBarHider == null) {
+            setupEditBarHider();
+        }
+        mEditBarHider.setVisibility(View.VISIBLE);
+
+        int eb_bar_size = getResources().getDimensionPixelSize(R.dimen.eb_bar_size);
+        View desktopView = mScreen.getDesktopView();
+        int w = desktopView.getWidth();
+        int h = desktopView.getHeight();
+        float sx = (w - eb_bar_size) / (float) w;
+        float sy = (h - eb_bar_size) / (float) h;
+        int bw, bh;
+        if (sx < sy) {
+            bw = eb_bar_size;
+            bh = (int) Math.ceil(h - sx * h);
+        } else {
+            bw = (int) Math.ceil(w - sy * w);
+            bh = eb_bar_size;
+        }
+
+        ViewGroup.LayoutParams lp = mEditBarHider.getLayoutParams();
+        lp.width = bw;
+        lp.height = bh;
+        mEditBarHider.requestLayout();
+        mEditBarHider.startAnimation(AnimationUtils.loadAnimation(this, android.R.anim.fade_in));
+    }
+
+    private void hideEditBarsHider() {
+        mEditBarHider.setVisibility(View.GONE);
+        mEditBarHider.startAnimation(AnimationUtils.loadAnimation(this, android.R.anim.fade_out));
+    }
+
+    private final Runnable mAnimateEditBarRunnable = new Runnable() {
         @Override
         public void run() {
             long delta = AnimationUtils.currentAnimationTimeMillis() - mAnimateEditBarStart;
-            if(delta> ANIMATE_EDIT_BAR_DURATION) {
+            if (delta > ANIMATE_EDIT_BAR_DURATION) {
                 delta = ANIMATE_EDIT_BAR_DURATION;
             }
-            float s = delta/(float) ANIMATE_EDIT_BAR_DURATION;
+            float s = delta / (float) ANIMATE_EDIT_BAR_DURATION;
 
             View desktopView = mScreen.getDesktopView();
             int w = desktopView.getWidth();
             int h = desktopView.getHeight();
             int size = getResources().getDimensionPixelSize(R.dimen.eb_bar_size);
             float size_anim;
-            if((mAnimateBars && mEditBarsVisible) || (!mAnimateBars && mAnimateZoom && mSystemConfig.hasSwitch(SystemConfig.SWITCH_CONTENT_ZOOMED))) {
-                size_anim =  size*s;
+            if ((mAnimateBars && mEditBarsVisible) || (!mAnimateBars && mAnimateZoom && mSystemConfig.hasSwitch(SystemConfig.SWITCH_CONTENT_ZOOMED))) {
+                size_anim = size * s;
             } else {
-                size_anim = size*(1-s);
+                size_anim = size * (1 - s);
 
             }
-            float sx = (w-size_anim)/(float)w;
-            float sy = (h-size_anim)/(float)h;
+            float sx = (w - size_anim) / (float) w;
+            float sy = (h - size_anim) / (float) h;
             int bw, bh;
-            if(sx<sy) {
+            if (sx < sy) {
                 bw = Math.round(size_anim);
-                bh = (int) Math.ceil(h-sx*h);
+                bh = (int) Math.ceil(h - sx * h);
                 sy = sx;
             } else {
-                bw = (int) Math.ceil(w-sy*w);
+                bw = (int) Math.ceil(w - sy * w);
                 bh = Math.round(size_anim);
                 sx = sy;
             }
 
-            if(mAnimateBars) {
+            if (mAnimateBars) {
                 FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mEditBarRight.getLayoutParams();
                 lp.width = bw;
                 lp.bottomMargin = bh;
@@ -5464,10 +5715,10 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                 desktopView.setScaleY(sy);
             }
 
-            if(s<1) {
+            if (s < 1) {
                 mHandler.post(mAnimateEditBarRunnable);
             } else {
-                if(mAnimateBars && bw==0 && bh==0) {
+                if (mAnimateBars && bw == 0 && bh == 0) {
                     mEditBarRight.setVisibility(View.GONE);
                     mEditBarBottom.setVisibility(View.GONE);
                     if (mAnimateEditBarHider) {
@@ -5478,48 +5729,13 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         }
     };
 
-    private void showEditBarsHider() {
-        if(mEditBarHider == null) {
-            setupEditBarHider();
-        }
-        mEditBarHider.setVisibility(View.VISIBLE);
-
-        int eb_bar_size = getResources().getDimensionPixelSize(R.dimen.eb_bar_size);
-        View desktopView = mScreen.getDesktopView();
-        int w = desktopView.getWidth();
-        int h = desktopView.getHeight();
-        float sx = (w-eb_bar_size)/(float)w;
-        float sy = (h-eb_bar_size)/(float)h;
-        int bw, bh;
-        if(sx<sy) {
-            bw = eb_bar_size;
-            bh = (int) Math.ceil(h-sx*h);
-        } else {
-            bw = (int) Math.ceil(w-sy*w);
-            bh = eb_bar_size;
-        }
-
-        ViewGroup.LayoutParams lp = mEditBarHider.getLayoutParams();
-        lp.width = bw;
-        lp.height = bh;
-        mEditBarHider.requestLayout();
-        mEditBarHider.startAnimation(AnimationUtils.loadAnimation(this, android.R.anim.fade_in));
-    }
-
-    private void hideEditBarsHider() {
-        mEditBarHider.setVisibility(View.GONE);
-        mEditBarHider.startAnimation(AnimationUtils.loadAnimation(this, android.R.anim.fade_out));
-    }
-
-
-
     private void setupEditBar(View bar) {
         ViewGroup vg = (ViewGroup) bar;
         Typeface typeface = LLApp.get().getIconsTypeface();
-        for(int n=vg.getChildCount()-1; n>=0; n--) {
+        for (int n = vg.getChildCount() - 1; n >= 0; n--) {
             View v = vg.getChildAt(n);
-            if(v instanceof TextView) {
-                ((TextView)v).setTypeface(typeface);
+            if (v instanceof TextView) {
+                ((TextView) v).setTypeface(typeface);
                 v.setOnClickListener(mEditBarClick);
                 v.setOnLongClickListener(mEditBarLongClick);
             }
@@ -5529,21 +5745,21 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
     private void setupEditBarHider() {
         setupEditControlsIfNeeded();
         computeEditBarsSize();
-        mEditBarHider = (EditBarHiderView) mEditControlsView.findViewById(R.id.eb_hider);
+        mEditBarHider = mEditControlsView.findViewById(R.id.eb_hider);
         mEditBarHider.setOnClickListener(mEditBarClick);
         mEditBarHider.setOnLongClickListener(mEditBarLongClick);
         mEditBarHider.setContentDescription(getString(R.string.eb_bh));
     }
 
     private void updateEditBars() {
-        if(mEditBarRight != null) {
+        if (mEditBarRight != null) {
             Item masterSelectedItem = mEditItemLayout.getMasterSelectedItem();
             boolean is_app_drawer = getClass() == AppDrawerX.class;
             boolean has_selected_item = masterSelectedItem != null;
             mEditBarRight.findViewById(R.id.eb_undo).setEnabled(mUndoStack.canUndo());
             mEditBarRight.findViewById(R.id.eb_redo).setEnabled(mUndoStack.canRedo());
             mEditBarRight.findViewById(R.id.eb_clone).setEnabled(has_selected_item && !is_app_drawer);
-            mEditBarRight.findViewById(R.id.eb_rm).setEnabled(has_selected_item && (!is_app_drawer || masterSelectedItem.getClass()==Folder.class || masterSelectedItem.getClass()==PageIndicator.class));
+            mEditBarRight.findViewById(R.id.eb_rm).setEnabled(has_selected_item && (!is_app_drawer || masterSelectedItem.getClass() == Folder.class || masterSelectedItem.getClass() == PageIndicator.class));
             mEditBarRight.findViewById(R.id.eb_cstyle).setEnabled(has_selected_item);
             mEditBarRight.findViewById(R.id.eb_pstyle).setEnabled(has_selected_item);
             mEditBarBottom.findViewById(R.id.eb_hp).setSelected(mSystemConfig.hasSwitch(SystemConfig.SWITCH_HONOUR_PINNED_ITEMS));
@@ -5561,21 +5777,21 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         View desktopView = mScreen.getDesktopView();
         int w = desktopView.getWidth();
         int h = desktopView.getHeight();
-        float sx = (w-eb_bar_size)/(float)w;
-        float sy = (h-eb_bar_size)/(float)h;
-        if(sx<sy) {
+        float sx = (w - eb_bar_size) / (float) w;
+        float sy = (h - eb_bar_size) / (float) h;
+        if (sx < sy) {
             mEditBarsWidth = eb_bar_size;
-            mEditBarsHeight = (int) Math.ceil(h-sx*h);
+            mEditBarsHeight = (int) Math.ceil(h - sx * h);
             mEditBarsScale = sx;
         } else {
-            mEditBarsWidth = (int) Math.ceil(w-sy*w);
+            mEditBarsWidth = (int) Math.ceil(w - sy * w);
             mEditBarsHeight = eb_bar_size;
             mEditBarsScale = sy;
         }
     }
 
     private void showEditActionBox() {
-        if(mEditActionBox == null) {
+        if (mEditActionBox == null) {
             setupEditActionBox();
         }
 
@@ -5584,7 +5800,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         mEditBarRight.findViewById(R.id.eb_pos).setSelected(mode == SystemConfig.EDIT_BOX_POSITION);
         mEditBarRight.findViewById(R.id.eb_action).setSelected(mode == SystemConfig.EDIT_BOX_ACTION);
 
-        if(mEditActionBox.getVisibility() != View.VISIBLE) {
+        if (mEditActionBox.getVisibility() != View.VISIBLE) {
             mEditActionBox.setVisibility(View.VISIBLE);
             mEditActionBox.startAnimation(mEditActionBoxAnimIn);
             updateEditPropertiesPosition();
@@ -5594,7 +5810,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
     }
 
     private void hideEditActionBox() {
-        if(mEditActionBox != null && mEditActionBox.getVisibility() == View.VISIBLE) {
+        if (mEditActionBox != null && mEditActionBox.getVisibility() == View.VISIBLE) {
             mEditBarRight.findViewById(R.id.eb_edit).setSelected(false);
             mEditBarRight.findViewById(R.id.eb_pos).setSelected(false);
             mEditBarRight.findViewById(R.id.eb_action).setSelected(false);
@@ -5606,7 +5822,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
     private boolean toggleEditActionBox(int mode) {
         int current_mode = mSystemConfig.editBoxMode;
-        if(current_mode == SystemConfig.EDIT_BOX_NONE || current_mode != mode) {
+        if (current_mode == SystemConfig.EDIT_BOX_NONE || current_mode != mode) {
             mSystemConfig.editBoxMode = mode;
             showEditActionBox();
         } else {
@@ -5617,7 +5833,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
     }
 
     private void updateEditActionBox() {
-        if(mEditActionBox == null || mEditActionBox.getVisibility() != View.VISIBLE) {
+        if (mEditActionBox == null || mEditActionBox.getVisibility() != View.VISIBLE) {
             return;
         }
 
@@ -5630,40 +5846,41 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         Class<?> item_class = masterSelectedItem == null ? null : masterSelectedItem.getClass();
 
         if (mSystemConfig.editBoxMode == SystemConfig.EDIT_BOX_PROPERTIES) {
-            boolean is_shortcut=(item_class==Shortcut.class || item_class==Folder.class);
-            boolean is_widget = item_class==Widget.class;
+            boolean is_shortcut = (item_class == Shortcut.class || item_class == Folder.class);
+            boolean is_widget = item_class == Widget.class;
             boolean is_embedded_folder = masterSelectedItemView != null && masterSelectedItemView.getClass() == EmbeddedFolderView.class;
-            if(is_shortcut) {
+            if (is_shortcut) {
                 addEditActionBoxButton(R.id.mi_edit_icon, R.string.mi_edit_icon);
                 addEditActionBoxButton(R.id.mi_edit_label, R.string.mi_edit_label);
             }
-            if((item_class==Shortcut.class || item_class==DynamicText.class) && !is_app_drawer) {
+            if ((item_class == Shortcut.class || item_class == DynamicText.class) && !is_app_drawer) {
                 addEditActionBoxButton(R.id.mi_edit_launch_action, R.string.mi_eda);
             }
-            if(is_widget) {
+            if (is_widget) {
                 addEditActionBoxButton(R.id.mi_pick_widget, R.string.mi_pick_widget);
-                if(((Widget) masterSelectedItem).hasConfigurationScreen()) addEditActionBoxButton(R.id.mi_widget_options, R.string.mi_widget_options);
+                if (((Widget) masterSelectedItem).hasConfigurationScreen())
+                    addEditActionBoxButton(R.id.mi_widget_options, R.string.mi_widget_options);
             }
-            if(is_embedded_folder) {
+            if (is_embedded_folder) {
                 addEditActionBoxButton(R.id.mi_ef_edit_layout, R.string.menu_objects_layout);
             }
-            if(is_app_drawer && is_shortcut) {
+            if (is_app_drawer && is_shortcut) {
                 addEditActionBoxButton(R.id.mi_hide_unhide, R.string.mi_hide_unhide);
             }
         } else if (mSystemConfig.editBoxMode == SystemConfig.EDIT_BOX_POSITION) {
-            if(masterSelectedItem != null) {
+            if (masterSelectedItem != null) {
                 boolean is_stop_point = item_class == StopPoint.class;
                 Page page = masterSelectedItem.getPage();
                 boolean is_folder_page = page.isFolder();
                 boolean is_in_embedded_folder = masterSelectedItemView.getParentItemLayout().getOpenerItemView() instanceof EmbeddedFolderView;
                 ItemConfig ic = masterSelectedItem.getItemConfig();
-                if(!is_app_drawer) {
+                if (!is_app_drawer) {
                     addEditActionBoxButton(R.id.mi_lm, ic.onGrid ? R.string.mi_lmg : R.string.mi_lmf);
                 }
                 if (!is_stop_point) {
                     addEditActionBoxButton(R.id.mi_pin, ic.pinMode != ItemConfig.PinMode.NONE ? R.string.mi_unpin : R.string.mi_pin);
                 }
-                if(!is_app_drawer) {
+                if (!is_app_drawer) {
                     if (is_folder_page && page.id != Page.USER_MENU_PAGE)
                         addEditActionBoxButton(R.id.mi_move_out_of_folder, is_in_embedded_folder ? R.string.mi_mop : R.string.mi_move_out_of_folder);
                     addEditActionBoxButton(R.id.mi_move_to_screen, R.string.mi_move_to_screen);
@@ -5671,21 +5888,21 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                 }
             }
         } else if (mSystemConfig.editBoxMode == SystemConfig.EDIT_BOX_ACTION) {
-            if(masterSelectedItem != null) {
+            if (masterSelectedItem != null) {
 
                 String pkg = Utils.getPackageNameForItem(masterSelectedItem);
-                if(pkg != null) {
+                if (pkg != null) {
                     addEditActionBoxButton(R.id.mi_app_details, R.string.mi_app_details);
                     addEditActionBoxButton(R.id.mi_app_store, R.string.mi_app_store);
                     addEditActionBoxButton(R.id.mi_kill, pkg.equals(getPackageName()) ? R.string.an_re : R.string.mi_kill);
                     addEditActionBoxButton(R.id.mi_uninstall, R.string.mi_uninstall);
                 }
 
-                if(mGlobalConfig.runScripts) {
+                if (mGlobalConfig.runScripts) {
                     addEditActionBoxButton(R.id.mi_s, R.string.mi_s);
                 }
-                if(getClass()!=AppDrawerX.class) {
-                    if(false) {
+                if (getClass() != AppDrawerX.class) {
+                    if (false) {
                         if (item_class == Folder.class) {
                             addEditActionBoxButton(R.id.mi_cfp, R.string.mi_cfp);
                         } else if (item_class == EmbeddedFolder.class) {
@@ -5695,7 +5912,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                 }
             }
         }
-        if(mEditActionBox.getChildCount() == 0) {
+        if (mEditActionBox.getChildCount() == 0) {
             TextView empty = new TextView(this);
             empty.setText(R.string.nois);
 //            empty.setTextSize(getResources().getDimensionPixelSize(R.dimen.eb_text_size));
@@ -5707,9 +5924,8 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         mEditActionBox.setWeightSum(mEditActionBox.getChildCount());
     }
 
-
     private void setupEditActionBox() {
-        mEditActionBox = (LinearLayout) findViewById(R.id.edit_action_box);
+        mEditActionBox = findViewById(R.id.edit_action_box);
         FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mEditActionBox.getLayoutParams();
         lp.rightMargin = mEditBarsWidth;
         mEditActionBox.requestLayout();
@@ -5717,8 +5933,6 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         setupEditActionBoxAnimations();
     }
 
-    private Animation mEditActionBoxAnimIn;
-    private Animation mEditActionBoxAnimOut;
     private void setupEditActionBoxAnimations() {
         mEditActionBoxAnimIn = new TranslateAnimation(0, 0, -mEditBarsHeight, 0);
         mEditActionBoxAnimIn.setDuration(200);
@@ -5739,18 +5953,18 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
     }
 
     private void showEditPropertiesBox() {
-        if(mEditPropertiesContainer == null) {
+        if (mEditPropertiesContainer == null) {
             setupEditPropertiesBox();
         }
 
-        if(!mEditBarsVisible) {
+        if (!mEditBarsVisible) {
             showEditBars(true);
         }
         FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mEditPropertiesContainer.getLayoutParams();
-        if(lp.height == 0) {
+        if (lp.height == 0) {
             lp.height = getResources().getDisplayMetrics().heightPixels / 3;
         }
-        if(mEditPropertiesContainer.getVisibility() != View.VISIBLE) {
+        if (mEditPropertiesContainer.getVisibility() != View.VISIBLE) {
             updateEditPropertiesBox(mEditPage, mEditItemLayout.getMasterSelectedItem());
             updateEditPropertiesMode();
 
@@ -5760,7 +5974,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
     }
 
     private void hideEditPropertiesBox() {
-        if(mEditPropertiesContainer != null && mEditPropertiesContainer.getVisibility() == View.VISIBLE) {
+        if (mEditPropertiesContainer != null && mEditPropertiesContainer.getVisibility() == View.VISIBLE) {
             mEditPropertiesContainer.setVisibility(View.GONE);
             mEditPropertiesContainer.startAnimation(mEditPropertiesBoxAnimOut);
         }
@@ -5772,7 +5986,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
     private boolean toggleEditPropertiesBox() {
         boolean show = isEditPropertiesBoxVisible();
-        if(show) {
+        if (show) {
             hideEditPropertiesBox();
         } else {
             showEditPropertiesBox();
@@ -5782,14 +5996,14 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
     }
 
     private void setupEditPropertiesBox() {
-        mEditPropertiesContainer = (ViewGroup) findViewById(R.id.edit_prop_cont);
+        mEditPropertiesContainer = findViewById(R.id.edit_prop_cont);
         mEditPropertiesHandle = mEditPropertiesContainer.findViewById(R.id.edit_prop_handle);
-        mEditPropertiesBox = (CustomizeItemView) mEditPropertiesContainer.findViewById(R.id.edit_prop_box);
-        mEditPropertiesTitle = (TextView) mEditPropertiesContainer.findViewById(R.id.edit_prop_title);
-        mEditPropertiesMode = (Button) mEditPropertiesContainer.findViewById(R.id.edit_prop_mode);
-        mEditPropertiesModePrevious = (TextView) mEditPropertiesContainer.findViewById(R.id.edit_prop_mode_p);
-        mEditPropertiesModeNext = (TextView) mEditPropertiesContainer.findViewById(R.id.edit_prop_mode_n);
-        Button position_toggle = (Button) mEditPropertiesContainer.findViewById(R.id.edit_prop_pos);
+        mEditPropertiesBox = mEditPropertiesContainer.findViewById(R.id.edit_prop_box);
+        mEditPropertiesTitle = mEditPropertiesContainer.findViewById(R.id.edit_prop_title);
+        mEditPropertiesMode = mEditPropertiesContainer.findViewById(R.id.edit_prop_mode);
+        mEditPropertiesModePrevious = mEditPropertiesContainer.findViewById(R.id.edit_prop_mode_p);
+        mEditPropertiesModeNext = mEditPropertiesContainer.findViewById(R.id.edit_prop_mode_n);
+        Button position_toggle = mEditPropertiesContainer.findViewById(R.id.edit_prop_pos);
 
         Typeface icon_typeface = LLApp.get().getIconsTypeface();
         position_toggle.setTypeface(icon_typeface);
@@ -5827,11 +6041,11 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
     }
 
     private void updateEditPropertiesBox(Page page, Item item) {
-        if(mEditPropertiesBox != null) {
+        if (mEditPropertiesBox != null) {
             mEditPropertiesBox.setTarget(mEditItemLayout, page, item);
 
             String handle_text;
-            if(item == null) {
+            if (item == null) {
                 handle_text = Utils.formatItemLayoutName(mEditItemLayout);
             } else {
                 handle_text = Utils.formatItemName(item, 20, getSelectedItemViews().size());
@@ -5839,9 +6053,9 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
             mEditPropertiesTitle.setText(handle_text);
             updateEditPropertiesMode();
 
-            if(item != null) {
+            if (item != null) {
                 Rect bounds = mScreen.computeItemViewBounds(mEditItemLayout.getItemView(item));
-                if(bounds != null) {
+                if (bounds != null) {
                     setEditPropertiesPosition(bounds.centerY() > mScreen.getDesktopView().getHeight() / 2);
                 }
             }
@@ -5859,10 +6073,8 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         updateEditPropertiesPosition();
     }
 
-    private Animation mEditPropertiesBoxAnimIn;
-    private Animation mEditPropertiesBoxAnimOut;
     private void updateEditPropertiesPosition() {
-        if(mEditPropertiesContainer != null) {
+        if (mEditPropertiesContainer != null) {
             // hackish
             View separator = mEditPropertiesContainer.getChildAt(1);
             mEditPropertiesContainer.removeAllViews();
@@ -5897,7 +6109,6 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         mEditPropertiesBoxAnimOut.setDuration(ANIMATE_EDIT_BAR_DURATION);
     }
 
-
     private void updateEditControls() {
         updateGeometryBox();
         updateEditBars();
@@ -5911,7 +6122,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
     @Override
     public void onUndoStackStateChanged(boolean can_undo, boolean can_redo) {
-        if(mEditBarRight != null) {
+        if (mEditBarRight != null) {
             mEditBarRight.findViewById(R.id.eb_undo).setEnabled(can_undo);
             mEditBarRight.findViewById(R.id.eb_redo).setEnabled(can_redo);
         }
@@ -5924,7 +6135,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
     @Override
     public void onUndoStackPageChanged(Page page) {
-        if(mEditPropertiesBox != null && (mEditPropertiesBox.getPage() == page)) {
+        if (mEditPropertiesBox != null && (mEditPropertiesBox.getPage() == page)) {
             mEditPropertiesBox.updatePreferences();
         }
     }
@@ -5932,7 +6143,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
     @Override
     public void onHierarchyScreenItemEdit(ContainerPath path, Item item) {
         ItemLayout il = mScreen.prepareItemLayoutForPath(path);
-        if(item instanceof Folder && item.getId() == path.getLast()) {
+        if (item instanceof Folder && item.getId() == path.getLast()) {
             // edit the opener item, not the container itself
             ItemView opener = il.getOpenerItemView();
             mScreen.ensureItemViewVisible(opener, false);
@@ -5944,9 +6155,9 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                 mScreen.ensureItemViewVisible(il.getItemView(item), false);
             }
         }
-        if(item != null) {
+        if (item != null) {
             enterEditMode(il, item);
-            if(!mSystemConfig.hasSwitch(SystemConfig.SWITCH_MULTI_SELECTION)) {
+            if (!mSystemConfig.hasSwitch(SystemConfig.SWITCH_MULTI_SELECTION)) {
                 unselectAllItems();
             }
             ItemView itemView = mEditItemLayout.getItemView(item);
@@ -5959,7 +6170,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
         mHierarchyScreen.hide();
 
-        if(item != null) {
+        if (item != null) {
             final ItemView itemView = mEditItemLayout.getItemView(item);
             mHandler.postDelayed(new Runnable() {
                 @Override
@@ -5977,15 +6188,15 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
     @Override
     public void onHierarchyScreenItemMoved(HierarchyScreen.HierarchyItem which, HierarchyScreen.HierarchyItem before, HierarchyScreen.HierarchyItem after) {
-        if(which.item != null && before != null && after != null && before != after && before.item == null && after.item == null) {
+        if (which.item != null && before != null && after != null && before != after && before.item == null && after.item == null) {
             // move of an item between 2 desktops, nothing to do
             return;
         }
 
         LightningEngine engine = mHierarchyScreen.getLightningEngine();
 
-        if(which.item == null) {
-            if(after == null || after.item == null) {
+        if (which.item == null) {
+            if (after == null || after.item == null) {
                 // move desktop
                 GlobalConfig gc = engine.getGlobalConfig();
 
@@ -6019,12 +6230,12 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
             return;
         }
 
-        if(before == null) {
+        if (before == null) {
             // move before a desktop
             return;
         }
 
-        if(after == null) {
+        if (after == null) {
             // move at the last place of the parent container of before
             moveAtLastPagePlace(which.item, before.getParentContainerId());
         } else if (before == after) {
@@ -6044,18 +6255,18 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 //            int currentIndex = p.items.indexOf(item);
 //            int afterIndex = p.items.indexOf(after.item);
 //            p.setItemZIndex(item, currentIndex>afterIndex ? afterIndex : afterIndex - 1);
-        } else if(before.isContainer() && before.getContainerId() == after.getParentContainerId()) {
+        } else if (before.isContainer() && before.getContainerId() == after.getParentContainerId()) {
             // move at the first place of the container of before
             Item item;
             Page p = engine.getOrLoadPage(before.getContainerId());
-            if(which.getParentContainerId() != before.getContainerId()) {
+            if (which.getParentContainerId() != before.getContainerId()) {
                 item = Utils.moveItem(which.item, p, Utils.POSITION_AUTO, Utils.POSITION_AUTO, 1, Item.NO_ID);
             } else {
                 item = which.item;
             }
 
             p.setItemZIndex(item, 0);
-        } else if(after.item == null) {
+        } else if (after.item == null) {
             // between an item and a desktop
             // move at the last place of the parent container of before
             moveAtLastPagePlace(which.item, before.getParentContainerId());
@@ -6063,7 +6274,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
             // move in the parent container of after, before after
             Item item;
             Page p = engine.getOrLoadPage(after.getParentContainerId());
-            if(which.getParentContainerId() != after.getParentContainerId()) {
+            if (which.getParentContainerId() != after.getParentContainerId()) {
                 item = Utils.moveItem(which.item, p, Utils.POSITION_AUTO, Utils.POSITION_AUTO, 1, Item.NO_ID);
             } else {
                 item = which.item;
@@ -6071,7 +6282,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
             int currentIndex = p.items.indexOf(item);
             int afterIndex = p.items.indexOf(after.item);
-            p.setItemZIndex(item, currentIndex>afterIndex ? afterIndex : afterIndex - 1);
+            p.setItemZIndex(item, currentIndex > afterIndex ? afterIndex : afterIndex - 1);
         }
 
         mHierarchyScreen.refresh();
@@ -6084,9 +6295,9 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
     private void moveAtLastPagePlace(Item item, int toPage) {
         Page p = item.getPage().getEngine().getOrLoadPage(toPage);
-        if(item.getPage() == p) {
+        if (item.getPage() == p) {
             // move at the last place
-            p.setItemZIndex(item, p.items.size()-1);
+            p.setItemZIndex(item, p.items.size() - 1);
         } else {
             // move in the other container and at the last place
             Utils.moveItem(item, p, Utils.POSITION_AUTO, Utils.POSITION_AUTO, 1, Item.NO_ID);
@@ -6095,9 +6306,9 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if(mABOnCreateOptionsMenu != null) {
+        if (mABOnCreateOptionsMenu != null) {
             Object result = mEngine.getScriptExecutor().runFunction(mABOnCreateOptionsMenu, new Object[]{menu}, false, true);
-            if(result instanceof Boolean) {
+            if (result instanceof Boolean) {
                 return (Boolean) result;
             } else {
                 return false;
@@ -6109,9 +6320,9 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(mABOnOptionsItemSelected != null) {
+        if (mABOnOptionsItemSelected != null) {
             Object result = mEngine.getScriptExecutor().runFunction(mABOnOptionsItemSelected, new Object[]{item}, true, true);
-            if(result instanceof Boolean) {
+            if (result instanceof Boolean) {
                 return (Boolean) result;
             } else {
                 return false;
@@ -6136,7 +6347,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
         @Override
         public void showAndroidActionBar(Function onCreateOptionsMenu, Function onOptionsItemSelected) {
-            if(isAndroidActionBarSupported() && !mIsAndroidActionBarDisplayed) {
+            if (isAndroidActionBarSupported() && !mIsAndroidActionBarDisplayed) {
                 getActionBar().show();
                 mIsAndroidActionBarDisplayed = true;
                 mABOnCreateOptionsMenu = onCreateOptionsMenu;
@@ -6149,7 +6360,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         @TargetApi(Build.VERSION_CODES.HONEYCOMB)
         @Override
         public void hideAndroidActionBar() {
-            if(isAndroidActionBarSupported() && mIsAndroidActionBarDisplayed) {
+            if (isAndroidActionBarSupported() && mIsAndroidActionBarDisplayed) {
                 getActionBar().hide();
                 mIsAndroidActionBarDisplayed = false;
                 mABOnCreateOptionsMenu = null;
@@ -6161,7 +6372,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         @Override
         public float[] translateItemLayoutCoordsIntoScreenCoords(ItemLayout il, float x, float y) {
             float[] coords = super.translateItemLayoutCoordsIntoScreenCoords(il, x, y);
-            if(mIsAndroidActionBarDisplayed) {
+            if (mIsAndroidActionBarDisplayed) {
                 SystemBarTintManager.SystemBarConfig config = getSystemBarTintManager().getConfig();
                 coords[1] -= (config.getActionBarHeight() + config.getStatusBarHeight());
             }
@@ -6177,24 +6388,24 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         public void onPageModified(Page page) {
             super.onPageModified(page);
 
-            if(page == getCurrentRootPage()) {
+            if (page == getCurrentRootPage()) {
                 configureActivity(page);
             }
         }
 
         @Override
         public void onPageRemoved(Page page) {
-            if(page.isDashboard() && mViewAnimator != null) {
-                for(int l = mViewAnimator.getChildCount()-1;l>=0; l--) {
+            if (page.isDashboard() && mViewAnimator != null) {
+                for (int l = mViewAnimator.getChildCount() - 1; l >= 0; l--) {
                     ItemLayout il = (ItemLayout) mViewAnimator.getChildAt(l);
-                    if(il.getPage() == page) {
-                        if(il.isResumed()) {
+                    if (il.getPage() == page) {
+                        if (il.isResumed()) {
                             il.pause();
                         }
                         mViewAnimator.removeViewAt(l);
                     }
                 }
-                while(mNavigationStack.removeElement(page.id));
+                while (mNavigationStack.removeElement(page.id)) ;
             }
 
             super.onPageRemoved(page);
@@ -6204,7 +6415,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         public void onPageItemChanged(Page page, Item item) {
             super.onPageItemChanged(page, item);
 
-            if(isEditPropertiesBoxVisible() && (mEditPropertiesBox.getPage() == page && mEditPropertiesBox.getItem() == item)) {
+            if (isEditPropertiesBoxVisible() && (mEditPropertiesBox.getPage() == page && mEditPropertiesBox.getItem() == item)) {
                 mEditPropertiesBox.updatePreferences();
             }
 
@@ -6224,8 +6435,8 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         }
 
         private void updateGeometryAndActionBoxesIfNeeded(Item item) {
-            if(mEditMode && mEditItemLayout.getMasterSelectedItem() == item) {
-                if(mEditActionBox != null && mEditActionBox.getVisibility() == View.VISIBLE) {
+            if (mEditMode && mEditItemLayout.getMasterSelectedItem() == item) {
+                if (mEditActionBox != null && mEditActionBox.getVisibility() == View.VISIBLE) {
                     updateEditActionBox();
                 }
                 if (isGeometryBoxVisible()) {
@@ -6242,12 +6453,12 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
         @Override
         public void displayCropPickImageDialog(final ScriptExecutor scriptExecutor, final ImageBitmap image, final boolean full_size) {
-            if(image == null) {
+            if (image == null) {
                 return;
             }
-            if(!checkPermissions(
+            if (!checkPermissions(
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    new int[] { R.string.pr_r5},
+                    new int[]{R.string.pr_r5},
                     REQUEST_PERMISSION_BASE)) {
                 return;
             }
@@ -6258,7 +6469,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
             d.setMessage(getString(R.string.please_wait));
             d.setCancelable(false);
             d.show();
-            new AsyncTask<Void,Void,Boolean>() {
+            new AsyncTask<Void, Void, Boolean>() {
 
                 @Override
                 protected Boolean doInBackground(Void... params) {
@@ -6270,13 +6481,16 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                     } catch (IOException e) {
                         return false;
                     } finally {
-                        if(fos != null) try { fos.close(); } catch (IOException e) {}
+                        if (fos != null) try {
+                            fos.close();
+                        } catch (IOException e) {
+                        }
                     }
                 }
 
                 @Override
                 protected void onPostExecute(Boolean success) {
-                    if(success) {
+                    if (success) {
                         mScriptExecutorForCallback = scriptExecutor;
                         Intent intent = new Intent(Dashboard.this, ImageCropper.class);
                         intent.putExtra(ImageCropper.INTENT_EXTRA_IMAGE, file.getAbsolutePath());
@@ -6287,7 +6501,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                     }
                     d.dismiss();
                 }
-            }.execute((Void)null);
+            }.execute((Void) null);
         }
 
         @Override
@@ -6305,7 +6519,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
         @Override
         public ItemLayout prepareFirstItemLayout(int page) {
-            if(page == Page.APP_DRAWER_PAGE) {
+            if (page == Page.APP_DRAWER_PAGE) {
                 // special case when opening a folder from the app drawer in the desktop
                 return getCurrentRootItemLayout();
             } else {
@@ -6315,16 +6529,16 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
         @Override
         public ItemLayout loadRootItemLayout(int page, boolean reset_navigation_history, boolean displayImmediately, boolean animate) {
-            if(!Page.isDashboard(page)) return null;
+            if (!Page.isDashboard(page)) return null;
 
             int hint;
-            if(displayImmediately) {
+            if (displayImmediately) {
                 hint = animate ? PAGE_DIRECTION_HINT_AUTO : PAGE_DIRECTION_HINT_NO_ANIMATION;
             } else {
                 hint = PAGE_DIRECTION_HINT_DONT_MOVE;
             }
             ItemLayout itemLayout = setPagerPage(page, hint);
-            if(reset_navigation_history) {
+            if (reset_navigation_history) {
                 mNavigationStack.clear();
             }
 
@@ -6333,7 +6547,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
         @Override
         public ItemLayout getCurrentRootItemLayout() {
-            if(mViewAnimator.getChildCount() == 0) {
+            if (mViewAnimator.getChildCount() == 0) {
                 return null;
             } else {
                 return (ItemLayout) mViewAnimator.getChildAt(mViewAnimator.getDisplayedChild());
@@ -6343,7 +6557,10 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         @Override
         public void onShortcutLaunchError(Shortcut shortcut) {
             mNotValidShortcut = shortcut;
-            try { removeDialog(DIALOG_APP_NOT_INSTALLED); } catch(Exception e2) {}
+            try {
+                removeDialog(DIALOG_APP_NOT_INSTALLED);
+            } catch (Exception e2) {
+            }
             showDialog(DIALOG_APP_NOT_INSTALLED);
         }
 
@@ -6377,9 +6594,9 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
         @Override
         public void onItemLayoutClicked(ItemLayout item_layout, int x, int y) {
-            if(mEditMode && mEditItemLayout == item_layout) {
+            if (mEditMode && mEditItemLayout == item_layout) {
                 setLastTouchEventForItemLayout(item_layout, x, y);
-                if(!mClosingBubble) {
+                if (!mClosingBubble) {
                     unselectAllItems();
                 }
             } else {
@@ -6389,7 +6606,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
         @Override
         public void onItemLayoutDoubleClicked(ItemLayout item_layout, int x, int y) {
-            if(mEditMode && mEditItemLayout == item_layout) {
+            if (mEditMode && mEditItemLayout == item_layout) {
                 setLastTouchEventForItemLayout(item_layout, x, y);
                 zoomInOrOut(mEditItemLayout);
             } else {
@@ -6399,7 +6616,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
         @Override
         public void onItemLayoutLongClicked(ItemLayout item_layout, int x, int y) {
-            if(mEditMode && mEditItemLayout == item_layout) {
+            if (mEditMode && mEditItemLayout == item_layout) {
                 setLastTouchEventForItemLayout(item_layout, x, y);
                 mEditItemLayout.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
                 unselectAllItems();
@@ -6411,56 +6628,56 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
         @Override
         public void onItemLayoutSwipeLeft(ItemLayout item_layout) {
-            if(!mEditMode) {
+            if (!mEditMode) {
                 super.onItemLayoutSwipeLeft(item_layout);
             }
         }
 
         @Override
         public void onItemLayoutSwipeRight(ItemLayout item_layout) {
-            if(!mEditMode) {
+            if (!mEditMode) {
                 super.onItemLayoutSwipeRight(item_layout);
             }
         }
 
         @Override
         public void onItemLayoutSwipeUp(ItemLayout item_layout) {
-            if(!mEditMode) {
+            if (!mEditMode) {
                 super.onItemLayoutSwipeUp(item_layout);
             }
         }
 
         @Override
         public void onItemLayoutSwipeDown(ItemLayout item_layout) {
-            if(!mEditMode) {
+            if (!mEditMode) {
                 super.onItemLayoutSwipeDown(item_layout);
             }
         }
 
         @Override
         public void onItemLayoutSwipe2Left(ItemLayout item_layout) {
-            if(!mEditMode) {
+            if (!mEditMode) {
                 super.onItemLayoutSwipe2Left(item_layout);
             }
         }
 
         @Override
         public void onItemLayoutSwipe2Right(ItemLayout item_layout) {
-            if(!mEditMode) {
+            if (!mEditMode) {
                 super.onItemLayoutSwipe2Right(item_layout);
             }
         }
 
         @Override
         public void onItemLayoutSwipe2Up(ItemLayout item_layout) {
-            if(!mEditMode) {
+            if (!mEditMode) {
                 super.onItemLayoutSwipe2Up(item_layout);
             }
         }
 
         @Override
         public void onItemLayoutSwipe2Down(ItemLayout item_layout) {
-            if(!mEditMode) {
+            if (!mEditMode) {
                 super.onItemLayoutSwipe2Down(item_layout);
             }
         }
@@ -6471,7 +6688,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
             // hackish: update edit bars in the next round because otherwise layout requests would be lost
             // also don't do this for folders because folders are windowed and do not reflect actual screen orientation changes
-            if(mEditMode && !il.getPage().isFolder()) {
+            if (mEditMode && !il.getPage().isFolder()) {
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -6500,39 +6717,55 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         public void onItemLayoutAppShortcutDropped(ItemLayout itemLayout, Object shortcutInfoObject, float x, float y) {
 
             ShortcutInfo shortcutInfo = (ShortcutInfo) shortcutInfoObject;
-                CharSequence label = shortcutInfo.getLongLabel();
-                if(label == null || label.length() == 0) {
-                    label = shortcutInfo.getShortLabel();
-                }
-                LauncherApps launcherApps = (LauncherApps) getSystemService(LAUNCHER_APPS_SERVICE);
-                Drawable drawable = launcherApps.getShortcutIconDrawable(shortcutInfo, Utils.getLauncherIconDensity());
-                Bitmap icon = Utils.createBitmapFromDrawable(drawable);
-                Intent intent = new Intent(Shortcut.INTENT_ACTION_APP_SHORTCUT);
-                intent.putExtra(Shortcut.INTENT_EXTRA_APP_SHORTCUT_ID, shortcutInfo.getId());
-                intent.putExtra(Shortcut.INTENT_EXTRA_APP_SHORTCUT_PKG, shortcutInfo.getPackage());
-                intent.putExtra(Shortcut.INTENT_EXTRA_APP_SHORTCUT_DISABLED_MSG, shortcutInfo.getDisabledMessage());
-                Utils.addShortcut(label.toString(), icon, intent, itemLayout.getPage(), x, y, 1, true);
+            CharSequence label = shortcutInfo.getLongLabel();
+            if (label == null || label.length() == 0) {
+                label = shortcutInfo.getShortLabel();
             }
+            LauncherApps launcherApps = (LauncherApps) getSystemService(LAUNCHER_APPS_SERVICE);
+            Drawable drawable = launcherApps.getShortcutIconDrawable(shortcutInfo, Utils.getLauncherIconDensity());
+            Bitmap icon = Utils.createBitmapFromDrawable(drawable);
+            Intent intent = new Intent(Shortcut.INTENT_ACTION_APP_SHORTCUT);
+            intent.putExtra(Shortcut.INTENT_EXTRA_APP_SHORTCUT_ID, shortcutInfo.getId());
+            intent.putExtra(Shortcut.INTENT_EXTRA_APP_SHORTCUT_PKG, shortcutInfo.getPackage());
+            intent.putExtra(Shortcut.INTENT_EXTRA_APP_SHORTCUT_DISABLED_MSG, shortcutInfo.getDisabledMessage());
+            Utils.addShortcut(label.toString(), icon, intent, itemLayout.getPage(), x, y, 1, true);
+        }
 
 
         @Override
         public void onHandlePressed(Handle h) {
-            mTrackedHandle=h;
+            mTrackedHandle = h;
             for (ItemView itemView : getSelectedItemViews()) {
                 startTracking(itemView);
                 saveInitialItemViewGeometry(itemView);
             }
-            if(mSystemConfig.hasSwitch(SystemConfig.SWITCH_SNAP)) {
+            if (mSystemConfig.hasSwitch(SystemConfig.SWITCH_SNAP)) {
                 int snap = SnappingContext.SNAP_ALL;
-                switch(h) {
-                    case LEFT: snap = SnappingContext.SNAP_LEFT; break;
-                    case RIGHT: snap = SnappingContext.SNAP_RIGHT; break;
-                    case TOP: snap = SnappingContext.SNAP_TOP; break;
-                    case BOTTOM: snap = SnappingContext.SNAP_BOTTOM; break;
-                    case TOP_LEFT: snap = SnappingContext.SNAP_TOP | SnappingContext.SNAP_LEFT; break;
-                    case TOP_RIGHT: snap = SnappingContext.SNAP_TOP | SnappingContext.SNAP_RIGHT; break;
-                    case BOTTOM_LEFT: snap = SnappingContext.SNAP_BOTTOM | SnappingContext.SNAP_LEFT; break;
-                    case BOTTOM_RIGHT: snap = SnappingContext.SNAP_BOTTOM | SnappingContext.SNAP_RIGHT; break;
+                switch (h) {
+                    case LEFT:
+                        snap = SnappingContext.SNAP_LEFT;
+                        break;
+                    case RIGHT:
+                        snap = SnappingContext.SNAP_RIGHT;
+                        break;
+                    case TOP:
+                        snap = SnappingContext.SNAP_TOP;
+                        break;
+                    case BOTTOM:
+                        snap = SnappingContext.SNAP_BOTTOM;
+                        break;
+                    case TOP_LEFT:
+                        snap = SnappingContext.SNAP_TOP | SnappingContext.SNAP_LEFT;
+                        break;
+                    case TOP_RIGHT:
+                        snap = SnappingContext.SNAP_TOP | SnappingContext.SNAP_RIGHT;
+                        break;
+                    case BOTTOM_LEFT:
+                        snap = SnappingContext.SNAP_BOTTOM | SnappingContext.SNAP_LEFT;
+                        break;
+                    case BOTTOM_RIGHT:
+                        snap = SnappingContext.SNAP_BOTTOM | SnappingContext.SNAP_RIGHT;
+                        break;
                 }
                 startSnapping(mEditItemLayout.getMasterSelectedItemView(), snap);
             }
@@ -6545,10 +6778,10 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
             dy /= mEditItemLayout.getCurrentScale();
             final ItemView masterSelectedItemView = mEditItemLayout.getMasterSelectedItemView();
 
-            if(masterSelectedItemView.getItem().getItemConfig().onGrid) {
+            if (masterSelectedItemView.getItem().getItemConfig().onGrid) {
                 for (ItemView itemView : getSelectedItemViews()) {
                     Item item = itemView.getItem();
-                    if(item.getClass() == StopPoint.class) {
+                    if (item.getClass() == StopPoint.class) {
                         continue;
                     }
                     if (item.getItemConfig().onGrid) {
@@ -6561,7 +6794,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                 boolean is_size = mEditItemLayout.getHandleView().getMode() == HandleView.Mode.CONTENT_SIZE;
                 float angle_or_scale = moveHandleFree(masterSelectedItemView, dx, dy, true, 0);
                 for (ItemView itemView : getSelectedItemViews()) {
-                    if(itemView == masterSelectedItemView || itemView.getClass() == StopPointView.class) {
+                    if (itemView == masterSelectedItemView || itemView.getClass() == StopPointView.class) {
                         continue;
                     }
                     if (itemView.getItem().getItemConfig().onGrid) {
@@ -6581,33 +6814,33 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
         @Override
         public void onHandleUnpressed(Handle h, float dx, float dy) {
-            mTrackedHandle=null;
+            mTrackedHandle = null;
             mEditItemLayout.grabEvent(null);
-            if(mSystemConfig.hasSwitch(SystemConfig.SWITCH_SNAP)) {
+            if (mSystemConfig.hasSwitch(SystemConfig.SWITCH_SNAP)) {
                 stopSnapping();
             }
             mUndoStack.storeGroupStart();
             for (ItemView itemView : getSelectedItemViews()) {
                 Item item = itemView.getItem();
                 mEditItemLayout.untrackItemView(itemView);
-                boolean size_changed= false;
+                boolean size_changed = false;
                 final SavedItemGeometry oldGeometry = mOriginalItemsGeometry.get(item.getId());
                 ItemConfig itemConfig = item.getItemConfig();
-                if(itemConfig.onGrid) {
-                    if(!oldGeometry.cell.equals(item.getCell())) {
+                if (itemConfig.onGrid) {
+                    if (!oldGeometry.cell.equals(item.getCell())) {
                         mUndoStack.storeItemSetCell(itemView, oldGeometry);
                         size_changed = true;
                     }
                 } else {
-                    if(!item.getTransform().equals(oldGeometry.transform)) {
+                    if (!item.getTransform().equals(oldGeometry.transform)) {
                         mUndoStack.storeItemSetTransform(itemView, oldGeometry);
                     }
-                    if(oldGeometry.viewWidth != item.getViewWidth() || oldGeometry.viewHeight != item.getViewHeight()) {
+                    if (oldGeometry.viewWidth != item.getViewWidth() || oldGeometry.viewHeight != item.getViewHeight()) {
                         mUndoStack.storeItemSetViewSize(itemView, oldGeometry);
                         size_changed = true;
                     }
                 }
-                if(size_changed) {
+                if (size_changed) {
                     item.notifyCellChanged();
                 }
             }
@@ -6619,12 +6852,12 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         public void onItemViewPressed(ItemView itemView) {
             mItemLongTappedInNormalMode = null;
             closeBubble();
-            mMoveStarted=false;
-            mCurrentMoveItemDx=0;
-            mCurrentMoveItemDy=0;
+            mMoveStarted = false;
+            mCurrentMoveItemDx = 0;
+            mCurrentMoveItemDy = 0;
             itemView.setHighlightedLater(true);
-            if(mEditMode && mEditPage == itemView.getItem().getPage()) {
-                if(itemView == mEditItemLayout.getMasterSelectedItemView()) {
+            if (mEditMode && mEditPage == itemView.getItem().getPage()) {
+                if (itemView == mEditItemLayout.getMasterSelectedItemView()) {
                     mEditItemLayout.grabEvent(itemView);
                 }
             } else {
@@ -6639,21 +6872,21 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
             itemView.setHighlightedLater(false);
             if (mEditMode || mItemLongTappedInNormalMode == item) {
                 ItemLayout il = parentItemLayout;
-                if(mItemLongTappedInNormalMode == item) {
+                if (mItemLongTappedInNormalMode == item) {
                     il.setAllowWrap(true);
                     mItemLongTappedInNormalMode = null;
                 }
 
                 cancelSelectDropFolder();
 
-                if(mMoveStarted) {
-                    if(mSystemConfig.hasSwitch(SystemConfig.SWITCH_SNAP)) {
+                if (mMoveStarted) {
+                    if (mSystemConfig.hasSwitch(SystemConfig.SWITCH_SNAP)) {
                         stopSnapping();
                     }
                     final ArrayList<ItemView> movedItemViews = getSelectedItemViews();
 
                     // in normal mode there is no selected item, only the currently moved item
-                    if(!mEditMode) {
+                    if (!mEditMode) {
                         movedItemViews.add(itemView);
                     }
 
@@ -6661,10 +6894,10 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                     final SparseArray<Point> movedItemsLocation = new SparseArray<>(movedItemViews.size());
                     final boolean is_embedded_folder = mDropFolderView instanceof EmbeddedFolderView;
 
-                    if(mDropFolderView == null) {
+                    if (mDropFolderView == null) {
                         mUndoStack.storeGroupStart();
                     }
-                    for(int l = mSwappedItems.size()-1; l>=0; l--) {
+                    for (int l = mSwappedItems.size() - 1; l >= 0; l--) {
                         final ArrayList<ItemView> swappedItemViews = mSwappedItems.valueAt(l);
                         for (ItemView swappedView : swappedItemViews) {
                             int id = swappedView.getItem().getId();
@@ -6678,7 +6911,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                         Item i = iv.getItem();
                         int add_x = Utils.POSITION_AUTO;
                         int add_y = Utils.POSITION_AUTO;
-                        if(is_embedded_folder) {
+                        if (is_embedded_folder) {
                             boolean on_grid = i.getItemConfig().onGrid;
                             RectF item_bounds = new RectF();
                             Utils.getItemViewBoundsInItemLayout(iv, item_bounds);
@@ -6691,7 +6924,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                             Utils.getItemViewBoundsInItemLayout(mDropFolderView, drop_folder_bounds);
 
                             item_bounds.offset(-drop_folder_bounds.left, -drop_folder_bounds.top);
-                            ItemLayout il_folder = ((EmbeddedFolderView)mDropFolderView).getEmbeddedItemLayout();
+                            ItemLayout il_folder = ((EmbeddedFolderView) mDropFolderView).getEmbeddedItemLayout();
                             il_folder.getLocalInverseTransform().mapRect(item_bounds);
                             if (on_grid) {
                                 add_x = (int) item_bounds.centerX();
@@ -6706,7 +6939,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
                         dropItemView(iv);
                     }
-                    if(mDropFolderView == null) {
+                    if (mDropFolderView == null) {
                         mUndoStack.storeGroupEnd();
                     }
                     il.clearHighlightedCells();
@@ -6715,14 +6948,14 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
                     updateGeometryBox();
 
-                    if(mDropFolderView != null) {
+                    if (mDropFolderView != null) {
                         mDropFolderView.setFocused(false);
 
                         final SelectionState selectionState = getSelectionState();
 
                         unselectAllItems();
 
-                        if(is_embedded_folder) {
+                        if (is_embedded_folder) {
                             moveItemsIntoFolder(mDropFolderView, movedItemViews, movedItemsLocation, selectionState);
                         } else {
                             final ItemView finalDropFolderView = mDropFolderView;
@@ -6736,12 +6969,12 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                     } else {
                         Page page = item.getPage();
                         Utils.updateContainerIconIfNeeded(page);
-                        if(page.config.rearrangeItems) rearrangeItems(page);
+                        if (page.config.rearrangeItems) rearrangeItems(page);
                     }
                 }
 
-                if(!mEditMode) {
-                    if(mMoveStarted && mSystemConfig.autoEdit) {
+                if (!mEditMode) {
+                    if (mMoveStarted && mSystemConfig.autoEdit) {
                         enterEditMode(parentItemLayout, item);
                     }
                 }
@@ -6755,12 +6988,12 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
             Folder dropFolder = (Folder) dropFolderItemView.getItem();
             boolean is_embedded_folder = dropFolder instanceof EmbeddedFolder;
             ItemLayout ilTo;
-            if(is_embedded_folder) {
-                ilTo = ((EmbeddedFolderView)dropFolderItemView).getEmbeddedItemLayout();
+            if (is_embedded_folder) {
+                ilTo = ((EmbeddedFolderView) dropFolderItemView).getEmbeddedItemLayout();
             } else {
                 // make sure the folder view is ready (need its item layout), if it doesn't exist create it
                 FolderView fv = findFolderView(dropFolderItemView, null);
-                if(fv == null) {
+                if (fv == null) {
                     fv = openFolder(dropFolder, dropFolderItemView, null, true);
                 }
                 ilTo = fv.getItemLayout();
@@ -6771,7 +7004,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
             for (ItemView iv : movedItemViews) {
                 Item i = iv.getItem();
                 Matrix transform;
-                if(is_embedded_folder && !i.getItemConfig().onGrid) {
+                if (is_embedded_folder && !i.getItemConfig().onGrid) {
                     transform = new Matrix(i.getTransform());
                 } else {
                     transform = null;
@@ -6782,7 +7015,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
                 Item newItem = Utils.moveItem(i, to_page, location.x, location.y, scale, Item.NO_ID);
 
-                if(transform != null) {
+                if (transform != null) {
                     transform.postScale(1 / scale, 1 / scale);
                     transform.postTranslate(location.x, location.y);
                     newItem.setTransform(transform, false);
@@ -6792,23 +7025,23 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
             }
             mUndoStack.storeGroupEnd();
             Page page = movedItemViews.get(0).getItem().getPage();
-            if(page.config.rearrangeItems) rearrangeItems(page);
+            if (page.config.rearrangeItems) rearrangeItems(page);
         }
 
         @Override
         public void onItemViewMove(ItemView movedItemView, float dx, float dy) {
             Item movedItem = movedItemView.getItem();
             ItemLayout il = movedItemView.getParentItemLayout();
-            if(mEditMode || mItemLongTappedInNormalMode == movedItem) {
-                if((mEditMode && movedItem == mEditItemLayout.getMasterSelectedItem()) || !mEditMode) {
+            if (mEditMode || mItemLongTappedInNormalMode == movedItem) {
+                if (!mEditMode || movedItem == mEditItemLayout.getMasterSelectedItem()) {
                     final ArrayList<ItemView> selectedItems = getSelectedItemViews();
-                    if(mItemLongTappedInNormalMode == movedItem) {
+                    if (mItemLongTappedInNormalMode == movedItem) {
                         // in normal mode, items are not selected (only in edit mode) : add it to the list to include it in the processings below
                         selectedItems.add(movedItemView);
                     }
-                    if(!mMoveStarted) {
+                    if (!mMoveStarted) {
                         PageConfig c = il.getPage().config;
-                        if(mItemLongTappedInNormalMode == null && (c.wrapX || c.wrapY) && (mSystemConfig.hints& SystemConfig.HINT_WRAP)==0) {
+                        if (mItemLongTappedInNormalMode == null && (c.wrapX || c.wrapY) && (mSystemConfig.hints & SystemConfig.HINT_WRAP) == 0) {
                             il.setAllowWrap(false);
                             Toast.makeText(mContext, R.string.h_w, Toast.LENGTH_SHORT).show();
                         }
@@ -6816,24 +7049,24 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                             itemView.prepareDraggedBitmap();
                             startTracking(itemView);
                             Item item = itemView.getItem();
-                            if(item.getItemConfig().onGrid && !itemView.isDragged()) {
+                            if (item.getItemConfig().onGrid && !itemView.isDragged()) {
                                 itemView.setDragged(true);
                             }
                             itemView.setHighlightedNow(false);
                             saveInitialItemViewGeometry(itemView);
                         }
                         il.grabEvent(movedItemView);
-                        if(mSystemConfig.hasSwitch(SystemConfig.SWITCH_SNAP)) {
+                        if (mSystemConfig.hasSwitch(SystemConfig.SWITCH_SNAP)) {
                             startSnapping(movedItemView, movedItem.getClass() == StopPoint.class ? SnappingContext.SNAP_CENTER : SnappingContext.SNAP_ALL);
                         }
                         closeBubble();
                         mMoveStarted = true;
                     }
 
-                    boolean is_stop_point = movedItem.getClass()==StopPoint.class;
+                    boolean is_stop_point = movedItem.getClass() == StopPoint.class;
 
-                    mCurrentMoveItemDx=dx;
-                    mCurrentMoveItemDy=dy;
+                    mCurrentMoveItemDx = dx;
+                    mCurrentMoveItemDy = dy;
 
                     final boolean swapItems = il.getPage().config.swapItems;
                     final ArrayList<Item> all_items = il.getPage().items;
@@ -6841,7 +7074,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                     il.clearHighlightedCells();
                     for (ItemView iv : selectedItems) {
                         Item i = iv.getItem();
-                        if(i.getItemConfig().onGrid) {
+                        if (i.getItemConfig().onGrid) {
                             il.moveTrackedItemView(iv, dx, dy);
 
                             if (!is_stop_point) {
@@ -6850,20 +7083,20 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                                 r.offsetTo(mTempCoords[0], mTempCoords[1]);
                                 il.addHighlightedCell(i, r);
 
-                                if(swapItems) {
+                                if (swapItems) {
                                     // check for overlap
-                                    int cw=(int) il.getCellWidth();
-                                    int ch=(int) il.getCellHeight();
+                                    int cw = (int) il.getCellWidth();
+                                    int ch = (int) il.getCellHeight();
                                     mTempRect.set(i.getCell());
-                                    mTempRect.left*=cw;
-                                    mTempRect.right*=cw;
-                                    mTempRect.top*=ch;
-                                    mTempRect.bottom*=ch;
-                                    int mx= (int) (mTempRect.centerX()+dx);
-                                    int my= (int) (mTempRect.centerY()+dy);
+                                    mTempRect.left *= cw;
+                                    mTempRect.right *= cw;
+                                    mTempRect.top *= ch;
+                                    mTempRect.bottom *= ch;
+                                    int mx = (int) (mTempRect.centerX() + dx);
+                                    int my = (int) (mTempRect.centerY() + dy);
 
                                     ItemConfig.PinMode pin_mode = i.getItemConfig().pinMode;
-                                    for(Item i2 : all_items) {
+                                    for (Item i2 : all_items) {
                                         ItemConfig ic = i2.getItemConfig();
                                         if (!ic.onGrid) continue;
                                         if (ic.pinMode != pin_mode) continue;
@@ -6888,7 +7121,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                                                 swapped_items = new ArrayList<>();
                                                 mSwappedItems.put(i.getId(), swapped_items);
                                             }
-                                            if(!swapped_items.contains(iv2)) {
+                                            if (!swapped_items.contains(iv2)) {
                                                 swapped_items.add(iv2);
                                                 saveInitialItemViewGeometry(iv2);
                                                 Rect old_cell = new Rect(cell);
@@ -6900,7 +7133,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                                         }
 
                                         if (swapped_items != null) {
-                                            for (int l=swapped_items.size()-1; l>=0; l--) {
+                                            for (int l = swapped_items.size() - 1; l >= 0; l--) {
                                                 ItemView swappedView = swapped_items.get(l);
                                                 Item swapped = swappedView.getItem();
                                                 final Rect original_cell = mOriginalItemsGeometry.get(swapped.getId()).cell;
@@ -6912,7 +7145,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                                                 if (!mTempRect.contains(mx, my)) {
                                                     mTempRect.set(swapped.getCell());
                                                     swapped.getCell().set(original_cell);
-                                                    swappedView.animateTranslate((mTempRect.left-original_cell.left)*cw, 0, (mTempRect.top-original_cell.top)*ch, 0, false);
+                                                    swappedView.animateTranslate((mTempRect.left - original_cell.left) * cw, 0, (mTempRect.top - original_cell.top) * ch, 0, false);
                                                     il.reLayoutItems();
                                                     swapped_items.remove(swappedView);
                                                     mOriginalItemsGeometry.remove(swapped.getId());
@@ -6924,7 +7157,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                             }
                         } else {
                             SavedItemGeometry tig = mTrackedItemsGeometry.get(i.getId());
-                            Matrix m=new Matrix(tig.transform);
+                            Matrix m = new Matrix(tig.transform);
                             m.postTranslate(dx, dy);
                             i.setTransform(m, false);
                             updateGeometryBox();
@@ -6932,12 +7165,12 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                     }
 
                     // check snapping in detached mode
-                    if(!movedItem.getItemConfig().onGrid) {
-                        if(mSnappingContext != null) {
+                    if (!movedItem.getItemConfig().onGrid) {
+                        if (mSnappingContext != null) {
                             final Matrix m = movedItem.getTransform();
                             mSnappingContext.computeSnaps(m);
 
-                            if(mSnappingContext.min_dx != Float.MAX_VALUE) {
+                            if (mSnappingContext.min_dx != Float.MAX_VALUE) {
                                 for (ItemView iv : selectedItems) {
                                     Item i = iv.getItem();
                                     if (!i.getItemConfig().onGrid) {
@@ -6946,7 +7179,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                                     }
                                 }
                             }
-                            if(mSnappingContext.min_dy != Float.MAX_VALUE) {
+                            if (mSnappingContext.min_dy != Float.MAX_VALUE) {
                                 for (ItemView iv : selectedItems) {
                                     Item i = iv.getItem();
                                     if (!i.getItemConfig().onGrid) {
@@ -6961,34 +7194,34 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                     }
 
                     // check for folder drag & drop (except for stop points)
-                    if(!is_stop_point) {
+                    if (!is_stop_point) {
                         movedItemView.getHitRect(mTempRect);
                         mTempRectF.set(mTempRect);
                         Matrix t = il.getTransformForItemView(movedItemView);
-                        if(t != null) {
+                        if (t != null) {
                             t.mapRect(mTempRectF);
                         }
-                        mTempCoords[0]= (int) mTempRectF.centerX();
-                        mTempCoords[1]= (int) mTempRectF.centerY();
-                        for(Item i : il.getPage().items) {
-                            if(i != movedItem && i instanceof Folder) {
+                        mTempCoords[0] = (int) mTempRectF.centerX();
+                        mTempCoords[1] = (int) mTempRectF.centerY();
+                        for (Item i : il.getPage().items) {
+                            if (i != movedItem && i instanceof Folder) {
                                 ItemView iv = il.getItemView(i);
                                 iv.getHitRect(mTempRect);
                                 mTempRectF.set(mTempRect);
                                 t = il.getTransformForItemView(iv);
-                                if(t != null) {
+                                if (t != null) {
                                     t.mapRect(mTempRectF);
                                 }
-                                if(mTempRectF.contains(mTempCoords[0], mTempCoords[1])) {
-                                    if(mCandidateDropFolderView == null && mDropFolderView == null) {
+                                if (mTempRectF.contains(mTempCoords[0], mTempCoords[1])) {
+                                    if (mCandidateDropFolderView == null && mDropFolderView == null) {
                                         mCandidateDropFolderView = iv;
                                         mSelectDropFolderStartTime = SystemClock.uptimeMillis();
                                         mSelectDropFolder.run();
                                     }
                                 } else {
-                                    if(iv == mCandidateDropFolderView) {
+                                    if (iv == mCandidateDropFolderView) {
                                         cancelSelectDropFolder();
-                                    } else if(iv == mDropFolderView) {
+                                    } else if (iv == mDropFolderView) {
                                         mDropFolderView.setFocused(false);
                                         mDropFolderView = null;
                                         // TODO SEL restore all selected items alpha
@@ -7007,19 +7240,19 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         @Override
         public void onItemViewClicked(ItemView itemView) {
             Item item = itemView.getItem();
-            if(mEditMode && mEditPage == item.getPage()) {
+            if (mEditMode && mEditPage == item.getPage()) {
                 Rect bounds = computeItemViewBounds(itemView);
                 setLastTouchEventForItemView(itemView, Utils.POSITION_AUTO, Utils.POSITION_AUTO, bounds.centerX(), bounds.centerY());
                 HandleView hv = mEditItemLayout.getHandleView();
                 boolean is_stop_point = item.getClass() == StopPoint.class;
                 Item masterSelectedItem = mEditItemLayout.getMasterSelectedItem();
-                if(!itemView.isSelected()) {
-                    if(mSystemConfig.hasSwitch(SystemConfig.SWITCH_MULTI_SELECTION)) {
+                if (!itemView.isSelected()) {
+                    if (mSystemConfig.hasSwitch(SystemConfig.SWITCH_MULTI_SELECTION)) {
                         mEditItemLayout.setMasterSelectedItem(item);
                         itemView.setSelected(true);
                         configureHandlesForItemView(itemView, HandleView.Mode.CONTENT_SIZE, true);
                     } else {
-                        if(masterSelectedItem != null) {
+                        if (masterSelectedItem != null) {
                             mEditItemLayout.getMasterSelectedItemView().setSelected(false);
                             mEditItemLayout.setMasterSelectedItem(null);
                         }
@@ -7028,8 +7261,8 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                         configureHandlesForItemView(itemView, HandleView.Mode.CONTENT_SIZE, true);
                     }
                 } else {
-                    if(!mMoveStarted) {
-                        if(item == masterSelectedItem) {
+                    if (!mMoveStarted) {
+                        if (item == masterSelectedItem) {
                             if (item.getItemConfig().onGrid) {
                                 // a single mode allowed in grid mode
                                 mEditItemLayout.setMasterSelectedItem(null);
@@ -7056,27 +7289,27 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
             } else {
                 boolean normal_path = true;
                 boolean is_widget = item.getClass() == Widget.class;
-                if(is_widget) {
-                    WidgetView widgetView = (WidgetView)itemView;
+                if (is_widget) {
+                    WidgetView widgetView = (WidgetView) itemView;
                     Widget w = (Widget) item;
-                    if(!widgetView.isGood()) {
+                    if (!widgetView.isGood()) {
                         normal_path = false;
                         ComponentName cn = w.getComponentName();
-                        if(cn != null) {
+                        if (cn != null) {
                             String pkg_name = cn.getPackageName();
                             try {
                                 getPackageManager().getPackageInfo(pkg_name, 0);
-                                if(sBindAppWidgetIdIfAllowed != null) {
+                                if (sBindAppWidgetIdIfAllowed != null) {
                                     int old_id = w.getAppWidgetId();
                                     LLApp.get().getAppWidgetHost().deleteAppWidgetId(old_id);
                                     int new_id = LLApp.get().getAppWidgetHost().allocateAppWidgetId();
                                     boolean ok;
                                     try {
-                                        ok = (Boolean)sBindAppWidgetIdIfAllowed.invoke(AppWidgetManager.getInstance(mContext), old_id, cn);
+                                        ok = (Boolean) sBindAppWidgetIdIfAllowed.invoke(AppWidgetManager.getInstance(mContext), old_id, cn);
                                     } catch (Exception e) {
                                         ok = false;
                                     }
-                                    if(ok) {
+                                    if (ok) {
                                         w.setAppWidgetId(new_id);
                                         item.notifyChanged();
                                     } else {
@@ -7098,7 +7331,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                         }
                     }
                 }
-                if(normal_path & item.getClass()!=EmbeddedFolder.class) {
+                if (normal_path & item.getClass() != EmbeddedFolder.class) {
                     super.onItemViewClicked(itemView);
                 }
             }
@@ -7108,11 +7341,11 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         public void onItemViewLongClicked(ItemView itemView) {
             Item item = itemView.getItem();
             itemView.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-            if(mEditMode && mEditPage == item.getPage()) {
+            if (mEditMode && mEditPage == item.getPage()) {
                 Rect bounds = computeItemViewBounds(itemView);
                 setLastTouchEventForItemView(itemView, Utils.POSITION_AUTO, Utils.POSITION_AUTO, bounds.centerX(), bounds.centerY());
                 final boolean multi_selection = mSystemConfig.hasSwitch(SystemConfig.SWITCH_MULTI_SELECTION);
-                if(itemView.isSelected() && multi_selection) {
+                if (itemView.isSelected() && multi_selection) {
                     itemView.setSelected(false);
                 } else {
                     itemView.setDragged(true);
@@ -7123,7 +7356,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                             mEditItemLayout.setMasterSelectedItem(item);
                             itemView.setSelected(true);
                             configureHandlesForItemView(itemView, HandleView.Mode.CONTENT_SIZE, true);
-                            if(!multi_selection) {
+                            if (!multi_selection) {
                                 for (Item i : mEditPage.items) {
                                     ItemView iv = mEditItemLayout.getItemView(i);
                                     if (iv.isSelected() && iv != itemView) {
@@ -7147,7 +7380,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
         @Override
         public boolean onItemViewTouch(ItemView itemView, MotionEvent event) {
-            return mEditMode ? false : super.onItemViewTouch(itemView, event);
+            return !mEditMode && super.onItemViewTouch(itemView, event);
         }
 
         @Override
@@ -7160,7 +7393,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         protected FolderView openUserMenu(boolean prepareOnly) {
             LightningEngine.PageManager pm = getCurrentRootPage().getEngine().getPageManager();
             Page page;
-            if(pm.isPageCreated(Page.USER_MENU_PAGE)) {
+            if (pm.isPageCreated(Page.USER_MENU_PAGE)) {
                 page = pm.getOrLoadPage(Page.USER_MENU_PAGE);
             } else {
                 page = Setup.createUserMenuPage(Dashboard.this);
@@ -7174,7 +7407,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
         @Override
         protected void onFolderClosed(FolderView fv) {
-            if(mEditMode && mEditItemLayout==fv.getItemLayout()) {
+            if (mEditMode && mEditItemLayout == fv.getItemLayout()) {
                 leaveEditMode();
             }
         }
@@ -7183,7 +7416,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         public boolean runAction(LightningEngine engine, String source, EventAction ea, ItemLayout il, ItemView itemView) {
             Intent intent;
 
-            switch(ea.action) {
+            switch (ea.action) {
                 case GlobalConfig.APP_DRAWER:
                     startActivity(new Intent(mContext, AppDrawerX.class));
                     break;
@@ -7201,8 +7434,8 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                     break;
 
                 case GlobalConfig.EDIT_LAYOUT:
-                    if(mEditMode) {
-                        if(itemView == null) {
+                    if (mEditMode) {
+                        if (itemView == null) {
                             leaveEditMode();
                         } else {
                             unselectAllItems();
@@ -7211,17 +7444,20 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                             configureHandlesForItemView(itemView, HandleView.Mode.CONTENT_SIZE, true);
                         }
                     } else {
-                        enterEditMode(il, itemView==null ? null : itemView.getItem());
+                        enterEditMode(il, itemView == null ? null : itemView.getItem());
                     }
                     break;
 
                 case GlobalConfig.ADD_ITEM:
-                    try { removeDialog(DIALOG_ADD); } catch(Exception e) {}
+                    try {
+                        removeDialog(DIALOG_ADD);
+                    } catch (Exception e) {
+                    }
                     showDialog(DIALOG_ADD);
                     break;
 
                 case GlobalConfig.MOVE_ITEM:
-                    if(itemView != null) {
+                    if (itemView != null) {
                         mItemLongTappedInNormalMode = itemView.getItem();
                         openBubble(BUBBLE_MODE_ITEM_NO_EM, itemView);
                     }
@@ -7236,7 +7472,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                     break;
 
                 case GlobalConfig.CUSTOMIZE_ITEM:
-                    editItem(il, itemView==null ? null : itemView.getItem());
+                    editItem(il, itemView == null ? null : itemView.getItem());
                     break;
 
                 case GlobalConfig.ITEM_MENU:
@@ -7253,7 +7489,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
                 case GlobalConfig.SEARCH_APP:
                     intent = new Intent(mContext, AppDrawerX.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intent.putExtra(AppDrawerX.INTENT_EXTRA_SEARCH, true);
                     startActivity(intent);
                     break;
@@ -7289,7 +7525,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
                 case GlobalConfig.GO_HOME_ZOOM_TO_ORIGIN:
                     int currentPageId = getCurrentRootPage().id;
-                    if(currentPageId == mGlobalConfig.homeScreen) {
+                    if (currentPageId == mGlobalConfig.homeScreen) {
                         zoomToOrigin(getCurrentRootItemLayout());
                     } else {
                         setPagerPage(mGlobalConfig.homeScreen, PAGE_DIRECTION_HINT_AUTO);
@@ -7305,7 +7541,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                     break;
 
                 case GlobalConfig.BACK:
-                    if(goBack()) {
+                    if (goBack()) {
                         il = getTopmostItemLayout();
                     }
                     break;
@@ -7326,13 +7562,13 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         @Override
         protected void launchIntent(Intent intent, ItemView itemView) {
             ComponentName cn = intent.getComponent();
-            ComponentName app_drawer =  new ComponentName(mContext, AppDrawerX.class);
-            if(BuildConfig.IS_TRIAL && cn != null && cn.getClassName().equals(LLApp.LL_PKG_NAME+".activities.AppDrawer")) {
+            ComponentName app_drawer = new ComponentName(mContext, AppDrawerX.class);
+            if (BuildConfig.IS_TRIAL && cn != null && cn.getClassName().equals(LLApp.LL_PKG_NAME + ".activities.AppDrawer")) {
                 // translate app drawer intent in the trial version into app drawer intent in the extreme version
                 intent.setComponent(app_drawer);
             }
 
-            if(itemView != null) {
+            if (itemView != null) {
                 mLastLaunchAnimation = itemView.getItem().getItemConfig().launchAnimation;
             } else {
                 Page page = mScreen.getTargetOrTopmostItemLayout().getPage();
@@ -7346,7 +7582,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         protected void onOrientationChanged(int orientation) {
             super.onOrientationChanged(orientation);
 
-            if(mEditMode && mEditItemLayout.getOpenerItemView() instanceof EmbeddedFolderView) {
+            if (mEditMode && mEditItemLayout.getOpenerItemView() instanceof EmbeddedFolderView) {
                 ItemLayout il = mEditItemLayout;
                 Item item = il.getMasterSelectedItem();
                 leaveEditMode();
@@ -7368,8 +7604,11 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
         @Override
         public void onSystemBarsSizeChanged() {
             Page page = mScreen.getCurrentRootPage();
-            if(page != null) {
+            if (page != null) {
                 configureSystemBarsPadding(page.config);
-            }        }
+            }
+        }
     }
+
+
 }

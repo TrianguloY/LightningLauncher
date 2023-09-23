@@ -21,7 +21,6 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.DisplayCutout;
@@ -38,9 +37,8 @@ import net.pierrox.lightning_launcher.R;
 
 
 /**
- * Class to manage status and navigation bar tint effects when using KitKat 
+ * Class to manage status and navigation bar tint effects when using KitKat
  * translucent system UI modes.
- *
  */
 public class SystemBarTintManager {
 
@@ -66,17 +64,16 @@ public class SystemBarTintManager {
      * The default system bar tint color value.
      */
     public static final int DEFAULT_TINT_COLOR = 0x99000000;
-
+    private static boolean sGlobalStatusBarTintEnabled = false;
+    private final boolean mStatusBarAvailable = true;
+    private final boolean mNavBarAvailable = true;
+    private final Animation mStatusBarAnimEnter;
+    private final Animation mStatusBarAnimExit;
     private SystemBarConfig mConfig;
-    private boolean mStatusBarAvailable = true;
-    private boolean mNavBarAvailable = true;
     private boolean mStatusBarTintEnabled;
     private boolean mNavBarTintEnabled;
     private View mStatusBarTintView;
     private View mNavBarTintView;
-
-    private Animation mStatusBarAnimEnter;
-    private Animation mStatusBarAnimExit;
 
     /**
      * Constructor. Call this in the host activity onCreate method after its
@@ -105,33 +102,9 @@ public class SystemBarTintManager {
         setupNavBarLayoutParams();
     }
 
-    private static boolean sGlobalStatusBarTintEnabled = false;
-    /**
-     * Enable tinting of the system status bar.
-     *
-     * If the platform is running Jelly Bean or earlier, or translucent system
-     * UI modes have not been enabled in either the theme or via window flags,
-     * then this method does nothing.
-     *
-     * @param enabled True to enable tinting, false to disable it (default).
-     */
-    public void setStatusBarTintEnabled(boolean enabled) {
-        mStatusBarTintEnabled = enabled;
-        if (mStatusBarAvailable) {
-            int visibility = enabled ? View.VISIBLE : View.GONE;
-            if(mStatusBarTintView.getVisibility() != visibility) {
-                mStatusBarTintView.setVisibility(visibility);
-                if(mStatusBarTintEnabled != sGlobalStatusBarTintEnabled) {
-                    mStatusBarTintView.startAnimation(enabled ? mStatusBarAnimEnter : mStatusBarAnimExit);
-                    sGlobalStatusBarTintEnabled = mStatusBarTintEnabled;
-                }
-            }
-        }
-    }
-
     /**
      * Enable tinting of the system navigation bar.
-     *
+     * <p>
      * If the platform does not have soft navigation keys, is running Jelly Bean
      * or earlier, or translucent system UI modes have not been enabled in either
      * the theme or via window flags, then this method does nothing.
@@ -296,6 +269,29 @@ public class SystemBarTintManager {
     }
 
     /**
+     * Enable tinting of the system status bar.
+     * <p>
+     * If the platform is running Jelly Bean or earlier, or translucent system
+     * UI modes have not been enabled in either the theme or via window flags,
+     * then this method does nothing.
+     *
+     * @param enabled True to enable tinting, false to disable it (default).
+     */
+    public void setStatusBarTintEnabled(boolean enabled) {
+        mStatusBarTintEnabled = enabled;
+        if (mStatusBarAvailable) {
+            int visibility = enabled ? View.VISIBLE : View.GONE;
+            if (mStatusBarTintView.getVisibility() != visibility) {
+                mStatusBarTintView.setVisibility(visibility);
+                if (mStatusBarTintEnabled != sGlobalStatusBarTintEnabled) {
+                    mStatusBarTintView.startAnimation(enabled ? mStatusBarAnimEnter : mStatusBarAnimExit);
+                    sGlobalStatusBarTintEnabled = mStatusBarTintEnabled;
+                }
+            }
+        }
+    }
+
+    /**
      * Is tinting enabled for the system navigation bar?
      *
      * @return True if enabled, False otherwise.
@@ -342,7 +338,6 @@ public class SystemBarTintManager {
     /**
      * Class which describes system bar sizing and other characteristics for the current
      * device configuration.
-     *
      */
     public static class SystemBarConfig {
 
@@ -351,21 +346,19 @@ public class SystemBarTintManager {
 //        private static final String NAV_BAR_HEIGHT_LANDSCAPE_RES_NAME = "navigation_bar_height_landscape";
 //        private static final String NAV_BAR_WIDTH_RES_NAME = "navigation_bar_width";
 //        private static final String SHOW_NAV_BAR_RES_NAME = "config_showNavigationBar";
-
+// These values are kept in order to be reused when the window insets are not available. This
+// is the case when the view is not attached to the window. Also, display cutouts are never
+// available in the context of the overlay desktop. Display cutouts are not supposed to change
+// so it should be safe enough.
+private static int sSafeInsetWidth = 0;
+        private static int sSafeInsetHeight = 0;
         private final boolean mIsInPortrait;
         private final int mStatusBarHeight;
         private final int mActionBarHeight;
         private final boolean mHasNavigationBar;
         private final int mNavigationBarHeight;
-//        private final int mNavigationBarWidth;
+        //        private final int mNavigationBarWidth;
         private final boolean mIsNavigationAtBottom;
-
-        // These values are kept in order to be reused when the window insets are not available. This
-        // is the case when the view is not attached to the window. Also, display cutouts are never
-        // available in the context of the overlay desktop. Display cutouts are not supposed to change
-        // so it should be safe enough.
-        private static int sSafeInsetWidth = 0;
-        private static int sSafeInsetHeight = 0;
 
         private SystemBarConfig(Window window) {
             Resources res = window.getContext().getResources();
@@ -394,7 +387,7 @@ public class SystemBarTintManager {
                 }
             }
             mIsNavigationAtBottom = realDm.widthPixels == dm.widthPixels;
-            if(mIsInPortrait || mIsNavigationAtBottom) {
+            if (mIsInPortrait || mIsNavigationAtBottom) {
                 mNavigationBarHeight = realDm.heightPixels - dm.heightPixels - sSafeInsetHeight;
             } else {
                 mNavigationBarHeight = realDm.widthPixels - dm.widthPixels - sSafeInsetWidth;

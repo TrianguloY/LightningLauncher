@@ -30,431 +30,445 @@ import java.io.IOException;
 
 /**
  * The item is the base class for other objects that can be found in a container (shortcuts, folders, etc.).
- * There are specific classes for some items (shortcut, folder, ...) when these items provides custom services. 
+ * There are specific classes for some items (shortcut, folder, ...) when these items provides custom services.
  * Some other item types don't have a specific class when they don't have more properties (such as widget for instance).
- *
+ * <p>
  * Since Lightning V14 allows the same container to be displayed multiple times on the same screen, it is possible to retrieve
  * several Item objects linked with the same underlying data. The identifier (see {@link #getId()}) will then be the same.
- *
+ * <p>
  * An instance of this object can be retrieved with {@link Event#getItem()}, {@link Screen#getItemById(int)}, {@link Screen#getAllItemsById(int)}, {@link Container#getAllItems()}, {@link Container#getItemById(int)}, {@link Container#getItemByName(String)}, {@link Container#cloneItem(Item)}, {@link Container#moveItem(Item, Container)}, {@link Container#getOpener()} or {@link ImageScript.DrawingContext#getItem()}; or by using directly the special variable 'item' (which is the current Item) when running a 'Menu' event.
  */
 public class Item {
-	
-	protected Lightning mLightning;
-	protected ItemView mItemView;
-	private PropertySet mProperties;
 
-	private Scriptable mMy;
+    protected Lightning mLightning;
+    protected ItemView mItemView;
+    private PropertySet mProperties;
 
-	/**
-	 * @hide
-	 */
-	public Item(Lightning lightning, ItemView itemView) {
-		mLightning = lightning;
-		mItemView = itemView;
-	}
+    private Scriptable mMy;
 
-	/**
-	 * Return a new script object, with this item as prototype
-	 * @return a new script object which inherit from this item
-	 */
-	public Scriptable extend() {
-		Scriptable scope = mLightning.getEngine().getScriptExecutor().getScriptScope();
-		Scriptable object = Context.getCurrentContext().newObject(scope);
-		object.setPrototype(new NativeJavaObject(scope, this, null));
-		return object;
-	}
-	
-	/**
-	 * Return the Screen where this item is placed.
-	 * @return the screen containing this item
-	 */
-	public Screen getScreen() {
-		return mLightning.createScreen(mItemView.getParentItemLayout().getScreen());
-	}
-
-	/**
-	 * Return a scriptable object that can be used to store live data. These data won't be stored, unlike tags.
+    /**
+     * @hide
      */
-	public Scriptable getMy() {
-		if(mMy == null) {
-			mMy = Context.getCurrentContext().newObject(mLightning.getEngine().getScriptExecutor().getScriptScope());
-		}
-		return mMy;
-	}
+    public Item(Lightning lightning, ItemView itemView) {
+        mLightning = lightning;
+        mItemView = itemView;
+    }
 
-	/**
-	 * Use an accessor, don't keep this value as an instance field as it can change when the page is reloaded
-	 * @hide
-	 */
-	public net.pierrox.lightning_launcher.data.Item getItem() {
-		return mItemView.getItem();
-	}
+    /**
+     * Return a new script object, with this item as prototype
+     *
+     * @return a new script object which inherit from this item
+     */
+    public Scriptable extend() {
+        Scriptable scope = mLightning.getEngine().getScriptExecutor().getScriptScope();
+        Scriptable object = Context.getCurrentContext().newObject(scope);
+        object.setPrototype(new NativeJavaObject(scope, this, null));
+        return object;
+    }
 
-	/**
-	 * Returns the unique item identifier.
-	 * Each item has its own unique id in the app, meaning that it is not possible to find 2 items in 2 containers with the same id. However the item id will change if it is moved from one desktop to another, or moved in/out of a folder or panel. It may also change when loaded from a template.  
-	 */
+    /**
+     * Return the Screen where this item is placed.
+     *
+     * @return the screen containing this item
+     */
+    public Screen getScreen() {
+        return mLightning.createScreen(mItemView.getParentItemLayout().getScreen());
+    }
+
+    /**
+     * Return a scriptable object that can be used to store live data. These data won't be stored, unlike tags.
+     */
+    public Scriptable getMy() {
+        if (mMy == null) {
+            mMy = Context.getCurrentContext().newObject(mLightning.getEngine().getScriptExecutor().getScriptScope());
+        }
+        return mMy;
+    }
+
+    /**
+     * Use an accessor, don't keep this value as an instance field as it can change when the page is reloaded
+     *
+     * @hide
+     */
+    public net.pierrox.lightning_launcher.data.Item getItem() {
+        return mItemView.getItem();
+    }
+
+    /**
+     * Returns the unique item identifier.
+     * Each item has its own unique id in the app, meaning that it is not possible to find 2 items in 2 containers with the same id. However the item id will change if it is moved from one desktop to another, or moved in/out of a folder or panel. It may also change when loaded from a template.
+     */
     public int getId() {
-		return getItem().getId();
-	}
+        return getItem().getId();
+    }
 
-	/**
-	 * Returns the item type has a text 
-	 * @return one of: Shortcut, Folder, Panel, Widget, StopPoint, DynamicText, Unlocker, PageIndicator or Unknown
-	 */
-	public String getType() {
-		// needed because of obfuscation
-		Class<?> cls = getItem().getClass();
-		if(cls == net.pierrox.lightning_launcher.data.Shortcut.class) {
-			return "Shortcut";
-		} else if(cls == net.pierrox.lightning_launcher.data.Folder.class) {
-			return "Folder";
-		} else if(cls == net.pierrox.lightning_launcher.data.EmbeddedFolder.class) {
-			return "Panel";
-		} else if(cls == net.pierrox.lightning_launcher.data.Widget.class) {
-			return "Widget";
-		} else if(cls == net.pierrox.lightning_launcher.data.StopPoint.class) {
-			return "StopPoint";
-		} else if(cls == net.pierrox.lightning_launcher.data.DynamicText.class) {
-			return "DynamicText";
-		} else if(cls == net.pierrox.lightning_launcher.data.Unlocker.class) {
-			return "Unlocker";
-        } else if(cls == net.pierrox.lightning_launcher.data.PageIndicator.class) {
+    /**
+     * Returns the item type has a text
+     *
+     * @return one of: Shortcut, Folder, Panel, Widget, StopPoint, DynamicText, Unlocker, PageIndicator or Unknown
+     */
+    public String getType() {
+        // needed because of obfuscation
+        Class<?> cls = getItem().getClass();
+        if (cls == net.pierrox.lightning_launcher.data.Shortcut.class) {
+            return "Shortcut";
+        } else if (cls == net.pierrox.lightning_launcher.data.Folder.class) {
+            return "Folder";
+        } else if (cls == net.pierrox.lightning_launcher.data.EmbeddedFolder.class) {
+            return "Panel";
+        } else if (cls == net.pierrox.lightning_launcher.data.Widget.class) {
+            return "Widget";
+        } else if (cls == net.pierrox.lightning_launcher.data.StopPoint.class) {
+            return "StopPoint";
+        } else if (cls == net.pierrox.lightning_launcher.data.DynamicText.class) {
+            return "DynamicText";
+        } else if (cls == net.pierrox.lightning_launcher.data.Unlocker.class) {
+            return "Unlocker";
+        } else if (cls == net.pierrox.lightning_launcher.data.PageIndicator.class) {
             return "PageIndicator";
-        } else if(cls == net.pierrox.lightning_launcher.data.CustomView.class) {
+        } else if (cls == net.pierrox.lightning_launcher.data.CustomView.class) {
             return "CustomView";
-		} else {
-			return "Unknown"; 
-		}
-	}
-	
-	/**
-	 * Hide or show an item.
-	 * @see #isVisible()
-	 * @param visible true to make it visible
-	 */
-	public void setVisibility(boolean visible) {
-		getItem().setVisible(visible);
-	}
-	
-	/**
-	 * Returns true if the item is visible.
-	 * @see #setVisibility(boolean)
-	 */
-	public boolean isVisible() {
-		return getItem().isVisible();
-	}
-	
-	
-	/**
-	 * @hide
-	 */
-	public String getLabel() {
-		net.pierrox.lightning_launcher.data.Item item = getItem();
-		if(item instanceof Shortcut) {
+        } else {
+            return "Unknown";
+        }
+    }
+
+    /**
+     * Hide or show an item.
+     *
+     * @param visible true to make it visible
+     * @see #isVisible()
+     */
+    public void setVisibility(boolean visible) {
+        getItem().setVisible(visible);
+    }
+
+    /**
+     * Returns true if the item is visible.
+     *
+     * @see #setVisibility(boolean)
+     */
+    public boolean isVisible() {
+        return getItem().isVisible();
+    }
+
+
+    /**
+     * @hide
+     */
+    public String getLabel() {
+        net.pierrox.lightning_launcher.data.Item item = getItem();
+        if (item instanceof Shortcut) {
             return ((Shortcut) item).getLabel();
         } else {
             return getName();
         }
-	}
-	
-	/**
-	 * @hide
-	 */
-	public void setLabel(String label) {
-        if(getItem() instanceof Shortcut) {
+    }
+
+    /**
+     * @hide
+     */
+    public void setLabel(String label) {
+        if (getItem() instanceof Shortcut) {
             setLabel(label, false);
         } else {
             setName(label);
         }
 
-	}
-	
-	/**
-	 * @hide
-	 */
-	public void setLabel(String label, boolean persistent) {
-		net.pierrox.lightning_launcher.data.Item item = getItem();
-		if(item instanceof Shortcut) {
+    }
+
+    /**
+     * @hide
+     */
+    public void setLabel(String label, boolean persistent) {
+        net.pierrox.lightning_launcher.data.Item item = getItem();
+        if (item instanceof Shortcut) {
             Shortcut s = (Shortcut) item;
 
-            if(persistent) {
+            if (persistent) {
                 s.setLabel(label);
             } else {
-				for (net.pierrox.lightning_launcher.engine.Screen screen : LLApp.get().getScreens()) {
-					ItemView[] itemViews = screen.getItemViewsForItem(item);
-					for (ItemView itemView : itemViews) {
-						IconLabelView il = ((ShortcutView)itemView).getIconLabelView();
-						TextView tv = il.getTextView();
-						if(tv != null) {
-							tv.setText(label);
-						}
-					}
-				}
-			}
+                for (net.pierrox.lightning_launcher.engine.Screen screen : LLApp.get().getScreens()) {
+                    ItemView[] itemViews = screen.getItemViewsForItem(item);
+                    for (ItemView itemView : itemViews) {
+                        IconLabelView il = ((ShortcutView) itemView).getIconLabelView();
+                        TextView tv = il.getTextView();
+                        if (tv != null) {
+                            tv.setText(label);
+                        }
+                    }
+                }
+            }
         } else {
             setName(label);
         }
-	}
+    }
 
     public String getName() {
         return getItem().getName();
     }
 
     public void setName(String name) {
-		net.pierrox.lightning_launcher.data.Item item = getItem();
-		item.setName(name);
+        net.pierrox.lightning_launcher.data.Item item = getItem();
+        item.setName(name);
     }
 
     private void itemGeometryUpdated(boolean fast) {
         getItem().getPage().setModified();
-		for (net.pierrox.lightning_launcher.engine.Screen screen : LLApp.get().getScreens()) {
-			ItemView[] itemViews = screen.getItemViewsForItem(getItem());
-			for (ItemView itemView : itemViews) {
-				ItemLayout il = itemView.getParentItemLayout();
-				if (il != null) {
-					if(fast) {
-						il.layoutItemView(itemView);
-					} else {
-						il.requestLayout();
-					}
-				}
-			}
-		}
+        for (net.pierrox.lightning_launcher.engine.Screen screen : LLApp.get().getScreens()) {
+            ItemView[] itemViews = screen.getItemViewsForItem(getItem());
+            for (ItemView itemView : itemViews) {
+                ItemLayout il = itemView.getParentItemLayout();
+                if (il != null) {
+                    if (fast) {
+                        il.layoutItemView(itemView);
+                    } else {
+                        il.requestLayout();
+                    }
+                }
+            }
+        }
     }
 
-	/**
-	 * Set the position of the item (only when detached from the grid).
-	 * Warning: any changes made through this method may be saved, meaning that the item position will have to be manually reset.
-	 * @param x
-	 * @param y
-	 */
-	public void setPosition(float x, float y) {
-        if(Float.isNaN(x) || Float.isNaN(y)) {
+    /**
+     * Set the position of the item (only when detached from the grid).
+     * Warning: any changes made through this method may be saved, meaning that the item position will have to be manually reset.
+     *
+     * @param x
+     * @param y
+     */
+    public void setPosition(float x, float y) {
+        if (Float.isNaN(x) || Float.isNaN(y)) {
             throw ScriptRuntime.constructError("setPosition", "Bad argument(s)");
         }
 
         getItem().updateGeometryValue(net.pierrox.lightning_launcher.data.Item.GEOMETRY_CTRL_POSITION, x, y, true);
         itemGeometryUpdated(true);
-	}
-	
-	/**
-	 * @return this item X position (only available when the script is not run in background).
-	 */
-	public float getPositionX() {
-		return getPositionXOrY(true);
-	}
+    }
 
-	/**
-	 * @return this item Y position (only available when the script is not run in background).
-	 */
-	public float getPositionY() {
-		return getPositionXOrY(false);
-	}
+    /**
+     * @return this item X position (only available when the script is not run in background).
+     */
+    public float getPositionX() {
+        return getPositionXOrY(true);
+    }
 
-	private float getPositionXOrY(boolean is_x) {
-		net.pierrox.lightning_launcher.data.Item item = getItem();
-		if (item.getItemConfig().onGrid) {
+    /**
+     * @return this item Y position (only available when the script is not run in background).
+     */
+    public float getPositionY() {
+        return getPositionXOrY(false);
+    }
+
+    private float getPositionXOrY(boolean is_x) {
+        net.pierrox.lightning_launcher.data.Item item = getItem();
+        if (item.getItemConfig().onGrid) {
             ItemLayout il = mItemView.getParentItemLayout();
-			android.graphics.Rect r = item.getCell();
-			return is_x ? r.left * il.getCellWidth() : r.top * il.getCellHeight();
+            android.graphics.Rect r = item.getCell();
+            return is_x ? r.left * il.getCellWidth() : r.top * il.getCellHeight();
         } else {
             RectF r = Utils.getTransformedItemBoxforMatrix(item, item.getTransform());
             return is_x ? r.left : r.top;
         }
-	}
-	
-	/**
-	 * Set the scale of the item (only when detached from the grid).
-	 * Warning: any changes made through this method may be saved, meaning that the item scale will have to be manually reset.
-	 * @param scaleX
-	 * @param scaleY
-	 */
-	public void setScale(float scaleX, float scaleY) {
-        if(Float.isNaN(scaleX) || Float.isNaN(scaleY)) {
+    }
+
+    /**
+     * Set the scale of the item (only when detached from the grid).
+     * Warning: any changes made through this method may be saved, meaning that the item scale will have to be manually reset.
+     *
+     * @param scaleX
+     * @param scaleY
+     */
+    public void setScale(float scaleX, float scaleY) {
+        if (Float.isNaN(scaleX) || Float.isNaN(scaleY)) {
             throw ScriptRuntime.constructError("setScale", "Bad argument(s)");
         }
 
-        if(scaleX == 0 || scaleY == 0) {
+        if (scaleX == 0 || scaleY == 0) {
             return;
         }
 
         getItem().updateGeometryValue(net.pierrox.lightning_launcher.data.Item.GEOMETRY_CTRL_SCALE, scaleX, scaleY, true);
         itemGeometryUpdated(true);
-	}
-	
-	/**
-	 * Returns the X scale for this item (only when detached from the grid).
-	 */
-	public float getScaleX() {
-		return Utils.getScaleforMatrix(getItem().getTransform(), true);
-	}
-	
-	/**
-	 * Returns the Y scale for this item (only when detached from the grid).
-	 */
-	public float getScaleY() {
-		return Utils.getScaleforMatrix(getItem().getTransform(), false);
-	}
-	
-	/**
-	 * Set the skew of the item (only when detached from the grid).
-	 * Warning: any changes made through this method may be saved, meaning that the item skew will have to be manually reset.
-	 * @param skewX
-	 * @param skewY
-	 */
-	public void setSkew(float skewX, float skewY) {
-        if(Float.isNaN(skewX) || Float.isNaN(skewY)) {
+    }
+
+    /**
+     * Returns the X scale for this item (only when detached from the grid).
+     */
+    public float getScaleX() {
+        return Utils.getScaleforMatrix(getItem().getTransform(), true);
+    }
+
+    /**
+     * Returns the Y scale for this item (only when detached from the grid).
+     */
+    public float getScaleY() {
+        return Utils.getScaleforMatrix(getItem().getTransform(), false);
+    }
+
+    /**
+     * Set the skew of the item (only when detached from the grid).
+     * Warning: any changes made through this method may be saved, meaning that the item skew will have to be manually reset.
+     *
+     * @param skewX
+     * @param skewY
+     */
+    public void setSkew(float skewX, float skewY) {
+        if (Float.isNaN(skewX) || Float.isNaN(skewY)) {
             throw ScriptRuntime.constructError("setSkew", "Bad argument(s)");
         }
 
         getItem().updateGeometryValue(net.pierrox.lightning_launcher.data.Item.GEOMETRY_CTRL_SKEW, skewX, skewY, true);
         itemGeometryUpdated(true);
-	}
-	
-	/**
-	 * Returns the X skew for this item (only when detached from the grid).
-	 */
-	public float getSkewX() {
-		return Utils.getSkewforMatrix(getItem().getTransform(), true);
-	}
-	
-	/**
-	 * Returns the Y skew for this item (only when detached from the grid).
-	 */
-	public float getSkewY() {
-		return Utils.getSkewforMatrix(getItem().getTransform(), false);
-	}
-	
-	/**
-	 * Set the size of the item (only when detached from the grid).
-	 * Warning: any changes made through this method may be saved, meaning that the item size will have to be manually reset.
-	 * @param width
-	 * @param height
-	 */
-	public void setSize(float width, float height) {
-        if(Float.isNaN(width) || Float.isNaN(height)) {
+    }
+
+    /**
+     * Returns the X skew for this item (only when detached from the grid).
+     */
+    public float getSkewX() {
+        return Utils.getSkewforMatrix(getItem().getTransform(), true);
+    }
+
+    /**
+     * Returns the Y skew for this item (only when detached from the grid).
+     */
+    public float getSkewY() {
+        return Utils.getSkewforMatrix(getItem().getTransform(), false);
+    }
+
+    /**
+     * Set the size of the item (only when detached from the grid).
+     * Warning: any changes made through this method may be saved, meaning that the item size will have to be manually reset.
+     *
+     * @param width
+     * @param height
+     */
+    public void setSize(float width, float height) {
+        if (Float.isNaN(width) || Float.isNaN(height)) {
             throw ScriptRuntime.constructError("setSize", "Bad argument(s)");
         }
 
-		if(getItem().getItemConfig().onGrid) return;
+        if (getItem().getItemConfig().onGrid) return;
 
         getItem().updateGeometryValue(net.pierrox.lightning_launcher.data.Item.GEOMETRY_CTRL_SIZE, width, height, false);
         itemGeometryUpdated(false);
-	}
-	
-	/**
-	 * Returns this item view width.
-	 */
-	public int getWidth() {
-		return getItem().getViewWidth();
-	}
-	
-	/**
-	 * Returns this item view height.
-	 */
-	public int getHeight() {
-		return getItem().getViewHeight();
-	}
-	
-	/**
-	 * Set the rotation of the item around its center (only when detached from the grid).
-	 * Warning: any changes made through this method may be saved, meaning that the item angle will have to be manually reset.
-	 * @param angle in degrees
-	 */
-	public void setRotation(float angle) {
-        if(Float.isNaN(angle)) {
+    }
+
+    /**
+     * Returns this item view width.
+     */
+    public int getWidth() {
+        return getItem().getViewWidth();
+    }
+
+    /**
+     * Returns this item view height.
+     */
+    public int getHeight() {
+        return getItem().getViewHeight();
+    }
+
+    /**
+     * Returns the rotation angle in degrees.
+     */
+    public float getRotation() {
+        return Utils.getRotateForMatrix(getItem().getTransform());
+    }
+
+    /**
+     * Set the rotation of the item around its center (only when detached from the grid).
+     * Warning: any changes made through this method may be saved, meaning that the item angle will have to be manually reset.
+     *
+     * @param angle in degrees
+     */
+    public void setRotation(float angle) {
+        if (Float.isNaN(angle)) {
             throw ScriptRuntime.constructError("setRotation", "Bad argument");
         }
 
-		net.pierrox.lightning_launcher.data.Item item = getItem();
-		if(item.getItemConfig().onGrid) return;
+        net.pierrox.lightning_launcher.data.Item item = getItem();
+        if (item.getItemConfig().onGrid) return;
 
         item.updateGeometryValue(net.pierrox.lightning_launcher.data.Item.GEOMETRY_CTRL_ROTATE, angle, 0, true);
         itemGeometryUpdated(true);
-	}
+    }
 
-	/**
-	 * Returns the rotation angle in degrees.
-	 */
-	public float getRotation() {
-		return Utils.getRotateForMatrix(getItem().getTransform());
-	}
-	
-	/**
-	 * Set the cell allocated to the item on the grid (only works when attached to the grid).
+    /**
+     * Set the cell allocated to the item on the grid (only works when attached to the grid).
      * These size and position are transcient and will be lost when the container is reloaded. Use the alternate setCell method to persist changes.
-	 * @param left left column
-	 * @param top top row
-	 * @param right right column
-	 * @param bottom bottom row
-	 */
-	public void setCell(int left, int top, int right, int bottom) {
-		net.pierrox.lightning_launcher.data.Item item = getItem();
-		if(!item.getItemConfig().onGrid) return;
+     *
+     * @param left   left column
+     * @param top    top row
+     * @param right  right column
+     * @param bottom bottom row
+     */
+    public void setCell(int left, int top, int right, int bottom) {
+        net.pierrox.lightning_launcher.data.Item item = getItem();
+        if (!item.getItemConfig().onGrid) return;
 
-		item.setCellT(new android.graphics.Rect(left, top, right, bottom));
+        item.setCellT(new android.graphics.Rect(left, top, right, bottom));
         itemGeometryUpdated(false);
-	}
+    }
 
     /**
      * Set the cell allocated to the item on the grid (only works when attached to the grid), persistently
-     * @param left left column
-     * @param top top row
-     * @param right right column
-     * @param bottom bottom row
+     *
+     * @param left     left column
+     * @param top      top row
+     * @param right    right column
+     * @param bottom   bottom row
      * @param portrait if true will set the portrait position (and landscape if not using dual position), if false will set the landscape position (only if using dual position)
      */
     public void setCell(int left, int top, int right, int bottom, boolean portrait) {
-		net.pierrox.lightning_launcher.data.Item item = getItem();
-		if(!item.getItemConfig().onGrid) return;
+        net.pierrox.lightning_launcher.data.Item item = getItem();
+        if (!item.getItemConfig().onGrid) return;
 
         android.graphics.Rect cell = portrait ? item.getCellP() : item.getCellL();
         cell.set(left, top, right, bottom);
         itemGeometryUpdated(false);
     }
-	
-	/**
-	 * Returns the cell allocated to this item (only works when attached to the grid).
-	 */
-	public RectL getCell() {
-		net.pierrox.lightning_launcher.data.Item item = getItem();
-		if(item.getItemConfig().onGrid) {
-			return new RectL(item.getCell());
-		} else {
-			return null;
-		}
-	}
-	
-	/**
-	 * Returns the container containing this item.
-	 */
-	public Container getParent() {
-		return mLightning.getCachedContainer(mItemView.getParentItemLayout());
-	}
 
-	/**
-	 * Retrieve properties for this item. Please note that modifying properties is expensive and not well suited for item animation.
-	 */
-	public PropertySet getProperties() {
-		if(mProperties == null) {
-			mProperties = new PropertySet(mLightning, this);
-		}
-		return mProperties;
-	}
+    /**
+     * Returns the cell allocated to this item (only works when attached to the grid).
+     */
+    public RectL getCell() {
+        net.pierrox.lightning_launcher.data.Item item = getItem();
+        if (item.getItemConfig().onGrid) {
+            return new RectL(item.getCell());
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Returns the container containing this item.
+     */
+    public Container getParent() {
+        return mLightning.getCachedContainer(mItemView.getParentItemLayout());
+    }
+
+    /**
+     * Retrieve properties for this item. Please note that modifying properties is expensive and not well suited for item animation.
+     */
+    public PropertySet getProperties() {
+        if (mProperties == null) {
+            mProperties = new PropertySet(mLightning, this);
+        }
+        return mProperties;
+    }
 
     /**
      * Retrieve the image currently displayed as the box background.
      * This image can be shared amongst several items.
+     *
      * @param state one of "n" (normal), "s" (selected) or "f" (focused)
      * @return an image, or null if this is a nine patch or if there is no image
      */
     public Image getBoxBackground(String state) {
         Drawable d;
         File f;
-		net.pierrox.lightning_launcher.data.Item item = getItem();
-		File icon_dir = item.getPage().getIconDir();
+        net.pierrox.lightning_launcher.data.Item item = getItem();
+        File icon_dir = item.getPage().getIconDir();
         int id = item.getId();
         if (state.equals("s")) {
             d = item.getItemConfig().box.bgSelected;
@@ -467,130 +481,134 @@ public class Item {
             f = net.pierrox.lightning_launcher.data.Box.getBoxBackgroundNormal(icon_dir, id);
         }
 
-		return Image.fromDrawable(mLightning, d, item, f);
+        return Image.fromDrawable(mLightning, d, item, f);
     }
 
     /**
      * Set a background image, in memory only, changes will not be persisted and will be lost when the app is restarted.box
+     *
      * @param image
      * @param state a combination of "n" (normal), "s" (selected), "f" (focused)
      */
     public void setBoxBackground(Image image, String state) {
         Drawable d = image == null ? null : image.toDrawable();
-		net.pierrox.lightning_launcher.data.Item item = getItem();
-		ItemConfig ic = item.modifyItemConfig();
-		Box box = ic.box;
-		if(state.indexOf('n') != -1) box.bgNormal = d;
-        if(state.indexOf('s') != -1) box.bgSelected = d;
-        if(state.indexOf('f') != -1) box.bgFocused = d;
-		for (net.pierrox.lightning_launcher.engine.Screen screen : LLApp.get().getScreens()) {
-			ItemView[] itemViews = screen.getItemViewsForItem(item);
-			for (ItemView itemView : itemViews) {
-				if(itemView.isInitDone()) {
-					itemView.getSensibleView().setBox(box);
-				}
-			}
-		}
+        net.pierrox.lightning_launcher.data.Item item = getItem();
+        ItemConfig ic = item.modifyItemConfig();
+        Box box = ic.box;
+        if (state.indexOf('n') != -1) box.bgNormal = d;
+        if (state.indexOf('s') != -1) box.bgSelected = d;
+        if (state.indexOf('f') != -1) box.bgFocused = d;
+        for (net.pierrox.lightning_launcher.engine.Screen screen : LLApp.get().getScreens()) {
+            ItemView[] itemViews = screen.getItemViewsForItem(item);
+            for (ItemView itemView : itemViews) {
+                if (itemView.isInitDone()) {
+                    itemView.getSensibleView().setBox(box);
+                }
+            }
+        }
     }
 
 
     /**
      * Set a background image, optionally saving the change to file. Note that saving the image to file is much slower than setting it in memory only, hence this is not suitable for animations.
+     *
      * @param image
-     * @param state a combination of "n" (normal), "s" (selected), "f" (focused)
+     * @param state      a combination of "n" (normal), "s" (selected), "f" (focused)
      * @param persistent whether to save changes and affect only this item, when set to false the image will be reset upon the next launcher restart
      */
     public void setBoxBackground(Image image, String state, boolean persistent) {
-		boolean stateN = state.indexOf('n') != -1;
-		boolean stateS = state.indexOf('s') != -1;
-		boolean stateF = state.indexOf('f') != -1;
-		if(!stateN && !stateS && !stateF) {
-			return;
-		}
+        boolean stateN = state.indexOf('n') != -1;
+        boolean stateS = state.indexOf('s') != -1;
+        boolean stateF = state.indexOf('f') != -1;
+        if (!stateN && !stateS && !stateF) {
+            return;
+        }
 
-		if(persistent) {
-			net.pierrox.lightning_launcher.data.Item item = getItem();
-			Page page = item.getPage();
+        if (persistent) {
+            net.pierrox.lightning_launcher.data.Item item = getItem();
+            Page page = item.getPage();
             File icon_dir = page.getIconDir();
             int id = item.getId();
 
-			if (stateN) {
+            if (stateN) {
                 copyImageToFile(image, Box.getBoxBackgroundNormal(icon_dir, id));
             }
 
-			if (stateS) {
+            if (stateS) {
                 copyImageToFile(image, Box.getBoxBackgroundSelected(icon_dir, id));
             }
 
-			if (stateF) {
+            if (stateF) {
                 copyImageToFile(image, Box.getBoxBackgroundFocused(icon_dir, id));
             }
 
-			page.setModified();
+            page.setModified();
         }
-		setBoxBackground(image, state);
-	}
+        setBoxBackground(image, state);
+    }
 
 
     /**
      * @hide
      */
     protected void copyImageToFile(Image image, File f) {
-        if(image == null) {
-			f.delete();
-		} else {
-			// try direct file copy first
-			boolean directFileCopy = false;
-			File sourceFile = image.getSourceFile();
-			if(!image.isModified() && sourceFile != null && sourceFile.exists()) {
-				// directly copy the file
-				Utils.copyFileSafe(null, sourceFile, f);
-				directFileCopy = true;
-			}
+        if (image == null) {
+            f.delete();
+        } else {
+            // try direct file copy first
+            boolean directFileCopy = false;
+            File sourceFile = image.getSourceFile();
+            if (!image.isModified() && sourceFile != null && sourceFile.exists()) {
+                // directly copy the file
+                Utils.copyFileSafe(null, sourceFile, f);
+                directFileCopy = true;
+            }
 
-			if(!directFileCopy) {
-				if (image.getClass() == ImageBitmap.class) {
-					Bitmap bmp = ((ImageBitmap) image).getBitmap();
-					FileOutputStream fos = null;
-					try {
-						f.getParentFile().mkdirs();
-						fos = new FileOutputStream(f);
-						bmp.compress(Bitmap.CompressFormat.PNG, 100, fos);
-					} catch (IOException e) {
-						f.delete();
-					} finally {
-						if (fos != null) try {
-							fos.close();
-						} catch (IOException e) {
-						}
-					}
-				} else if (image.getClass() == ImageAnimation.class) {
-					ImageAnimation animation = (ImageAnimation) image;
-					if (animation.isModified()) {
-						Utils.encodeAnimationToGif(f, animation.toDrawable());
-					}
-				}
-			}
+            if (!directFileCopy) {
+                if (image.getClass() == ImageBitmap.class) {
+                    Bitmap bmp = ((ImageBitmap) image).getBitmap();
+                    FileOutputStream fos = null;
+                    try {
+                        f.getParentFile().mkdirs();
+                        fos = new FileOutputStream(f);
+                        bmp.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                    } catch (IOException e) {
+                        f.delete();
+                    } finally {
+                        if (fos != null) try {
+                            fos.close();
+                        } catch (IOException e) {
+                        }
+                    }
+                } else if (image.getClass() == ImageAnimation.class) {
+                    ImageAnimation animation = (ImageAnimation) image;
+                    if (animation.isModified()) {
+                        Utils.encodeAnimationToGif(f, animation.toDrawable());
+                    }
+                }
+            }
         }
+    }
+
+    /**
+     * Returns the value associated with this item.
+     * This is the same as getTag(null);
+     *
+     * @see #getTag(String)
+     */
+    public String getTag() {
+        return getTag(null);
     }
 
     /**
      * Set a persistent data for this item.
      * This is the same as setTag(null, value)
+     *
      * @see #setTag(String, String)
      */
-	public void setTag(String value) {
-		setTag(null, value);
-	}
-
-    /**
-     * Returns the value associated with this item.
-     * This is the same as getTag(null);
-     * @see #getTag(String)
-     */
-	public String getTag() {
-		return getTag(null);
-	}
+    public void setTag(String value) {
+        setTag(null, value);
+    }
 
     /**
      * Set a persistent data for this item. This string value can be used to store non volatile data. Use JSON to store complex structures.
@@ -619,30 +637,30 @@ public class Item {
      * var complex_data = JSON.parse(item.getTag("my_value"));
      * </pre>
      *
-     * @param id identifier for this tag, valid characters are a-z, A-Z, 0-9 and _ (underscore). The identifier "_" is reserved and shouldn't be used.
+     * @param id    identifier for this tag, valid characters are a-z, A-Z, 0-9 and _ (underscore). The identifier "_" is reserved and shouldn't be used.
      * @param value value to store
      */
     public void setTag(String id, String value) {
-		net.pierrox.lightning_launcher.data.Item item = getItem();
-		item.setTag(id, value);
+        net.pierrox.lightning_launcher.data.Item item = getItem();
+        item.setTag(id, value);
     }
 
     /**
      * Returns the value associated with this item and id. Can be undefined if it has never been set.
      * Using a null id is the same as calling {@link #getTag()} without argument
+     *
      * @see #setTag(String, String)
      */
     public String getTag(String id) {
         return getItem().getTag(id);
     }
 
-	/**
-	 * @hide
-	 * same as #getRootView but with clear internal type for the return value
-	 */
-	public ItemView getItemView() {
-		return mItemView;
-	}
+    /**
+     * @hide same as #getRootView but with clear internal type for the return value
+     */
+    public ItemView getItemView() {
+        return mItemView;
+    }
 
     /**
      * Retrieve the root android View for this item.
@@ -653,33 +671,35 @@ public class Item {
 
     /**
      * Retrieve the list of configured bindings.
+     *
      * @return an array of bindings
-	 * @deprecated use #getBindings instead
+     * @deprecated use #getBindings instead
      */
     public Array getAllBindings() {
         return new Array(getBindings());
     }
 
-	public Binding[] getBindings() {
-		ItemConfig ic = getItem().getItemConfig();
-		int length = ic.bindings==null ? 0 : ic.bindings.length;
-		Binding[] bindings = new Binding[length];
-		for(int i=0; i<length; i++) {
-			bindings[i] = new Binding(ic.bindings[i]);
-		}
-		return bindings;
-	}
+    public Binding[] getBindings() {
+        ItemConfig ic = getItem().getItemConfig();
+        int length = ic.bindings == null ? 0 : ic.bindings.length;
+        Binding[] bindings = new Binding[length];
+        for (int i = 0; i < length; i++) {
+            bindings[i] = new Binding(ic.bindings[i]);
+        }
+        return bindings;
+    }
 
     /**
      * Retrieve a binding by its key, the taget.
+     *
      * @return a binding object, or null if no binding found for this target
      */
     public Binding getBindingByTarget(String target) {
         ItemConfig ic = getItem().getItemConfig();
-        int length = ic.bindings==null ? 0 : ic.bindings.length;
-        for(int i=0; i<length; i++) {
+        int length = ic.bindings == null ? 0 : ic.bindings.length;
+        for (int i = 0; i < length; i++) {
             net.pierrox.lightning_launcher.engine.variable.Binding b = ic.bindings[i];
-            if(b.target.equals(target)) {
+            if (b.target.equals(target)) {
                 return new Binding(b);
             }
         }
@@ -689,7 +709,8 @@ public class Item {
 
     /**
      * Set a binding (same as #setBinding(String, String, boolean).
-	 * It is forbidden to modify bindings in a script itself triggered by a binding.
+     * It is forbidden to modify bindings in a script itself triggered by a binding.
+     *
      * @param binding
      * @see #setBinding(String, String, boolean)
      */
@@ -777,21 +798,21 @@ public class Item {
      * 		<tr><td>f.box</td><td>Box</td></tr>
      * 	</tbody>
      * </table>
-     * @see #unsetBinding(String)
      *
-     * @param target the item's property to change (no check is done on this parameter)
+     * @param target  the item's property to change (no check is done on this parameter)
      * @param formula the value for the target, a constant value, a short or complex script
      * @param enabled whether this binding is active
+     * @see #unsetBinding(String)
      */
     public void setBinding(String target, String formula, boolean enabled) {
-        if(target == null || formula == null) {
+        if (target == null || formula == null) {
             mLightning.scriptError("neither target nor formula can be null");
             return;
         }
 
         ItemConfig ic = getItem().modifyItemConfig();
         boolean found = false;
-        if(ic.bindings != null) {
+        if (ic.bindings != null) {
             for (net.pierrox.lightning_launcher.engine.variable.Binding b : ic.bindings) {
                 if (b.target.equals(target)) {
                     b.target = target;
@@ -803,61 +824,60 @@ public class Item {
             }
         }
 
-        if(!found) {
+        if (!found) {
             int length = ic.bindings == null ? 0 : ic.bindings.length;
             net.pierrox.lightning_launcher.engine.variable.Binding[] bindings = new net.pierrox.lightning_launcher.engine.variable.Binding[length + 1];
-            for(int i=0; i<length; i++) {
-                bindings[i] = ic.bindings[i];
-            }
+            System.arraycopy(ic.bindings, 0, bindings, 0, length);
             bindings[length] = new net.pierrox.lightning_launcher.engine.variable.Binding(target, formula, enabled);
             ic.bindings = bindings;
         }
 
-		mLightning.getEngine().getVariableManager().updateBindings(mItemView, ic.bindings, true, mItemView.getParentItemLayout().getScreen(), true);
-		getItem().getPage().setModified();
+        mLightning.getEngine().getVariableManager().updateBindings(mItemView, ic.bindings, true, mItemView.getParentItemLayout().getScreen(), true);
+        getItem().getPage().setModified();
     }
 
     /**
      * Removes a binding for this item.
-	 * It is forbidden to modify bindings in a script itself triggered by a binding.
-     * @see #setBinding(String, String, boolean)
+     * It is forbidden to modify bindings in a script itself triggered by a binding.
+     *
      * @param target target property for which to remove the binding
+     * @see #setBinding(String, String, boolean)
      */
     public void unsetBinding(String target) {
         ItemConfig ic = getItem().getItemConfig();
-        if(ic.bindings == null) {
+        if (ic.bindings == null) {
             return;
         }
 
         int length = ic.bindings.length;
         int i;
-        for(i=0; i<length; i++) {
-            if(ic.bindings[i].target.equals(target)) {
+        for (i = 0; i < length; i++) {
+            if (ic.bindings[i].target.equals(target)) {
                 break;
             }
         }
 
-        if(i < length) {
+        if (i < length) {
             net.pierrox.lightning_launcher.engine.variable.Binding[] bindings = new net.pierrox.lightning_launcher.engine.variable.Binding[length - 1];
             int j;
-            for(i=0, j=0; i<length; i++) {
-                if(!ic.bindings[i].target.equals(target)) {
+            for (i = 0, j = 0; i < length; i++) {
+                if (!ic.bindings[i].target.equals(target)) {
                     bindings[j++] = ic.bindings[i];
                 }
             }
             ic.bindings = bindings;
 
             mLightning.getEngine().getVariableManager().updateBindings(mItemView, ic.bindings, true, mItemView.getParentItemLayout().getScreen(), true);
-			getItem().getPage().setModified();
+            getItem().getPage().setModified();
 //            page.notifyItemChanged(mItem);
         }
     }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String toString() {
-		return getType()+" "+ getItem().getId();
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return getType() + " " + getItem().getId();
+    }
 }

@@ -92,27 +92,24 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
     public static final int PAGE_DIRECTION_HINT_DONT_MOVE = 2;
     public static final int PAGE_DIRECTION_HINT_NO_ANIMATION = 3;
 
-    private static final String SIS_TARGET_ITEM_LAYOUT="sa";
-    private static final String SIS_LAST_TOUCHED_X="sb";
-    private static final String SIS_LAST_TOUCHED_Y="sc";
-    private static final String SIS_LAST_TOUCHED_ITEM_ID="sd";
-    private static final String SIS_LAST_TOUCHED_ITEM_IL="se";
-
+    private static final String SIS_TARGET_ITEM_LAYOUT = "sa";
+    private static final String SIS_LAST_TOUCHED_X = "sb";
+    private static final String SIS_LAST_TOUCHED_Y = "sc";
+    private static final String SIS_LAST_TOUCHED_ITEM_ID = "sd";
+    private static final String SIS_LAST_TOUCHED_ITEM_IL = "se";
+    private final ViewGroup mFolderContainer;
+    private final ArrayList<FolderView> mFolderViews;
+    private final ArrayList<ItemLayout> mRootItemLayouts = new ArrayList<>();
+    private final ArrayList<ItemLayout> mItemLayouts = new ArrayList<>();
     protected Context mContext;
+    protected SystemBarTintManager mSystemBarTintManager;
     private Window mWindow;
     private boolean mHasWindowFocus;
-    protected SystemBarTintManager mSystemBarTintManager;
-
     private ViewGroup mContentView;
     private View mDesktopView;
     private WallpaperView mWallpaperView;
-
-    private ViewGroup mFolderContainer;
-    private ArrayList<FolderView> mFolderViews;
-
     private int mCustomScreenWidth;
     private int mCustomScreenHeight;
-
     // currently focused container / touch position
     private ItemLayout mTargetItemLayout = null;
     private int mLastTouchedAddX = Utils.POSITION_AUTO;
@@ -120,42 +117,39 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
     private int mLastTouchedMenuX = Utils.POSITION_AUTO;
     private int mLastTouchedMenuY = Utils.POSITION_AUTO;
     private ItemView mLastTouchedItemView;
-
     private boolean mItemSwipeCaught = true;
-
     private boolean mIsResumed;
-
     // in degrees, not Configuration.ORIENTATION_{LANDSCAPE/PORTRAIT}
     private int mDisplayOrientation;
     private boolean mIsPortrait;
-
     private boolean mStatusBarHide;         // as selected per configuration
     private boolean mIsStatusBarHidden;     // current status
     private boolean mForceDisplayStatusBar; // transcient forced visibility
-
     private int mCurrentOrientation = OrientationEventListener.ORIENTATION_UNKNOWN;
+    private final Runnable mApplyOrientationChangedRunnable = new Runnable() {
+        @Override
+        public void run() {
+            onOrientationChanged(mCurrentOrientation);
+        }
+    };
     private OrientationEventListener mOrientationEventListener;
-
-    private ArrayList<ItemLayout> mRootItemLayouts = new ArrayList<>();
     private ItemLayout mCurrentRootItemLayout;
-
-    private ArrayList<ItemLayout> mItemLayouts = new ArrayList<>();
-
     private ArrayList<Error> mErrors;
+    private long mPreviousPositionChangeDate;
 
     public Screen(Context context, int content_view) {
         LLApp app = LLApp.get();
         app.onScreenCreated(this);
 
         mContext = context;
-        mFolderViews=new ArrayList<>();
+        mFolderViews = new ArrayList<>();
 
-        if(content_view != 0) {
+        if (content_view != 0) {
             mContentView = (ViewGroup) LayoutInflater.from(context).inflate(content_view, null);
             mDesktopView = mContentView.findViewById(R.id.desktop);
 
-            mWallpaperView = (WallpaperView) mContentView.findViewById(R.id.wp);
-            mFolderContainer = (ViewGroup) mContentView.findViewById(R.id.folder_container);
+            mWallpaperView = mContentView.findViewById(R.id.wp);
+            mFolderContainer = mContentView.findViewById(R.id.folder_container);
         } else {
             mFolderContainer = new FrameLayout(context);
         }
@@ -166,22 +160,28 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
         // engines in a single screen is possible
         app.getAppEngine().registerPageListener(this);
 
-        if(mContentView != null) {
+        if (mContentView != null) {
             mOrientationEventListener = new OrientationEventListener(mContext, SensorManager.SENSOR_DELAY_NORMAL) {
                 @Override
                 public void onOrientationChanged(int i) {
-                    if(i != ORIENTATION_UNKNOWN) {
-                        if(i > 360-45) i-=360;
-                        i = ((i+45)/90)*90;
+                    if (i != ORIENTATION_UNKNOWN) {
+                        if (i > 360 - 45) i -= 360;
+                        i = ((i + 45) / 90) * 90;
 
                         int rotation = mWindow == null ? Surface.ROTATION_0 : mWindow.getWindowManager().getDefaultDisplay().getRotation();
                         switch (rotation) {
-                            case Surface.ROTATION_90: i+=90; break;
-                            case Surface.ROTATION_180: i+=180; break;
-                            case Surface.ROTATION_270: i+=270; break;
+                            case Surface.ROTATION_90:
+                                i += 90;
+                                break;
+                            case Surface.ROTATION_180:
+                                i += 180;
+                                break;
+                            case Surface.ROTATION_270:
+                                i += 270;
+                                break;
                         }
 
-                        if(mCurrentOrientation != i) {
+                        if (mCurrentOrientation != i) {
                             mCurrentOrientation = i;
                             mContentView.removeCallbacks(mApplyOrientationChangedRunnable);
                             mContentView.postDelayed(mApplyOrientationChangedRunnable, 800);
@@ -196,10 +196,11 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
                     // select API 28 because this is linked with the display cutout stuff
                     WindowInsets insets = mContentView.getRootWindowInsets();
                     if (insets != null) {
-                            mSystemBarTintManager.onConfigurationChanged(mWindow);
-                            onSystemBarsSizeChanged();
-                        }
+                        mSystemBarTintManager.onConfigurationChanged(mWindow);
+                        onSystemBarsSizeChanged();
+                    }
                 }
+
                 @Override
                 public void onViewDetachedFromWindow(View view) {
 
@@ -210,7 +211,7 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
 
     public void destroy() {
         int last;
-        while((last = mItemLayouts.size()) > 0) {
+        while ((last = mItemLayouts.size()) > 0) {
             ItemLayout il = mItemLayouts.remove(last - 1);
             releaseItemLayout(il);
         }
@@ -221,15 +222,15 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
     }
 
     public void pause() {
-        if(mIsResumed) {
+        if (mIsResumed) {
             mIsResumed = false;
 
-            if(mOrientationEventListener != null) {
+            if (mOrientationEventListener != null) {
                 mOrientationEventListener.disable();
             }
 
             ItemLayout il = getCurrentRootItemLayout();
-            if(il != null) {
+            if (il != null) {
                 il.pause();
             }
 
@@ -246,7 +247,7 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
     }
 
     public void resume() {
-        if(!mIsResumed) {
+        if (!mIsResumed) {
             mIsResumed = true;
 
             // clear errors, they will be accumulated in an array, should they appear during resume
@@ -257,7 +258,7 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
             updateOrientationOrRotation();
 
             ItemLayout il = getCurrentRootItemLayout();
-            if(il != null) {
+            if (il != null) {
                 il.resume();
             }
 
@@ -269,16 +270,16 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
                 }
             }
 
-            if(mOrientationEventListener != null) {
+            if (mOrientationEventListener != null) {
                 mOrientationEventListener.enable();
             }
 
-            if(mErrors != null) {
+            if (mErrors != null) {
                 // gather permission errors in a single set in order to bubble a single event
                 ArrayList<Error> permission_errors = new ArrayList<>();
                 for (Error e : mErrors) {
                     if (e.isPermission()) {
-                        if(!permission_errors.contains(e)) {
+                        if (!permission_errors.contains(e)) {
                             permission_errors.add(e);
                         }
                     } else {
@@ -321,7 +322,7 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
     }
 
     public void setHasWindowFocus(boolean hasWindowFocus) {
-        if(mHasWindowFocus!=hasWindowFocus && hasWindowFocus) {
+        if (mHasWindowFocus != hasWindowFocus && hasWindowFocus) {
             SystemUIHelper.setStatusBarVisibility(mWindow, !mIsStatusBarHidden, mForceDisplayStatusBar);
         }
         mHasWindowFocus = hasWindowFocus;
@@ -339,6 +340,7 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
     /**
      * Hook for the script executor
      * TODO document this, should be balanced with...
+     *
      * @param scriptExecutor
      */
     public void displayScriptPickImageDialog(ScriptExecutor scriptExecutor) {
@@ -364,7 +366,7 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
      * What to do on activity start error
      */
     public void onShortcutLaunchError(Shortcut shortcut) {
-        Toast.makeText(mContext, "Unable to launch this item: "+shortcut.toString(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(mContext, "Unable to launch this item: " + shortcut.toString(), Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -378,7 +380,7 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
      * App shortcut not found (Android 7.1)
      */
     public void onLauncherAppsShortcutNotFound(ItemView itemView, String msg) {
-        if(msg == null) {
+        if (msg == null) {
             msg = mContext.getString(R.string.as_nf);
         }
         Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
@@ -390,7 +392,7 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
     protected void onMissingPermissions(String[] permissions, int[] msgs) {
         String msg = getContext().getString(R.string.pr_f);
         for (int m : msgs) {
-            msg += "\n - "+getContext().getString(m);
+            msg += "\n - " + getContext().getString(m);
         }
         Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
     }
@@ -413,7 +415,7 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
     // FIXME: dashboard specific
     public void setActivePageWithTopmostPage() {
         ItemLayout itemLayout = getTopmostItemLayout();
-        if(itemLayout != null) {
+        if (itemLayout != null) {
             Page page = itemLayout.getPage();
             setActivePage(page.id);
         }
@@ -436,12 +438,12 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
     }
 
     public void saveInstanceState(Bundle to) {
-        if(mTargetItemLayout != null) {
+        if (mTargetItemLayout != null) {
             to.putString(SIS_TARGET_ITEM_LAYOUT, new ContainerPath(mTargetItemLayout).toString());
         }
         to.putInt(SIS_LAST_TOUCHED_X, mLastTouchedAddX);
         to.putInt(SIS_LAST_TOUCHED_Y, mLastTouchedAddY);
-        if(mLastTouchedItemView != null) {
+        if (mLastTouchedItemView != null) {
             to.putInt(SIS_LAST_TOUCHED_ITEM_ID, mLastTouchedItemView.getItem().getId());
             to.putString(SIS_LAST_TOUCHED_ITEM_IL, new ContainerPath(mLastTouchedItemView.getParentItemLayout()).toString());
         }
@@ -449,32 +451,30 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
 
     public void restoreInstanceState(Bundle from) {
         String path = from.getString(SIS_TARGET_ITEM_LAYOUT);
-        if(path != null) {
+        if (path != null) {
             mTargetItemLayout = prepareItemLayoutForPath(new ContainerPath(path));
         }
 
         mLastTouchedAddX = from.getInt(SIS_LAST_TOUCHED_X);
         mLastTouchedAddY = from.getInt(SIS_LAST_TOUCHED_Y);
         int lastTouchedItemId = from.getInt(SIS_LAST_TOUCHED_ITEM_ID, Item.NO_ID);
-        if(lastTouchedItemId != Item.NO_ID) {
+        if (lastTouchedItemId != Item.NO_ID) {
             path = from.getString(SIS_LAST_TOUCHED_ITEM_IL);
             ItemLayout il = prepareItemLayoutForPath(new ContainerPath(path));
             mLastTouchedItemView = il.getItemView(lastTouchedItemId);
-       }
+        }
     }
-
-
 
     @Override
     public void onItemViewPressed(ItemView itemView) {
         itemView.setHighlightedLater(true);
-        if(itemView.getClass() == EmbeddedFolderView.class) {
-            setLastTouchEventForItemLayout(((EmbeddedFolderView)itemView).getEmbeddedItemLayout(), Utils.POSITION_AUTO, Utils.POSITION_AUTO);
+        if (itemView.getClass() == EmbeddedFolderView.class) {
+            setLastTouchEventForItemLayout(((EmbeddedFolderView) itemView).getEmbeddedItemLayout(), Utils.POSITION_AUTO, Utils.POSITION_AUTO);
         }
-        ItemConfig ic= itemView.getItem().getItemConfig();
-        if(ic.swipeLeft.action!=GlobalConfig.UNSET || ic.swipeUp.action!=GlobalConfig.UNSET || ic.swipeRight.action!=GlobalConfig.UNSET || ic.swipeDown.action!=GlobalConfig.UNSET) {
+        ItemConfig ic = itemView.getItem().getItemConfig();
+        if (ic.swipeLeft.action != GlobalConfig.UNSET || ic.swipeUp.action != GlobalConfig.UNSET || ic.swipeRight.action != GlobalConfig.UNSET || ic.swipeDown.action != GlobalConfig.UNSET) {
             itemView.getParentItemLayout().grabEvent(itemView);
-            mItemSwipeCaught=false;
+            mItemSwipeCaught = false;
         }
     }
 
@@ -486,16 +486,16 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
 
     @Override
     public void onItemViewMove(ItemView itemView, float dx, float dy) {
-        if(!mItemSwipeCaught) {
+        if (!mItemSwipeCaught) {
             Item item = itemView.getItem();
-            if(!(item instanceof EmbeddedFolder) && !(item instanceof Unlocker)) {
-                float abs_dx=Math.abs(dx);
-                float abs_dy=Math.abs(dy);
-                ItemConfig ic= item.getItemConfig();
+            if (!(item instanceof EmbeddedFolder) && !(item instanceof Unlocker)) {
+                float abs_dx = Math.abs(dx);
+                float abs_dy = Math.abs(dy);
+                ItemConfig ic = item.getItemConfig();
                 EventAction ea;
                 String source;
-                if(abs_dx>abs_dy) {
-                    if(dx>0) {
+                if (abs_dx > abs_dy) {
+                    if (dx > 0) {
                         ea = ic.swipeRight;
                         source = "I_SWIPE_RIGHT";
                     } else {
@@ -503,7 +503,7 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
                         source = "I_SWIPE_LEFT";
                     }
                 } else {
-                    if(dy>0) {
+                    if (dy > 0) {
                         ea = ic.swipeDown;
                         source = "I_SWIPE_DOWN";
                     } else {
@@ -511,7 +511,7 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
                         source = "I_SWIPE_UP";
                     }
                 }
-                if(ea.action==GlobalConfig.UNSET) {
+                if (ea.action == GlobalConfig.UNSET) {
                     itemView.getParentItemLayout().grabEvent(null);
                     itemView.setHighlightedNow(false);
                 } else {
@@ -520,7 +520,7 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
                     LightningEngine engine = item.getPage().getEngine();
                     runAction(engine, source, ea, itemView);
                 }
-                mItemSwipeCaught=true;
+                mItemSwipeCaught = true;
             }
         }
     }
@@ -533,7 +533,7 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
         ItemConfig ic = item.getItemConfig();
         boolean ic_tap_unset = ic.tap.action == GlobalConfig.UNSET;
         boolean is_widget = item.getClass() == Widget.class;
-        if(is_widget && ic_tap_unset) {
+        if (is_widget && ic_tap_unset) {
             // normal click on a widget (not overloaded): do nothing, let the widget handle it, not the launcher
             onWidgetClicked();
         } else {
@@ -549,7 +549,7 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
 
         // don't handle long click for embedded folders
         Item item = itemView.getItem();
-        if(item.getClass() != EmbeddedFolder.class) {
+        if (item.getClass() != EmbeddedFolder.class) {
             Rect bounds = computeItemViewBounds(itemView);
             setLastTouchEventForItemView(itemView, Utils.POSITION_AUTO, Utils.POSITION_AUTO, bounds.centerX(), bounds.centerY());
             itemView.setHighlightedNow(false);
@@ -570,15 +570,15 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
         Item item = itemView.getItem();
         ItemConfig ic = item.getItemConfig();
         EventAction ea = ic.touch;
-        if(ea.action == GlobalConfig.UNSET) {
+        if (ea.action == GlobalConfig.UNSET) {
             return false;
         } else {
             final String source = "I_TOUCH";
-            if(ea.action == GlobalConfig.RUN_SCRIPT) {
+            if (ea.action == GlobalConfig.RUN_SCRIPT) {
                 try {
-                    Pair<Integer,String> id_data = Script.decodeIdAndData(ea.data);
+                    Pair<Integer, String> id_data = Script.decodeIdAndData(ea.data);
                     item.getPage().getEngine().getScriptExecutor().runScriptTouchEvent(this, id_data.first, itemView, event);
-                } catch(NumberFormatException e) {
+                } catch (NumberFormatException e) {
                     // pass
                 }
             } else {
@@ -599,10 +599,10 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
         mLastTouchedItemView = itemView;
         setTargetItemLayout(targetItemLayout);
         mLastTouchedAddX = add_x;
-        mLastTouchedAddY =  add_y;
+        mLastTouchedAddY = add_y;
         mLastTouchedMenuX = menu_x;
-        mLastTouchedMenuY =  menu_y;
-        if(targetItemLayout != null) {
+        mLastTouchedMenuY = menu_y;
+        if (targetItemLayout != null) {
             setActivePage(targetItemLayout.getPage().id);
         }
     }
@@ -612,11 +612,11 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
     }
 
     protected void setLastTouchEventForItemLayout(ItemLayout item_layout, int x, int y) {
-        int[] coords= new int[2];
-        if(x != Integer.MIN_VALUE && y != Integer.MIN_VALUE) {
+        int[] coords = new int[2];
+        if (x != Integer.MIN_VALUE && y != Integer.MIN_VALUE) {
             float[] values = translateItemLayoutCoordsIntoScreenCoords(item_layout, x, y);
-            coords[0] = (int)values[0];
-            coords[1] = (int)values[1];
+            coords[0] = (int) values[0];
+            coords[1] = (int) values[1];
         } else {
             coords[0] = Utils.POSITION_AUTO;
             coords[1] = Utils.POSITION_AUTO;
@@ -629,17 +629,17 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
         setLastTouchedItemAndPosition(null, il, Utils.POSITION_AUTO, Utils.POSITION_AUTO, Utils.POSITION_AUTO, Utils.POSITION_AUTO);
     }
 
-    public void setTargetItemLayout(ItemLayout targetItemLayout) {
-        mTargetItemLayout = targetItemLayout;
-    }
+//    public Page getTargetPage() {
+//        return mTargetPage;
+//    }
 
     public ItemLayout getTargetItemLayout() {
         return mTargetItemLayout;
     }
 
-//    public Page getTargetPage() {
-//        return mTargetPage;
-//    }
+    public void setTargetItemLayout(ItemLayout targetItemLayout) {
+        mTargetItemLayout = targetItemLayout;
+    }
 
     // TODO rename as getLastTouchedPositionX
     public int getLastTouchedAddX() {
@@ -664,18 +664,18 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
 
     /***************************************** FOLDER MANAGEMENT ***********************************/
     public ItemView[] getOpenFolders() {
-        if(mFolderContainer == null) {
+        if (mFolderContainer == null) {
             return new ItemView[0];
         }
 
         int count = 0;
-        for(FolderView fv : mFolderViews) {
-            if(fv.isOpen()) count++;
+        for (FolderView fv : mFolderViews) {
+            if (fv.isOpen()) count++;
         }
 
         ItemView[] folders = new ItemView[count];
-        for(FolderView fv : mFolderViews) {
-            if(fv.isOpen()) {
+        for (FolderView fv : mFolderViews) {
+            if (fv.isOpen()) {
                 folders[--count] = fv.getOpenerItemView();
             }
         }
@@ -689,30 +689,32 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
 
     /**
      * Find a folder view given its opener item view
+     *
      * @param opener the item view used to open the folder
-     * @param open true to look for open folder, false to look for closed folder, null to look for both
+     * @param open   true to look for open folder, false to look for closed folder, null to look for both
      * @return
      */
     public FolderView findFolderView(ItemView opener, Boolean open) {
-        if(mFolderContainer == null) {
+        if (mFolderContainer == null) {
             return null;
         }
 
-        for(FolderView fv : mFolderViews) {
-            if((open==null || fv.isOpen()==open) && fv.getOpenerItemView() == opener) {
+        for (FolderView fv : mFolderViews) {
+            if ((open == null || fv.isOpen() == open) && fv.getOpenerItemView() == opener) {
                 return fv;
             }
         }
 
         return null;
     }
+
     public FolderView findFolderView(ItemLayout il, boolean open) {
-        if(mFolderContainer == null) {
+        if (mFolderContainer == null) {
             return null;
         }
 
-        for(FolderView fv : mFolderViews) {
-            if(fv.isOpen()==open && fv.getItemLayout() == il) {
+        for (FolderView fv : mFolderViews) {
+            if (fv.isOpen() == open && fv.getItemLayout() == il) {
                 return fv;
             }
         }
@@ -721,21 +723,21 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
     }
 
     public FolderView[] findFolderViews(int page, Boolean open) {
-        if(mFolderContainer == null) {
+        if (mFolderContainer == null) {
             return new FolderView[0];
         }
 
         // loop two times: first to count folder views, second to build the array
         int count = 0;
         FolderView[] fvs = null;
-        for(int i=0; i<2; i++) {
+        for (int i = 0; i < 2; i++) {
             for (FolderView fv : mFolderViews) {
                 if ((open == null || fv.isOpen() == open) && fv.getPage().id == page) {
-                    if(i==1) fvs[count] = fv;
+                    if (i == 1) fvs[count] = fv;
                     count++;
                 }
             }
-            if(i==0) {
+            if (i == 0) {
                 fvs = new FolderView[count];
                 count = 0;
             }
@@ -745,15 +747,15 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
     }
 
     public FolderView findTopmostFolderView() {
-        if(mFolderContainer == null) {
+        if (mFolderContainer == null) {
             return null;
         }
 
-        for(int i=mFolderContainer.getChildCount()-1; i>=0; i--) {
-            View v=mFolderContainer.getChildAt(i);
-            if(v instanceof FolderView) {
-                FolderView fv=(FolderView)v;
-                if(fv.isOpen()) {
+        for (int i = mFolderContainer.getChildCount() - 1; i >= 0; i--) {
+            View v = mFolderContainer.getChildAt(i);
+            if (v instanceof FolderView) {
+                FolderView fv = (FolderView) v;
+                if (fv.isOpen()) {
                     return fv;
                 }
             }
@@ -774,24 +776,25 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
 
     /**
      * Open a folder with an optional item view as opener
-     * @param folder mandatory folder to open
+     *
+     * @param folder         mandatory folder to open
      * @param folderItemView optional item view used to open the folder
-     * @param from optional starting point for the animation
-     * @param prepareOnly make everything to prepare the folder, but don't actually open it
+     * @param from           optional starting point for the animation
+     * @param prepareOnly    make everything to prepare the folder, but don't actually open it
      * @return
      */
     public FolderView openFolder(Folder folder, ItemView folderItemView, Point from, boolean prepareOnly) {
-        if(mFolderContainer == null) {
+        if (mFolderContainer == null) {
             return null;
         }
 
         final LightningEngine engine = folder.getPage().getEngine();
 
-        int p=folder.getFolderPageId();
+        int p = folder.getFolderPageId();
         FolderView fv;
-        if(folderItemView == null) {
+        if (folderItemView == null) {
             FolderView[] fvs = findFolderViews(p, true);
-            if(fvs.length > 0) {
+            if (fvs.length > 0) {
                 fv = fvs[0];
             } else {
                 fv = null;
@@ -799,17 +802,17 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
         } else {
             fv = findFolderView(folderItemView, true);
         }
-        if(fv != null) {
-            if(!prepareOnly) {
+        if (fv != null) {
+            if (!prepareOnly) {
                 closeFolder(fv, true);
             }
         } else {
-            if(getCurrentRootPage().config.defaultFolderConfig.closeOther && p!= Page.USER_MENU_PAGE) {
+            if (getCurrentRootPage().config.defaultFolderConfig.closeOther && p != Page.USER_MENU_PAGE) {
                 closeAllFolders(true);
             }
-            if(folderItemView == null) {
+            if (folderItemView == null) {
                 FolderView[] fvs = findFolderViews(p, false);
-                if(fvs.length > 0) {
+                if (fvs.length > 0) {
                     fv = fvs[0];
                 } else {
                     fv = null;
@@ -817,9 +820,9 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
             } else {
                 fv = findFolderView(folderItemView, false);
             }
-            boolean newFolderView = fv==null;
-            if(newFolderView) {
-                fv=new FolderView(mContext);
+            boolean newFolderView = fv == null;
+            if (newFolderView) {
+                fv = new FolderView(mContext);
                 takeItemLayoutOwnership(fv.getItemLayout());
                 fv.setOpenerItemView(folderItemView);
                 final FolderView finalFv = fv;
@@ -830,7 +833,7 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
                         v.getHitRect(rect);
                         setLastTouchedItemAndPosition(null, finalFv.getItemLayout(), Utils.POSITION_AUTO, Utils.POSITION_AUTO, rect.centerX(), rect.centerY());
                         EventAction ea = finalFv.getPage().config.bgLongTap;
-                        return runAction(engine, "C_LONG_CLICK", ea.action==GlobalConfig.UNSET ? engine.getGlobalConfig().bgLongTap : ea);
+                        return runAction(engine, "C_LONG_CLICK", ea.action == GlobalConfig.UNSET ? engine.getGlobalConfig().bgLongTap : ea);
                     }
                 });
                 fv.setOnTapOutsideListener(this);
@@ -838,18 +841,18 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
                 mFolderViews.add(fv);
             }
             Page page = engine.getPageManager().getOrLoadPage(p);
-            for(Item i : page.items) {
+            for (Item i : page.items) {
                 i.setCellT(null);
             }
             fv.configure(folder, folderItemView, page);
-            if(newFolderView) {
+            if (newFolderView) {
                 page.notifyLoaded(fv.getItemLayout());
             }
             View root_view = getCurrentRootItemLayout();
             fv.getItemLayout().setDesktopSize(root_view.getWidth(), root_view.getHeight());
-            if(!prepareOnly) {
+            if (!prepareOnly) {
                 if (from == null) {
-                    if(folderItemView == null) {
+                    if (folderItemView == null) {
                         int x = mFolderContainer.getWidth() / 2;
                         int y = mFolderContainer.getHeight() / 2;
                         from = new Point(x, y);
@@ -863,7 +866,7 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
                 mFolderContainer.bringChildToFront(fv);
             }
         }
-        if(!prepareOnly) {
+        if (!prepareOnly) {
             setActivePageWithTopmostPage();
         }
         return fv;
@@ -875,22 +878,22 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
     }
 
     public void closeAllFolders(boolean animate) {
-        if(mFolderContainer == null) {
+        if (mFolderContainer == null) {
             return;
         }
 
-        for(FolderView fv : mFolderViews) {
+        for (FolderView fv : mFolderViews) {
             closeFolder(fv, animate);
         }
         setActivePageWithTopmostPage();
     }
 
     public void closeFolder(FolderView fv, boolean animate) {
-        if(mFolderContainer == null) {
+        if (mFolderContainer == null) {
             return;
         }
 
-        if(fv!=null && fv.isOpen()) {
+        if (fv != null && fv.isOpen()) {
             onFolderClosed(fv);
             fv.close(animate, mIsResumed);
             setActivePageWithTopmostPage();
@@ -899,12 +902,12 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
     }
 
     public void closeFolder(ItemView folderItemView) {
-        if(mFolderContainer == null) {
+        if (mFolderContainer == null) {
             return;
         }
 
-        for(FolderView fv : mFolderViews) {
-            if(fv.isOpen() && fv.getOpenerItemView() == folderItemView) {
+        for (FolderView fv : mFolderViews) {
+            if (fv.isOpen() && fv.getOpenerItemView() == folderItemView) {
                 onFolderClosed(fv);
                 fv.close(true, mIsResumed);
             }
@@ -920,15 +923,15 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
     }
 
     public ItemLayout setFolderEditMode(ItemLayout il, boolean edit_mode) {
-        FolderView fv=findFolderView(il, true);
-        if(fv==null) {
+        FolderView fv = findFolderView(il, true);
+        if (fv == null) {
             // the folder has been closed for instance because the activity has been recreated (select shortcut, widget for add) and the folder has not been re-opened
             // or because back is pressed while long tapping on an item in a folder
             // or because editing a panel fullscreen using a FolderView
             // so re-open the folder
-            if(il.getPage().id == Page.USER_MENU_PAGE) {
+            if (il.getPage().id == Page.USER_MENU_PAGE) {
                 fv = openUserMenu(false);
-            }else {
+            } else {
                 ItemView openerView = il.getOpenerItemView();
                 Folder opener = (Folder) openerView.getItem();
                 float panel_x = 0;
@@ -981,7 +984,7 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
             }
         }
         // translate the current transformation according to the item layout position on screen so that we can match the display
-        int[] location_r=new int[2];
+        int[] location_r = new int[2];
         mFolderContainer.getLocationInWindow(location_r);
         fv.setEditMode(edit_mode, location_r);
 
@@ -989,7 +992,7 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
     }
 
     public void removeFolders(Page page) {
-        if(mFolderContainer != null) {
+        if (mFolderContainer != null) {
             FolderView[] fvs = findFolderViews(page.id, null);
             for (FolderView fv : fvs) {
                 removeFolderView(fv);
@@ -998,13 +1001,13 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
     }
 
     public void removeAllFolders() {
-        for (int i = mFolderViews.size() -1; i>=0; i--) {
+        for (int i = mFolderViews.size() - 1; i >= 0; i--) {
             removeFolderView(mFolderViews.get(i));
         }
     }
 
     private void removeFolderView(FolderView fv) {
-        if(fv.isOpen()) closeFolder(fv, false);
+        if (fv.isOpen()) closeFolder(fv, false);
         releaseItemLayout(fv.getItemLayout());
         mFolderViews.remove(fv);
         mFolderContainer.removeView(fv);
@@ -1028,12 +1031,12 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public Rect computeItemViewBounds(ItemView itemView) {
         ItemLayout il = itemView.getParentItemLayout();
-        RectF bounds=new RectF();
+        RectF bounds = new RectF();
         Utils.getItemViewBoundsInItemLayout(itemView, bounds);
         Matrix t = il.getTransformForItemView(itemView);
-        if(t != null) t.mapRect(bounds);
+        if (t != null) t.mapRect(bounds);
 
-        traverseViews((View)il.getParent(), bounds);
+        traverseViews((View) il.getParent(), bounds);
         if (il.getEditMode()) {
             // pivot is always 0x0
             float sx = mDesktopView.getScaleX();
@@ -1048,16 +1051,15 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
         return rounded_bounds;
     }
 
-
     private void traverseViews(View v, RectF r) {
-        if(v == null) {
+        if (v == null) {
             return;
         }
-        if(v instanceof ItemView) {
+        if (v instanceof ItemView) {
             ItemView itemView = (ItemView) v;
             Item i = itemView.getItem();
             ItemLayout il = itemView.getParentItemLayout();
-            if(i.getItemConfig().onGrid) {
+            if (i.getItemConfig().onGrid) {
                 float cw = il.getCellWidth();
                 float ch = il.getCellHeight();
                 Rect cell = i.getCell();
@@ -1066,24 +1068,23 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
                 i.getTransform().mapRect(r);
             }
             Matrix t = il.getTransformForItemView(itemView);
-            if(t != null) t.mapRect(r);
+            if (t != null) t.mapRect(r);
         } else {
             r.offset(v.getLeft(), v.getTop());
         }
 
         ViewParent vp = v.getParent();
-        if(vp instanceof View) {
-            traverseViews((View)vp, r);
+        if (vp instanceof View) {
+            traverseViews((View) vp, r);
         }
     }
-
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public float[] translateItemLayoutCoordsIntoScreenCoords(ItemLayout il, float x, float y) {
         RectF r = new RectF(x, y, x, y);
         il.getTransformForRect(r).mapRect(r);
-        traverseViews((View)(il.getParent()), r);
-        float[] coords = new float[] {r.left, r.top};
+        traverseViews((View) (il.getParent()), r);
+        float[] coords = new float[]{r.left, r.top};
         if (il.getEditMode()) {
             // pivot is always 0x0
             coords[0] *= mDesktopView.getScaleX();
@@ -1102,7 +1103,7 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
      */
     public Page getCurrentRootPage() {
         ItemLayout itemLayout = getCurrentRootItemLayout();
-        return itemLayout==null ? null : itemLayout.getPage();
+        return itemLayout == null ? null : itemLayout.getPage();
     }
 
     /**
@@ -1115,13 +1116,13 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
     protected ItemLayout loadRootItemLayoutOffscreen(int pageId, boolean reset_navigation_history, boolean displayImmediately, boolean animate) {
         ItemLayout itemLayout = null;
         for (ItemLayout il : mRootItemLayouts) {
-            if(il.getPage().id == pageId) {
+            if (il.getPage().id == pageId) {
                 itemLayout = il;
                 break;
             }
         }
 
-        if(itemLayout == null) {
+        if (itemLayout == null) {
             itemLayout = new ItemLayout(getContext(), null);
             mRootItemLayouts.add(itemLayout);
             takeItemLayoutOwnership(itemLayout);
@@ -1130,20 +1131,19 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
             page.notifyLoaded(itemLayout);
         }
 
-        if(displayImmediately || mRootItemLayouts.size() == 1) {
+        if (displayImmediately || mRootItemLayouts.size() == 1) {
             mCurrentRootItemLayout = itemLayout;
         }
 
         return itemLayout;
     }
 
-
     public void executeGoToDesktopPositionIntent(Intent intent) {
         int page = intent.getIntExtra(LightningIntent.INTENT_EXTRA_DESKTOP, Page.FIRST_DASHBOARD_PAGE);
-        if(Page.isDashboard(page) && page != getCurrentRootPage().id) {
+        if (Page.isDashboard(page) && page != getCurrentRootPage().id) {
             loadRootItemLayout(page, false, true, true);
         }
-        if(intent.hasExtra(LightningIntent.INTENT_EXTRA_X)) {
+        if (intent.hasExtra(LightningIntent.INTENT_EXTRA_X)) {
             float x = intent.getFloatExtra(LightningIntent.INTENT_EXTRA_X, 0);
             float y = intent.getFloatExtra(LightningIntent.INTENT_EXTRA_Y, 0);
             float s = intent.getFloatExtra(LightningIntent.INTENT_EXTRA_SCALE, 1);
@@ -1155,7 +1155,7 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
     }
 
     public void goToDesktopPosition(int page, float x, float y, float s, boolean animate, boolean absolute) {
-        if(Page.isDashboard(page) && page != getCurrentRootPage().id) {
+        if (Page.isDashboard(page) && page != getCurrentRootPage().id) {
             ItemLayout il = loadRootItemLayout(page, false, true, animate);
             goToItemLayoutPosition(il, x, y, s, animate, absolute);
         } else {
@@ -1168,10 +1168,10 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
 
     public void goToItemLayoutPosition(ItemLayout il, float x, float y, float s, boolean animate, boolean absolute) {
         Page page = il.getPage();
-        if(page.isDashboard() && page != getCurrentRootPage()) {
+        if (page.isDashboard() && page != getCurrentRootPage()) {
             loadRootItemLayout(page.id, false, true, true);
         }
-        if(absolute) {
+        if (absolute) {
             if (animate) {
                 il.animateZoomTo(x, y, s);
             } else {
@@ -1183,7 +1183,7 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
     }
 
     public void zoomInOrOut(ItemLayout il) {
-        if(il.getCurrentScale()==1) {
+        if (il.getCurrentScale() == 1) {
             zoomFullScale(il);
         } else {
             zoomToOrigin(il);
@@ -1191,7 +1191,7 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
     }
 
     public boolean zoomToOrigin(ItemLayout il) {
-        if(il.getCurrentX()!=0 || il.getCurrentY()!=0 || il.getCurrentScale()!=1) {
+        if (il.getCurrentX() != 0 || il.getCurrentY() != 0 || il.getCurrentScale() != 1) {
             il.animateZoomTo(ItemLayout.POSITION_ORIGIN, 0);
             return true;
         } else {
@@ -1205,11 +1205,11 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
 
     public void ensureItemLayoutVisible(ItemLayout il, boolean honour_scrolling_direction) {
         ItemView opener = il.getOpenerItemView();
-        if(opener == null) {
+        if (opener == null) {
             // this is (should be) a desktop
             loadRootItemLayout(il.getPage().id, false, true, true);
         } else {
-            if(opener.getClass() == EmbeddedFolderView.class) {
+            if (opener.getClass() == EmbeddedFolderView.class) {
                 // this is a panel, make sure it is displayed in its container
                 ItemLayout parentItemLayout = opener.getParentItemLayout();
                 ensureItemLayoutVisible(parentItemLayout, honour_scrolling_direction);
@@ -1217,7 +1217,7 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
             } else {
                 // this is a folder, open it and stop here
                 FolderView folderView = findFolderView(opener, null);
-                if(!folderView.isOpen()) {
+                if (!folderView.isOpen()) {
                     openFolder(opener);
                 }
             }
@@ -1239,7 +1239,7 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
     public int getPageUseCount(int pageId) {
         int count = 0;
         for (ItemLayout il : mItemLayouts) {
-            if(il.getPage().id == pageId) {
+            if (il.getPage().id == pageId) {
                 count++;
             }
         }
@@ -1252,14 +1252,14 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
     public ItemLayout[] getItemLayoutsForPage(int pageId) {
         int count = 0;
         ItemLayout[] ils = null;
-        for(int i=0; i<2; i++) {
+        for (int i = 0; i < 2; i++) {
             for (ItemLayout il : mItemLayouts) {
                 if (il.getPage().id == pageId) {
-                    if(i==1) ils[count] = il;
+                    if (i == 1) ils[count] = il;
                     count++;
                 }
             }
-            if(i==0) {
+            if (i == 0) {
                 ils = new ItemLayout[count];
                 count = 0;
             }
@@ -1270,23 +1270,24 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
 
     /**
      * Prepare all item layouts to display a given page, using the first path found
+     *
      * @param page
      * @return the item layout prepared for the page
      */
     public ItemLayout prepareFirstItemLayout(int page) {
         ItemLayout[] ils = getItemLayoutsForPage(page);
-        if(ils.length > 0) {
+        if (ils.length > 0) {
             return ils[0];
         }
         ItemLayout itemLayout;
 
-        if(Page.isDashboard(page) || page==Page.APP_DRAWER_PAGE) {
+        if (Page.isDashboard(page) || page == Page.APP_DRAWER_PAGE) {
             itemLayout = loadRootItemLayout(page, false, false, true);
         } else {
             net.pierrox.lightning_launcher.data.Folder opener = LLApp.get().getAppEngine().findFirstFolderPageOpener(page);
             if (opener != null) {
                 ItemLayout parentItemLayout = prepareFirstItemLayout(opener.getPage().id);
-                if(parentItemLayout == null) {
+                if (parentItemLayout == null) {
                     return null;
                 }
                 ItemView openerItemView = parentItemLayout.getItemView(opener);
@@ -1309,30 +1310,30 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
     public ItemLayout prepareItemLayoutForPath(ContainerPath path) {
         ContainerPath parent = path.getParent();
         int last = path.getLast();
-        if(parent == null) {
-            if(last == Page.USER_MENU_PAGE) {
+        if (parent == null) {
+            if (last == Page.USER_MENU_PAGE) {
                 FolderView folderView = openUserMenu(true);
-                return folderView==null ? null : folderView.getItemLayout();
+                return folderView == null ? null : folderView.getItemLayout();
             } else {
                 return loadRootItemLayout(last, false, false, true);
             }
         } else {
             ItemLayout il = prepareItemLayoutForPath(parent);
-            if(il == null) {
+            if (il == null) {
                 return null;
             }
             ItemView itemView = il.getItemView(last);
-            if(itemView == null) {
+            if (itemView == null) {
                 return null;
             }
             Item item = itemView.getItem();
-            if(item.getClass() == Folder.class) {
+            if (item.getClass() == Folder.class) {
                 // this is a folder
-                FolderView folderView = openFolder((Folder)item, itemView, null, true);
+                FolderView folderView = openFolder((Folder) item, itemView, null, true);
                 return folderView.getItemLayout();
-            } else if(item.getClass() == EmbeddedFolder.class) {
+            } else if (item.getClass() == EmbeddedFolder.class) {
                 // this is a panel
-                return ((EmbeddedFolderView)itemView).getEmbeddedItemLayout();
+                return ((EmbeddedFolderView) itemView).getEmbeddedItemLayout();
             } else {
                 // any other item
                 return il;
@@ -1346,7 +1347,7 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
      */
     public ArrayList<ItemLayout> prepareAllItemLayouts(int page) {
         ArrayList<ItemLayout> itemLayouts = new ArrayList<>();
-        if(Page.isDashboard(page)) {
+        if (Page.isDashboard(page)) {
             itemLayouts.add(loadRootItemLayout(page, false, false, true));
         } else {
             ArrayList<net.pierrox.lightning_launcher.data.Folder> openers = LLApp.get().getAppEngine().findAllFolderPageOpeners(page);
@@ -1368,10 +1369,10 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
     }
 
     public void releaseItemLayout(ItemLayout il) {
-        if(mIsResumed) il.pause();
+        if (mIsResumed) il.pause();
         il.destroy();
         mItemLayouts.remove(il);
-        if(mTargetItemLayout == il) {
+        if (mTargetItemLayout == il) {
             mTargetItemLayout = getTopmostItemLayout();
         }
     }
@@ -1382,9 +1383,9 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
         int length = ils.length;
         int count = 0;
         ItemView[] itemViews = new ItemView[length];
-        for(int i=0; i<length; i++) {
+        for (int i = 0; i < length; i++) {
             ItemView itemView = ils[i].getItemView(itemId);
-            if(itemView != null) {
+            if (itemView != null) {
                 itemViews[count++] = itemView;
             }
         }
@@ -1393,6 +1394,10 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
         return result;
     }
 
+//    public Page getTopmostPage() {
+//        return getTopmostItemLayout().getPage();
+//    }
+
     public ItemView[] getItemViewsForItem(Item item) {
         return getItemViewsForItem(item.getId());
     }
@@ -1400,19 +1405,17 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
     /***************************************** VARIOUS PAGE ACCESSORS ***********************************/
     public ItemLayout getTopmostItemLayout() {
         FolderView fv = findTopmostFolderView();
-        if(fv != null) {
+        if (fv != null) {
             return fv.getItemLayout();
         }
 
         return getCurrentRootItemLayout();
     }
 
-//    public Page getTopmostPage() {
-//        return getTopmostItemLayout().getPage();
-//    }
+    /***************************************** BACKGROUND WALLPAPER AND COLOR ***********************************/
 
     public ItemLayout getTargetOrTopmostItemLayout() {
-        if(mTargetItemLayout == null) {
+        if (mTargetItemLayout == null) {
             return getTopmostItemLayout();
         } else {
             return mTargetItemLayout;
@@ -1420,20 +1423,20 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
     }
 
     public int getNextPage(GlobalConfig globalConfig, int direction) {
-        int p=globalConfig.homeScreen;
-        int[] screens_order=globalConfig.screensOrder;
-        int n=screens_order.length;
-        for(int i=0; i<n; i++) {
+        int p = globalConfig.homeScreen;
+        int[] screens_order = globalConfig.screensOrder;
+        int n = screens_order.length;
+        for (int i = 0; i < n; i++) {
             int rootPageId = getCurrentRootPage().id;
-            if(screens_order[i]== rootPageId) {
-                if(direction == PAGE_DIRECTION_HINT_BACKWARD) {
+            if (screens_order[i] == rootPageId) {
+                if (direction == PAGE_DIRECTION_HINT_BACKWARD) {
                     i--;
-                    if(i<0) i=n-1;
+                    if (i < 0) i = n - 1;
                 } else {
                     i++;
-                    if(i==n) i=0;
+                    if (i == n) i = 0;
                 }
-                p=screens_order[i];
+                p = screens_order[i];
                 break;
             }
         }
@@ -1441,31 +1444,30 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
         return p;
     }
 
-    /***************************************** BACKGROUND WALLPAPER AND COLOR ***********************************/
     /**
      * This is called for desktop and app drawer pages only, not folders nor panels since they have their own box options.
      */
     public void onPageBackgroundColorChanged(Page page) {
-        if(page == getCurrentRootPage()) {
+        if (page == getCurrentRootPage()) {
             configureBackground(page);
         }
     }
 
     public void configureBackground(Page page) {
-        if(mContentView == null) {
+        if (mContentView == null) {
             return;
         }
 
         PageConfig c = page.config;
-        if(NativeImage.isAvailable() && !LLApp.get().isFreeVersion() && mWallpaperView != null) {
+        if (NativeImage.isAvailable() && !LLApp.get().isFreeVersion() && mWallpaperView != null) {
             int alpha = Color.alpha(c.bgColor);
-            if(alpha == 255) {
+            if (alpha == 255) {
                 mWallpaperView.setVisibility(View.GONE);
                 mContentView.setBackgroundDrawable(new ColorDrawable(c.bgColor));
             } else {
                 mContentView.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 File wp_file = page.getWallpaperFile();
-                if(Color.alpha(c.bgColor)==0 && !wp_file.exists()) {
+                if (Color.alpha(c.bgColor) == 0 && !wp_file.exists()) {
                     mWallpaperView.setVisibility(View.GONE);
                 } else {
                     mWallpaperView.setVisibility(View.VISIBLE);
@@ -1473,7 +1475,7 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
                 }
             }
         } else {
-            if(mWallpaperView != null) {
+            if (mWallpaperView != null) {
                 mWallpaperView.setVisibility(View.GONE);
             }
             mContentView.setBackgroundDrawable(new ColorDrawable(c.bgColor));
@@ -1482,7 +1484,7 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
 
     /***************************************** SYSTEM BARS ***********************************/
     public void onPageSystemBarsColorChanged(Page page) {
-        if(page == getCurrentRootPage()) {
+        if (page == getCurrentRootPage()) {
             configureSystemBarsColor(page.config);
         }
     }
@@ -1492,7 +1494,7 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
     }
 
     public void configureSystemBarsColor(PageConfig c) {
-        if(Build.VERSION.SDK_INT>=19) {
+        if (Build.VERSION.SDK_INT >= 19) {
             mSystemBarTintManager.setStatusBarTintEnabled(!c.statusBarHide || mForceDisplayStatusBar);
             mSystemBarTintManager.setNavigationBarTintEnabled(true);
 
@@ -1500,14 +1502,14 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
             mSystemBarTintManager.setNavigationBarTintColor(c.navigationBarColor);
 
             int flags = mWindow.getAttributes().flags;
-            if(Build.VERSION.SDK_INT>=21) {
+            if (Build.VERSION.SDK_INT >= 21) {
                 flags |= WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN | WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS;
                 flags &= ~(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
                 mWindow.setFlags(flags, 0xffffffff);
 
                 if (Build.VERSION.SDK_INT >= 23) {
                     int f = mContentView.getSystemUiVisibility();
-                    if(c.statusBarLight) {
+                    if (c.statusBarLight) {
                         f |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
                     } else {
                         f &= ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
@@ -1516,7 +1518,7 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
                 }
                 if (Build.VERSION.SDK_INT >= 26) {
                     int f = mContentView.getSystemUiVisibility();
-                    if(c.navigationBarLight) {
+                    if (c.navigationBarLight) {
                         f |= View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
                     } else {
                         f &= ~View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
@@ -1541,15 +1543,15 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
                 Object service = mContext.getSystemService("statusbar");
                 Class<?> statusbarManager = Class.forName("android.app.StatusBarManager");
                 Method setStatusBarTransparent = statusbarManager.getMethod("setStatusBarTransparent", boolean.class);
-                setStatusBarTransparent.invoke(service, c.statusBarColor==0);
-            } catch(Exception e1) {
+                setStatusBarTransparent.invoke(service, c.statusBarColor == 0);
+            } catch (Exception e1) {
             }
 
             try {
                 Field field = View.class.getDeclaredField("SYSTEM_UI_FLAG_TRANSPARENT_BACKGROUND");
                 Class<?> t = field.getType();
                 if (t == int.class) {
-                    int value = c.statusBarColor==0 ? field.getInt(null) : 0;
+                    int value = c.statusBarColor == 0 ? field.getInt(null) : 0;
                     Method setSystemUiVisibility = View.class.getMethod("setSystemUiVisibility", int.class);
                     setSystemUiVisibility.invoke(mContentView, value);
                 }
@@ -1560,7 +1562,7 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
 
     public void setForceDisplayStatusBar(boolean forceDisplayStatusBar) {
         mForceDisplayStatusBar = forceDisplayStatusBar;
-        if(mForceDisplayStatusBar) {
+        if (mForceDisplayStatusBar) {
             showStatusBarIfNeeded();
         } else {
             hideStatusBarIfNeeded();
@@ -1575,15 +1577,15 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
     }
 
     protected void showStatusBarIfNeeded() {
-        if(mStatusBarHide) {
-            mIsStatusBarHidden=false;
+        if (mStatusBarHide) {
+            mIsStatusBarHidden = false;
             SystemUIHelper.setStatusBarVisibility(mWindow, !mIsStatusBarHidden, mForceDisplayStatusBar);
         }
     }
 
     public void hideStatusBarIfNeeded() {
-        if(mStatusBarHide) {
-            mIsStatusBarHidden=true;
+        if (mStatusBarHide) {
+            mIsStatusBarHidden = true;
             SystemUIHelper.setStatusBarVisibility(mWindow, !mIsStatusBarHidden, mForceDisplayStatusBar);
         }
     }
@@ -1596,15 +1598,15 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
         setForceDisplayStatusBar(true);
 
         try {
-            Object service=null;
-            Class<?> statusbarManager=null;
+            Object service = null;
+            Class<?> statusbarManager = null;
 
             //noinspection ResourceType
-            service  = mContext.getSystemService("statusbar");
+            service = mContext.getSystemService("statusbar");
             statusbarManager = Class.forName("android.app.StatusBarManager");
             Method expand = statusbarManager.getMethod("expandNotificationsPanel");
             expand.invoke(service);
-        } catch(Exception e1) {
+        } catch (Exception e1) {
         }
 
 
@@ -1619,7 +1621,7 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
     /***************************************** INTENT AND LAUNCH ***********************************/
 
     public void launchItem(ItemView itemView) {
-        if(itemView instanceof EmbeddedFolderView) {
+        if (itemView instanceof EmbeddedFolderView) {
             return;
         }
 
@@ -1627,21 +1629,21 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
         Page page = item.getPage();
         LightningEngine engine = page.getEngine();
 
-        if(page.isFolder()) {
+        if (page.isFolder()) {
             // auto-close the folder if appropriate (find the folder view associated with the opener item view of the item layout containing the launched item view)
             FolderView fv = null;
             ItemView openerItemView = itemView.getParentItemLayout().getOpenerItemView();
-            if(openerItemView == null) {
+            if (openerItemView == null) {
                 // no opener, this must be the user menu, try to retrieve the folder view throughs its page id and use the first available one
                 FolderView[] folderViews = findFolderViews(page.id, true);
-                if(folderViews.length > 0) {
+                if (folderViews.length > 0) {
                     fv = folderViews[0];
                 }
             } else if (!(openerItemView instanceof EmbeddedFolderView)) {
                 fv = findFolderView(openerItemView, true);
             }
-            if(fv != null) {
-                if(fv.getOpener().getFolderConfig().autoClose) {
+            if (fv != null) {
+                if (fv.getOpener().getFolderConfig().autoClose) {
                     closeFolder(fv, true);
                 }
             }
@@ -1668,22 +1670,22 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
 
         itemView.setHighlightedNow(true);
         itemView.setHighlightedLater(false);
-        if(item.getClass() == Folder.class) {
+        if (item.getClass() == Folder.class) {
             openFolder(itemView);
-        } else if(item instanceof Shortcut) {
+        } else if (item instanceof Shortcut) {
             Shortcut shortcut = (Shortcut) item;
             Intent intent = shortcut.getIntent();
-            if(LLApp.get().isLightningIntent(intent)) {
+            if (LLApp.get().isLightningIntent(intent)) {
                 EventAction eventAction = Utils.decodeEventActionFromLightningIntent(intent);
-                if(eventAction != null) {
+                if (eventAction != null) {
                     runAction(engine, "SHORTCUT", eventAction, itemView.getParentItemLayout(), itemView);
                 } else {
-                    if(intent.hasExtra(LightningIntent.INTENT_EXTRA_DESKTOP)) {
+                    if (intent.hasExtra(LightningIntent.INTENT_EXTRA_DESKTOP)) {
                         executeGoToDesktopPositionIntent(intent);
                     }
                 }
             } else {
-                launchShortcut((ShortcutView)itemView);
+                launchShortcut((ShortcutView) itemView);
             }
         }
     }
@@ -1695,14 +1697,14 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
     }
 
     protected void launchIntent(Intent originalIntent, ItemView itemView) {
-        Intent intent=new Intent(originalIntent);
+        Intent intent = new Intent(originalIntent);
 
-        if(intent.getAction()==null) intent.setAction(Intent.ACTION_MAIN);
+        if (intent.getAction() == null) intent.setAction(Intent.ACTION_MAIN);
 
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         Rect sourceBounds = null;
-        if(itemView != null) {
+        if (itemView != null) {
             sourceBounds = computeItemViewBounds(itemView);
             intent.setSourceBounds(sourceBounds);
         }
@@ -1714,7 +1716,7 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
                 String pkg = intent.getStringExtra(Shortcut.INTENT_EXTRA_APP_SHORTCUT_PKG);
                 try {
                     launcherApps.startShortcut(pkg, id, sourceBounds, null, Process.myUserHandle());
-                } catch(SecurityException e) {
+                } catch (SecurityException e) {
                     onLauncherAppsNoHostPermission(itemView);
                 } catch (ActivityNotFoundException e) {
                     onLauncherAppsShortcutNotFound(itemView, intent.getStringExtra(Shortcut.INTENT_EXTRA_APP_SHORTCUT_DISABLED_MSG));
@@ -1723,25 +1725,25 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
                 mContext.startActivity(intent);
             }
             return;
-        } catch(SecurityException e1) {
+        } catch (SecurityException e1) {
             try {
                 Intent callIntent = new Intent(Intent.ACTION_CALL);
                 callIntent.setData(intent.getData());
                 mContext.startActivity(callIntent);
                 return;
-            }  catch(SecurityException e2) {
-                if(Intent.ACTION_CALL.equals(intent.getAction())) {
+            } catch (SecurityException e2) {
+                if (Intent.ACTION_CALL.equals(intent.getAction())) {
                     onMissingPermissions(new String[]{Manifest.permission.CALL_PHONE}, new int[]{R.string.pr_r13});
                     return;
                 }
-            }  catch(Exception e2) {
+            } catch (Exception e2) {
                 // pass
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             // continue
         }
 
-        if(itemView != null && itemView.getItem().getClass() == Shortcut.class) {
+        if (itemView != null && itemView.getItem().getClass() == Shortcut.class) {
             onShortcutLaunchError((Shortcut) itemView.getItem());
         }
     }
@@ -1907,9 +1909,9 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
 
             case GlobalConfig.GO_DESKTOP_POSITION:
                 try {
-                    boolean ilWasTopmost = il==getTopmostItemLayout();
+                    boolean ilWasTopmost = il == getTopmostItemLayout();
                     executeGoToDesktopPositionIntent(Intent.parseUri(ea.data, 0));
-                    if(ilWasTopmost) {
+                    if (ilWasTopmost) {
                         il = getTopmostItemLayout();
                     }
                 } catch (Exception e) {
@@ -1947,7 +1949,7 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
     }
 
     protected boolean processNextAction(LightningEngine engine, String source, EventAction ea, ItemLayout il, ItemView itemView) {
-        if(ea.next == null) {
+        if (ea.next == null) {
             return false;
         } else {
             return runAction(engine, source, ea.next, il, itemView);
@@ -1967,19 +1969,9 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
         // default is empty
     }
 
-    /***************************************** UPDATE OF VIEWS REFERENCES ***********************************/
-    private static class ItemViewUpdate {
-        ItemView oldItemView;
-        ItemView newItemView;
-        net.pierrox.lightning_launcher.script.api.Item cachedItem;
-        ArrayList<ItemViewUpdate> children;
-        ItemLayout oldChildItemLayout;
-        ItemLayout newChildItemLayout;
-        Container cachedContainer;
-    }
-
     /**
      * Build the list of old views
+     *
      * @param updates
      * @param itemView
      */
@@ -1987,16 +1979,16 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
         ItemViewUpdate update = new ItemViewUpdate();
         update.oldItemView = itemView;
         Lightning lightning = update.oldItemView.getItem().getPage().getEngine().getScriptExecutor().getLightning();
-        update.cachedItem =  lightning.findCachedItem(itemView);
-        if(itemView instanceof EmbeddedFolderView) {
+        update.cachedItem = lightning.findCachedItem(itemView);
+        if (itemView instanceof EmbeddedFolderView) {
             ItemLayout il = ((EmbeddedFolderView) itemView).getEmbeddedItemLayout();
             int count = il.getChildCount();
             update.children = new ArrayList<>(count);
             update.oldChildItemLayout = il;
             update.cachedContainer = lightning.findCachedContainer(il);
-            for(int i=0; i<count; i++) {
+            for (int i = 0; i < count; i++) {
                 View view = il.getChildAt(i);
-                if(view instanceof ItemView) {
+                if (view instanceof ItemView) {
                     addItemViewtoUpdateList(update.children, (ItemView) view);
                 }
             }
@@ -2006,12 +1998,13 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
 
     /**
      * Match old item views with new ones
+     *
      * @param update
      * @param itemView
      */
     private void matchItemViewUpdateList(ItemViewUpdate update, ItemView itemView) {
         update.newItemView = itemView;
-        if(itemView instanceof EmbeddedFolderView && update.children != null) {
+        if (itemView instanceof EmbeddedFolderView && update.children != null) {
             ItemLayout il = ((EmbeddedFolderView) itemView).getEmbeddedItemLayout();
             update.newChildItemLayout = il;
             for (ItemViewUpdate childUpdate : update.children) {
@@ -2026,38 +2019,38 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
     private void updateItemViewReferences(ArrayList<ItemViewUpdate> updates) {
         for (ItemViewUpdate update : updates) {
             // update the last touched item view
-            if(mLastTouchedItemView == update.oldItemView) {
+            if (mLastTouchedItemView == update.oldItemView) {
                 mLastTouchedItemView = update.newItemView;
             }
 
-            if(mTargetItemLayout != null && mTargetItemLayout == update.oldChildItemLayout) {
+            if (mTargetItemLayout != null && mTargetItemLayout == update.oldChildItemLayout) {
                 mTargetItemLayout = update.newChildItemLayout;
             }
 
             // update script items and containers
             Lightning lightning = update.oldItemView.getItem().getPage().getEngine().getScriptExecutor().getLightning();
-            if(update.cachedItem != null) {
+            if (update.cachedItem != null) {
                 lightning.updateCachedItem(update.cachedItem, update.newItemView);
             }
-            if(update.cachedContainer != null) {
+            if (update.cachedContainer != null) {
                 lightning.updateCachedContainer(update.cachedContainer, update.newChildItemLayout);
             }
 
             // update openers
             for (ItemLayout il : mItemLayouts) {
                 ItemView openerItemView = il.getOpenerItemView();
-                if(openerItemView != null && openerItemView == update.oldItemView) {
+                if (openerItemView != null && openerItemView == update.oldItemView) {
                     il.setOpenerItemView(update.newItemView);
                 }
             }
 
             // restore item layout position
-            if(update.oldChildItemLayout != null) {
+            if (update.oldChildItemLayout != null) {
                 update.newChildItemLayout.setLocalTransform(update.oldChildItemLayout.getLocalTransform());
             }
 
             // update child item views if any
-            if(update.children != null) {
+            if (update.children != null) {
                 updateItemViewReferences(update.children);
             }
 
@@ -2066,7 +2059,7 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
 
     /***************************************** SCREEN ORIENTATION ***********************************/
     public void onOrientationChanged() {
-        if(mSystemBarTintManager != null) {
+        if (mSystemBarTintManager != null) {
             mSystemBarTintManager.onConfigurationChanged(mWindow);
         }
 
@@ -2076,15 +2069,15 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
         Page mainPage = getCurrentRootPage();
         LightningEngine lightningEngine = mainPage.getEngine();
         GlobalConfig globalConfig = lightningEngine.getGlobalConfig();
-        if(mIsPortrait) {
+        if (mIsPortrait) {
             EventAction ea = mainPage.config.orientationPortrait;
-            if(ea.action == GlobalConfig.UNSET) {
+            if (ea.action == GlobalConfig.UNSET) {
                 ea = globalConfig.orientationPortrait;
             }
             runAction(lightningEngine, "PORTRAIT", ea);
         } else {
             EventAction ea = mainPage.config.orientationLandscape;
-            if(ea.action == GlobalConfig.UNSET) {
+            if (ea.action == GlobalConfig.UNSET) {
                 ea = globalConfig.orientationLandscape;
             }
             runAction(lightningEngine, "LANDSCAPE", ea);
@@ -2098,10 +2091,10 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
         // FIXME: this should be done for all engines
         LLApp.get().getAppEngine().getBuiltinDataCollectors().setDisplayOrientationAndSize(getResourcesOrientation(), size[0], size[1]);
 
-        int degrees=getDegreesFromCurrentConfiguration();
-        mIsPortrait=(degrees==0);
-        if(degrees!=mDisplayOrientation) {
-            mDisplayOrientation=degrees;
+        int degrees = getDegreesFromCurrentConfiguration();
+        mIsPortrait = (degrees == 0);
+        if (degrees != mDisplayOrientation) {
+            mDisplayOrientation = degrees;
             for (ItemLayout il : mItemLayouts) {
                 il.updateOrientation();
             }
@@ -2114,7 +2107,7 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
     }
 
     private void getScreenSize(int[] out) {
-        if(mWindow != null && (mCustomScreenWidth == 0 || mCustomScreenHeight == 0)) {
+        if (mWindow != null && (mCustomScreenWidth == 0 || mCustomScreenHeight == 0)) {
             DisplayMetrics dm = new DisplayMetrics();
             Display display = mWindow.getWindowManager().getDefaultDisplay();
             display.getRealMetrics(dm);
@@ -2135,15 +2128,8 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
     }
 
     private int getDegreesFromCurrentConfiguration() {
-        return getResourcesOrientation()==Configuration.ORIENTATION_LANDSCAPE ? 90 : 0;
+        return getResourcesOrientation() == Configuration.ORIENTATION_LANDSCAPE ? 90 : 0;
     }
-
-    private Runnable mApplyOrientationChangedRunnable = new Runnable() {
-        @Override
-        public void run() {
-            onOrientationChanged(mCurrentOrientation);
-        }
-    };
 
     protected void onOrientationChanged(int orientation) {
         for (ItemLayout il : mItemLayouts) {
@@ -2158,14 +2144,14 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
 
     @Override
     public void onPageRemoved(Page page) {
-        if(page.isFolder()) {
+        if (page.isFolder()) {
             removeFolders(page);
         }
 
         ItemLayout[] ils = getItemLayoutsForPage(page.id);
         for (ItemLayout il : ils) {
             mRootItemLayouts.remove(il);
-            if(mCurrentRootItemLayout == il) {
+            if (mCurrentRootItemLayout == il) {
                 mCurrentRootItemLayout = mRootItemLayouts.size() > 0 ? mRootItemLayouts.get(0) : null;
             }
             releaseItemLayout(il);
@@ -2182,7 +2168,7 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
 
     @Override
     public void onPageModified(Page page) {
-        if(page == getCurrentRootPage()) {
+        if (page == getCurrentRootPage()) {
             // TODO this would be nice to use a more specific event handler in order to avoid useless background configuration
             configureBackground(page);
         }
@@ -2193,9 +2179,9 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
             // save the old view hierarchy
             int count = il.getChildCount();
             ArrayList<ItemViewUpdate> updates = new ArrayList<>(count);
-            for(int i=0; i<count; i++) {
+            for (int i = 0; i < count; i++) {
                 View view = il.getChildAt(i);
-                if(view instanceof ItemView) {
+                if (view instanceof ItemView) {
                     addItemViewtoUpdateList(updates, (ItemView) view);
                 }
             }
@@ -2242,7 +2228,7 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
         updateEmptyMessageVisibility(page);
 
         EventAction ea = page.config.itemAdded;
-        if(ea.action == GlobalConfig.UNSET) {
+        if (ea.action == GlobalConfig.UNSET) {
             ea = engine.getGlobalConfig().itemAdded;
         }
         ItemView[] itemViews = getItemViewsForItem(item);
@@ -2256,7 +2242,7 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
         Page page = item.getPage();
         LightningEngine engine = page.getEngine();
         EventAction ea = page.config.itemRemoved;
-        if(ea.action == GlobalConfig.UNSET) {
+        if (ea.action == GlobalConfig.UNSET) {
             ea = engine.getGlobalConfig().itemRemoved;
         }
 
@@ -2265,7 +2251,7 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
             runAction(engine, "C_ITEM_REMOVED", ea, itemView);
         }
 
-        if(mLastTouchedItemView != null && mLastTouchedItemView.getItem() == item) {
+        if (mLastTouchedItemView != null && mLastTouchedItemView.getItem() == item) {
             mLastTouchedItemView = null;
         }
     }
@@ -2275,7 +2261,7 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
         ItemLayout[] ils = getItemLayoutsForPage(page.id);
         for (ItemLayout il : ils) {
             FolderView folderView = findFolderView(il.getItemView(item), null);
-            if(folderView != null) {
+            if (folderView != null) {
                 removeFolderView(folderView);
             }
             il.onPageItemRemoved(item);
@@ -2290,7 +2276,7 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
         for (ItemLayout il : ils) {
             // update the folder opener item view, if any
             ItemView oldItemView = il.getItemView(item);
-            if(oldItemView != null) { // the old item view can be null if not displayed (case of a folder in the app drawer in alphabetical mode for instance), or not ready yet
+            if (oldItemView != null) { // the old item view can be null if not displayed (case of a folder in the app drawer in alphabetical mode for instance), or not ready yet
 
                 // save the old view hierarchy
                 ArrayList<ItemViewUpdate> updates = new ArrayList<>(1);
@@ -2361,13 +2347,13 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
     @Override
     public void onItemError(Item item, Error error) {
         // check that the item belongs to this screen
-        if(getItemViewsForItem(item).length == 0) {
+        if (getItemViewsForItem(item).length == 0) {
             return;
         }
 
         // accumulate errors, so that the consumer above can display a synthetic report
         // at the moment the source item is not used, and not kept
-        if(mErrors == null) {
+        if (mErrors == null) {
             mErrors = new ArrayList<>(3);
         }
         mErrors.add(error);
@@ -2377,10 +2363,10 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
     public void onShortcutLabelChanged(Shortcut shortcut) {
         ItemView[] itemViews = getItemViewsForItem(shortcut);
         for (ItemView itemView : itemViews) {
-            ((ShortcutView)itemView).updateLabelText();
+            ((ShortcutView) itemView).updateLabelText();
         }
-        if(shortcut.getClass() == Folder.class) {
-            FolderView[] fvs = findFolderViews(((Folder)shortcut).getFolderPageId(), true);
+        if (shortcut.getClass() == Folder.class) {
+            FolderView[] fvs = findFolderViews(((Folder) shortcut).getFolderPageId(), true);
             for (FolderView fv : fvs) {
                 fv.setTitle(shortcut.getLabel());
             }
@@ -2389,7 +2375,7 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
 
     @Override
     public void onFolderPageIdChanged(Folder folder, int oldPageId) {
-        if(folder instanceof EmbeddedFolder) {
+        if (folder instanceof EmbeddedFolder) {
             ItemView[] itemViews = getItemViewsForItem(folder);
             for (ItemView itemView : itemViews) {
                 itemView.getParentItemLayout().onPageItemChanged(folder);
@@ -2398,7 +2384,7 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
             FolderView[] folderViews = findFolderViews(oldPageId, null);
             for (FolderView fv : folderViews) {
                 boolean open = fv.isOpen();
-                if(open) {
+                if (open) {
                     closeFolder(fv, false);
                     openFolder(fv.getOpenerItemView());
                     fv.skipOpenAnimation();
@@ -2421,8 +2407,8 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
 
     @Override
     public void onPageFolderWindowChanged(Page page, Folder folder) {
-        for(FolderView fv : mFolderViews) {
-            if(fv.isOpen() && fv.getOpener() == folder) {
+        for (FolderView fv : mFolderViews) {
+            if (fv.isOpen() && fv.getOpener() == folder) {
                 fv.configure(folder, fv.getOpenerItemView(), fv.getPage());
             }
         }
@@ -2548,28 +2534,27 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
 
     @Override
     public void onItemLayoutSizeChanged(ItemLayout item_layout, int w, int h, int oldw, int oldh) {
-        if(item_layout.getPage() == getCurrentRootPage()) {
-            for(FolderView fv : mFolderViews) {
+        if (item_layout.getPage() == getCurrentRootPage()) {
+            for (FolderView fv : mFolderViews) {
                 fv.getItemLayout().setDesktopSize(w, h);
             }
         }
     }
 
-    private long mPreviousPositionChangeDate;
     @Override
     public void onItemLayoutPositionChanged(ItemLayout il, float mCurrentDx, float mCurrentDy, float mCurrentScale) {
         long now = System.currentTimeMillis();
         Page page = il.getPage();
         EventAction ea = page.config.posChanged;
-        if(ea.action==GlobalConfig.RUN_SCRIPT) {
+        if (ea.action == GlobalConfig.RUN_SCRIPT) {
             try {
-                Pair<Integer,String> id_data = Script.decodeIdAndData(ea.data);
+                Pair<Integer, String> id_data = Script.decodeIdAndData(ea.data);
 
                 page.getEngine().getScriptExecutor().runScript(this, id_data.first, "C_POSITION_CHANGED", id_data.second, il);
-            } catch(Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else if(now-mPreviousPositionChangeDate>300) {
+        } else if (now - mPreviousPositionChangeDate > 300) {
             runAction(page.getEngine(), "C_POSITION_CHANGED", ea, il, null);
             mPreviousPositionChangeDate = now;
         }
@@ -2578,15 +2563,15 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
     @Override
     public void onItemLayoutStopPointReached(ItemLayout item_layout, StopPoint sp) {
         EventAction ea = sp.getReachedAction();
-        if(ea.action != GlobalConfig.UNSET) {
+        if (ea.action != GlobalConfig.UNSET) {
             runAction(sp.getPage().getEngine(), "STOP_POINT", ea, item_layout.getItemView(sp));
         }
     }
 
     @Override
     public void onItemLayoutWindowSystemUiVisibility(ItemLayout il, int visibility) {
-        if(mSystemBarTintManager != null && mHasWindowFocus) {
-            mSystemBarTintManager.setStatusBarTintEnabled((visibility&View.SYSTEM_UI_FLAG_FULLSCREEN) == 0);
+        if (mSystemBarTintManager != null && mHasWindowFocus) {
+            mSystemBarTintManager.setStatusBarTintEnabled((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0);
         }
     }
 
@@ -2597,7 +2582,7 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
 
     @Override
     public void onItemLayoutPageLoaded(ItemLayout itemLayout, Page oldPage, Page newPage) {
-        if(mLastTouchedItemView != null) {
+        if (mLastTouchedItemView != null) {
             mLastTouchedItemView = itemLayout.getItemView(mLastTouchedItemView.getItem());
         }
     }
@@ -2630,5 +2615,16 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
     @Override
     public void onHandleLongClicked(HandleView.Handle h) {
 
+    }
+
+    /***************************************** UPDATE OF VIEWS REFERENCES ***********************************/
+    private static class ItemViewUpdate {
+        ItemView oldItemView;
+        ItemView newItemView;
+        net.pierrox.lightning_launcher.script.api.Item cachedItem;
+        ArrayList<ItemViewUpdate> children;
+        ItemLayout oldChildItemLayout;
+        ItemLayout newChildItemLayout;
+        Container cachedContainer;
     }
 }

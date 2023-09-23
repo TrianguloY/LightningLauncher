@@ -33,14 +33,14 @@ import org.mozilla.javascript.Token;
  * then the line is considered a line comment.  This is to support parsing
  * JavaScript in &lt;script&gt; HTML tags that has been "hidden" from very old
  * browsers by surrounding it with HTML comment delimiters. <p>
- *
+ * <p>
  * Note the node start position for Comment nodes is still relative to the
  * parent, but Comments are always stored directly in the AstRoot node, so
  * they are also effectively absolute offsets.
  */
 public class Comment extends AstNode {
 
-    private String value;
+    private final String value;
     private Token.CommentType commentType;
 
     {
@@ -49,9 +49,10 @@ public class Comment extends AstNode {
 
     /**
      * Constructs a new Comment
-     * @param pos the start position
-     * @param len the length including delimiter(s)
-     * @param type the comment type
+     *
+     * @param pos   the start position
+     * @param len   the length including delimiter(s)
+     * @param type  the comment type
      * @param value the value of the comment, as a string
      */
     public Comment(int pos, int len, Token.CommentType type, String value) {
@@ -69,8 +70,9 @@ public class Comment extends AstNode {
 
     /**
      * Sets the comment style
+     *
      * @param type the comment style, a
-     * {@link org.mozilla.javascript.Token.CommentType}
+     *             {@link org.mozilla.javascript.Token.CommentType}
      */
     public void setCommentType(Token.CommentType type) {
         this.commentType = type;
@@ -85,10 +87,9 @@ public class Comment extends AstNode {
 
     @Override
     public String toSource(int depth) {
-        StringBuilder sb = new StringBuilder(getLength() + 10);
-        sb.append(makeIndent(depth));
-        sb.append(value);
-        return sb.toString();
+        String sb = makeIndent(depth) +
+                value;
+        return sb;
     }
 
     /**

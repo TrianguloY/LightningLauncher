@@ -41,35 +41,42 @@ import java.util.Iterator;
 import java.util.List;
 
 public class LightningEngine implements Page.PageListener {
-    public interface GlobalConfigListener {
-        void onGlobalConfigChanged(GlobalConfig newGlobalConfig);
-    }
-
     private static final int GLOBAL_CONFIG_FILE_VERSION = 7;
+    /************************************** ANDROID 7.1 APP SHORTCUTS *************************************/
 
-
+    private static final String TOKEN_PIN_COUNT = "pinCount";
+    private final File mBaseDir;
+    private final PageManager mPageManager;
+    private final ScriptManager mScriptManager;
+    private final ScriptExecutor mScriptExecutor;
+    private final VariableManager mVariableManager;
+    private final BuiltinDataCollectors mBuiltinDataCollectors;
+    private final ArrayList<GlobalConfigListener> mGlobalConfigListeners = new ArrayList<>();
+    private final ArrayList<Page.PageListener> mPageListeners = new ArrayList<>();
+    private final Handler mHandler;
     protected Context mContext;
-    private File mBaseDir;
-
-    private PageManager mPageManager;
-    private ScriptManager mScriptManager;
-    private ScriptExecutor mScriptExecutor;
-    private VariableManager mVariableManager;
-    private BuiltinDataCollectors mBuiltinDataCollectors;
-
-
     private GlobalConfig mGlobalConfig;
-    private ArrayList<GlobalConfigListener> mGlobalConfigListeners = new ArrayList<>();
-
-    private ArrayList<Page.PageListener> mPageListeners = new ArrayList<>();
-
-    private Handler mHandler;
-
     private int mResumedPagesCount;
 
     private JSONObject mLaunchStatistics;
 
     private JSONObject mAppShortcuts;
+    /***************************************** SAVE DATA ***********************************/
+
+    private final Runnable mSaveDataRunnable = new Runnable() {
+        @Override
+        public void run() {
+            mVariableManager.saveValues();
+
+            saveGlobalConfig();
+
+            saveLaunchStatistics();
+
+            saveAppShortcuts();
+
+            mPageManager.savePagesSync();
+        }
+    };
 
     public LightningEngine(Context context, File baseDir) {
         mContext = context;
@@ -105,34 +112,33 @@ public class LightningEngine implements Page.PageListener {
     }
 
     /**
-     *
      * @return true if upgrade of old free version
      */
     public void migrate() {
-        if(shouldDoFirstTimeInit()) {
+        if (shouldDoFirstTimeInit()) {
             //  new install, nothing to migrate
             return;
         }
 
-		int from_version=mGlobalConfig.version;
-		if(from_version == 1) {
-			// from_version==1 && !first_time_install means global config never changed: unable to guess the migration path, but existing setup anyway
+        int from_version = mGlobalConfig.version;
+        if (from_version == 1) {
+            // from_version==1 && !first_time_install means global config never changed: unable to guess the migration path, but existing setup anyway
             // save the global config now to keep track of the version now
             saveGlobalConfig();
-			return;
-		}
+            return;
+        }
 
         // migrate here (nothing yet)
 
         // update the version number now
-        if(from_version<GLOBAL_CONFIG_FILE_VERSION) {
+        if (from_version < GLOBAL_CONFIG_FILE_VERSION) {
             saveGlobalConfig();
         }
     }
 
     public boolean shouldDoFirstTimeInit() {
         int h = mGlobalConfig.homeScreen;
-        if(h != Page.FIRST_DASHBOARD_PAGE) {
+        if (h != Page.FIRST_DASHBOARD_PAGE) {
             return false;
         }
 
@@ -182,25 +188,25 @@ public class LightningEngine implements Page.PageListener {
         return page.findItemById(id);
     }
 
-    public Pair<Page,Folder> getPageAndOpenerFromPath(ContainerPath path) {
+    public Pair<Page, Folder> getPageAndOpenerFromPath(ContainerPath path) {
         int id = path.getLast();
-        if(path.getParent() == null) {
+        if (path.getParent() == null) {
             Page page = getOrLoadPage(id);
-            if(id == Page.USER_MENU_PAGE) {
-                return new Pair<>(page, (Folder)page.findItemById(Utils.USER_MENU_ITEM_ID));
+            if (id == Page.USER_MENU_PAGE) {
+                return new Pair<>(page, (Folder) page.findItemById(Utils.USER_MENU_ITEM_ID));
             } else {
                 return new Pair<>(page, null);
             }
         } else {
             Item item = getItemById(id);
-            if(item instanceof Folder) {
+            if (item instanceof Folder) {
                 Folder folder = (Folder) item;
                 return new Pair<>(folder.getOrLoadFolderPage(), folder);
             } else {
                 // not a folder? maybe a shortcut with a open folder action
-                if(item instanceof Shortcut) {
+                if (item instanceof Shortcut) {
                     Intent intent = ((Shortcut) item).getIntent();
-                    if(LLApp.get().isLightningIntent(intent)) {
+                    if (LLApp.get().isLightningIntent(intent)) {
                         EventAction eventAction = Utils.decodeEventActionFromLightningIntent(intent);
                         if (eventAction != null) {
                             int folderPage = Integer.parseInt(eventAction.data);
@@ -226,7 +232,6 @@ public class LightningEngine implements Page.PageListener {
         return mGlobalConfig.runScripts;
     }
 
-
     @Override
     public void onPageModified(Page page) {
         Utils.updateContainerIconIfNeeded(page);
@@ -249,7 +254,7 @@ public class LightningEngine implements Page.PageListener {
         for (Page.PageListener listener : mPageListeners) listener.onPageItemAdded(item);
 
         Intent intent = getAppShortcutIntent(item);
-        if(intent != null) {
+        if (intent != null) {
             String pkg = intent.getStringExtra(Shortcut.INTENT_EXTRA_APP_SHORTCUT_PKG);
             String id = intent.getStringExtra(Shortcut.INTENT_EXTRA_APP_SHORTCUT_ID);
             pinAppShortcut(pkg, id);
@@ -257,7 +262,7 @@ public class LightningEngine implements Page.PageListener {
 
         Page page = item.getPage();
         Utils.updateContainerIconIfNeeded(page);
-        if(item.getClass() == Shortcut.class && page.config.iconPack != null) {
+        if (item.getClass() == Shortcut.class && page.config.iconPack != null) {
             IconPack.applyIconPackSync(mContext, page.config.iconPack, page, item.getId());
         }
     }
@@ -270,7 +275,7 @@ public class LightningEngine implements Page.PageListener {
     @Override
     public void onPageItemRemoved(Page page, Item item) {
         Intent intent = getAppShortcutIntent(item);
-        if(intent != null) {
+        if (intent != null) {
             String pkg = intent.getStringExtra(Shortcut.INTENT_EXTRA_APP_SHORTCUT_PKG);
             String id = intent.getStringExtra(Shortcut.INTENT_EXTRA_APP_SHORTCUT_ID);
             unpinAppShortcut(pkg, id);
@@ -279,7 +284,7 @@ public class LightningEngine implements Page.PageListener {
 
         // really hackish: reverse order so that the Lightning script object (which is the first to register) is evaluated last
         // the reason is that scripts may be executed from other listeners and may need item data in the Lightning script object
-        for (int i = mPageListeners.size()-1; i>=0; i--) {
+        for (int i = mPageListeners.size() - 1; i >= 0; i--) {
             Page.PageListener listener = mPageListeners.get(i);
             listener.onPageItemRemoved(page, item);
         }
@@ -291,15 +296,16 @@ public class LightningEngine implements Page.PageListener {
         for (Page.PageListener listener : mPageListeners) listener.onPageItemChanged(page, item);
 
         // TODO move this into Screen
-        if(item instanceof Folder) {
-            onPageFolderWindowChanged(page, (Folder)item);
+        if (item instanceof Folder) {
+            onPageFolderWindowChanged(page, (Folder) item);
         }
     }
 
     @Override
     public void onPageItemZIndexChanged(Page page, int old_index, int new_index) {
         Utils.updateContainerIconIfNeeded(page);
-        for (Page.PageListener listener : mPageListeners) listener.onPageItemZIndexChanged(page, old_index, new_index);
+        for (Page.PageListener listener : mPageListeners)
+            listener.onPageItemZIndexChanged(page, old_index, new_index);
     }
 
     @Override
@@ -307,7 +313,7 @@ public class LightningEngine implements Page.PageListener {
         for (Page.PageListener listener : mPageListeners) listener.onPagePaused(page);
 
         mResumedPagesCount--;
-        if(mResumedPagesCount == 0) {
+        if (mResumedPagesCount == 0) {
             mBuiltinDataCollectors.pause();
         }
     }
@@ -316,7 +322,7 @@ public class LightningEngine implements Page.PageListener {
     public void onPageResumed(Page page) {
         for (Page.PageListener listener : mPageListeners) listener.onPageResumed(page);
 
-        if(mResumedPagesCount == 0) {
+        if (mResumedPagesCount == 0) {
             mBuiltinDataCollectors.resume();
         }
         mResumedPagesCount++;
@@ -324,7 +330,8 @@ public class LightningEngine implements Page.PageListener {
 
     @Override
     public void onPageFolderWindowChanged(Page page, Folder folder) {
-        for (Page.PageListener listener : mPageListeners) listener.onPageFolderWindowChanged(page, folder);
+        for (Page.PageListener listener : mPageListeners)
+            listener.onPageFolderWindowChanged(page, folder);
     }
 
     @Override
@@ -363,7 +370,8 @@ public class LightningEngine implements Page.PageListener {
 
     @Override
     public void onItemTransformChanged(Item item, boolean fast) {
-        for (Page.PageListener listener : mPageListeners) listener.onItemTransformChanged(item, fast);
+        for (Page.PageListener listener : mPageListeners)
+            listener.onItemTransformChanged(item, fast);
     }
 
     @Override
@@ -373,7 +381,8 @@ public class LightningEngine implements Page.PageListener {
 
     @Override
     public void onItemBindingsChanged(Item item, boolean apply) {
-        for (Page.PageListener listener : mPageListeners) listener.onItemBindingsChanged(item, apply);
+        for (Page.PageListener listener : mPageListeners)
+            listener.onItemBindingsChanged(item, apply);
     }
 
     @Override
@@ -389,13 +398,14 @@ public class LightningEngine implements Page.PageListener {
     @Override
     public void onFolderPageIdChanged(Folder folder, int oldPageId) {
         Utils.updateFolderIcon(folder);
-        for (Page.PageListener listener : mPageListeners) listener.onFolderPageIdChanged(folder, oldPageId);
+        for (Page.PageListener listener : mPageListeners)
+            listener.onFolderPageIdChanged(folder, oldPageId);
     }
 
     @Override
     public void onPageRemoved(Page page) {
         // see comment for onPageItemRemoved
-        for (int i = mPageListeners.size()-1; i>=0; i--) {
+        for (int i = mPageListeners.size() - 1; i >= 0; i--) {
             Page.PageListener listener = mPageListeners.get(i);
             listener.onPageRemoved(page);
         }
@@ -405,23 +415,6 @@ public class LightningEngine implements Page.PageListener {
     public void onPageLoaded(Page page) {
         for (Page.PageListener listener : mPageListeners) listener.onPageLoaded(page);
     }
-
-    /***************************************** SAVE DATA ***********************************/
-
-    private Runnable mSaveDataRunnable = new Runnable() {
-        @Override
-        public void run() {
-            mVariableManager.saveValues();
-
-            saveGlobalConfig();
-
-            saveLaunchStatistics();
-
-            saveAppShortcuts();
-
-            mPageManager.savePagesSync();
-        }
-    };
 
     public void saveData() {
         cancelDelayedSaveData();
@@ -453,19 +446,19 @@ public class LightningEngine implements Page.PageListener {
     }
 
     private void evaluateGlobalConfig() {
-        if(mGlobalConfig.screensOrder==null) {
+        if (mGlobalConfig.screensOrder == null) {
             ArrayList<Integer> desktops = new ArrayList<>();
 
-            for(int i = Page.FIRST_DASHBOARD_PAGE; i<= Page.LAST_DASHBOARD_PAGE; i++) {
-                if(Page.getPageDir(mBaseDir, i).exists()) {
+            for (int i = Page.FIRST_DASHBOARD_PAGE; i <= Page.LAST_DASHBOARD_PAGE; i++) {
+                if (Page.getPageDir(mBaseDir, i).exists()) {
                     desktops.add(i);
                 }
             }
 
-            int n=desktops.size();
+            int n = desktops.size();
             int[] screens_order = new int[n];
             String[] screens_name = new String[n];
-            for(int i=0; i<n; i++) {
+            for (int i = 0; i < n; i++) {
                 Integer page = desktops.get(i);
                 screens_order[i] = page;
                 screens_name[i] = String.valueOf(page);
@@ -476,12 +469,12 @@ public class LightningEngine implements Page.PageListener {
         }
 
         // make sure that page directories are reserved
-        for(int p : mGlobalConfig.screensOrder) {
+        for (int p : mGlobalConfig.screensOrder) {
             Page.getPageDir(mBaseDir, p).mkdirs();
         }
 
-        Intent s=LLApp.get().getLockscreenServiceIntent();
-        if(s != null) {
+        Intent s = LLApp.get().getLockscreenServiceIntent();
+        if (s != null) {
             if (mGlobalConfig.lockScreen != Page.NONE) {
                 mContext.startService(s);
             } else {
@@ -490,7 +483,7 @@ public class LightningEngine implements Page.PageListener {
         }
 
         s = LLApp.get().getWindowServiceIntent();
-        if(s != null && WindowService.isPermissionAllowed(mContext)) {
+        if (s != null && WindowService.isPermissionAllowed(mContext)) {
             if (mGlobalConfig.overlayScreen != Page.NONE) {
                 mContext.startService(s);
             } else {
@@ -511,7 +504,7 @@ public class LightningEngine implements Page.PageListener {
 
     public void notifyGlobalConfigChanged() {
         evaluateGlobalConfig();
-        for(GlobalConfigListener l : mGlobalConfigListeners) {
+        for (GlobalConfigListener l : mGlobalConfigListeners) {
             l.onGlobalConfigChanged(mGlobalConfig);
         }
     }
@@ -519,12 +512,15 @@ public class LightningEngine implements Page.PageListener {
     /************************************** LAUNCH STATISTICS *************************************/
 
     public void updateLaunchStatisticsForShortcut(Shortcut shortcut) {
-        Intent intent=new Intent(shortcut.getIntent());
-        ComponentName cn=intent.getComponent();
-        if(cn!=null) {
-            String key=cn.flattenToShortString();
+        Intent intent = new Intent(shortcut.getIntent());
+        ComponentName cn = intent.getComponent();
+        if (cn != null) {
+            String key = cn.flattenToShortString();
             int count = mLaunchStatistics.optInt(key);
-            try { mLaunchStatistics.put(key, count+1); } catch (JSONException e) { }
+            try {
+                mLaunchStatistics.put(key, count + 1);
+            } catch (JSONException e) {
+            }
         }
     }
 
@@ -543,7 +539,7 @@ public class LightningEngine implements Page.PageListener {
     private void loadLaunchStatistics() {
         File statistics_file = FileUtils.getStatisticsFile(mBaseDir);
         mLaunchStatistics = FileUtils.readJSONObjectFromFile(statistics_file);
-        if(mLaunchStatistics==null) {
+        if (mLaunchStatistics == null) {
             mLaunchStatistics = new JSONObject();
         }
     }
@@ -552,25 +548,21 @@ public class LightningEngine implements Page.PageListener {
         try {
             File out = FileUtils.getStatisticsFile(mBaseDir);
             FileUtils.saveStringToFile(mLaunchStatistics.toString(), out);
-        } catch(Exception e) {
+        } catch (Exception e) {
             // pass
         }
     }
 
-    /************************************** ANDROID 7.1 APP SHORTCUTS *************************************/
-
-    private static final String TOKEN_PIN_COUNT = "pinCount";
-
     private void pinAppShortcut(String pkg, String id) {
         int pinCount = adjustAppShortcutPinCount(pkg, id, 1);
-        if(pinCount == 1) {
+        if (pinCount == 1) {
             updatePinnedAppShortcuts(pkg);
         }
     }
 
     private void unpinAppShortcut(String pkg, String id) {
         int pinCount = adjustAppShortcutPinCount(pkg, id, -1);
-        if(pinCount == 0) {
+        if (pinCount == 0) {
             updatePinnedAppShortcuts(pkg);
         }
     }
@@ -579,7 +571,7 @@ public class LightningEngine implements Page.PageListener {
     private void updatePinnedAppShortcuts(String pkg) {
         LauncherApps launcherApps = (LauncherApps) mContext.getSystemService(Context.LAUNCHER_APPS_SERVICE);
         List<String> pinnedAppShortcutIds = getPinnedAppShortcutIds(pkg);
-        if(launcherApps.hasShortcutHostPermission()) {
+        if (launcherApps.hasShortcutHostPermission()) {
             launcherApps.pinShortcuts(pkg, pinnedAppShortcutIds, Process.myUserHandle());
         }
     }
@@ -587,13 +579,13 @@ public class LightningEngine implements Page.PageListener {
     private List<String> getPinnedAppShortcutIds(String pkg) {
         ArrayList<String> ids = new ArrayList<>();
         JSONObject appShortcutsForPackage = mAppShortcuts.optJSONObject(pkg);
-        if(appShortcutsForPackage != null) {
+        if (appShortcutsForPackage != null) {
             Iterator<String> keys = appShortcutsForPackage.keys();
-            while(keys.hasNext()) {
+            while (keys.hasNext()) {
                 String id = keys.next();
                 JSONObject appShortcut = appShortcutsForPackage.optJSONObject(id);
                 int pinCount = appShortcut.optInt(TOKEN_PIN_COUNT, 0);
-                if(pinCount > 0) {
+                if (pinCount > 0) {
                     ids.add(id);
                 }
             }
@@ -604,7 +596,7 @@ public class LightningEngine implements Page.PageListener {
     private int adjustAppShortcutPinCount(String pkg, String id, int increment) {
         try {
             JSONObject appShortcutsForPackage = mAppShortcuts.optJSONObject(pkg);
-            if(appShortcutsForPackage == null) {
+            if (appShortcutsForPackage == null) {
                 appShortcutsForPackage = new JSONObject();
                 mAppShortcuts.put(pkg, appShortcutsForPackage);
             }
@@ -642,7 +634,9 @@ public class LightningEngine implements Page.PageListener {
         }
     }
 
-    /** Return null if this isn't a Android 7.1 app shortcut */
+    /**
+     * Return null if this isn't a Android 7.1 app shortcut
+     */
     private Intent getAppShortcutIntent(Item item) {
         if (item.getClass() == Shortcut.class) {
             Shortcut shortcut = (Shortcut) item;
@@ -662,13 +656,13 @@ public class LightningEngine implements Page.PageListener {
     }
 
     public int readCurrentPage(int default_page) {
-        String p=FileUtils.readFileContent(getCurrentPagerPageFile());
+        String p = FileUtils.readFileContent(getCurrentPagerPageFile());
         int page;
         try {
-            page=Integer.parseInt(p);
-        } catch(Exception e) {
+            page = Integer.parseInt(p);
+        } catch (Exception e) {
             // catch NPE (if p==null) and NumberFormatException
-            page=default_page;
+            page = default_page;
         }
         return page;
     }
@@ -685,15 +679,15 @@ public class LightningEngine implements Page.PageListener {
 
     public ArrayList<Folder> findAllFolderPageOpeners(int folder_page) {
         ArrayList<Folder> openers = new ArrayList<>();
-        for(int n : mPageManager.getAllPagesIds()) {
-            if(n == folder_page && folder_page != Page.USER_MENU_PAGE) continue;
+        for (int n : mPageManager.getAllPagesIds()) {
+            if (n == folder_page && folder_page != Page.USER_MENU_PAGE) continue;
 
             Page p = mPageManager.getOrLoadPage(n);
 
-            for(Item item : p.items) {
-                if(item instanceof Folder) {
-                    Folder f=(Folder)item;
-                    if(f.getFolderPageId()==folder_page) {
+            for (Item item : p.items) {
+                if (item instanceof Folder) {
+                    Folder f = (Folder) item;
+                    if (f.getFolderPageId() == folder_page) {
                         openers.add(f);
                     }
                 }
@@ -704,22 +698,22 @@ public class LightningEngine implements Page.PageListener {
     }
 
     public Folder findFirstFolderPageOpener(int folder_page) {
-        if(!Page.isFolder(folder_page)) {
+        if (!Page.isFolder(folder_page)) {
             return null;
         }
 
-        ArrayList<Page> pages=mPageManager.getLoadedPages();
-        for(Page p : pages) {
+        ArrayList<Page> pages = mPageManager.getLoadedPages();
+        for (Page p : pages) {
             // skip the page containing this item to avoid nasty recursive calls, except for the user menu which includes its opener
-            if(p.id == folder_page && folder_page != Page.USER_MENU_PAGE) continue;
+            if (p.id == folder_page && folder_page != Page.USER_MENU_PAGE) continue;
 
-            if(p.items==null) {
+            if (p.items == null) {
                 mPageManager.getOrLoadPage(p.id);
             }
-            for(Item item : p.items) {
-                if(item instanceof Folder) {
-                    Folder f=(Folder)item;
-                    if(f.getFolderPageId()==folder_page) {
+            for (Item item : p.items) {
+                if (item instanceof Folder) {
+                    Folder f = (Folder) item;
+                    if (f.getFolderPageId() == folder_page) {
                         return f;
                     }
                 }
@@ -727,22 +721,22 @@ public class LightningEngine implements Page.PageListener {
         }
 
         // not found in currently loaded pages, try again with unloaded pages
-        for(int n : mPageManager.getAllPagesIds()) {
+        for (int n : mPageManager.getAllPagesIds()) {
 
             Page p = mPageManager.getPage(n);
-            if(p != null) {
+            if (p != null) {
                 // already traversed in the loop above
                 continue;
             }
 
             p = mPageManager.getOrLoadPage(n);
 
-            if(p.id == folder_page) continue;
+            if (p.id == folder_page) continue;
 
-            for(Item item : p.items) {
-                if(item instanceof Folder) {
-                    Folder f=(Folder)item;
-                    if(f.getFolderPageId()==folder_page) {
+            for (Item item : p.items) {
+                if (item instanceof Folder) {
+                    Folder f = (Folder) item;
+                    if (f.getFolderPageId() == folder_page) {
                         return f;
                     }
                 }
@@ -753,15 +747,19 @@ public class LightningEngine implements Page.PageListener {
     }
 
     public void setFloatingDesktopVisibility(boolean visible) {
-        if(mGlobalConfig.overlayScreen != Page.NONE) {
+        if (mGlobalConfig.overlayScreen != Page.NONE) {
             Intent f = LLApp.get().getWindowServiceIntent();
             f.setAction(visible ? WindowService.INTENT_ACTION_SHOW : WindowService.INTENT_ACTION_HIDE);
             mContext.startService(f);
         }
     }
 
+    public interface GlobalConfigListener {
+        void onGlobalConfigChanged(GlobalConfig newGlobalConfig);
+    }
+
     public class PageManager {
-        private ArrayList<Page> mPages = new ArrayList<>();
+        private final ArrayList<Page> mPages = new ArrayList<>();
 
         private PageManager() {
         }
@@ -772,13 +770,13 @@ public class LightningEngine implements Page.PageListener {
 
         public int[] getAllPagesIds() {
             String[] allPageNames = FileUtils.getPagesDir(mBaseDir).list();
-            if(allPageNames == null) {
+            if (allPageNames == null) {
                 return new int[0];
             }
 
             int length = allPageNames.length;
             int[] allPagesIds = new int[length];
-            for(int n=0; n<length; n++) {
+            for (int n = 0; n < length; n++) {
                 allPagesIds[n] = Integer.parseInt(allPageNames[n]);
             }
             return allPagesIds;
@@ -793,8 +791,8 @@ public class LightningEngine implements Page.PageListener {
         }
 
         public Page getPage(int id) {
-            for(Page page : mPages) {
-                if(page.id == id) {
+            for (Page page : mPages) {
+                if (page.id == id) {
                     return page;
                 }
             }
@@ -804,7 +802,7 @@ public class LightningEngine implements Page.PageListener {
 
         public Page getOrLoadPage(int id) {
             Page page = getPage(id);
-            if(page != null) {
+            if (page != null) {
                 return page;
             }
 
@@ -817,7 +815,7 @@ public class LightningEngine implements Page.PageListener {
         }
 
         public void savePagesSync() {
-            for(Page p : new ArrayList<Page>(mPages)) {
+            for (Page p : new ArrayList<Page>(mPages)) {
                 p.save();
             }
         }
@@ -848,7 +846,7 @@ public class LightningEngine implements Page.PageListener {
 
             // reserve copied page ids
             SparseIntArray translated_page_ids = new SparseIntArray();
-            for(Page to_translate : pages_to_copy) {
+            for (Page to_translate : pages_to_copy) {
                 int new_page_id = Page.reservePage(mBaseDir, to_translate.isFolder());
                 translated_page_ids.put(to_translate.id, new_page_id);
             }
@@ -856,7 +854,7 @@ public class LightningEngine implements Page.PageListener {
             // copy and translate pages
             PageProcessor page_processor = new PageProcessor();
             page_processor.setTranslatedPageIds(translated_page_ids);
-            for(Page to_copy : pages_to_copy) {
+            for (Page to_copy : pages_to_copy) {
                 page_processor.copyAndTranslatePage(to_copy, LightningEngine.this, keepAppWidgetId);
             }
 

@@ -31,9 +31,9 @@ import java.lang.reflect.Field;
  * <li>Page Indicator: item, shortcut and page indicator properties</li>
  * <li>Other objects: contains item properties only</li>
  * </ul>
- *
+ * <p>
  * An instance of this object can be retrieved with {@link Item#getProperties()}, {@link Container#getProperties()} or {@link Configuration#getProperties()}.
- *
+ * <p>
  * The list of supported properties can be found below. Behavior when setting a value for a property marked as read only is unspecified and can lead to data loss.
  * The same may appear when setting a value out of its bounds. These cases are currently not checked.
  *
@@ -151,7 +151,7 @@ import java.lang.reflect.Field;
  *      <tr><td>i.paused</td><td>{@link net.pierrox.lightning_launcher.script.api.EventHandler}</td><td>Read/Write</td><td></td></tr>
  *      <tr><td>i.resumed</td><td>{@link net.pierrox.lightning_launcher.script.api.EventHandler}</td><td>Read/Write</td><td></td></tr>
  *      <tr><td><a href="/help/app/topic.php?id=204">i.menu</a></td><td>{@link net.pierrox.lightning_launcher.script.api.EventHandler}</td><td>Read/Write</td><td></td></tr>
-
+ *
  * 	</tbody>
  * </table>
  *
@@ -284,199 +284,201 @@ import java.lang.reflect.Field;
  */
 public class PropertySet {
 
+    private final Object mScriptObject;
+    private final Type mType;
     /*package*/ Lightning mLightning;
-	private Object mScriptObject;
-	/*package*/ enum Type {
-		GLOBAL_CONFIG,
-		CONTAINER,
-		ITEM
-	}
 
-	private Type mType;
-	
-	/**
-	 * @hide
-	 */
-	/*package*/ public PropertySet(Lightning lightning, Object script_object) {
-		mLightning = lightning;
+    /**
+     * @hide
+     */
+    /*package*/
+    public PropertySet(Lightning lightning, Object script_object) {
+        mLightning = lightning;
         mScriptObject = script_object;
-		if(script_object instanceof GlobalConfig) {
-			mType = Type.GLOBAL_CONFIG;
-		} else if(script_object instanceof Container) {
-			mType = Type.CONTAINER;
-		} else {
-			mType = Type.ITEM;
-		}
-	}
+        if (script_object instanceof GlobalConfig) {
+            mType = Type.GLOBAL_CONFIG;
+        } else if (script_object instanceof Container) {
+            mType = Type.CONTAINER;
+        } else {
+            mType = Type.ITEM;
+        }
+    }
 
-	/**
-	 * @hide
-	 */
-	public Type getType() {
-		return mType;
-	}
+    /**
+     * @hide
+     */
+    public Type getType() {
+        return mType;
+    }
 
-	/**
-	 * @hide
-	 */
-	/*package*/ Item getScriptItem() {
-		return (Item) mScriptObject;
-	}
+    /**
+     * @hide
+     */
+    /*package*/ Item getScriptItem() {
+        return (Item) mScriptObject;
+    }
 
-	/**
-	 * @hide
-	 */
-	/*package*/ Container getScriptContainer() {
-		return (Container) mScriptObject;
-	}
-	
-	public boolean getBoolean(String name) {
-		return (Boolean)getProperty(name, Boolean.class);
-	}
-	
-	public float getFloat(String name) {
-		return (Float)getProperty(name, Float.class);
-	}
-	
-	public int getInteger(String name) {
-		return (Integer)getProperty(name, Integer.class);
-	}
-	
-	public String getString(String name) {
-		return (String)getProperty(name, String.class);
-	}
+    /**
+     * @hide
+     */
+    /*package*/ Container getScriptContainer() {
+        return (Container) mScriptObject;
+    }
 
-	public EventHandler getEventHandler(String name) {
-		EventAction ea = (EventAction)getProperty(name, EventAction.class);
-        return ea==null ? null : new EventHandler(ea.clone());
-	}
+    public boolean getBoolean(String name) {
+        return (Boolean) getProperty(name, Boolean.class);
+    }
 
-	/**
-	 * Returns a box object allowing access to the box properties.
-	 * This object does not allow modifications. Use the box object acquired through {@link PropertyEditor#getBox(String)} to alter values.
-	 */
-	public Box getBox(String name) {
-		net.pierrox.lightning_launcher.data.Box box = (net.pierrox.lightning_launcher.data.Box) getProperty(name, net.pierrox.lightning_launcher.data.Box.class);
-		return new Box(mLightning, box, name, null);
-	}
-	
-	/*package*/ Object getProperty(String name, Class<?> expected_cls) {
-		Pair<Object,String> c_p = getConfigObject(name, null);
-		Object config = c_p.first;
-		String property = c_p.second;
-		
-		try {
-			Field f = config.getClass().getField(property);
-			Object o = f.get(config);
-			Class<?> cls = o.getClass();
-			if(cls == expected_cls) {
-				return o;
-			} else if(expected_cls==String.class && cls.isEnum()) {
-				return o.toString();
-			} else {
-				mLightning.scriptError("property "+name+" is a "+cls.getSimpleName()+", not a "+expected_cls.getSimpleName());
-				return expected_cls.newInstance();
-			}
-		} catch (Exception e) {
-			mLightning.scriptError("unknown property "+name);
-			return null;
-		}
-	}
-	
-	/*package*/ Pair<Object,String> getConfigObject(String name, PageConfig cow_page_config) {
-		if(mType == Type.GLOBAL_CONFIG) {
-			return new Pair<>(mScriptObject, name);
-		}
+    public float getFloat(String name) {
+        return (Float) getProperty(name, Float.class);
+    }
 
-		Page page = null;
-		
-		if(mType == Type.CONTAINER) {
-			page = getScriptContainer().getPage();
-		}
-		
-		int dot = name.indexOf('.');
-		if((page == null && dot != 1) || (page!=null && dot!=-1 && dot!=1)) {
-			mLightning.scriptError("invalid property name");
-			return null;
-		}
+    public int getInteger(String name) {
+        return (Integer) getProperty(name, Integer.class);
+    }
 
-		String property = name.substring(dot+1);
-		Object config = null;
-		if(page!=null && dot==-1) {
-			config = page.config;
-		} else {
-			net.pierrox.lightning_launcher.data.Item item = mType==Type.ITEM ? getScriptItem().getItem() : null;
-			switch(name.charAt(0)) {
-			case 'i':
-				if(page != null) {
-					config = page.config.defaultItemConfig;
-				} else {
-					config = item.getItemConfig();
-					if(cow_page_config!=null && cow_page_config.defaultItemConfig==config) {
-						ItemConfig ic = new ItemConfig();
-						ic.copyFrom((ItemConfig)config);
-						item.setItemConfig(ic);
-						config = ic;
-					}
-				}
-				break;
-				
-			case 's':
-				if(page != null) {
-					config = page.config.defaultShortcutConfig;
-				} else if(item instanceof ShortcutConfigStylable) {
-                    ShortcutConfigStylable s = (ShortcutConfigStylable)item;
-					config = s.getShortcutConfig();
-					if(cow_page_config!=null && cow_page_config.defaultShortcutConfig==config) {
-						ShortcutConfig sc = ((ShortcutConfig)config).clone();
-						s.setShortcutConfig(sc);
-						config = sc;
-					}
-				}
-				break;
-				
-			case 'f':
-				if(page != null) {
-					config = page.config.defaultFolderConfig;
-				} else if(item instanceof net.pierrox.lightning_launcher.data.Folder) {
-					net.pierrox.lightning_launcher.data.Folder f = (net.pierrox.lightning_launcher.data.Folder)item;
-					config = ((net.pierrox.lightning_launcher.data.Folder)item).getFolderConfig();
-					if(cow_page_config!=null && cow_page_config.defaultFolderConfig==config) {
-						FolderConfig fc = new FolderConfig();
-						fc.copyFrom((FolderConfig)config);
-						f.setFolderConfig(fc);
-						config = fc;
-					}
-				}
-				break;
+    public String getString(String name) {
+        return (String) getProperty(name, String.class);
+    }
 
-            case 'p':
-                if(page == null && item instanceof net.pierrox.lightning_launcher.data.PageIndicator) {
-                    config = item;
-                }
-                break;
+    public EventHandler getEventHandler(String name) {
+        EventAction ea = (EventAction) getProperty(name, EventAction.class);
+        return ea == null ? null : new EventHandler(ea.clone());
+    }
 
-            case 'v':
-                if(page == null && item instanceof net.pierrox.lightning_launcher.data.CustomView) {
-                    config = item;
-                }
-                break;
-			}
+    /**
+     * Returns a box object allowing access to the box properties.
+     * This object does not allow modifications. Use the box object acquired through {@link PropertyEditor#getBox(String)} to alter values.
+     */
+    public Box getBox(String name) {
+        net.pierrox.lightning_launcher.data.Box box = (net.pierrox.lightning_launcher.data.Box) getProperty(name, net.pierrox.lightning_launcher.data.Box.class);
+        return new Box(mLightning, box, name, null);
+    }
 
-			if(config == null) {
-				mLightning.scriptError("property name should start with i, s, f or p");
-				return null;
-			}
-		}
-		
-		return new Pair<Object,String>(config, property);
-	}
-	
-	/**
-	 * Start to modify settings. Once all changes are made, don't forget to call {@link PropertyEditor#commit()} to validate changes.
-	 * @return a PropertyEditor
-	 */
-	public PropertyEditor edit() {
-		return new PropertyEditor(this);
-	}
+    /*package*/ Object getProperty(String name, Class<?> expected_cls) {
+        Pair<Object, String> c_p = getConfigObject(name, null);
+        Object config = c_p.first;
+        String property = c_p.second;
+
+        try {
+            Field f = config.getClass().getField(property);
+            Object o = f.get(config);
+            Class<?> cls = o.getClass();
+            if (cls == expected_cls) {
+                return o;
+            } else if (expected_cls == String.class && cls.isEnum()) {
+                return o.toString();
+            } else {
+                mLightning.scriptError("property " + name + " is a " + cls.getSimpleName() + ", not a " + expected_cls.getSimpleName());
+                return expected_cls.newInstance();
+            }
+        } catch (Exception e) {
+            mLightning.scriptError("unknown property " + name);
+            return null;
+        }
+    }
+
+    /*package*/ Pair<Object, String> getConfigObject(String name, PageConfig cow_page_config) {
+        if (mType == Type.GLOBAL_CONFIG) {
+            return new Pair<>(mScriptObject, name);
+        }
+
+        Page page = null;
+
+        if (mType == Type.CONTAINER) {
+            page = getScriptContainer().getPage();
+        }
+
+        int dot = name.indexOf('.');
+        if ((page == null && dot != 1) || (page != null && dot != -1 && dot != 1)) {
+            mLightning.scriptError("invalid property name");
+            return null;
+        }
+
+        String property = name.substring(dot + 1);
+        Object config = null;
+        if (page != null && dot == -1) {
+            config = page.config;
+        } else {
+            net.pierrox.lightning_launcher.data.Item item = mType == Type.ITEM ? getScriptItem().getItem() : null;
+            switch (name.charAt(0)) {
+                case 'i':
+                    if (page != null) {
+                        config = page.config.defaultItemConfig;
+                    } else {
+                        config = item.getItemConfig();
+                        if (cow_page_config != null && cow_page_config.defaultItemConfig == config) {
+                            ItemConfig ic = new ItemConfig();
+                            ic.copyFrom((ItemConfig) config);
+                            item.setItemConfig(ic);
+                            config = ic;
+                        }
+                    }
+                    break;
+
+                case 's':
+                    if (page != null) {
+                        config = page.config.defaultShortcutConfig;
+                    } else if (item instanceof ShortcutConfigStylable) {
+                        ShortcutConfigStylable s = (ShortcutConfigStylable) item;
+                        config = s.getShortcutConfig();
+                        if (cow_page_config != null && cow_page_config.defaultShortcutConfig == config) {
+                            ShortcutConfig sc = ((ShortcutConfig) config).clone();
+                            s.setShortcutConfig(sc);
+                            config = sc;
+                        }
+                    }
+                    break;
+
+                case 'f':
+                    if (page != null) {
+                        config = page.config.defaultFolderConfig;
+                    } else if (item instanceof net.pierrox.lightning_launcher.data.Folder) {
+                        net.pierrox.lightning_launcher.data.Folder f = (net.pierrox.lightning_launcher.data.Folder) item;
+                        config = ((net.pierrox.lightning_launcher.data.Folder) item).getFolderConfig();
+                        if (cow_page_config != null && cow_page_config.defaultFolderConfig == config) {
+                            FolderConfig fc = new FolderConfig();
+                            fc.copyFrom((FolderConfig) config);
+                            f.setFolderConfig(fc);
+                            config = fc;
+                        }
+                    }
+                    break;
+
+                case 'p':
+                    if (page == null && item instanceof net.pierrox.lightning_launcher.data.PageIndicator) {
+                        config = item;
+                    }
+                    break;
+
+                case 'v':
+                    if (page == null && item instanceof net.pierrox.lightning_launcher.data.CustomView) {
+                        config = item;
+                    }
+                    break;
+            }
+
+            if (config == null) {
+                mLightning.scriptError("property name should start with i, s, f or p");
+                return null;
+            }
+        }
+
+        return new Pair<Object, String>(config, property);
+    }
+
+    /**
+     * Start to modify settings. Once all changes are made, don't forget to call {@link PropertyEditor#commit()} to validate changes.
+     *
+     * @return a PropertyEditor
+     */
+    public PropertyEditor edit() {
+        return new PropertyEditor(this);
+    }
+
+    /*package*/ enum Type {
+        GLOBAL_CONFIG,
+        CONTAINER,
+        ITEM
+    }
 }

@@ -12,8 +12,7 @@ package org.mozilla.javascript;
  * Interface to represent arbitrary action that requires to have Context
  * object associated with the current thread for its execution.
  */
-public interface ContextAction
-{
+public interface ContextAction {
     /**
      * Execute action using the supplied Context instance.
      * When Rhino runtime calls the method, <tt>cx</tt> will be associated
@@ -21,6 +20,6 @@ public interface ContextAction
      *
      * @see ContextFactory#call(ContextAction)
      */
-    public Object run(Context cx);
+    Object run(Context cx);
 }
 

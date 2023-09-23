@@ -43,110 +43,111 @@ import fr.xgouchet.texteditor.ui.AdvancedEditText;
  * Class that Manages a searchable dialog (currently for the script editor).
  */
 public class Search {
-    private Activity mCntx;
-    private AdvancedEditText mEditText;
-    
+    private final Activity mCntx;
+    private final AdvancedEditText mEditText;
+
     private AlertDialog mDialog;
     private EditText mEdTxt;
     private CheckBox mChkBackwards;
     private CheckBox mChkCase;
     private CheckBox mChkRegexp;
-    
+
     public Search(Activity cntx, AdvancedEditText editText) {
         mCntx = cntx;
         mEditText = editText;
-    
+
         // The dialog is saved and created on first use
         mDialog = null;
     }
-    
+
     /**
      * Shows the dialog to search.
      */
-    public void showDialog(){
-        if(mDialog == null)
+    public void showDialog() {
+        if (mDialog == null)
             createDialog();
-        
+
         mDialog.show();
     }
-    
+
     /**
      * Performs a search as defined in the dialog.
      * If the search fails the dialog is shown.
      */
     public void searchNext() {
-        if(mDialog == null)
+        if (mDialog == null)
             createDialog();
-    
+
         String searchText = mEdTxt.getText().toString();
-    
-        if(searchText.isEmpty()) {
+
+        if (searchText.isEmpty()) {
             // no text to search
             showDialog();
             return;
         }
-    
+
         String text = mEditText.getText().toString();
-    
+
         int flags = 0;
-        if(!mChkCase.isChecked()) flags |= Pattern.CASE_INSENSITIVE;
-        if(!mChkRegexp.isChecked()) flags |= Pattern.LITERAL;
-        
+        if (!mChkCase.isChecked()) flags |= Pattern.CASE_INSENSITIVE;
+        if (!mChkRegexp.isChecked()) flags |= Pattern.LITERAL;
+
         Pattern pattern = Pattern.compile(searchText, flags);
         int start = -1;
         int end = -1;
-    
+
         Matcher matcher = pattern.matcher(text);
-        if(!mChkBackwards.isChecked()) {
+        if (!mChkBackwards.isChecked()) {
             // search fordwards
             int from = mEditText.getTrueSelectionStart();
-            if (from != mEditText.getTrueSelectionEnd()) from++; // avoids returning the current selection
-            if( matcher.find(from) || matcher.find(0)){
+            if (from != mEditText.getTrueSelectionEnd())
+                from++; // avoids returning the current selection
+            if (matcher.find(from) || matcher.find(0)) {
                 // found one just after the selection or from the beginning
                 start = matcher.start();
                 end = matcher.end();
             }
-        }else{
+        } else {
             // search backwards
-            
+
             int until = mEditText.getTrueSelectionEnd();
-            while( matcher.find() && matcher.end() < until){
+            while (matcher.find() && matcher.end() < until) {
                 // found match before cursor, save
                 start = matcher.start();
                 end = matcher.end();
             }
-            
-            if(start == -1){
+
+            if (start == -1) {
                 // not found, continue to find last one
-                while( matcher.find() ){
+                while (matcher.find()) {
                     // found match, save
                     start = matcher.start();
                     end = matcher.end();
                 }
             }
         }
-        
-        if( start != -1) {
+
+        if (start != -1) {
             // found, set selection
             mEditText.setSelection(start, end);
-        }else{
+        } else {
             // nothing found
             showDialog();
         }
     }
-    
+
     /**
      * Private: creates the dialog
      */
-    private void createDialog(){
-        
+    private void createDialog() {
+
         View views = mCntx.getLayoutInflater().inflate(R.layout.dialog_search, null);
-        
+
         mEdTxt = views.findViewById(R.id.srch_text);
         mChkBackwards = views.findViewById(R.id.srch_back);
         mChkCase = views.findViewById(R.id.srch_case);
         mChkRegexp = views.findViewById(R.id.srch_regexp);
-    
+
         mDialog = new AlertDialog.Builder(mCntx)
                 .setTitle(R.string.srch_ttl)
                 .setView(views)

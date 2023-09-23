@@ -10,7 +10,6 @@ import org.mozilla.javascript.Token;
 
 /**
  * AST node for an empty statement.  Node type is {@link Token#EMPTY}.<p>
- *
  */
 public class EmptyStatement extends AstNode {
 
@@ -31,9 +30,7 @@ public class EmptyStatement extends AstNode {
 
     @Override
     public String toSource(int depth) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(makeIndent(depth)).append(";\n");
-        return sb.toString();
+        return makeIndent(depth) + ";\n";
     }
 
     /**

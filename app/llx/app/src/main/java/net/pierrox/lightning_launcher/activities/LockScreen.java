@@ -32,12 +32,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Rect;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+
 import net.pierrox.lightning_launcher.LLApp;
 import net.pierrox.lightning_launcher.api.ScreenIdentity;
 import net.pierrox.lightning_launcher.configuration.GlobalConfig;
@@ -56,8 +56,8 @@ import java.util.List;
 import java.util.Stack;
 
 public class LockScreen extends Dashboard {
-	private static final int DIALOG_UNLOCK = 1;
-	
+    private static final int DIALOG_UNLOCK = 1;
+
     public static LockScreen sThis;
     public static Integer sMyTaskId;
 
@@ -77,10 +77,10 @@ public class LockScreen extends Dashboard {
             mActivityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
             List<ActivityManager.RunningTaskInfo> tasks = mActivityManager.getRunningTasks(2);
             int size = tasks.size();
-            if(size > 0) {
+            if (size > 0) {
                 sMyTaskId = tasks.get(0).id;
             }
-            if(size == 2) {
+            if (size == 2) {
                 mLastTaskId = tasks.get(1).id;
             } else {
                 mLastTaskId = null;
@@ -113,19 +113,16 @@ public class LockScreen extends Dashboard {
         }
 
 
-
-
         try {
-            Method getActionBar=getClass().getMethod("getActionBar");
-            Object action_bar=getActionBar.invoke(this, (Object[])null);
-            action_bar.getClass().getMethod("hide").invoke(action_bar, (Object[])null);
-        } catch(Exception e) {
+            Method getActionBar = getClass().getMethod("getActionBar");
+            Object action_bar = getActionBar.invoke(this, (Object[]) null);
+            action_bar.getClass().getMethod("hide").invoke(action_bar, (Object[]) null);
+        } catch (Exception e) {
             // pass, API level 11
         }
 
 
-
-        mNavigationStack=new Stack<Integer>();
+        mNavigationStack = new Stack<Integer>();
 
         LLApp llApp = LLApp.get();
         LightningEngine engine = llApp.getAppEngine();
@@ -133,13 +130,13 @@ public class LockScreen extends Dashboard {
         int lockScreen = globalConfig.lockScreen;
         mLockScreenPage = engine.getOrLoadPage(lockScreen);
 
-        mItemLayout=(ItemLayout)findViewById(R.id.drawer_il);
+        mItemLayout = findViewById(R.id.drawer_il);
         mScreen.takeItemLayoutOwnership(mItemLayout);
         mItemLayout.setHonourFocusChange(false);
         mItemLayout.setPage(mLockScreenPage);
         configureActivity(mLockScreenPage);
 
-        if(globalConfig.overlayScreen != Page.NONE && globalConfig.lockDisableOverlay) {
+        if (globalConfig.overlayScreen != Page.NONE && globalConfig.lockDisableOverlay) {
             stopService(llApp.getWindowServiceIntent());
         }
 
@@ -159,7 +156,7 @@ public class LockScreen extends Dashboard {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(keyCode == KeyEvent.KEYCODE_BACK) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
             mScreen.zoomToOrigin(mScreen.getTargetOrTopmostItemLayout());
             return true;
         }
@@ -197,9 +194,12 @@ public class LockScreen extends Dashboard {
             @Override
             public void onShow(DialogInterface dialogInterface) {
                 finish();
-                try { removeDialog(DIALOG_UNLOCK); } catch(Exception e) {}
-                if(mRestorePreviousTask) {
-                    if(mLastTaskId != null) {
+                try {
+                    removeDialog(DIALOG_UNLOCK);
+                } catch (Exception e) {
+                }
+                if (mRestorePreviousTask) {
+                    if (mLastTaskId != null) {
                         try {
                             mMoveTaskToFront.invoke(mActivityManager, mLastTaskId, 0);
                             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
@@ -207,7 +207,7 @@ public class LockScreen extends Dashboard {
                             e.printStackTrace();
                         }
                     } else {
-                        if(mNeedDashboardRestart) {
+                        if (mNeedDashboardRestart) {
                             Intent intent = new Intent(LockScreen.this, Dashboard.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
@@ -220,15 +220,17 @@ public class LockScreen extends Dashboard {
     }
 
 
-
     public void unlock(boolean restore_previous_task) {
         mRestorePreviousTask = restore_previous_task;
-        try { showDialog(DIALOG_UNLOCK); } catch(Exception e) {}
+        try {
+            showDialog(DIALOG_UNLOCK);
+        } catch (Exception e) {
+        }
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
 
         LLApp llApp = LLApp.get();
         GlobalConfig globalConfig = llApp.getAppEngine().getGlobalConfig();
-        if(globalConfig.overlayScreen != Page.NONE && globalConfig.lockDisableOverlay) {
+        if (globalConfig.overlayScreen != Page.NONE && globalConfig.lockDisableOverlay) {
             startService(llApp.getWindowServiceIntent());
         }
         Intent unlocked = new Intent(Dashboard.BROADCAST_ACTION_UNLOCKED);
@@ -250,7 +252,7 @@ public class LockScreen extends Dashboard {
 
         @Override
         public void onWidgetClicked() {
-            if(mGlobalConfig.launchUnlock) {
+            if (mGlobalConfig.launchUnlock) {
                 mItemLayout.postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -262,7 +264,7 @@ public class LockScreen extends Dashboard {
 
         @Override
         public ItemLayout loadRootItemLayout(int page, boolean reset_navigation_history, boolean displayImmediately, boolean animate) {
-            if(mItemLayout.getPage().id == page) {
+            if (mItemLayout.getPage().id == page) {
                 return mItemLayout;
             } else {
                 return loadRootItemLayoutOffscreen(page, reset_navigation_history, displayImmediately, animate);
@@ -297,7 +299,7 @@ public class LockScreen extends Dashboard {
         @Override
         protected void launchIntent(Intent intent, ItemView itemView) {
             super.launchIntent(intent, itemView);
-            if(mGlobalConfig.launchUnlock) {
+            if (mGlobalConfig.launchUnlock) {
                 unlock(false);
             }
         }

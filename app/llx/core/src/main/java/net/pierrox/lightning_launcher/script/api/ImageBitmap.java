@@ -18,11 +18,11 @@ import java.io.IOException;
 /**
  * Wraps a static bitmap.
  * Such an image can be loaded from file, created using {@link Image#createImage(int, int)}, or obtained from items icons.
- *
+ * <p>
  * An instance of this object can be created with {@link Image#createImage(int, int)} or {@link Image#createTextIcon(String, int, int, int, Typeface)}; or retrieved with any function that returns an {@link Image} when that image is an ImageBitmap; or with {@link ImageAnimation#getFrameImage(int)} or {@link net.pierrox.lightning_launcher.script.api.screen.ActivityScreen#cropImage(ImageBitmap, boolean)}.
  */
 public class ImageBitmap extends Image {
-    private Bitmap mBitmap;
+    private final Bitmap mBitmap;
     private ImageAnimation mSourceAnimation;
 
     /**
@@ -85,11 +85,12 @@ public class ImageBitmap extends Image {
      *     <li>SweepGradient</li>
      *     <li>Typeface</li>
      * </ul>
-     * @see <a href="http://developer.android.com/reference/android/graphics/Canvas.html">http://developer.android.com/reference/android/graphics/Canvas.html</a>
+     *
      * @return a canvas used to draw on this icon
+     * @see <a href="http://developer.android.com/reference/android/graphics/Canvas.html">http://developer.android.com/reference/android/graphics/Canvas.html</a>
      */
     public Canvas draw() {
-        if(mSourceAnimation != null) {
+        if (mSourceAnimation != null) {
             mSourceAnimation.setModified();
         }
         setModified();
@@ -107,7 +108,7 @@ public class ImageBitmap extends Image {
      */
     public void save() {
         Bitmap bmp = getBitmap();
-        if(bmp != null && mSourceFile != null) {
+        if (bmp != null && mSourceFile != null) {
             FileOutputStream fos = null;
             try {
                 fos = new FileOutputStream(mSourceFile);
@@ -120,7 +121,7 @@ public class ImageBitmap extends Image {
                 } catch (Exception e) {
                 }
             }
-            if(mSourceItem != null) {
+            if (mSourceItem != null) {
                 mSourceItem.notifyChanged();
             }
         }
@@ -131,15 +132,15 @@ public class ImageBitmap extends Image {
      * This method need to be called in order to refresh the object on the screen after the image has been modified through #draw.
      */
     public void update() {
-        if(mSourceItem != null && mSourceDrawable != null) {
-            if(mSourceDrawable.getClass() == SharedAsyncGraphicsDrawable.class) {
-                ((SharedAsyncGraphicsDrawable)mSourceDrawable).setBitmap(mBitmap);
+        if (mSourceItem != null && mSourceDrawable != null) {
+            if (mSourceDrawable.getClass() == SharedAsyncGraphicsDrawable.class) {
+                ((SharedAsyncGraphicsDrawable) mSourceDrawable).setBitmap(mBitmap);
             }
             net.pierrox.lightning_launcher.data.Shortcut s = (net.pierrox.lightning_launcher.data.Shortcut) mSourceItem;
             for (Screen screen : LLApp.get().getScreens()) {
                 ItemView[] ivs = screen.getItemViewsForItem(s);
                 for (ItemView iv : ivs) {
-                    if(iv.isInitDone()) {
+                    if (iv.isInitDone()) {
                         iv.getSensibleView().invalidate();
                     }
                 }
@@ -149,7 +150,8 @@ public class ImageBitmap extends Image {
 
     /**
      * Save the underlying bitmap to file
-     * @param path where to store the file
+     *
+     * @param path    where to store the file
      * @param quality only useful for JPEG (0-100)
      * @return true if the operation succeeded
      */
@@ -160,11 +162,14 @@ public class ImageBitmap extends Image {
             fos = new FileOutputStream(file);
             mBitmap.compress(format, quality, fos);
             return true;
-        } catch(IOException e) {
+        } catch (IOException e) {
             file.delete();
             return false;
         } finally {
-            if(fos != null) try { fos.close(); } catch (IOException e) {}
+            if (fos != null) try {
+                fos.close();
+            } catch (IOException e) {
+            }
         }
     }
 }

@@ -12,9 +12,9 @@ import org.mozilla.javascript.Scriptable;
 /**
  * ImageScript is a way to draw images or animations without the need for intermediate bitmaps.
  * Such images are scalable and memory efficient.
- *
+ * <p>
  * An instance of this object can be created with {@link Image#createImage(Scriptable, int, int)}; or retrieved with any function that returns an {@link Image} when that image is an ImageScript.
- *
+ * <p>
  * The Scriptable object must have a "draw" function, and optionally a "pause" and "resume" functions. These functions are called with a DrawingContext instance.
  * <br/><br/>
  * <b>Note</b>: <code>pause</code> and <code>resume</code> functions are called when the drawing is assigned to item icons only, not for backgrounds not icon layers. Animated backgrounds are currently not supported.
@@ -94,74 +94,9 @@ import org.mozilla.javascript.Scriptable;
  */
 public class ImageScript extends Image {
 
-    /**
-     * The DrawingContext is the link between the drawing script and the drawing target.
-     * The same script can be used to draw several images. For instance an ImageScript instance can be set for icon A, B and C, the drawing context then gives infos on the currently drawn icon.
-     */
-    public static class DrawingContext {
-        private SharedAsyncGraphicsDrawable mDrawable;
-        private Item mItem;
-        private Canvas mCanvas;
-        private int mWidth, mHeight;
-
-        public DrawingContext(SharedAsyncGraphicsDrawable drawable, Item item) {
-            mDrawable = drawable;
-            mItem = item;
-        }
-
-        public void setDrawingInfo(Canvas canvas, int width, int height) {
-            mCanvas = canvas;
-            mWidth = width;
-            mHeight = height;
-        }
-
-        /**
-         * Return an unique identifier for this context
-         */
-        public int getId() {
-            return mDrawable.hashCode();
-        }
-
-        /**
-         * Return the item for which the drawing occurs.
-         * Currently this method will only return a value when drawing shortcut icons (set through {@link Shortcut#setImage(Image)}), otherwise it will return null.
-         */
-        public Item getItem() {
-            return mItem;
-        }
-
-        /**
-         * Return a canvas on which to draw
-         * @return a canvas or null if not currently ready for draw
-         */
-        public Canvas getCanvas() {
-            return mCanvas;
-        }
-
-        /**
-         * Return the drawing width
-         * @return the width in pixel, or 0 if not currently ready for draw
-         */
-        public int getWidth() {
-            return mWidth;
-        }
-
-        /**
-         * Return the drawing height
-         * @return the height in pixel, or 0 if not currently ready for draw
-         */
-        public int getHeight() {
-            return mHeight;
-        }
-
-        public void invalidate() {
-            mDrawable.invalidateSelf();
-        }
-    }
-
-    private Scriptable mObject;
-    private int mWidth;
-    private int mHeight;
+    private final Scriptable mObject;
+    private final int mWidth;
+    private final int mHeight;
 
     /**
      * @hide
@@ -202,7 +137,7 @@ public class ImageScript extends Image {
      * Request this image to be drawn again, at some point in the future.
      */
     public void invalidate() {
-        if(mSourceDrawable != null) {
+        if (mSourceDrawable != null) {
             mSourceDrawable.invalidateSelf();
         }
     }
@@ -215,5 +150,73 @@ public class ImageScript extends Image {
         SharedAsyncGraphicsDrawable drawable = new SharedAsyncGraphicsDrawable((Graphics) null, false);
         drawable.setScriptObject(getScriptExecutor(), mObject, mWidth, mHeight, null);
         return drawable;
+    }
+
+    /**
+     * The DrawingContext is the link between the drawing script and the drawing target.
+     * The same script can be used to draw several images. For instance an ImageScript instance can be set for icon A, B and C, the drawing context then gives infos on the currently drawn icon.
+     */
+    public static class DrawingContext {
+        private final SharedAsyncGraphicsDrawable mDrawable;
+        private final Item mItem;
+        private Canvas mCanvas;
+        private int mWidth, mHeight;
+
+        public DrawingContext(SharedAsyncGraphicsDrawable drawable, Item item) {
+            mDrawable = drawable;
+            mItem = item;
+        }
+
+        public void setDrawingInfo(Canvas canvas, int width, int height) {
+            mCanvas = canvas;
+            mWidth = width;
+            mHeight = height;
+        }
+
+        /**
+         * Return an unique identifier for this context
+         */
+        public int getId() {
+            return mDrawable.hashCode();
+        }
+
+        /**
+         * Return the item for which the drawing occurs.
+         * Currently this method will only return a value when drawing shortcut icons (set through {@link Shortcut#setImage(Image)}), otherwise it will return null.
+         */
+        public Item getItem() {
+            return mItem;
+        }
+
+        /**
+         * Return a canvas on which to draw
+         *
+         * @return a canvas or null if not currently ready for draw
+         */
+        public Canvas getCanvas() {
+            return mCanvas;
+        }
+
+        /**
+         * Return the drawing width
+         *
+         * @return the width in pixel, or 0 if not currently ready for draw
+         */
+        public int getWidth() {
+            return mWidth;
+        }
+
+        /**
+         * Return the drawing height
+         *
+         * @return the height in pixel, or 0 if not currently ready for draw
+         */
+        public int getHeight() {
+            return mHeight;
+        }
+
+        public void invalidate() {
+            mDrawable.invalidateSelf();
+        }
     }
 }

@@ -9,8 +9,8 @@ import net.pierrox.lightning_launcher.script.api.screen.HomeScreen;
  * An instance of this object can be retrieved with {@link Lightning#getConfiguration()}.
  */
 public class Configuration {
-    private Lightning mLightning;
-    private GlobalConfig mGlobalConfig;
+    private final Lightning mLightning;
+    private final GlobalConfig mGlobalConfig;
 
     /**
      * @hide
@@ -30,10 +30,11 @@ public class Configuration {
     /**
      * Set which desktop to use as the home desktop.
      * Please note that this will not automatically change the currently displayed desktop. Use {@link net.pierrox.lightning_launcher.script.api.screen.HomeScreen#goToDesktopPosition(int, float, float, float, boolean)} for this.
+     *
      * @param desktopId identifier of the desktop to use as the home desktop
      */
     public void setHomeDesktopId(int desktopId) {
-        if(Page.isDashboard(desktopId)) {
+        if (Page.isDashboard(desktopId)) {
             mGlobalConfig.homeScreen = desktopId;
             mLightning.getEngine().notifyGlobalConfigChanged();
         }
@@ -56,16 +57,18 @@ public class Configuration {
      * displayed desktop, if the home screen is visible. Note that this value is also set when calling.
      * {@link HomeScreen#goToDesktop(int)}. This function is meant to be used by background script when
      * the home screen is not available.
+     *
      * @param desktopId
      */
     public void setCurrentDesktopId(int desktopId) {
-        if(Page.isDashboard(desktopId)) {
+        if (Page.isDashboard(desktopId)) {
             mLightning.getEngine().writeCurrentPage(desktopId);
         }
     }
 
     /**
      * Returns the desktop used as the lock screen, or undefined if not set.
+     *
      * @return identifier, or {@link Container#NONE} if not set
      */
     public int getLockscreenDesktopId() {
@@ -74,6 +77,7 @@ public class Configuration {
 
     /**
      * Set which desktop to use on the lock screen.
+     *
      * @param desktopId identifier of the desktop to use as the lock screen. Use {@link Container#NONE} to disable it.
      */
     public void setLockscreenDesktopId(int desktopId) {
@@ -83,6 +87,7 @@ public class Configuration {
 
     /**
      * Returns the desktop used as the floating desktop, or undefined if not set.
+     *
      * @return identifier, or {@link Container#NONE} if not set
      */
     public int getFloatingDesktopId() {
@@ -91,6 +96,7 @@ public class Configuration {
 
     /**
      * Set which desktop to use as the floating desktop.
+     *
      * @param desktopId identifier of the desktop to use as the floating one. Using {@link Container#NONE} to display a blank screen.
      */
     public void setFloatingDesktopId(int desktopId) {
@@ -100,6 +106,7 @@ public class Configuration {
 
     /**
      * Returns the desktop used as the live wallpaper, or undefined if not set.
+     *
      * @return identifier, or {@link Container#NONE} if not set
      */
     public int getLiveWallpaperDesktopId() {
@@ -108,6 +115,7 @@ public class Configuration {
 
     /**
      * Set which desktop to use as the live wallpaper. This isn't enough to activate the live wallpaper, Lightning must also be manually selected as the current live wallpaper engine.
+     *
      * @param desktopId identifier of the desktop to use as the live wallpaper one. Using {@link Container#NONE} will not disable the live wallpaper but display a blank screen.
      */
     public void setLiveWallpaperDesktopId(int desktopId) {

@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * Hack, not all android versions allow several views for a single widget. Use a single views that "smartly" manages reparenting
  */
 public final class MyAppWidgetHostView extends AppWidgetHostView {
-    private ArrayList<View> mParents = new ArrayList<>(2);
+    private final ArrayList<View> mParents = new ArrayList<>(2);
     private ArrayList<View> mAllowedRedraws;
 
     public MyAppWidgetHostView(Context context) {
@@ -24,7 +24,7 @@ public final class MyAppWidgetHostView extends AppWidgetHostView {
 
     public void unregisterParent(View parent) {
         mParents.remove(parent);
-        if(mAllowedRedraws != null) {
+        if (mAllowedRedraws != null) {
             mAllowedRedraws.remove(parent);
         }
         int size = mParents.size();

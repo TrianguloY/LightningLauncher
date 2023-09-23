@@ -11,7 +11,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.RippleDrawable;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -39,68 +38,47 @@ import net.pierrox.lightning_launcher.views.TouchEventInterceptor;
 import net.pierrox.lightning_launcher.views.TransformLayout;
 
 public abstract class ItemView extends TransformLayout implements TouchEventInterceptor.OnInterceptorListener, View.OnKeyListener, View.OnFocusChangeListener {
-    public interface ItemViewListener {
-        public void onItemViewPressed(ItemView itemView);
-        public void onItemViewUnpressed(ItemView itemView);
-        public void onItemViewMove(ItemView itemView, float dx, float dy);
-        public void onItemViewClicked(ItemView itemView);
-//        public void onItemViewDoubleClicked(Item item);
-        public void onItemViewLongClicked(ItemView itemView);
-        public void onItemViewAction(ItemView itemView, int action);
-        public boolean onItemViewTouch(ItemView itemView, MotionEvent event);
-        public void onItemViewSelectionChanged(ItemView itemView, boolean selected);
-    }
-
+    public static final long ANIMATION_TRANSLATE_DURATION = 200;
     private static final int[][] RIPPLE_STATES_LIST = {{android.R.attr.state_pressed}};
     private static final int[] STATE_PRESSED = new int[]{android.R.attr.state_pressed, android.R.attr.state_enabled};
     private static final int MINIMUM_ALPHA = 50;
-    public static final long ANIMATION_TRANSLATE_DURATION = 200;
-    private static final Box sStopPointBox=new Box();
+    private static final Box sStopPointBox = new Box();
     private static final Interpolator sAccelerateDecelerateInterpolator = new AccelerateDecelerateInterpolator();
-
+    private static final int[] STATE_UNPRESSED = new int[]{android.R.attr.state_enabled};
+    // hack: used to prioritize view loading : those near to the viewport will be loaded first
+    public float mDistanceToViewport;
     protected Item mItem;
-
-    private ItemLayout mItemLayout;
-
     protected BoxLayout mSensibleView;
 
     protected int mAlpha;
-    private boolean mOverrideVisible;
-    private boolean mAlwaysPinnedAndVisible;
-
     protected boolean mHighlighted;
     protected boolean mFocused;
+    protected boolean mResumed;
+    protected boolean mDelayedHighlightedState;
+    protected HolographicOutlineHelper mOutlineHelper;
+    private ItemLayout mItemLayout;
+    private boolean mOverrideVisible;
+    private boolean mAlwaysPinnedAndVisible;
     private boolean mDragged;
     private boolean mSelected;
     private boolean mChecked;
-
-    protected boolean mResumed;
-
     private Bitmap mDraggedBitmap;
     private int mDraggedBitmapScale;
-
-    private boolean mDpadCenterDown;
-    private boolean mHasLongDpadCenter;
-    private Runnable mLongDpadCenterRunnable=new Runnable() {
+    private final Runnable mLongDpadCenterRunnable = new Runnable() {
         @Override
         public void run() {
-            mHasLongDpadCenter=true;
+            mHasLongDpadCenter = true;
             getScreen().onItemViewLongClicked(ItemView.this);
         }
     };
-
-    protected boolean mDelayedHighlightedState;
-    private Runnable mHighlightRunnable =new Runnable() {
+    private boolean mDpadCenterDown;
+    private boolean mHasLongDpadCenter;
+    private final Runnable mHighlightRunnable = new Runnable() {
         @Override
         public void run() {
             setHighlightedNow(mDelayedHighlightedState);
         }
     };
-
-    protected HolographicOutlineHelper mOutlineHelper;
-
-    // hack: used to prioritize view loading : those near to the viewport will be loaded first
-    public float mDistanceToViewport;
 
     public ItemView(Context context, Item item) {
         super(context);
@@ -121,7 +99,7 @@ public abstract class ItemView extends TransformLayout implements TouchEventInte
         LightningEngine engine = mItem.getPage().getEngine();
         engine.getVariableManager().updateBindings(this, null, true, null, true);
         engine.getScriptExecutor().getLightning().clearCachedItem(this);
-        if(mSensibleView != null) {
+        if (mSensibleView != null) {
             mSensibleView.destroy();
         }
     }
@@ -150,16 +128,16 @@ public abstract class ItemView extends TransformLayout implements TouchEventInte
         Context context = itemView.getContext();
         mOutlineHelper = HolographicOutlineHelper.obtain(context);
 
-        final ItemConfig ic=mItem.getItemConfig();
+        final ItemConfig ic = mItem.getItemConfig();
 
-        BoxLayout bl=new BoxLayout(context, null, ic.hardwareAccelerated);
+        BoxLayout bl = new BoxLayout(context, null, ic.hardwareAccelerated);
         //bl.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        bl.setChild(itemView, mItem.getClass()==StopPoint.class ? sStopPointBox : ic.box);
+        bl.setChild(itemView, mItem.getClass() == StopPoint.class ? sStopPointBox : ic.box);
         bl.setUseSelectedContentColor(ic.selectionEffect == ItemConfig.SelectionEffect.PLAIN);
 
         setFilterChildView(ic.filterTransformed);
         setChild(bl);
-        mSensibleView=bl;
+        mSensibleView = bl;
 
         setOnInterceptorListener(this);
         mSensibleView.setOnKeyListener(this);
@@ -186,6 +164,7 @@ public abstract class ItemView extends TransformLayout implements TouchEventInte
 
     /**
      * Only available when isInitDone() returns true.
+     *
      * @return
      */
     public BoxLayout getSensibleView() {
@@ -202,7 +181,7 @@ public abstract class ItemView extends TransformLayout implements TouchEventInte
 
     public void evaluateEnabledState() {
         ItemLayout il = getParentItemLayout();
-        if(il != null) {
+        if (il != null) {
             boolean enabled;
             boolean editMode = il.getEditMode();
             if (getClass() == StopPointView.class) {
@@ -222,7 +201,7 @@ public abstract class ItemView extends TransformLayout implements TouchEventInte
     }
 
     public void setOverrideVisible(boolean override_visible) {
-        if(mOverrideVisible != override_visible) {
+        if (mOverrideVisible != override_visible) {
             mOverrideVisible = override_visible;
             updateViewAlpha();
             updateViewVisibility();
@@ -232,9 +211,9 @@ public abstract class ItemView extends TransformLayout implements TouchEventInte
     public void updateViewVisibility() {
         int visibility;
 
-        if(!mItem.isVisible()) {
+        if (!mItem.isVisible()) {
             visibility = mOverrideVisible ? View.VISIBLE : View.INVISIBLE;
-        } else if(mAlwaysPinnedAndVisible) {
+        } else if (mAlwaysPinnedAndVisible) {
             visibility = View.VISIBLE;
         } else {
             visibility = (mItem.isAppDrawerHidden() && mItem.getAppDrawerHiddenHandling() != Item.APP_DRAWER_HIDDEN_ONLY_VISIBLE)
@@ -249,19 +228,19 @@ public abstract class ItemView extends TransformLayout implements TouchEventInte
         return getVisibility() == View.VISIBLE;
     }
 
+    public boolean isAlwaysPinnedAndVisible() {
+        return mAlwaysPinnedAndVisible;
+    }
+
     public void setAlwaysPinnedAndVisible(boolean alwaysPinnedAndVisible) {
-        if(alwaysPinnedAndVisible != mAlwaysPinnedAndVisible) {
+        if (alwaysPinnedAndVisible != mAlwaysPinnedAndVisible) {
             mAlwaysPinnedAndVisible = alwaysPinnedAndVisible;
             updateViewVisibility();
         }
     }
 
-    public boolean isAlwaysPinnedAndVisible() {
-        return mAlwaysPinnedAndVisible;
-    }
-
     public void updateViewAlpha() {
-        if(isInitDone()) {
+        if (isInitDone()) {
             mAlpha = mItem.getAlpha();
             if (mOverrideVisible) {
                 if (mAlpha < MINIMUM_ALPHA) {
@@ -278,7 +257,7 @@ public abstract class ItemView extends TransformLayout implements TouchEventInte
     }
 
     public void setHighlightedLater(boolean highlighted) {
-        if(isInitDone()) {
+        if (isInitDone()) {
             mDelayedHighlightedState = highlighted;
             mSensibleView.removeCallbacks(mHighlightRunnable);
             mSensibleView.postDelayed(mHighlightRunnable, 80);
@@ -286,25 +265,21 @@ public abstract class ItemView extends TransformLayout implements TouchEventInte
     }
 
     public void setHighlightedNow(boolean selected) {
-        if(isInitDone()) {
+        if (isInitDone()) {
             mSensibleView.removeCallbacks(mHighlightRunnable);
             mSensibleView.setItemSelected(selected);
         }
         mHighlighted = selected;
     }
 
-    public void setSelected(boolean selected) {
-        setSelected(selected, true);
-    }
-
     public void setSelected(boolean selected, boolean sendSelectionChangeEvent) {
-        if(selected != mSelected) {
+        if (selected != mSelected) {
             mSelected = selected;
             if (!mSelected && mDraggedBitmap != null) {
                 mDraggedBitmap.recycle();
                 mDraggedBitmap = null;
             }
-            if(sendSelectionChangeEvent) {
+            if (sendSelectionChangeEvent) {
                 getScreen().onItemViewSelectionChanged(this, selected);
             }
         }
@@ -314,17 +289,17 @@ public abstract class ItemView extends TransformLayout implements TouchEventInte
         return mSelected;
     }
 
-    public void setChecked(boolean checked) {
-        mChecked = checked;
-        invalidate();
+    public void setSelected(boolean selected) {
+        setSelected(selected, true);
     }
 
     public boolean isChecked() {
         return mChecked;
     }
 
-    public void setDragged(boolean dragged) {
-        mDragged = dragged;
+    public void setChecked(boolean checked) {
+        mChecked = checked;
+        invalidate();
     }
 
     public void animateTranslate(float dx1, float dx2, float dy1, float dy2, boolean fade) {
@@ -332,7 +307,7 @@ public abstract class ItemView extends TransformLayout implements TouchEventInte
 
         Animation translateAnimation = new TranslateAnimation(dx1, dx2, dy1, dy2);
 
-        if(fade) {
+        if (fade) {
             AnimationSet as = new AnimationSet(true);
             as.addAnimation(translateAnimation);
             as.addAnimation(new AlphaAnimation(1, 0));
@@ -351,21 +326,21 @@ public abstract class ItemView extends TransformLayout implements TouchEventInte
 
     public void prepareDraggedBitmap() {
         final ItemConfig ic = mItem.getItemConfig();
-        if(ic.selectionEffect != ItemConfig.SelectionEffect.PLAIN) {
+        if (ic.selectionEffect != ItemConfig.SelectionEffect.PLAIN) {
             try {
                 Class<?> cls = mItem.getClass();
                 boolean is_icon_label_view = cls == Shortcut.class || cls == Folder.class;
-                View view = is_icon_label_view ? ((ShortcutView)this).getIconLabelView() : getSensibleView();
+                View view = is_icon_label_view ? ((ShortcutView) this).getIconLabelView() : getSensibleView();
                 Drawable background = view.getBackground();
                 int w = view.getWidth();
                 int h = view.getHeight();
-                if(w == 0 || h == 0) {
+                if (w == 0 || h == 0) {
                     // nothing to do
                     mDraggedBitmap = null;
                     return;
                 }
                 mDraggedBitmapScale = 1;
-                while(w*h>512*512) {
+                while (w * h > 512 * 512) {
                     mDraggedBitmapScale *= 2;
                     w /= 2;
                     h /= 2;
@@ -376,31 +351,32 @@ public abstract class ItemView extends TransformLayout implements TouchEventInte
                 float s = 1f / mDraggedBitmapScale;
                 int count = canvas.save();
                 canvas.scale(s, s);
-                if(background != null) background.setAlpha(0); // ripples do not handle setVisible(false, false); (always restart)
+                if (background != null)
+                    background.setAlpha(0); // ripples do not handle setVisible(false, false); (always restart)
                 view.draw(canvas);
-                if(background != null) background.setAlpha(255);
+                if (background != null) background.setAlpha(255);
                 canvas.restoreToCount(count);
 
-                new AsyncTask<Void,Void,Boolean>() {
+                new AsyncTask<Void, Void, Boolean>() {
                     @Override
                     protected Boolean doInBackground(Void... voids) {
                         int color = ic.box.ccs;
                         try {
                             mOutlineHelper.applyMediumExpensiveOutlineWithBlur(b, canvas, color, color);
                             return true;
-                        } catch(Throwable e) {
+                        } catch (Throwable e) {
                             return false;
                         }
                     }
 
                     @Override
                     protected void onPostExecute(Boolean ok) {
-                        if(ok) {
+                        if (ok) {
                             mDraggedBitmap = b;
                         }
                     }
-                }.execute((Void)null);
-            } catch(Throwable e) {
+                }.execute((Void) null);
+            } catch (Throwable e) {
                 e.printStackTrace();
             }
         } else {
@@ -420,30 +396,34 @@ public abstract class ItemView extends TransformLayout implements TouchEventInte
         return mDragged;
     }
 
+    public void setDragged(boolean dragged) {
+        mDragged = dragged;
+    }
+
     public void setFocused(boolean focused) {
         mFocused = focused;
-        if(mSensibleView != null) {
+        if (mSensibleView != null) {
             mSensibleView.setItemFocused(focused);
         }
     }
 
     public void updateViewSize() {
-        if(mSensibleView != null) {
+        if (mSensibleView != null) {
             mSensibleView.configureBox();
         }
     }
 
     public void setOnGrid(boolean on_grid) {
         ItemConfig old_ic = mItem.getItemConfig();
-        if(old_ic.onGrid == on_grid) return;
+        if (old_ic.onGrid == on_grid) return;
 
-        ItemConfig ic=mItem.modifyItemConfig();
+        ItemConfig ic = mItem.modifyItemConfig();
         ic.onGrid = on_grid;
         ItemLayout il = getParentItemLayout();
         float cw = il.getCellWidth();
         float ch = il.getCellHeight();
         HandleView hv = il.getHandleView();
-        if(ic.onGrid) {
+        if (ic.onGrid) {
             RectF bounds = new RectF();
             bounds.set(0, 0, mSensibleView.getWidth(), mSensibleView.getHeight());
             mItem.getTransform().mapRect(bounds);
@@ -474,7 +454,6 @@ public abstract class ItemView extends TransformLayout implements TouchEventInte
         setPressedState(true);
     }
 
-    private static final int[] STATE_UNPRESSED = new int[]{android.R.attr.state_enabled};
     @Override
     public void onInterceptUnpressed() {
         getScreen().onItemViewUnpressed(this);
@@ -504,15 +483,15 @@ public abstract class ItemView extends TransformLayout implements TouchEventInte
 
     @Override
     public boolean onKey(View v, int keyCode, KeyEvent event) {
-        if(keyCode==KeyEvent.KEYCODE_DPAD_CENTER || keyCode==KeyEvent.KEYCODE_ENTER) {
-            if(event.getAction()==KeyEvent.ACTION_DOWN && !mDpadCenterDown) {
-                mDpadCenterDown=true;
-                mHasLongDpadCenter=false;
+        if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
+            if (event.getAction() == KeyEvent.ACTION_DOWN && !mDpadCenterDown) {
+                mDpadCenterDown = true;
+                mHasLongDpadCenter = false;
                 getScreen().onItemViewPressed(this);
                 v.postDelayed(mLongDpadCenterRunnable, ViewConfiguration.getLongPressTimeout());
             } else {
-                mDpadCenterDown=false;
-                if(!mHasLongDpadCenter) {
+                mDpadCenterDown = false;
+                if (!mHasLongDpadCenter) {
                     v.removeCallbacks(mLongDpadCenterRunnable);
                     getScreen().onItemViewClicked(this);
                 }
@@ -527,8 +506,31 @@ public abstract class ItemView extends TransformLayout implements TouchEventInte
     @Override
     public void onFocusChange(View v, boolean hasFocus) {
         setFocused(hasFocus);
-        if(hasFocus) {
-            ((ItemLayout)getParent()).ensureChildViewVisible(this, true);
+        if (hasFocus) {
+            ((ItemLayout) getParent()).ensureChildViewVisible(this, true);
         }
     }
+
+    public interface ItemViewListener {
+        void onItemViewPressed(ItemView itemView);
+
+        void onItemViewUnpressed(ItemView itemView);
+
+        void onItemViewMove(ItemView itemView, float dx, float dy);
+
+        void onItemViewClicked(ItemView itemView);
+
+        //        public void onItemViewDoubleClicked(Item item);
+        void onItemViewLongClicked(ItemView itemView);
+
+        void onItemViewAction(ItemView itemView, int action);
+
+        boolean onItemViewTouch(ItemView itemView, MotionEvent event);
+
+        void onItemViewSelectionChanged(ItemView itemView, boolean selected);
+    }
+
+
+
+
 }

@@ -40,7 +40,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -87,6 +86,7 @@ import net.pierrox.lightning_launcher.data.Shortcut;
 import net.pierrox.lightning_launcher.data.StopPoint;
 import net.pierrox.lightning_launcher.data.UndoStack;
 import net.pierrox.lightning_launcher.data.Utils;
+import net.pierrox.lightning_launcher.engine.variable.Binding;
 import net.pierrox.lightning_launcher.prefs.LLPreference;
 import net.pierrox.lightning_launcher.prefs.LLPreferenceBinding;
 import net.pierrox.lightning_launcher.prefs.LLPreferenceBox;
@@ -99,11 +99,10 @@ import net.pierrox.lightning_launcher.prefs.LLPreferenceListView;
 import net.pierrox.lightning_launcher.prefs.LLPreferenceSlider;
 import net.pierrox.lightning_launcher.prefs.LLPreferenceText;
 import net.pierrox.lightning_launcher.script.Script;
-import net.pierrox.lightning_launcher.util.ScriptPickerDialog;
 import net.pierrox.lightning_launcher.util.BindingEditDialog;
 import net.pierrox.lightning_launcher.util.FileAndDirectoryPickerDialog;
 import net.pierrox.lightning_launcher.util.PhoneUtils;
-import net.pierrox.lightning_launcher.engine.variable.Binding;
+import net.pierrox.lightning_launcher.util.ScriptPickerDialog;
 import net.pierrox.lightning_launcher_extreme.R;
 
 import java.io.File;
@@ -129,7 +128,115 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
 
 
     private static final String SIS_PICK_EVENT_ACTION_PREFERENCE_ID = "civ_pid";
-
+    private static final String FONT_ITEM_PREVIEW = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private static final int ID_mItemLabelDisplay = 1;
+    //    private static final int ID_mItemLabelCustom = 2;
+    private static final int ID_mItemLabelSize = 3;
+    private static final int ID_mItemLabelStyle = 4;
+    private static final int ID_mItemLabelFont = 5;
+    private static final int ID_mItemLabelNumLines = 6;
+    private static final int ID_mItemLabelColorNormal = 7;
+    private static final int ID_mItemLabelColorSelected = 8;
+    private static final int ID_mItemLabelColorFocused = 9;
+    private static final int ID_mItemLabelShadow = 10;
+    private static final int ID_mItemLabelShadowRadius = 11;
+    private static final int ID_mItemLabelShadowOffsetX = 12;
+    private static final int ID_mItemLabelShadowOffsetY = 13;
+    private static final int ID_mItemLabelShadowColor = 14;
+    private static final int ID_mItemIconDisplay = 15;
+    //    private static final int ID_mItemIconCustom = 16;
+    private static final int ID_mItemIconFolder = 17;
+    private static final int ID_mItemIconSmooth = 18;
+    private static final int ID_mItemIconScale = 19;
+    private static final int ID_mItemIconEffectBack = 25;
+    private static final int ID_mItemIconEffectOver = 26;
+    private static final int ID_mItemIconEffectMask = 27;
+    private static final int ID_mItemIconEffectScale = 28;
+    private static final int ID_mItemIconReflection = 29;
+    private static final int ID_mItemIconReflectionOverlap = 30;
+    private static final int ID_mItemIconReflectionSize = 31;
+    private static final int ID_mItemIconReflectionScale = 32;
+    private static final int ID_mItemLayoutMargin = 33;
+    private static final int ID_mItemLayoutPosition = 34;
+    private static final int ID_mItemBoxAlignH = 35;
+    private static final int ID_mItemBoxAlignV = 36;
+    private static final int ID_mItemBoxBox = 37;
+    private static final int ID_mItemBoxSize = 38;
+    private static final int ID_mItemBoxColorNormal = 39;
+    private static final int ID_mItemBoxColorSelected = 40;
+    private static final int ID_mItemBoxColorFocused = 41;
+    private static final int ID_mItemMiscEnabled = 42;
+    private static final int ID_mItemMiscAlpha = 43;
+    private static final int ID_mItemMiscSmoothTransformed = 44;
+    private static final int ID_mItemMiscEventSwipeLeft = 45;
+    private static final int ID_mItemMiscEventSwipeRight = 46;
+    private static final int ID_mItemMiscEventSwipeUp = 47;
+    private static final int ID_mItemMiscEventSwipeDown = 48;
+    private static final int ID_mItemMiscEventLongTap = 49;
+    private static final int ID_mItemMiscEventTap = 107;
+    private static final int ID_mItemMiscPinMode = 108;
+    private static final int ID_mItemSpDirLeftToRight = 114;
+    private static final int ID_mItemSpDirRightToLeft = 115;
+    private static final int ID_mItemSpDirTopToBottom = 116;
+    private static final int ID_mItemSpDirBottomToTop = 117;
+    private static final int ID_mItemSpStopScroll = 118;
+    private static final int ID_mItemSpStopDrag = 119;
+    private static final int ID_mItemSpBarrier = 120;
+    private static final int ID_mItemSpDesktopWide = 121;
+    private static final int ID_mItemSpSnapping = 122;
+    private static final int ID_mItemSpMatchEdgeLeft = 131;
+    private static final int ID_mItemSpMatchEdgeRight = 132;
+    private static final int ID_mItemSpMatchEdgeTop = 133;
+    private static final int ID_mItemSpMatchEdgeBottom = 134;
+    private static final int ID_ninePatch = 135;
+    private static final int ID_mItemMiscSelectionEffect = 142;
+    private static final int ID_mItemMiscRotate = 143;
+    private static final int ID_mItemSpReachedEvent = 144;
+    private static final int ID_mItemMiscName = 147;
+    private static final int ID_mItemBoxColorBasic = 149;
+    private static final int ID_mItemTextColorBasic = 150;
+    private static final int ID_mPageEventPaused = 153;
+    private static final int ID_mPageEventResumed = 154;
+    private static final int ID_mItemMiscEventTouch = 160;
+    private static final int ID_mItemIconColorFilter = 162;
+    private static final int ID_mItemMiscSelectionEffectMask = 169;
+    private static final int ID_mItemPIStyle = 170;
+    private static final int ID_mItemPIRawFormat = 171;
+    private static final int ID_mItemPIDotsMarginX = 172;
+    private static final int ID_mItemPIDotsMarginY = 173;
+    private static final int ID_mItemPIDotsOuterRadius = 174;
+    private static final int ID_mItemPIDotsInnerRadius = 175;
+    private static final int ID_mItemPIDotsOuterStrokeWidth = 176;
+    private static final int ID_mItemPIDotsOuterColor = 177;
+    private static final int ID_mItemPIDotsInnerColor = 178;
+    private static final int ID_mItemPIMiniMapOutStrokeColor = 179;
+    private static final int ID_mItemPIMiniMapOutFillColor = 180;
+    private static final int ID_mItemPIMiniMapOutStrokeWidth = 181;
+    private static final int ID_mItemPIMiniMapInStrokeColor = 182;
+    private static final int ID_mItemPIMiniMapInFillColor = 183;
+    private static final int ID_mItemPIMiniMapInStrokeWidth = 184;
+    private static final int ID_mItemPILineBgWidth = 185;
+    private static final int ID_mItemPILineBgColor = 186;
+    private static final int ID_mItemPILineFgWidth = 187;
+    private static final int ID_mItemPILineFgColor = 188;
+    private static final int ID_mItemPILineGravity = 189;
+    private static final int ID_mItemDtTextFormat = 193;
+    private static final int ID_mItemMiscEventCVCreate = 195;
+    private static final int ID_mItemMiscEventCVDestroy = 196;
+    private static final int ID_mItemBindingsAdd = 197;
+    private static final int ID_mItemMiscHardwareAccelerated = 198;
+    private static final int ID_mItemMiscLaunchAnimation = 199;
+    private static final int ID_mItemIconSizeMode = 200;
+    private static final int ID_mItemMiscEventMenu = 204;
+    private static final int ID_mItemDtSource = 10004;
+    private static final int ID_mItemDtDateEasyFormat = 10005;
+    private static final int ID_mItemDtDateExpertFormat = 10006;
+    private static final int ID_mItemDtDisplayEmpty = 10007;
+    private static final int ID_mItemDtCountFormat = 10008;
+    private static final int ID_mItemDtStorageSource = 10009;
+    private static final int ID_mItemDtStorageFormat = 10010;
+    private static final int ID_mItemDtStorageWhat = 10011;
+    private static final int ID_mItemDtGmailLabel = 10012;
     // list views
     private LLPreferenceListView[] mAllPreferenceListViews;
     private LLPreferenceListView mItemPrefsLabel;
@@ -142,7 +249,6 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
     private LLPreferenceListView mItemPrefsStopPoint;
     private LLPreferenceListView mItemPrefsPageIndicator;
     private LLPreferenceListView mItemPrefsBindings;
-
     // label
     private LLPreferenceCheckBox mItemLabelDisplay;
     private LLPreferenceSlider mItemLabelSize;
@@ -158,7 +264,6 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
     private LLPreferenceSlider mItemLabelShadowOffsetX;
     private LLPreferenceSlider mItemLabelShadowOffsetY;
     private LLPreferenceColor mItemLabelShadowColor;
-
     // icon
     private LLPreferenceCheckBox mItemIconDisplay;
     private LLPreferenceList mItemIconFolder;
@@ -175,7 +280,6 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
     private LLPreferenceSlider mItemIconReflectionOverlap;
     private LLPreferenceSlider mItemIconReflectionSize;
     private LLPreferenceSlider mItemIconReflectionScale;
-
     // dynamic text
     private LLPreferenceList mItemDtSource;
     private LLPreferenceCheckBox mItemDtDisplayEmpty;
@@ -187,7 +291,6 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
     private LLPreferenceList mItemDtStorageFormat;
     private LLPreferenceList mItemDtStorageWhat;
     private LLPreferenceList mItemDtGmailLabel;
-
     // page indicator
     private LLPreferenceList mItemPIStyle;
     private LLPreferenceSlider mItemPIDotsMarginX;
@@ -209,11 +312,9 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
     private LLPreferenceSlider mItemPILineFgWidth;
     private LLPreferenceColor mItemPILineFgColor;
     private LLPreferenceList mItemPILineGravity;
-
     // position
     private LLPreferenceSlider mItemLayoutMargin;
     private LLPreferenceList mItemLayoutPosition;
-
     // box
     private LLPreferenceList mItemBoxAlignH;
     private LLPreferenceList mItemBoxAlignV;
@@ -227,7 +328,6 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
     private LLPreference mItemBoxNpSelected;
     private LLPreference mItemBoxNpFocused;
     private LLPreference mItemBoxNpBasic;
-
     // misc
     private LLPreference mItemMiscName;
     private LLPreferenceList mItemMiscLaunchAnimation;
@@ -239,7 +339,6 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
     private LLPreferenceSlider mItemMiscAlpha;
     private LLPreferenceCheckBox mItemMiscSmoothTransformed;
     private LLPreferenceCheckBox mItemMiscHardwareAccelerated;
-
     // event
     private LLPreferenceEventAction mItemMiscEventSwipeLeft;
     private LLPreferenceEventAction mItemMiscEventSwipeRight;
@@ -254,7 +353,6 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
     private LLPreferenceEventAction mItemSpReachedEvent;
     private LLPreference mItemMiscEventCVCreate;
     private LLPreference mItemMiscEventCVDestroy;
-
     // stop point
     private LLPreferenceCheckBox mItemSpStopScroll;
     private LLPreferenceCheckBox mItemSpStopDrag;
@@ -269,33 +367,37 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
     private LLPreferenceCheckBox mItemSpMatchEdgeRight;
     private LLPreferenceCheckBox mItemSpMatchEdgeTop;
     private LLPreferenceCheckBox mItemSpMatchEdgeBottom;
-
     // bindings
     private LLPreference mItemBindingsAdd;
-
     private Dashboard mDashboard;
     private UndoStack mUndoStack;
-
     private boolean mSetupDone;
-
     private boolean mExpertMode;
     private ItemLayout mItemLayout;
     private Page mPage;
     private Item mItem;
     private boolean mForPage;
-
     private int mPickEventActionPreferenceId;
     private File mPreviouslyUsedDir;
     private String[] mFonts;
-
     private ItemConfig ic_def;
     private ShortcutConfig sc_def;
     private FolderConfig fc_def;
     private DynamicTextConfig dtc;
     private ActionsDescription mActionsDescriptions;
-
     public CustomizeItemView(Context context, AttributeSet attrs) {
         super(context, attrs);
+    }
+
+    private static int getEasyDateFormatIndex(Context context, String format) {
+        String[] date_formats = context.getResources().getStringArray(R.array.dt_date_ef_v);
+        for (int i = 0; i < date_formats.length; i++) {
+            if (date_formats[i].equals(format)) {
+                return i;
+            }
+        }
+
+        return -1;
     }
 
     public void init() {
@@ -322,11 +424,11 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
     public void setTarget(ItemLayout il, Page page, Item item) {
         // as of today, don't filter: the target data may have changed through script
 //        if(mPage != page || mItem != item) {
-            mItemLayout = il;
-            mPage = page;
-            mItem = item;
-            mForPage = mItem == null;
-            updatePreferences();
+        mItemLayout = il;
+        mPage = page;
+        mItem = item;
+        mForPage = mItem == null;
+        updatePreferences();
 //        }
     }
 
@@ -344,25 +446,25 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
 
     private String getPageName(View v) {
         int res;
-        if(v == mItemPrefsLabel) res = R.string.tab_label;
-        else if(v == mItemPrefsIcon) res = R.string.tab_icon;
-        else if(v == mItemPrefsDtData) res = R.string.tab_dt_data;
-        else if(v == mItemPrefsLayout) res = R.string.tab_layout;
-        else if(v == mItemPrefsBox) res = R.string.tab_box;
-        else if(v == mItemPrefsMisc) res = R.string.tab_misc;
-        else if(v == mItemPrefsEvent) res = R.string.m_events;
-        else if(v == mItemPrefsStopPoint) res = R.string.tab_stop_point;
-        else if(v == mItemPrefsPageIndicator) res = R.string.tab_page_indicator;
-        else if(v == mItemPrefsBindings) res = R.string.tab_bind;
+        if (v == mItemPrefsLabel) res = R.string.tab_label;
+        else if (v == mItemPrefsIcon) res = R.string.tab_icon;
+        else if (v == mItemPrefsDtData) res = R.string.tab_dt_data;
+        else if (v == mItemPrefsLayout) res = R.string.tab_layout;
+        else if (v == mItemPrefsBox) res = R.string.tab_box;
+        else if (v == mItemPrefsMisc) res = R.string.tab_misc;
+        else if (v == mItemPrefsEvent) res = R.string.m_events;
+        else if (v == mItemPrefsStopPoint) res = R.string.tab_stop_point;
+        else if (v == mItemPrefsPageIndicator) res = R.string.tab_page_indicator;
+        else if (v == mItemPrefsBindings) res = R.string.tab_bind;
         else res = 0;
 
-        return res==0 ? "" : getContext().getString(res);
+        return res == 0 ? "" : getContext().getString(res);
     }
 
     public void showGotoPageDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         String[] items = new String[mItems.size()];
-        for(ItemInfo ii : mItems) {
+        for (ItemInfo ii : mItems) {
             items[ii.position] = getPageName(ii.v);
         }
         builder.setItems(items, new DialogInterface.OnClickListener() {
@@ -392,7 +494,7 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
         boolean isEmbeddedFolder = itemClass == EmbeddedFolder.class;
         boolean isStopPoint = itemClass == StopPoint.class;
 
-        switch(preferenceId) {
+        switch (preferenceId) {
             case ID_mItemLabelDisplay:
                 return isShortcutConfigStylable && !isDynamicText && !isPageIndicator;
 
@@ -440,7 +542,7 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
             case ID_mItemDtCountFormat:
             case ID_mItemDtDisplayEmpty:
             case ID_mItemDtGmailLabel:
-            return isDynamicText;
+                return isDynamicText;
 
             case ID_mItemBoxAlignH:
             case ID_mItemBoxAlignV:
@@ -487,7 +589,7 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
             case ID_mItemMiscEventTouch:
             case ID_mPageEventPaused:
             case ID_mPageEventResumed:
-                return !isEmbeddedFolder && !isStopPoint && getContext().getClass()!=AppDrawerX.class;
+                return !isEmbeddedFolder && !isStopPoint && getContext().getClass() != AppDrawerX.class;
 
             case ID_mItemPIStyle:
             case ID_mItemPIDotsOuterColor:
@@ -535,20 +637,20 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
         mItemPrefsPageIndicator = new LLPreferenceListView(context, null);
         mItemPrefsBindings = new LLPreferenceListView(context, null);
 
-        mAllPreferenceListViews = new LLPreferenceListView[] {
-            mItemPrefsLabel,
-            mItemPrefsIcon,
-            mItemPrefsDtData,
-            mItemPrefsLayout,
-            mItemPrefsBox,
-            mItemPrefsMisc,
-            mItemPrefsEvent,
-            mItemPrefsStopPoint,
-            mItemPrefsPageIndicator,
-            mItemPrefsBindings,
+        mAllPreferenceListViews = new LLPreferenceListView[]{
+                mItemPrefsLabel,
+                mItemPrefsIcon,
+                mItemPrefsDtData,
+                mItemPrefsLayout,
+                mItemPrefsBox,
+                mItemPrefsMisc,
+                mItemPrefsEvent,
+                mItemPrefsStopPoint,
+                mItemPrefsPageIndicator,
+                mItemPrefsBindings,
         };
 
-        for(LLPreferenceListView l : mAllPreferenceListViews) {
+        for (LLPreferenceListView l : mAllPreferenceListViews) {
             l.setCompactMode(true);
             l.setListener(this);
             l.setDisplayOverride(true);
@@ -775,7 +877,7 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
 
     public void updatePreferences() {
         if (mItem == null && mPage == null) return;
-        mActionsDescriptions = new ActionsDescription(getContext(), mPage.id==Page.APP_DRAWER_PAGE ? Action.FLAG_TYPE_APP_DRAWER : Action.FLAG_TYPE_DESKTOP, true);
+        mActionsDescriptions = new ActionsDescription(getContext(), mPage.id == Page.APP_DRAWER_PAGE ? Action.FLAG_TYPE_APP_DRAWER : Action.FLAG_TYPE_DESKTOP, true);
         if (!mSetupDone) {
             setupPreferences();
         }
@@ -853,20 +955,20 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
             mItemPrefsStopPoint.setVisibility(View.VISIBLE);
         }
 
-        if(!is_stop_point) {
+        if (!is_stop_point) {
             updatePreferencesBox();
             mItemPrefsBox.setVisibility(View.VISIBLE);
         }
 
-        if(mExpertMode && mItem != null && getContext().getClass()!= AppDrawerX.class) {
+        if (mExpertMode && mItem != null && getContext().getClass() != AppDrawerX.class) {
             mItemPrefsBindings.setVisibility(View.VISIBLE);
         }
 
-        if(!mForPage) {
+        if (!mForPage) {
             updatePreferencesBindings();
         }
 
-        if(!is_stop_point && (mPage==null || mPage.id != Page.APP_DRAWER_PAGE) && !is_embedded_folder && getContext().getClass()!= AppDrawerX.class) {
+        if (!is_stop_point && (mPage == null || mPage.id != Page.APP_DRAWER_PAGE) && !is_embedded_folder && getContext().getClass() != AppDrawerX.class) {
             updatePreferencesEvent();
             mItemPrefsEvent.setVisibility(View.VISIBLE);
         }
@@ -876,7 +978,7 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
 
         initPagerItems();
 
-        if(previously_selected_view.getVisibility() == VISIBLE) {
+        if (previously_selected_view.getVisibility() == VISIBLE) {
             setCurrentView(previously_selected_view);
         }
     }
@@ -886,11 +988,7 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
 
         boolean is_dynamic_text = mItem != null && mItem.getClass() == DynamicText.class;
         boolean is_page_indicator = mItem != null && mItem.getClass() == PageIndicator.class;
-        if(is_dynamic_text || is_page_indicator) {
-            mItemLabelDisplay.setVisible(false);
-        } else {
-            mItemLabelDisplay.setVisible(true);
-        }
+        mItemLabelDisplay.setVisible(!is_dynamic_text && !is_page_indicator);
         mItemLabelDisplay.setValue(sc.labelVisibility || is_dynamic_text, sc_def == null ? null : sc_def.labelVisibility);
         mItemLabelSize.setValue(sc.labelFontSize, sc_def == null ? null : sc_def.labelFontSize);
         mItemLabelStyle.setValue(sc.labelFontStyle, sc_def == null ? null : sc_def.labelFontStyle);
@@ -918,8 +1016,8 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
         ShortcutConfig sc = getShortcutConfig();
 
         mItemIconDisplay.setValue(sc.iconVisibility, sc_def == null ? null : sc_def.iconVisibility);
-        if((mItem != null && mItem instanceof Folder) || (mItem == null && !mPage.isFolder())) {
-            FolderConfig fc = mForPage ? mPage.getFolderConfig() : ((FolderConfigStylable)mItem).getFolderConfig();
+        if ((mItem != null && mItem instanceof Folder) || (mItem == null && !mPage.isFolder())) {
+            FolderConfig fc = mForPage ? mPage.getFolderConfig() : ((FolderConfigStylable) mItem).getFolderConfig();
             mItemIconFolder.setVisible(true);
             mItemIconFolder.setValue(fc.iconStyle, fc_def == null ? null : fc_def.iconStyle);
         } else {
@@ -951,7 +1049,7 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
 
         ArrayList<LLPreference> prefs_dt_data = new ArrayList<LLPreference>();
         prefs_dt_data.add(mItemDtSource = new LLPreferenceList(context, ID_mItemDtSource, R.string.dt_source_t, R.array.dt_source_e, source, null));
-        switch(source) {
+        switch (source) {
             case DATE:
                 int easy_date_format_index = getEasyDateFormatIndex(context, dtc.dateFormat);
                 prefs_dt_data.add(mItemDtDateEasyFormat = new LLPreferenceList(context, ID_mItemDtDateEasyFormat, R.string.dt_date_ef_t, getResources().getStringArray(R.array.dt_date_ef_e), easy_date_format_index, null));
@@ -971,7 +1069,7 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
                 prefs_dt_data.add(mItemDtTextFormat = new LLPreferenceText(context, ID_mItemDtTextFormat, R.string.dt_date_xf_t, R.string.dt_date_xf_s, dtc.textFormat, null));
                 break;
             default:
-                if(source == DynamicTextConfig.Source.UNREAD_GMAIL && GmailContract.canReadLabels(context)) {
+                if (source == DynamicTextConfig.Source.UNREAD_GMAIL && GmailContract.canReadLabels(context)) {
                     prefs_dt_data.add(mItemDtGmailLabel = new LLPreferenceList(context, ID_mItemDtGmailLabel, R.string.dt_gml_t, new String[0], 0, null));
                     AccountManager.get(context).getAccountsByTypeAndFeatures(GmailContract.ACCOUNT_TYPE_GOOGLE, GmailContract.FEATURES_MAIL,
                             new AccountManagerCallback<Account[]>() {
@@ -989,11 +1087,11 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
                                                     final int name_index = c.getColumnIndexOrThrow(GmailContract.Labels.NAME);
                                                     while (c.moveToNext()) {
                                                         String row_label = c.getString(name_index);
-                                                        String full_label = account.name+" / "+row_label;
+                                                        String full_label = account.name + " / " + row_label;
                                                         String label = accounts.length > 1 ? full_label : row_label;
                                                         labels.add(label);
 
-                                                        if(current_label != null && (current_label.equals(full_label) || (account == accounts[0] && current_label.equals(row_label)))) {
+                                                        if (current_label != null && (current_label.equals(full_label) || (account == accounts[0] && current_label.equals(row_label)))) {
                                                             selected_index = labels.size() - 1;
                                                         }
                                                     }
@@ -1026,15 +1124,15 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
         ArrayList<LLPreference> prefs_pi = new ArrayList<>();
         final PageIndicator.Style style = pi.style;
         prefs_pi.add(mItemPIStyle = new LLPreferenceList(context, ID_mItemPIStyle, R.string.pi_style, R.array.pi_style_e, style, null));
-        switch(style) {
+        switch (style) {
             case DOTS:
-                prefs_pi.add(mItemPIDotsOuterColor=new LLPreferenceColor(context, ID_mItemPIDotsOuterColor, R.string.pi_dmoc, 0, pi.dotsOuterColor, null, true));
-                prefs_pi.add(mItemPIDotsOuterRadius =new LLPreferenceSlider(context, ID_mItemPIDotsOuterRadius, R.string.pi_dmor, 0, pi.dotsOuterRadius, null, LLPreferenceSlider.ValueType.INT, 0, 50, 1, null));
-                prefs_pi.add(mItemPIDotsOuterStrokeWidth =new LLPreferenceSlider(context, ID_mItemPIDotsOuterStrokeWidth, R.string.pi_dmow, 0, pi.dotsOuterStrokeWidth, null, LLPreferenceSlider.ValueType.INT, 0, 50, 1, null));
-                prefs_pi.add(mItemPIDotsInnerColor=new LLPreferenceColor(context, ID_mItemPIDotsInnerColor, R.string.pi_dmic, 0, pi.dotsInnerColor, null, true));
-                prefs_pi.add(mItemPIDotsInnerRadius =new LLPreferenceSlider(context, ID_mItemPIDotsInnerRadius, R.string.pi_dmir, 0, pi.dotsInnerRadius, null, LLPreferenceSlider.ValueType.INT, 0, 50, 1, null));
-                prefs_pi.add(mItemPIDotsMarginX=new LLPreferenceSlider(context, ID_mItemPIDotsMarginX, R.string.pi_dmx_t, 0, pi.dotsMarginX, null, LLPreferenceSlider.ValueType.INT, 0, 100, 1, null));
-                prefs_pi.add(mItemPIDotsMarginY=new LLPreferenceSlider(context, ID_mItemPIDotsMarginY, R.string.pi_dmy_t, 0, pi.dotsMarginY, null, LLPreferenceSlider.ValueType.INT, 0, 100, 1, null));
+                prefs_pi.add(mItemPIDotsOuterColor = new LLPreferenceColor(context, ID_mItemPIDotsOuterColor, R.string.pi_dmoc, 0, pi.dotsOuterColor, null, true));
+                prefs_pi.add(mItemPIDotsOuterRadius = new LLPreferenceSlider(context, ID_mItemPIDotsOuterRadius, R.string.pi_dmor, 0, pi.dotsOuterRadius, null, LLPreferenceSlider.ValueType.INT, 0, 50, 1, null));
+                prefs_pi.add(mItemPIDotsOuterStrokeWidth = new LLPreferenceSlider(context, ID_mItemPIDotsOuterStrokeWidth, R.string.pi_dmow, 0, pi.dotsOuterStrokeWidth, null, LLPreferenceSlider.ValueType.INT, 0, 50, 1, null));
+                prefs_pi.add(mItemPIDotsInnerColor = new LLPreferenceColor(context, ID_mItemPIDotsInnerColor, R.string.pi_dmic, 0, pi.dotsInnerColor, null, true));
+                prefs_pi.add(mItemPIDotsInnerRadius = new LLPreferenceSlider(context, ID_mItemPIDotsInnerRadius, R.string.pi_dmir, 0, pi.dotsInnerRadius, null, LLPreferenceSlider.ValueType.INT, 0, 50, 1, null));
+                prefs_pi.add(mItemPIDotsMarginX = new LLPreferenceSlider(context, ID_mItemPIDotsMarginX, R.string.pi_dmx_t, 0, pi.dotsMarginX, null, LLPreferenceSlider.ValueType.INT, 0, 100, 1, null));
+                prefs_pi.add(mItemPIDotsMarginY = new LLPreferenceSlider(context, ID_mItemPIDotsMarginY, R.string.pi_dmy_t, 0, pi.dotsMarginY, null, LLPreferenceSlider.ValueType.INT, 0, 100, 1, null));
                 break;
 
             case RAW:
@@ -1042,21 +1140,21 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
                 break;
 
             case MINIMAP:
-                prefs_pi.add(mItemPIMiniMapOutStrokeColor=new LLPreferenceColor(context, ID_mItemPIMiniMapOutStrokeColor, R.string.pi_mosc, 0, pi.miniMapOutStrokeColor, null, true));
-                prefs_pi.add(mItemPIMiniMapOutStrokeWidth=new LLPreferenceSlider(context, ID_mItemPIMiniMapOutStrokeWidth, R.string.pi_mosw, 0, pi.miniMapOutStrokeWidth, null, LLPreferenceSlider.ValueType.INT, 0, 50, 1, null));
-                prefs_pi.add(mItemPIMiniMapOutFillColor=new LLPreferenceColor(context, ID_mItemPIMiniMapOutFillColor, R.string.pi_mofc, 0, pi.miniMapOutFillColor, null, true));
-                prefs_pi.add(mItemPIMiniMapInStrokeColor=new LLPreferenceColor(context, ID_mItemPIMiniMapInStrokeColor, R.string.pi_misc, 0, pi.miniMapInStrokeColor, null, true));
-                prefs_pi.add(mItemPIMiniMapInStrokeWidth=new LLPreferenceSlider(context, ID_mItemPIMiniMapInStrokeWidth, R.string.pi_misw, 0, pi.miniMapInStrokeWidth, null, LLPreferenceSlider.ValueType.INT, 0, 50, 1, null));
-                prefs_pi.add(mItemPIMiniMapInFillColor=new LLPreferenceColor(context, ID_mItemPIMiniMapInFillColor, R.string.pi_mifc, 0, pi.miniMapInFillColor, null, true));
+                prefs_pi.add(mItemPIMiniMapOutStrokeColor = new LLPreferenceColor(context, ID_mItemPIMiniMapOutStrokeColor, R.string.pi_mosc, 0, pi.miniMapOutStrokeColor, null, true));
+                prefs_pi.add(mItemPIMiniMapOutStrokeWidth = new LLPreferenceSlider(context, ID_mItemPIMiniMapOutStrokeWidth, R.string.pi_mosw, 0, pi.miniMapOutStrokeWidth, null, LLPreferenceSlider.ValueType.INT, 0, 50, 1, null));
+                prefs_pi.add(mItemPIMiniMapOutFillColor = new LLPreferenceColor(context, ID_mItemPIMiniMapOutFillColor, R.string.pi_mofc, 0, pi.miniMapOutFillColor, null, true));
+                prefs_pi.add(mItemPIMiniMapInStrokeColor = new LLPreferenceColor(context, ID_mItemPIMiniMapInStrokeColor, R.string.pi_misc, 0, pi.miniMapInStrokeColor, null, true));
+                prefs_pi.add(mItemPIMiniMapInStrokeWidth = new LLPreferenceSlider(context, ID_mItemPIMiniMapInStrokeWidth, R.string.pi_misw, 0, pi.miniMapInStrokeWidth, null, LLPreferenceSlider.ValueType.INT, 0, 50, 1, null));
+                prefs_pi.add(mItemPIMiniMapInFillColor = new LLPreferenceColor(context, ID_mItemPIMiniMapInFillColor, R.string.pi_mifc, 0, pi.miniMapInFillColor, null, true));
                 break;
 
             case LINE_X:
             case LINE_Y:
-                prefs_pi.add(mItemPILineBgWidth=new LLPreferenceSlider(context, ID_mItemPILineBgWidth, R.string.pi_lbw, 0, pi.lineBgWidth, null, LLPreferenceSlider.ValueType.INT, 0, 50, 1, null));
-                prefs_pi.add(mItemPILineBgColor=new LLPreferenceColor(context, ID_mItemPILineBgColor, R.string.pi_lbc, 0, pi.lineBgColor, null, true));
-                prefs_pi.add(mItemPILineFgWidth=new LLPreferenceSlider(context, ID_mItemPILineFgWidth, R.string.pi_lfw, 0, pi.lineFgWidth, null, LLPreferenceSlider.ValueType.INT, 0, 50, 1, null));
-                prefs_pi.add(mItemPILineFgColor=new LLPreferenceColor(context, ID_mItemPILineFgColor, R.string.pi_lfc, 0, pi.lineFgColor, null, true));
-                prefs_pi.add(mItemPILineGravity=new LLPreferenceList(context, ID_mItemPILineGravity, R.string.pi_lg, R.array.pi_lg_e, pi.lineGravity, null));
+                prefs_pi.add(mItemPILineBgWidth = new LLPreferenceSlider(context, ID_mItemPILineBgWidth, R.string.pi_lbw, 0, pi.lineBgWidth, null, LLPreferenceSlider.ValueType.INT, 0, 50, 1, null));
+                prefs_pi.add(mItemPILineBgColor = new LLPreferenceColor(context, ID_mItemPILineBgColor, R.string.pi_lbc, 0, pi.lineBgColor, null, true));
+                prefs_pi.add(mItemPILineFgWidth = new LLPreferenceSlider(context, ID_mItemPILineFgWidth, R.string.pi_lfw, 0, pi.lineFgWidth, null, LLPreferenceSlider.ValueType.INT, 0, 50, 1, null));
+                prefs_pi.add(mItemPILineFgColor = new LLPreferenceColor(context, ID_mItemPILineFgColor, R.string.pi_lfc, 0, pi.lineFgColor, null, true));
+                prefs_pi.add(mItemPILineGravity = new LLPreferenceList(context, ID_mItemPILineGravity, R.string.pi_lg, R.array.pi_lg_e, pi.lineGravity, null));
                 break;
         }
 
@@ -1067,12 +1165,12 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
         final Context context = getContext();
 
         Binding[] bindings = getItemConfig().bindings;
-        if(bindings == null) {
+        if (bindings == null) {
             bindings = new Binding[0];
         }
 
         ArrayList<LLPreference> prefs_bindings = mItemPrefsBindings.getPreferences();
-        if(prefs_bindings == null) {
+        if (prefs_bindings == null) {
             prefs_bindings = new ArrayList<>();
             prefs_bindings.add(mItemBindingsAdd = new LLPreference(context, ID_mItemBindingsAdd, R.string.bd_a, R.string.np_d));
 
@@ -1085,20 +1183,20 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
         } else {
             int list_length = prefs_bindings.size();
             int bindings_length = bindings.length;
-            if(list_length-1 < bindings_length) {
+            if (list_length - 1 < bindings_length) {
                 int i = 1;
-                for(; i<=list_length-1; i++) {
-                    prefs_bindings.get(i).setValue(bindings[i-1], null);
+                for (; i <= list_length - 1; i++) {
+                    prefs_bindings.get(i).setValue(bindings[i - 1], null);
                 }
-                for(; i<=bindings_length; i++) {
-                    LLPreferenceBinding pref = new LLPreferenceBinding(context, bindings[i-1]);
+                for (; i <= bindings_length; i++) {
+                    LLPreferenceBinding pref = new LLPreferenceBinding(context, bindings[i - 1]);
                     prefs_bindings.add(pref);
                 }
             } else {
-                for(int i=0; i<bindings_length; i++) {
-                    prefs_bindings.get(i+1).setValue(bindings[i], null);
+                for (int i = 0; i < bindings_length; i++) {
+                    prefs_bindings.get(i + 1).setValue(bindings[i], null);
                 }
-                for(int i=list_length-1; i>bindings_length; i--) {
+                for (int i = list_length - 1; i > bindings_length; i--) {
                     prefs_bindings.remove(i);
                 }
             }
@@ -1171,7 +1269,7 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
                 break;
             }
         }
-        mItemBoxSize.setValue((float)size, ic_def==null ? null : (float)default_size);
+        mItemBoxSize.setValue((float) size, ic_def == null ? null : (float) default_size);
 
         final int[] border_color = ic.box.border_color;
         final int[] default_border_color = ic_def == null ? null : ic_def.box.border_color;
@@ -1228,11 +1326,11 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
         mItemMiscAlpha.setVisible(false);
         mItemMiscSmoothTransformed.setVisible(false);
         mItemMiscHardwareAccelerated.setVisible(false);
-        if(mItem == null || (mItem.getClass() == Shortcut.class)) {
+        if (mItem == null || (mItem.getClass() == Shortcut.class)) {
             mItemMiscLaunchAnimation.setVisible(true);
             mItemMiscLaunchAnimation.setValue(ic.launchAnimation, ic_def == null ? null : ic_def.launchAnimation);
         }
-        if(mItem == null || mItem.getClass() != StopPoint.class) {
+        if (mItem == null || mItem.getClass() != StopPoint.class) {
             if (mExpertMode) {
                 mItemMiscSelectionEffect.setValue(ic.selectionEffect, ic_def == null ? null : ic_def.selectionEffect);
                 mItemMiscSelectionEffect.setVisible(true);
@@ -1268,12 +1366,12 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
     private void updatePreferencesEvent() {
         ItemConfig ic = getItemConfig();
 
-        mItemMiscEventTap.setValue(ic.tap.clone(), ic_def==null ? null : ic_def.tap);
-        mItemMiscEventLongTap.setValue(ic.longTap.clone(), ic_def==null ? null : ic_def.longTap);
-        mItemMiscEventSwipeLeft.setValue(ic.swipeLeft.clone(), ic_def==null ? null : ic_def.swipeLeft);
-        mItemMiscEventSwipeRight.setValue(ic.swipeRight.clone(), ic_def==null ? null : ic_def.swipeRight);
-        mItemMiscEventSwipeUp.setValue(ic.swipeUp.clone(), ic_def==null ? null : ic_def.swipeUp );
-        mItemMiscEventSwipeDown.setValue(ic.swipeDown.clone(), ic_def==null ? null : ic_def.swipeDown);
+        mItemMiscEventTap.setValue(ic.tap.clone(), ic_def == null ? null : ic_def.tap);
+        mItemMiscEventLongTap.setValue(ic.longTap.clone(), ic_def == null ? null : ic_def.longTap);
+        mItemMiscEventSwipeLeft.setValue(ic.swipeLeft.clone(), ic_def == null ? null : ic_def.swipeLeft);
+        mItemMiscEventSwipeRight.setValue(ic.swipeRight.clone(), ic_def == null ? null : ic_def.swipeRight);
+        mItemMiscEventSwipeUp.setValue(ic.swipeUp.clone(), ic_def == null ? null : ic_def.swipeUp);
+        mItemMiscEventSwipeDown.setValue(ic.swipeDown.clone(), ic_def == null ? null : ic_def.swipeDown);
         mItemMiscEventTouch.setValue(ic.touch.clone(), ic_def == null ? null : ic_def.touch);
         mItemMiscEventTouch.setVisible(mExpertMode);
         mItemMiscEventPaused.setValue(ic.paused.clone(), ic_def == null ? null : ic_def.paused);
@@ -1283,7 +1381,7 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
         mItemMiscEventMenu.setValue(ic.menu.clone(), ic_def == null ? null : ic_def.menu);
         mItemMiscEventMenu.setVisible(mExpertMode);
 
-        if(mItem != null && mItem instanceof CustomView) {
+        if (mItem != null && mItem instanceof CustomView) {
             CustomView cv = (CustomView) mItem;
             setPreferenceSummaryForScript(mItemMiscEventCVCreate, cv.onCreate);
             setPreferenceSummaryForScript(mItemMiscEventCVDestroy, cv.onDestroy);
@@ -1301,20 +1399,20 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
         StopPoint sp = (StopPoint) mItem;
         int direction = sp.getDirection();
         int what = sp.getWhat();
-        boolean stop_scroll = (what&StopPoint.STOP_SCROLL)!=0;
-        boolean stop_drag = (what&StopPoint.STOP_DRAG)!=0;
-        final boolean left_to_right = (direction&StopPoint.DIRECTION_LEFT_TO_RIGHT)!=0;
-        final boolean right_to_left = (direction&StopPoint.DIRECTION_RIGHT_TO_LEFT)!=0;
-        final boolean top_to_bottom = (direction&StopPoint.DIRECTION_TOP_TO_BOTTOM)!=0;
-        final boolean bottom_to_top = (direction&StopPoint.DIRECTION_BOTTOM_TO_TOP)!=0;
+        boolean stop_scroll = (what & StopPoint.STOP_SCROLL) != 0;
+        boolean stop_drag = (what & StopPoint.STOP_DRAG) != 0;
+        final boolean left_to_right = (direction & StopPoint.DIRECTION_LEFT_TO_RIGHT) != 0;
+        final boolean right_to_left = (direction & StopPoint.DIRECTION_RIGHT_TO_LEFT) != 0;
+        final boolean top_to_bottom = (direction & StopPoint.DIRECTION_TOP_TO_BOTTOM) != 0;
+        final boolean bottom_to_top = (direction & StopPoint.DIRECTION_BOTTOM_TO_TOP) != 0;
         final boolean barrier = sp.isBarrier();
         final boolean desktop_wide = sp.isDesktopWide();
         final boolean snapping = sp.isSnapping();
         final int match_edge = sp.getMatchEdge();
-        final boolean match_edge_left = (match_edge&StopPoint.MATCH_EDGE_LEFT)!=0;
-        final boolean match_edge_right = (match_edge&StopPoint.MATCH_EDGE_RIGHT)!=0;
-        final boolean match_edge_top = (match_edge&StopPoint.MATCH_EDGE_TOP)!=0;
-        final boolean match_edge_bottom = (match_edge&StopPoint.MATCH_EDGE_BOTTOM)!=0;
+        final boolean match_edge_left = (match_edge & StopPoint.MATCH_EDGE_LEFT) != 0;
+        final boolean match_edge_right = (match_edge & StopPoint.MATCH_EDGE_RIGHT) != 0;
+        final boolean match_edge_top = (match_edge & StopPoint.MATCH_EDGE_TOP) != 0;
+        final boolean match_edge_bottom = (match_edge & StopPoint.MATCH_EDGE_BOTTOM) != 0;
 
         mItemSpStopScroll.setValue(stop_scroll, null);
         mItemSpStopDrag.setValue(stop_drag, null);
@@ -1351,7 +1449,7 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
         } else if (preference == mItemBoxNpBasic) {
             ImagePicker.startActivity(mDashboard, REQUEST_PICK_IMAGE_BOX_B);
         } else if (preference == mItemMiscName) {
-            Utils.createTextInputDialog(getContext(), R.string.in_t,  mItem.getName(), new Utils.OnTextInputDialogDone() {
+            Utils.createTextInputDialog(getContext(), R.string.in_t, mItem.getName(), new Utils.OnTextInputDialogDone() {
                 @Override
                 public void onTextInputDone(String value) {
                     mUndoStack.storeItemState(mItem);
@@ -1370,7 +1468,7 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
                 public void onScriptPicked(String id_data, int target) {
                     mUndoStack.storeGroupStart();
                     for (Item item : mDashboard.getSelectedItems()) {
-                        if(item instanceof CustomView) {
+                        if (item instanceof CustomView) {
                             mUndoStack.storeItemState(item);
                             mPage.startItemChange(item);
                             CustomView cv = (CustomView) item;
@@ -1393,9 +1491,9 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
                 }
             });
             dialog.show();
-        } else if(preference == mItemBindingsAdd || preference instanceof LLPreferenceBinding) {
+        } else if (preference == mItemBindingsAdd || preference instanceof LLPreferenceBinding) {
             final boolean for_add = preference == mItemBindingsAdd;
-            Binding init_value = for_add ? null : ((LLPreferenceBinding)preference).getValue();
+            Binding init_value = for_add ? null : ((LLPreferenceBinding) preference).getValue();
 
             new BindingEditDialog(getContext(), init_value, mItemLayout.getItemView(mItem), new BindingEditDialog.OnBindingEditDialogListener() {
                 @Override
@@ -1407,14 +1505,14 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
                     }
                     int length = bindings.length;
                     Binding[] new_bindings;
-                    if(for_add) {
+                    if (for_add) {
                         new_bindings = new Binding[length + 1];
                         System.arraycopy(bindings, 0, new_bindings, 0, length);
                         new_bindings[length] = binding;
                     } else {
-                        for(int i=0; i<length; i++) {
+                        for (int i = 0; i < length; i++) {
                             Binding b = bindings[i];
-                            if(b.target.equals(binding.target)) {
+                            if (b.target.equals(binding.target)) {
                                 bindings[i] = binding;
                             }
                         }
@@ -1432,7 +1530,7 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
                 }
             }).show();
         } else if (preference instanceof LLPreferenceEventAction) {
-            editEventActionPreference((LLPreferenceEventAction)preference);
+            editEventActionPreference((LLPreferenceEventAction) preference);
         }
     }
 
@@ -1445,26 +1543,26 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
     public void onLLPreferenceChanged(LLPreference preference) {
         final int preferenceId = preference.getId();
 
-        if(preferenceId == ID_mItemBoxBox) {
+        if (preferenceId == ID_mItemBoxBox) {
             // nothing to do except update enabled state of some other color preferences, this is only a selection box
             updatePreferencesBox();
             return;
         }
 
-        if(preference instanceof LLPreferenceEventAction) {
-            applyEventAction(preferenceId, ((LLPreferenceEventAction)preference).getValue());
+        if (preference instanceof LLPreferenceEventAction) {
+            applyEventAction(preferenceId, ((LLPreferenceEventAction) preference).getValue());
             return;
         }
 
-        if(preference instanceof LLPreferenceBinding) {
+        if (preference instanceof LLPreferenceBinding) {
             // update bindings
             int l = mItemPrefsBindings.getCount();
             Binding[] bindings;
-            if(l > 1) {
-                bindings = new Binding[l-1];
+            if (l > 1) {
+                bindings = new Binding[l - 1];
                 for (int i = 1; i < l; i++) {
                     LLPreferenceBinding pref = (LLPreferenceBinding) mItemPrefsBindings.getItemAtPosition(i);
-                    bindings[i-1] = pref.getValue();
+                    bindings[i - 1] = pref.getValue();
                 }
             } else {
                 bindings = null;
@@ -1475,7 +1573,7 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
             return;
         }
 
-        if(mForPage) {
+        if (mForPage) {
 
             mUndoStack.storePageState(mPage);
 
@@ -1498,20 +1596,20 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
 
             ArrayList<Item> items = mDashboard.getSelectedItems();
 
-            if(preference instanceof LLPreferenceCheckBox) {
+            if (preference instanceof LLPreferenceCheckBox) {
                 booleanValue = ((LLPreferenceCheckBox) preference).isChecked();
-            } else if(preference instanceof LLPreferenceSlider) {
-                intValue = (int)((LLPreferenceSlider) preference).getValue();
+            } else if (preference instanceof LLPreferenceSlider) {
+                intValue = (int) ((LLPreferenceSlider) preference).getValue();
                 floatValue = ((LLPreferenceSlider) preference).getValue();
-            } else if(preference instanceof LLPreferenceColor) {
-                colorValue = ((LLPreferenceColor)preference).getColor();
-            } else if(preference instanceof LLPreferenceText) {
-                textValue = ((LLPreferenceText)preference).getValue();
-            } else if(preference instanceof LLPreferenceList) {
+            } else if (preference instanceof LLPreferenceColor) {
+                colorValue = ((LLPreferenceColor) preference).getColor();
+            } else if (preference instanceof LLPreferenceText) {
+                textValue = ((LLPreferenceText) preference).getValue();
+            } else if (preference instanceof LLPreferenceList) {
                 final LLPreferenceList preferenceList = (LLPreferenceList) preference;
                 final String[] labels = preferenceList.getLabels();
                 listIndex = preferenceList.getValueIndex();
-                if(labels != null && listIndex != -1) {
+                if (labels != null && listIndex != -1) {
                     listLabel = labels[listIndex];
                 }
                 switch (preferenceList.getValueType()) {
@@ -1528,7 +1626,7 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
                 }
             }
 
-            DynamicTextConfig.Source masterDynamicTextSource = mItem instanceof DynamicText ? masterDynamicTextSource = ((DynamicText)mItem).getDynamicTextConfig().source : null;
+            DynamicTextConfig.Source masterDynamicTextSource = mItem instanceof DynamicText ? masterDynamicTextSource = ((DynamicText) mItem).getDynamicTextConfig().source : null;
             String dynamicTextDateFormat = null;
             switch (preferenceId) {
                 case ID_mItemDtSource:
@@ -1611,12 +1709,12 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
                 // dynamic texts have a custom management, apply the preference only if the dynamic text item has the same source as the master item
                 available = available && (!isDynamicText || masterDynamicTextSource == null || dynamicText.getDynamicTextConfig().source == masterDynamicTextSource);
 
-                if(available) {
+                if (available) {
                     mPage.startItemChange(item);
 
                     mUndoStack.storeItemState(item);
 
-                    if(!applyPreferenceOnStylableObject(item, preference)) {
+                    if (!applyPreferenceOnStylableObject(item, preference)) {
                         switch (preferenceId) {
                             case ID_mItemDtSource:
                                 DynamicTextConfig dynamicTextConfig = dynamicText.modifyDynamicTextConfig();
@@ -1709,30 +1807,68 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
 
                             case ID_mItemPIStyle:
                                 pageIndicator.style = (PageIndicator.Style) mItemPIStyle.getValueEnum();
-                                if(item == mItem) {
+                                if (item == mItem) {
                                     updatePreferencesPageIndicator();
                                 }
                                 break;
 
-                            case ID_mItemPIDotsOuterColor: pageIndicator.dotsOuterColor = colorValue; break;
-                            case ID_mItemPIDotsOuterRadius: pageIndicator.dotsOuterRadius = intValue; break;
-                            case ID_mItemPIDotsOuterStrokeWidth: pageIndicator.dotsOuterStrokeWidth = intValue; break;
-                            case ID_mItemPIDotsInnerColor: pageIndicator.dotsInnerColor = colorValue; break;
-                            case ID_mItemPIDotsInnerRadius: pageIndicator.dotsInnerRadius = intValue; break;
-                            case ID_mItemPIDotsMarginX: pageIndicator.dotsMarginX = intValue; break;
-                            case ID_mItemPIDotsMarginY: pageIndicator.dotsMarginY = intValue; break;
-                            case ID_mItemPIRawFormat: pageIndicator.rawFormat = textValue; break;
-                            case ID_mItemPIMiniMapOutStrokeColor: pageIndicator.miniMapOutStrokeColor = colorValue; break;
-                            case ID_mItemPIMiniMapOutStrokeWidth: pageIndicator.miniMapOutStrokeWidth = intValue; break;
-                            case ID_mItemPIMiniMapOutFillColor: pageIndicator.miniMapOutFillColor = colorValue; break;
-                            case ID_mItemPIMiniMapInStrokeColor: pageIndicator.miniMapInStrokeColor = colorValue; break;
-                            case ID_mItemPIMiniMapInStrokeWidth: pageIndicator.miniMapInStrokeWidth = intValue; break;
-                            case ID_mItemPIMiniMapInFillColor: pageIndicator.miniMapInFillColor = colorValue; break;
-                            case ID_mItemPILineBgWidth: pageIndicator.lineBgWidth = intValue; break;
-                            case ID_mItemPILineBgColor: pageIndicator.lineBgColor = colorValue; break;
-                            case ID_mItemPILineFgWidth: pageIndicator.lineFgWidth = intValue; break;
-                            case ID_mItemPILineFgColor: pageIndicator.lineFgColor = colorValue; break;
-                            case ID_mItemPILineGravity: pageIndicator.lineGravity = (PageIndicator.LineGravity) enumValue; break;
+                            case ID_mItemPIDotsOuterColor:
+                                pageIndicator.dotsOuterColor = colorValue;
+                                break;
+                            case ID_mItemPIDotsOuterRadius:
+                                pageIndicator.dotsOuterRadius = intValue;
+                                break;
+                            case ID_mItemPIDotsOuterStrokeWidth:
+                                pageIndicator.dotsOuterStrokeWidth = intValue;
+                                break;
+                            case ID_mItemPIDotsInnerColor:
+                                pageIndicator.dotsInnerColor = colorValue;
+                                break;
+                            case ID_mItemPIDotsInnerRadius:
+                                pageIndicator.dotsInnerRadius = intValue;
+                                break;
+                            case ID_mItemPIDotsMarginX:
+                                pageIndicator.dotsMarginX = intValue;
+                                break;
+                            case ID_mItemPIDotsMarginY:
+                                pageIndicator.dotsMarginY = intValue;
+                                break;
+                            case ID_mItemPIRawFormat:
+                                pageIndicator.rawFormat = textValue;
+                                break;
+                            case ID_mItemPIMiniMapOutStrokeColor:
+                                pageIndicator.miniMapOutStrokeColor = colorValue;
+                                break;
+                            case ID_mItemPIMiniMapOutStrokeWidth:
+                                pageIndicator.miniMapOutStrokeWidth = intValue;
+                                break;
+                            case ID_mItemPIMiniMapOutFillColor:
+                                pageIndicator.miniMapOutFillColor = colorValue;
+                                break;
+                            case ID_mItemPIMiniMapInStrokeColor:
+                                pageIndicator.miniMapInStrokeColor = colorValue;
+                                break;
+                            case ID_mItemPIMiniMapInStrokeWidth:
+                                pageIndicator.miniMapInStrokeWidth = intValue;
+                                break;
+                            case ID_mItemPIMiniMapInFillColor:
+                                pageIndicator.miniMapInFillColor = colorValue;
+                                break;
+                            case ID_mItemPILineBgWidth:
+                                pageIndicator.lineBgWidth = intValue;
+                                break;
+                            case ID_mItemPILineBgColor:
+                                pageIndicator.lineBgColor = colorValue;
+                                break;
+                            case ID_mItemPILineFgWidth:
+                                pageIndicator.lineFgWidth = intValue;
+                                break;
+                            case ID_mItemPILineFgColor:
+                                pageIndicator.lineFgColor = colorValue;
+                                break;
+                            case ID_mItemPILineGravity:
+                                pageIndicator.lineGravity = (PageIndicator.LineGravity) enumValue;
+                                break;
                         }
                     }
                     mPage.endItemChange(item);
@@ -1748,7 +1884,7 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
         Binding[] old_bindings = ic.bindings;
         int l = old_bindings.length;
         Binding[] new_bindings;
-        if(l == 1) {
+        if (l == 1) {
             new_bindings = null;
         } else {
             new_bindings = new Binding[l - 1];
@@ -1770,8 +1906,8 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
     }
 
     public void myOnActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == REQUEST_EDIT_EVENT_ACTION) {
-            if(resultCode == Activity.RESULT_OK) {
+        if (requestCode == REQUEST_EDIT_EVENT_ACTION) {
+            if (resultCode == Activity.RESULT_OK) {
                 EventAction ea = EventActionSetup.getEventActionFromIntent(data);
                 applyEventAction(mPickEventActionPreferenceId, ea);
             }
@@ -1781,7 +1917,7 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
 
                 ShortcutConfig pageShortcutConfig = mPage.getShortcutConfig();
 
-                if(mForPage) {
+                if (mForPage) {
                     mUndoStack.storePageState(mPage);
 
                     File file;
@@ -1806,7 +1942,7 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
                     ArrayList<Item> items = mDashboard.getSelectedItems();
                     mUndoStack.storeGroupStart();
                     for (Item item : items) {
-                        if(item instanceof ShortcutConfigStylable) {
+                        if (item instanceof ShortcutConfigStylable) {
                             final int itemId = item.getId();
 
                             mUndoStack.storeItemState(item);
@@ -1835,12 +1971,12 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
                 }
             }
         } else if (requestCode == REQUEST_PICK_IMAGE_BOX_N || requestCode == REQUEST_PICK_IMAGE_BOX_S || requestCode == REQUEST_PICK_IMAGE_BOX_F || requestCode == REQUEST_PICK_IMAGE_BOX_B) {
-            if(resultCode == Activity.RESULT_OK) {
+            if (resultCode == Activity.RESULT_OK) {
 
                 File icon_dir = mPage.getAndCreateIconDir();
                 File tmp_image_file = Utils.getTmpImageFile();
 
-                if(mForPage) {
+                if (mForPage) {
                     mUndoStack.storePageState(mPage);
 
                     File drawable_file;
@@ -1883,7 +2019,7 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
                     ArrayList<Item> items = mDashboard.getSelectedItems();
                     mUndoStack.storeGroupStart();
                     for (Item item : items) {
-                        if(item instanceof ShortcutConfigStylable) {
+                        if (item instanceof ShortcutConfigStylable) {
                             final int itemId = item.getId();
 
                             mUndoStack.storeItemState(item);
@@ -1933,23 +2069,12 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
         }
     }
 
-    private static int getEasyDateFormatIndex(Context context, String format) {
-        String[] date_formats = context.getResources().getStringArray(R.array.dt_date_ef_v);
-        for(int i=0; i<date_formats.length; i++) {
-            if(date_formats[i].equals(format)) {
-                return i;
-            }
-        }
-
-        return -1;
-    }
-
     private void setPreferenceSummaryForScript(LLPreference preference, String id_data) {
         preference.setSummary("");
-        if(id_data != null) {
+        if (id_data != null) {
             int id = Script.decodeIdAndData(id_data).first;
             Script script = mPage.getEngine().getScriptManager().getOrLoadScript(id);
-            if(script != null) {
+            if (script != null) {
                 preference.setSummary(script.name);
             }
         }
@@ -1984,7 +2109,7 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
     }
 
     private void applyEventAction(int preferenceId, EventAction ea) {
-        if(mForPage) {
+        if (mForPage) {
             mUndoStack.storePageState(mPage);
 
             applyEventActionOnObject(mPage, preferenceId, ea);
@@ -1998,7 +2123,7 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
 
                 mUndoStack.storeItemState(item);
 
-                if(isPreferenceAvailableForItem(item, preferenceId)) {
+                if (isPreferenceAvailableForItem(item, preferenceId)) {
                     applyEventActionOnObject(item, preferenceId, ea);
                 }
 
@@ -2012,7 +2137,7 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
     private void applyEventActionOnObject(Object object, int preferenceId, EventAction eventAction) {
         EventAction ea = eventAction.clone();
 
-        if(preferenceId == ID_mItemSpReachedEvent) {
+        if (preferenceId == ID_mItemSpReachedEvent) {
             ((StopPoint) object).setReachedAction(ea);
         } else {
             final ItemConfig itemConfig;
@@ -2022,16 +2147,36 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
                 itemConfig = ((Page) object).config.defaultItemConfig;
             }
             switch (preferenceId) {
-                case ID_mItemMiscEventSwipeLeft: itemConfig.swipeLeft = ea; break;
-                case ID_mItemMiscEventSwipeRight: itemConfig.swipeRight = ea; break;
-                case ID_mItemMiscEventSwipeUp: itemConfig.swipeUp = ea; break;
-                case ID_mItemMiscEventSwipeDown: itemConfig.swipeDown = ea; break;
-                case ID_mItemMiscEventTap: itemConfig.tap = ea; break;
-                case ID_mItemMiscEventLongTap: itemConfig.longTap = ea; break;
-                case ID_mItemMiscEventTouch: itemConfig.touch = ea; break;
-                case ID_mPageEventPaused: itemConfig.paused = ea; break;
-                case ID_mPageEventResumed: itemConfig.resumed = ea; break;
-                case ID_mItemMiscEventMenu: itemConfig.menu = ea; break;
+                case ID_mItemMiscEventSwipeLeft:
+                    itemConfig.swipeLeft = ea;
+                    break;
+                case ID_mItemMiscEventSwipeRight:
+                    itemConfig.swipeRight = ea;
+                    break;
+                case ID_mItemMiscEventSwipeUp:
+                    itemConfig.swipeUp = ea;
+                    break;
+                case ID_mItemMiscEventSwipeDown:
+                    itemConfig.swipeDown = ea;
+                    break;
+                case ID_mItemMiscEventTap:
+                    itemConfig.tap = ea;
+                    break;
+                case ID_mItemMiscEventLongTap:
+                    itemConfig.longTap = ea;
+                    break;
+                case ID_mItemMiscEventTouch:
+                    itemConfig.touch = ea;
+                    break;
+                case ID_mPageEventPaused:
+                    itemConfig.paused = ea;
+                    break;
+                case ID_mPageEventResumed:
+                    itemConfig.resumed = ea;
+                    break;
+                case ID_mItemMiscEventMenu:
+                    itemConfig.menu = ea;
+                    break;
             }
         }
     }
@@ -2054,9 +2199,9 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
                 if (position == 0) {
                     boolean ok = mDashboard.checkPermissions(
                             new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                            new int[] { R.string.pr_r3},
+                            new int[]{R.string.pr_r3},
                             ResourceWrapperActivity.REQUEST_PERMISSION_FONT_PICKER);
-                    if(ok) {
+                    if (ok) {
                         FileAndDirectoryPickerDialog.showForFont(mDashboard, mPreviouslyUsedDir, new FileAndDirectoryPickerDialog.FileAndDirectoryPickerDialogListener() {
                             @Override
                             public void onFileSelected(File file, File newDirectory) {
@@ -2077,10 +2222,16 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
                                     file = dst;
                                     buildFontsList();
                                 } catch (Exception e) {
-                                    file= null;
+                                    file = null;
                                 } finally {
-                                    if (fos != null) try { fos.close(); } catch (Exception e) { }
-                                    if (fis != null) try { fis.close(); } catch (Exception e) { }
+                                    if (fos != null) try {
+                                        fos.close();
+                                    } catch (Exception e) {
+                                    }
+                                    if (fis != null) try {
+                                        fis.close();
+                                    } catch (Exception e) {
+                                    }
                                 }
                                 if (file != null) {
                                     if (mForPage) {
@@ -2094,7 +2245,7 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
                                         ArrayList<Item> items = mDashboard.getSelectedItems();
                                         mUndoStack.storeGroupStart();
                                         for (Item item : items) {
-                                            if(item instanceof ShortcutConfigStylable) {
+                                            if (item instanceof ShortcutConfigStylable) {
                                                 mUndoStack.storeItemState(item);
                                                 ((ShortcutConfigStylable) item).modifyShortcutConfig().labelFontTypeFace = file.getAbsolutePath();
                                                 item.notifyChanged();
@@ -2126,7 +2277,7 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
                         mUndoStack.storeGroupStart();
                         for (Item item : items) {
                             mUndoStack.storeItemState(item);
-                            ((ShortcutConfigStylable)item).modifyShortcutConfig().labelFontTypeFace = labelFontTypeFace;
+                            ((ShortcutConfigStylable) item).modifyShortcutConfig().labelFontTypeFace = labelFontTypeFace;
                         }
                         mUndoStack.storeGroupEnd();
                         for (Item item : items) {
@@ -2141,7 +2292,7 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                if(position > 2) {
+                if (position > 2) {
                     showDeleteFontDialog(new File(FileUtils.getFontsDir(getPageBaseDir()), mFonts[position]));
                     dialog.dismiss();
                     return true;
@@ -2215,83 +2366,12 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
         mItem.notifyBindingsChanged(apply);
     }
 
-    private static final String FONT_ITEM_PREVIEW = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
     @Override
     public void onSystemConfigChanged(SystemConfig newSystemConfig) {
         boolean expert_mode = newSystemConfig.expertMode;
-        if(mExpertMode != expert_mode) {
+        if (mExpertMode != expert_mode) {
             mExpertMode = expert_mode;
             updatePreferences();
-        }
-    }
-
-    private class FontAdapter extends ArrayAdapter<String> {
-        private HashMap<String,Typeface> mTypefaces = new HashMap<>();
-        private File mFontsDir;
-        private int mSelectedIndex;
-        private int mCheckMarkDrawable;
-        private LayoutInflater inflater;
-
-        public FontAdapter(Context context, String[] fonts, int selected_index) {
-            super(context, 0, fonts);
-            mFontsDir = FileUtils.getFontsDir(getPageBaseDir());
-            mSelectedIndex = selected_index;
-
-            TypedValue typedValue = new TypedValue();
-            context.getTheme().resolveAttribute(android.R.attr.listChoiceIndicatorSingle, typedValue, true);
-            mCheckMarkDrawable = typedValue.resourceId;
-
-            inflater = (LayoutInflater.from(context));
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if(convertView == null) {
-                convertView = inflater.inflate(R.layout.two_lines_list_item_font, null);
-            }
-
-            String f = getItem(position);
-
-            CheckedTextView line1 = (CheckedTextView) convertView.findViewById(android.R.id.text1);
-            TextView line2 = (TextView) convertView.findViewById(android.R.id.text2);
-
-            line1.setText(f);
-
-            if(position == 0) {
-                line1.setCheckMarkDrawable(null);
-                line2.setVisibility(View.GONE);
-            } else {
-                line1.setCheckMarkDrawable(mCheckMarkDrawable);
-
-                Typeface font;
-                if(position == 1) {
-                    font = Typeface.DEFAULT;
-                } else if(position == 2) {
-                    font = LLApp.get().getIconsTypeface();
-                } else {
-                    font = mTypefaces.get(f);
-                    if (font == null) {
-                        try {
-                            font = Typeface.createFromFile(new File(mFontsDir, f));
-                            mTypefaces.put(f, font);
-                        } catch (Exception e) {
-                            // pass, use a default font
-                        }
-                    }
-                    if (font == null) {
-                        font = Typeface.DEFAULT;
-                        mTypefaces.put(f, font);
-                    }
-                }
-
-                line2.setVisibility(View.VISIBLE);
-                line2.setTypeface(font);
-                line2.setText(FONT_ITEM_PREVIEW);
-                line1.setChecked(position == mSelectedIndex);
-            }
-
-            return convertView;
         }
     }
 
@@ -2307,14 +2387,14 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
 
         boolean processed = true;
 
-        if(preference instanceof LLPreferenceCheckBox) {
+        if (preference instanceof LLPreferenceCheckBox) {
             booleanValue = ((LLPreferenceCheckBox) preference).isChecked();
-        } else if(preference instanceof LLPreferenceSlider) {
-            intValue = (int)((LLPreferenceSlider) preference).getValue();
+        } else if (preference instanceof LLPreferenceSlider) {
+            intValue = (int) ((LLPreferenceSlider) preference).getValue();
             floatValue = ((LLPreferenceSlider) preference).getValue();
-        } else if(preference instanceof LLPreferenceColor) {
-            colorValue = ((LLPreferenceColor)preference).getColor();
-        } else if(preference instanceof LLPreferenceList) {
+        } else if (preference instanceof LLPreferenceColor) {
+            colorValue = ((LLPreferenceColor) preference).getColor();
+        } else if (preference instanceof LLPreferenceList) {
             final LLPreferenceList preferenceList = (LLPreferenceList) preference;
             switch (preferenceList.getValueType()) {
                 case ENUM:
@@ -2355,8 +2435,8 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
             case ID_mItemMiscPinMode:
                 final ItemConfig.PinMode pinMode = (ItemConfig.PinMode) enumValue;
                 ics.modifyItemConfig().pinMode = pinMode;
-                if(object instanceof Item) {
-                    mDashboard.setItemPinMode(mItemLayout.getItemView((Item)object), pinMode);
+                if (object instanceof Item) {
+                    mDashboard.setItemPinMode(mItemLayout.getItemView((Item) object), pinMode);
                 }
                 break;
 
@@ -2370,8 +2450,8 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
 
             case ID_mItemMiscAlpha:
                 ics.modifyItemConfig().alpha = intValue;
-                if(object instanceof Item) {
-                    ((Item)object).setAlpha(intValue);
+                if (object instanceof Item) {
+                    ((Item) object).setAlpha(intValue);
                 }
                 break;
 
@@ -2386,13 +2466,13 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
             case ID_mItemBoxAlignH:
                 itemConfig = ics.modifyItemConfig();
                 itemConfig.box.ah = (Box.AlignH) enumValue;
-                itemConfig.box_s = itemConfig.box.toString(ic_def==null ? null : ic_def.box);
+                itemConfig.box_s = itemConfig.box.toString(ic_def == null ? null : ic_def.box);
                 break;
 
             case ID_mItemBoxAlignV:
                 itemConfig = ics.modifyItemConfig();
                 itemConfig.box.av = (Box.AlignV) enumValue;
-                itemConfig.box_s = itemConfig.box.toString(ic_def==null ? null : ic_def.box);
+                itemConfig.box_s = itemConfig.box.toString(ic_def == null ? null : ic_def.box);
                 break;
 
             case ID_mItemBoxSize:
@@ -2446,7 +2526,7 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
                         }
                         break;
                 }
-                itemConfig.box_s = itemConfig.box.toString(ic_def==null ? null : ic_def.box);
+                itemConfig.box_s = itemConfig.box.toString(ic_def == null ? null : ic_def.box);
                 break;
 
             case ID_mItemLabelDisplay:
@@ -2555,7 +2635,7 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
 
             case ID_mItemIconFolder:
                 fcs.modifyFolderConfig().iconStyle = (FolderConfig.FolderIconStyle) enumValue;
-                if(object instanceof Folder) {
+                if (object instanceof Folder) {
                     Folder folder = (Folder) object;
 
                     // when switching to a style with a dynamic background, force the recreation of
@@ -2565,7 +2645,7 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
 
                     Utils.updateFolderIcon(folder);
                 } else {
-                    Utils.updateFolderIconStyle((Page)object);
+                    Utils.updateFolderIconStyle((Page) object);
                 }
                 break;
 
@@ -2582,116 +2662,75 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
     }
 
     private ShortcutConfig getShortcutConfig() {
-        return mForPage ? mPage.getShortcutConfig() : ((ShortcutConfigStylable)mItem).getShortcutConfig();
+        return mForPage ? mPage.getShortcutConfig() : ((ShortcutConfigStylable) mItem).getShortcutConfig();
     }
 
-    private static final int ID_mItemLabelDisplay = 1;
-//    private static final int ID_mItemLabelCustom = 2;
-    private static final int ID_mItemLabelSize = 3;
-    private static final int ID_mItemLabelStyle = 4;
-    private static final int ID_mItemLabelFont = 5;
-    private static final int ID_mItemLabelNumLines = 6;
-    private static final int ID_mItemLabelColorNormal = 7;
-    private static final int ID_mItemLabelColorSelected = 8;
-    private static final int ID_mItemLabelColorFocused = 9;
-    private static final int ID_mItemLabelShadow = 10;
-    private static final int ID_mItemLabelShadowRadius = 11;
-    private static final int ID_mItemLabelShadowOffsetX = 12;
-    private static final int ID_mItemLabelShadowOffsetY = 13;
-    private static final int ID_mItemLabelShadowColor = 14;
-    private static final int ID_mItemIconDisplay = 15;
-//    private static final int ID_mItemIconCustom = 16;
-    private static final int ID_mItemIconFolder = 17;
-    private static final int ID_mItemIconSmooth = 18;
-    private static final int ID_mItemIconScale = 19;
-    private static final int ID_mItemIconEffectBack = 25;
-    private static final int ID_mItemIconEffectOver = 26;
-    private static final int ID_mItemIconEffectMask = 27;
-    private static final int ID_mItemIconEffectScale = 28;
-    private static final int ID_mItemIconReflection = 29;
-    private static final int ID_mItemIconReflectionOverlap = 30;
-    private static final int ID_mItemIconReflectionSize = 31;
-    private static final int ID_mItemIconReflectionScale = 32;
-    private static final int ID_mItemLayoutMargin = 33;
-    private static final int ID_mItemLayoutPosition = 34;
-    private static final int ID_mItemBoxAlignH = 35;
-    private static final int ID_mItemBoxAlignV = 36;
-    private static final int ID_mItemBoxBox = 37;
-    private static final int ID_mItemBoxSize = 38;
-    private static final int ID_mItemBoxColorNormal = 39;
-    private static final int ID_mItemBoxColorSelected = 40;
-    private static final int ID_mItemBoxColorFocused = 41;
-    private static final int ID_mItemMiscEnabled = 42;
-    private static final int ID_mItemMiscAlpha = 43;
-    private static final int ID_mItemMiscSmoothTransformed = 44;
-    private static final int ID_mItemMiscEventSwipeLeft = 45;
-    private static final int ID_mItemMiscEventSwipeRight = 46;
-    private static final int ID_mItemMiscEventSwipeUp = 47;
-    private static final int ID_mItemMiscEventSwipeDown = 48;
-    private static final int ID_mItemMiscEventLongTap = 49;
-    private static final int ID_mItemMiscEventTap = 107;
-    private static final int ID_mItemMiscPinMode = 108;
-    private static final int ID_mItemSpDirLeftToRight = 114;
-    private static final int ID_mItemSpDirRightToLeft = 115;
-    private static final int ID_mItemSpDirTopToBottom = 116;
-    private static final int ID_mItemSpDirBottomToTop = 117;
-    private static final int ID_mItemSpStopScroll = 118;
-    private static final int ID_mItemSpStopDrag = 119;
-    private static final int ID_mItemSpBarrier = 120;
-    private static final int ID_mItemSpDesktopWide = 121;
-    private static final int ID_mItemSpSnapping = 122;
-    private static final int ID_mItemSpMatchEdgeLeft = 131;
-    private static final int ID_mItemSpMatchEdgeRight = 132;
-    private static final int ID_mItemSpMatchEdgeTop = 133;
-    private static final int ID_mItemSpMatchEdgeBottom = 134;
-    private static final int ID_ninePatch= 135;
-    private static final int ID_mItemMiscSelectionEffect = 142;
-    private static final int ID_mItemMiscRotate = 143;
-    private static final int ID_mItemSpReachedEvent = 144;
-    private static final int ID_mItemMiscName = 147;
-    private static final int ID_mItemBoxColorBasic = 149;
-    private static final int ID_mItemTextColorBasic = 150;
-    private static final int ID_mPageEventPaused = 153;
-    private static final int ID_mPageEventResumed = 154;
-    private static final int ID_mItemMiscEventTouch = 160;
-    private static final int ID_mItemIconColorFilter = 162;
-    private static final int ID_mItemMiscSelectionEffectMask = 169;
-    private static final int ID_mItemPIStyle = 170;
-    private static final int ID_mItemPIRawFormat = 171;
-    private static final int ID_mItemPIDotsMarginX = 172;
-    private static final int ID_mItemPIDotsMarginY = 173;
-    private static final int ID_mItemPIDotsOuterRadius = 174;
-    private static final int ID_mItemPIDotsInnerRadius = 175;
-    private static final int ID_mItemPIDotsOuterStrokeWidth = 176;
-    private static final int ID_mItemPIDotsOuterColor = 177;
-    private static final int ID_mItemPIDotsInnerColor = 178;
-    private static final int ID_mItemPIMiniMapOutStrokeColor = 179;
-    private static final int ID_mItemPIMiniMapOutFillColor = 180;
-    private static final int ID_mItemPIMiniMapOutStrokeWidth = 181;
-    private static final int ID_mItemPIMiniMapInStrokeColor = 182;
-    private static final int ID_mItemPIMiniMapInFillColor = 183;
-    private static final int ID_mItemPIMiniMapInStrokeWidth = 184;
-    private static final int ID_mItemPILineBgWidth = 185;
-    private static final int ID_mItemPILineBgColor = 186;
-    private static final int ID_mItemPILineFgWidth = 187;
-    private static final int ID_mItemPILineFgColor = 188;
-    private static final int ID_mItemPILineGravity = 189;
-    private static final int ID_mItemDtTextFormat = 193;
-    private static final int ID_mItemMiscEventCVCreate = 195;
-    private static final int ID_mItemMiscEventCVDestroy = 196;
-    private static final int ID_mItemBindingsAdd = 197;
-    private static final int ID_mItemMiscHardwareAccelerated = 198;
-    private static final int ID_mItemMiscLaunchAnimation = 199;
-    private static final int ID_mItemIconSizeMode = 200;
-    private static final int ID_mItemMiscEventMenu = 204;
+    private class FontAdapter extends ArrayAdapter<String> {
+        private final HashMap<String, Typeface> mTypefaces = new HashMap<>();
+        private final File mFontsDir;
+        private final int mSelectedIndex;
+        private final int mCheckMarkDrawable;
+        private final LayoutInflater inflater;
 
-    private static final int ID_mItemDtSource = 10004;
-    private static final int ID_mItemDtDateEasyFormat = 10005;
-    private static final int ID_mItemDtDateExpertFormat = 10006;
-    private static final int ID_mItemDtDisplayEmpty = 10007;
-    private static final int ID_mItemDtCountFormat = 10008;
-    private static final int ID_mItemDtStorageSource = 10009;
-    private static final int ID_mItemDtStorageFormat = 10010;
-    private static final int ID_mItemDtStorageWhat = 10011;
-    private static final int ID_mItemDtGmailLabel = 10012;
+        public FontAdapter(Context context, String[] fonts, int selected_index) {
+            super(context, 0, fonts);
+            mFontsDir = FileUtils.getFontsDir(getPageBaseDir());
+            mSelectedIndex = selected_index;
+
+            TypedValue typedValue = new TypedValue();
+            context.getTheme().resolveAttribute(android.R.attr.listChoiceIndicatorSingle, typedValue, true);
+            mCheckMarkDrawable = typedValue.resourceId;
+
+            inflater = (LayoutInflater.from(context));
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                convertView = inflater.inflate(R.layout.two_lines_list_item_font, null);
+            }
+
+            String f = getItem(position);
+
+            CheckedTextView line1 = convertView.findViewById(android.R.id.text1);
+            TextView line2 = convertView.findViewById(android.R.id.text2);
+
+            line1.setText(f);
+
+            if (position == 0) {
+                line1.setCheckMarkDrawable(null);
+                line2.setVisibility(View.GONE);
+            } else {
+                line1.setCheckMarkDrawable(mCheckMarkDrawable);
+
+                Typeface font;
+                if (position == 1) {
+                    font = Typeface.DEFAULT;
+                } else if (position == 2) {
+                    font = LLApp.get().getIconsTypeface();
+                } else {
+                    font = mTypefaces.get(f);
+                    if (font == null) {
+                        try {
+                            font = Typeface.createFromFile(new File(mFontsDir, f));
+                            mTypefaces.put(f, font);
+                        } catch (Exception e) {
+                            // pass, use a default font
+                        }
+                    }
+                    if (font == null) {
+                        font = Typeface.DEFAULT;
+                        mTypefaces.put(f, font);
+                    }
+                }
+
+                line2.setVisibility(View.VISIBLE);
+                line2.setTypeface(font);
+                line2.setText(FONT_ITEM_PREVIEW);
+                line1.setChecked(position == mSelectedIndex);
+            }
+
+            return convertView;
+        }
+    }
 }

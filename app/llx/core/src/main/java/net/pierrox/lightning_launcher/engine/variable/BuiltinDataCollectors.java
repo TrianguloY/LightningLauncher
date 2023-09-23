@@ -12,10 +12,10 @@ public class BuiltinDataCollectors {
     private static final String VAR_SCREEN_WIDTH = "screen_width";
     private static final String VAR_SCREEN_HEIGHT = "screen_height";
 
-    private Pair<String,BuiltinVariable[]>[] mBuiltinVariables;
-    private Handler mHandler;
-    private VariableManager mVariableManager;
-    private DataCollector[] mDataCollectors;
+    private final Pair<String, BuiltinVariable[]>[] mBuiltinVariables;
+    private final Handler mHandler;
+    private final VariableManager mVariableManager;
+    private final DataCollector[] mDataCollectors;
     private int mResumedCount;
 
     public BuiltinDataCollectors(Context context, VariableManager vm) {
@@ -26,7 +26,7 @@ public class BuiltinDataCollectors {
         StorageDataCollector storageDataCollector = new StorageDataCollector(context, mHandler, mVariableManager);
         BatteryDataCollector batteryDataCollector = new BatteryDataCollector(context, mVariableManager);
         CpuDataCollector cpuDataCollector = new CpuDataCollector(mHandler, mVariableManager);
-        mDataCollectors = new DataCollector[] {
+        mDataCollectors = new DataCollector[]{
                 timeDataCollector,
                 storageDataCollector,
                 batteryDataCollector,
@@ -35,13 +35,13 @@ public class BuiltinDataCollectors {
 
         Resources resources = context.getResources();
 
-        BuiltinVariable[] screen_variables = new BuiltinVariable[] {
-            new BuiltinVariable(VAR_SCREEN_ORIENTATION, resources.getString(R.string.bv_o)),
-            new BuiltinVariable(VAR_SCREEN_WIDTH, resources.getString(R.string.gb_w)),
-            new BuiltinVariable(VAR_SCREEN_HEIGHT, resources.getString(R.string.gb_h)),
+        BuiltinVariable[] screen_variables = new BuiltinVariable[]{
+                new BuiltinVariable(VAR_SCREEN_ORIENTATION, resources.getString(R.string.bv_o)),
+                new BuiltinVariable(VAR_SCREEN_WIDTH, resources.getString(R.string.gb_w)),
+                new BuiltinVariable(VAR_SCREEN_HEIGHT, resources.getString(R.string.gb_h)),
         };
 
-        mBuiltinVariables = new Pair[] {
+        mBuiltinVariables = new Pair[]{
                 new Pair<>(resources.getString(R.string.bvc_dt), timeDataCollector.getBuiltinVariables(resources)),
                 new Pair<>(resources.getString(R.string.bvc_screen), screen_variables),
                 new Pair<>(resources.getString(R.string.bvc_stor), storageDataCollector.getBuiltinVariables(resources)),
@@ -51,11 +51,11 @@ public class BuiltinDataCollectors {
     }
 
     public void end() {
-        for(DataCollector collector : mDataCollectors) collector.end();
+        for (DataCollector collector : mDataCollectors) collector.end();
     }
 
     public void resume() {
-        if(mResumedCount == 0) {
+        if (mResumedCount == 0) {
             for (DataCollector collector : mDataCollectors) collector.onResume();
         }
         mResumedCount++;
@@ -63,12 +63,12 @@ public class BuiltinDataCollectors {
 
     public void pause() {
         mResumedCount--;
-        if(mResumedCount == 0) {
-            for(DataCollector collector : mDataCollectors) collector.onPause();
+        if (mResumedCount == 0) {
+            for (DataCollector collector : mDataCollectors) collector.onPause();
         }
     }
 
-    public Pair<String,BuiltinVariable[]>[] getBuiltinVariables() {
+    public Pair<String, BuiltinVariable[]>[] getBuiltinVariables() {
         return mBuiltinVariables;
     }
 

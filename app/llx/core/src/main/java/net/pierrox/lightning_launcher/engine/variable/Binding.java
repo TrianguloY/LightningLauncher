@@ -12,8 +12,8 @@ public final class Binding {
     }
 
     public boolean equals(Binding other) {
-        if(target == null && other.target!=null || (target != null && !target.equals(other.target))) return false;
-        if(formula == null && other.formula!=null || (formula != null && !formula.equals(other.formula))) return false;
-        return true;
+        if (target == null && other.target != null || (target != null && !target.equals(other.target)))
+            return false;
+        return (formula != null || other.formula == null) && (formula == null || formula.equals(other.formula));
     }
 }

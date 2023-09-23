@@ -33,7 +33,6 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Handler;
 import android.os.Process;
 import android.view.View;
 import android.widget.Toast;
@@ -43,15 +42,15 @@ import com.google.android.vending.licensing.LicenseCheckerCallback;
 import com.google.android.vending.licensing.Policy;
 import com.google.android.vending.licensing.ServerManagedPolicy;
 
-import net.pierrox.lightning_launcher.engine.LightningEngine;
-import net.pierrox.lightning_launcher_extreme.R;
 import net.pierrox.lightning_launcher.data.FileUtils;
 import net.pierrox.lightning_launcher.data.Page;
+import net.pierrox.lightning_launcher.engine.LightningEngine;
 import net.pierrox.lightning_launcher.iab.IabHelper;
 import net.pierrox.lightning_launcher.iab.IabResult;
 import net.pierrox.lightning_launcher.iab.Inventory;
 import net.pierrox.lightning_launcher.iab.Purchase;
 import net.pierrox.lightning_launcher.prefs.LLPreference;
+import net.pierrox.lightning_launcher_extreme.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -67,11 +66,12 @@ public class LLAppExtreme extends LLAppPhone {
     private static final String key4 = "hI3T9SPxlX4faIxSX0hwLJAtbb5IZWX5XvuQdQovF9W9";
     private static final String key5 = "vRdURFT6D7K01k+doWbMDZnbfQXiYKHaaBja+SlsZA4UsHF6RubVTi+nOET1xBlpjNwQ6wl69GdM+y8WA1WR47JBNph6wuCF0q7pz2KbuBDvh5vSvYaBGb9dflqnOKy2S47DSA7HOwffTUtxilskp";
     private static final String key6 = "JvKKBdyKwQoNTKyp7bjXUrFg/tlJOTo0je4RkcvBHiYCW/yEQKSPY43nlnapcy6L4P+0IV+GDHI+Zx1D+mPo6BmsTwIDAQAB";
-
+    private static final String LWP_PKG = "net.pierrox.lightning_launcher.lwp_key";
+    private static final String PATH_TEST = "t";
+    private static final String COLUMN_IS_LICENSED = "l";
     private LicenseCheckerCallback mLicenseCheckerCallback;
     private LicenseChecker mChecker;
     private boolean mIsLicensed = true;
-
     private IabHelper mIABHelper;
     private String mIabKey;
     private boolean mHasLWPIab;
@@ -80,12 +80,12 @@ public class LLAppExtreme extends LLAppPhone {
     @Override
     public void onCreate() {
         // obfuscation
-        String three = String.valueOf((new Date().getYear()+2901)/1000);
+        String three = String.valueOf((new Date().getYear() + 2901) / 1000);
         mIabKey = key1 + three + key2;
 
         mLicenseCheckerCallback = new MyLicenseCheckerCallback();
 
-        mIabKey +=  three + key3 + three + key4 + getString(R.string.internal_version);
+        mIabKey += three + key3 + three + key4 + getString(R.string.internal_version);
 
         // obfuscation
         mIabKey += key5 + three + key6;
@@ -148,7 +148,7 @@ public class LLAppExtreme extends LLAppPhone {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Version.APP_STORE_INSTALL_PREFIX + context.getPackageName()));
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
-        } catch(ActivityNotFoundException e) {
+        } catch (ActivityNotFoundException e) {
             // pass
         }
         Toast.makeText(context, "Couldn't validate the Play Store license. Please check your internet connectivity.", Toast.LENGTH_LONG).show();
@@ -169,33 +169,6 @@ public class LLAppExtreme extends LLAppPhone {
     @Override
     public void checkLicense() {
         mChecker.checkAccess(mLicenseCheckerCallback);
-    }
-
-    private class MyLicenseCheckerCallback implements LicenseCheckerCallback {
-        public void allow(int reason) {
-            mIsLicensed = true;
-        }
-
-        public void dontAllow(int reason) {
-
-            if (reason == Policy.RETRY) {
-                // If the reason received from the policy is RETRY, it was probably
-                // due to a loss of connection with the service, so we should give the
-                // user a chance to retry. So show a dialog to retry.
-                mIsLicensed = true;
-            } else {
-                // Otherwise, the user is not licensed to use this app.
-                // Your response should always inform the user that the application
-                // is not licensed, but your behavior at that point can vary. You might
-                // provide the user a limited access version of your app or you can
-                // take them to Google Play to purchase the app.
-                mIsLicensed = false;
-            }
-        }
-
-        @Override
-        public void applicationError(int errorCode) {
-        }
     }
 
     public String getIabKey() {
@@ -221,28 +194,24 @@ public class LLAppExtreme extends LLAppPhone {
         });
     }
 
-    private static final String LWP_PKG = "net.pierrox.lightning_launcher.lwp_key";
-    private static final String PATH_TEST = "t";
-    private static final String COLUMN_IS_LICENSED = "l";
-
     public void checkLwpKey() {
         // first step : the permission is granted meaning the package is installed
         mHasLWPKey = checkPermission(LWP_PKG, Process.myPid(), Process.myUid()) == PackageManager.PERMISSION_GRANTED;
 
         // second step, ask the key to check its license
-        new AsyncTask<Void,Void,Boolean>() {
+        new AsyncTask<Void, Void, Boolean>() {
 
             @Override
             protected Boolean doInBackground(Void... voids) {
                 boolean hasLicensedKey = false;
                 try {
-                    Cursor c = getContentResolver().query(Uri.parse("content://"+LWP_PKG+"/" + PATH_TEST), new String[]{COLUMN_IS_LICENSED}, null, null, null);
+                    Cursor c = getContentResolver().query(Uri.parse("content://" + LWP_PKG + "/" + PATH_TEST), new String[]{COLUMN_IS_LICENSED}, null, null, null);
                     if (c != null) {
                         c.moveToNext();
                         hasLicensedKey = c.getInt(0) == 1;
                         c.close();
                     }
-                } catch(Exception e) {
+                } catch (Exception e) {
                     // pass
                 }
                 return hasLicensedKey;
@@ -251,14 +220,14 @@ public class LLAppExtreme extends LLAppPhone {
             @Override
             protected void onPostExecute(Boolean hasLicensedKey) {
                 // key is installed, but no license
-                if(mHasLWPKey && !hasLicensedKey) {
+                if (mHasLWPKey && !hasLicensedKey) {
                     LightningEngine engine = getAppEngine();
                     engine.getGlobalConfig().lwpScreen = Page.NONE;
                     engine.notifyGlobalConfigChanged();
                 }
                 mHasLWPKey = hasLicensedKey;
             }
-        }.execute((Void)null);
+        }.execute((Void) null);
 
     }
 
@@ -271,12 +240,12 @@ public class LLAppExtreme extends LLAppPhone {
 
         mHasLWPIab = false;
 
-        if(data.exists()) {
+        if (data.exists()) {
             JSONObject o = FileUtils.readJSONObjectFromFile(data);
-            if(o != null) {
+            if (o != null) {
                 try {
                     mHasLWPIab = o.getBoolean(getString(R.string.iab_lwp));
-                } catch(JSONException e) {
+                } catch (JSONException e) {
                     // pass
                 }
             }
@@ -284,7 +253,7 @@ public class LLAppExtreme extends LLAppPhone {
     }
 
     public void setProductStatus(String sku, boolean purchased) {
-        if(sku.equals(getString(R.string.iab_lwp))) {
+        if (sku.equals(getString(R.string.iab_lwp))) {
             mHasLWPIab = purchased;
         }
         File data = getUnlockInfoDataFile();
@@ -295,10 +264,6 @@ public class LLAppExtreme extends LLAppPhone {
         } catch (Exception e) {
             // pass
         }
-    }
-
-    public interface UnlockResultReceiver {
-        void setUnlocked(String sku, boolean unlocked);
     }
 
     public void checkProducts(final UnlockResultReceiver receiver) {
@@ -318,12 +283,12 @@ public class LLAppExtreme extends LLAppPhone {
 
                 Purchase lwp = inventory.getPurchase(iab_lwp);
                 boolean has_lwp = lwp != null /*&& verifyDeveloperPayload(unlock_pro)*/;
-                if(has_lwp) {
+                if (has_lwp) {
                     setProductStatus(iab_lwp, true);
-                    if(receiver != null) receiver.setUnlocked(iab_lwp, true);
+                    if (receiver != null) receiver.setUnlocked(iab_lwp, true);
                 } else {
                     setProductStatus(iab_lwp, false);
-                    if(receiver != null) receiver.setUnlocked(iab_lwp, false);
+                    if (receiver != null) receiver.setUnlocked(iab_lwp, false);
                 }
             }
         });
@@ -341,7 +306,7 @@ public class LLAppExtreme extends LLAppPhone {
         builder.setPositiveButton(context.getString(R.string.iab_y_key), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                context.startActivity(Intent.createChooser(new Intent(Intent.ACTION_VIEW, Uri.parse(Version.APP_STORE_INSTALL_PREFIX+"net.pierrox.lightning_launcher.lwp_key")), ""));
+                context.startActivity(Intent.createChooser(new Intent(Intent.ACTION_VIEW, Uri.parse(Version.APP_STORE_INSTALL_PREFIX + "net.pierrox.lightning_launcher.lwp_key")), ""));
             }
         });
         builder.setNegativeButton(context.getString(R.string.iab_y_app), new DialogInterface.OnClickListener() {
@@ -356,5 +321,32 @@ public class LLAppExtreme extends LLAppPhone {
 
     private void startPurchaseProcess(Context context, String sku) {
         PurchaseProcess.startActivity(context, sku);
+    }
+
+    public interface UnlockResultReceiver {
+        void setUnlocked(String sku, boolean unlocked);
+    }
+
+    private class MyLicenseCheckerCallback implements LicenseCheckerCallback {
+        public void allow(int reason) {
+            mIsLicensed = true;
+        }
+
+        public void dontAllow(int reason) {
+
+            // If the reason received from the policy is RETRY, it was probably
+            // due to a loss of connection with the service, so we should give the
+            // user a chance to retry. So show a dialog to retry.
+            // Otherwise, the user is not licensed to use this app.
+            // Your response should always inform the user that the application
+            // is not licensed, but your behavior at that point can vary. You might
+            // provide the user a limited access version of your app or you can
+            // take them to Google Play to purchase the app.
+            mIsLicensed = reason == Policy.RETRY;
+        }
+
+        @Override
+        public void applicationError(int errorCode) {
+        }
     }
 }

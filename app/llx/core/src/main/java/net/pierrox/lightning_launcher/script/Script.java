@@ -11,7 +11,7 @@ import java.io.File;
 import java.util.HashMap;
 
 public class Script extends JsonLoader {
-	public static final int NO_ID = net.pierrox.lightning_launcher.api.Script.NO_ID;
+    public static final int NO_ID = net.pierrox.lightning_launcher.api.Script.NO_ID;
 
     public static final int TYPE_FILE = 0;
     public static final int TYPE_BUILTIN = 1;
@@ -19,34 +19,32 @@ public class Script extends JsonLoader {
     public static final int TYPE_SET_VARIABLE = 3;
     public static final int TYPE_IN_MEMORY = 4;
 
-	public static final int TARGET_NONE = -1;
-	public static final int TARGET_DESKTOP = 0;
-	public static final int TARGET_APP_DRAWER = 1;
-	public static final int TARGET_LOCK_SCREEN = 2;
-	public static final int TARGET_BACKGROUND = 3;
+    public static final int TARGET_NONE = -1;
+    public static final int TARGET_DESKTOP = 0;
+    public static final int TARGET_APP_DRAWER = 1;
+    public static final int TARGET_LOCK_SCREEN = 2;
+    public static final int TARGET_BACKGROUND = 3;
 
-	public static final int FLAG_ALL = net.pierrox.lightning_launcher.api.Script.FLAG_ALL;
-	public static final int FLAG_DISABLED = net.pierrox.lightning_launcher.api.Script.FLAG_DISABLED;
-	public static final int FLAG_APP_MENU = net.pierrox.lightning_launcher.api.Script.FLAG_APP_MENU;
-	public static final int FLAG_ITEM_MENU = net.pierrox.lightning_launcher.api.Script.FLAG_ITEM_MENU;
-	public static final int FLAG_CUSTOM_MENU = net.pierrox.lightning_launcher.api.Script.FLAG_CUSTOM_MENU;
-
+    public static final int FLAG_ALL = net.pierrox.lightning_launcher.api.Script.FLAG_ALL;
+    public static final int FLAG_DISABLED = net.pierrox.lightning_launcher.api.Script.FLAG_DISABLED;
+    public static final int FLAG_APP_MENU = net.pierrox.lightning_launcher.api.Script.FLAG_APP_MENU;
+    public static final int FLAG_ITEM_MENU = net.pierrox.lightning_launcher.api.Script.FLAG_ITEM_MENU;
+    public static final int FLAG_CUSTOM_MENU = net.pierrox.lightning_launcher.api.Script.FLAG_CUSTOM_MENU;
+    private final ScriptManager mScriptManager;
     // public fields use for JSON serialization
-	public int id = Script.NO_ID;
+    public int id = Script.NO_ID;
     public String name = "";
     public String mSourceText = "";
     public int flags = 0;
     public String tag = null;
-    public HashMap<String,String> tags;
-
-    private ScriptManager mScriptManager;
+    public HashMap<String, String> tags;
+    public org.mozilla.javascript.Script compiledScript;
+    public Function compiledFunction;
     private File mFile;
     private int mType;
     private int mSourceItemId;
     private String mSourceTarget;
     private String mProcessedText;
-    public org.mozilla.javascript.Script compiledScript;
-    public Function compiledFunction;
 
     /*package*/ Script(ScriptManager scriptManager, int type, int id, String name, String text, File file) {
         mScriptManager = scriptManager;
@@ -54,7 +52,7 @@ public class Script extends JsonLoader {
         mFile = file;
 
         this.id = id;
-        if(type == TYPE_BUILTIN) {
+        if (type == TYPE_BUILTIN) {
             this.name = "builtin" + id;
             this.mSourceText = "// Hello, I am a builtin script! I may be changed or deleted without prior notice. Have fun.\n\n" + text;
         } else {
@@ -63,54 +61,15 @@ public class Script extends JsonLoader {
         }
     }
 
-    public boolean hasFlag(int flag) {
-    	return (flags & flag) != 0;
-    }
-    
-    public void setFlag(int flag, boolean on) {
-    	if(on) {
-    		flags |= flag;
-    	} else {
-    		flags &= ~flag;
-    	}
-    }
-
-    /**
-     * @return the script text that should be compiled
-     */
-    public String getScriptText() {
-        return mProcessedText == null ? mSourceText : mProcessedText;
-    }
-
-    public void setSourceText(String text) {
-        mSourceText = text;
-    }
-
-    /**
-     * @return the script text that serve as the origin for this script (can possibly be processed before to be compiled)
-     */
-    public String getSourceText() {
-        return mSourceText;
-    }
-
-    public void setProcessedText(String text) {
-        mProcessedText = text;
-    }
-    
-    @Override
-    public String toString() {
-    	return Utils.formatHex(id, 3)+": "+name;
-    }
-
-    public static Pair<Integer,String> decodeIdAndData(String id_and_data) {
-        if(id_and_data == null) {
+    public static Pair<Integer, String> decodeIdAndData(String id_and_data) {
+        if (id_and_data == null) {
             return new Pair<>(Script.NO_ID, null);
         }
         // data can be either id or id/data
         int id;
         String data;
         int p = id_and_data.indexOf('/');
-        if(p == -1) {
+        if (p == -1) {
             id = Integer.valueOf(id_and_data);
             data = null;
         } else {
@@ -122,6 +81,45 @@ public class Script extends JsonLoader {
 
     public static String encodeIdAndData(int id, String data) {
         return data == null ? String.valueOf(id) : id + "/" + data;
+    }
+
+    public boolean hasFlag(int flag) {
+        return (flags & flag) != 0;
+    }
+
+    public void setFlag(int flag, boolean on) {
+        if (on) {
+            flags |= flag;
+        } else {
+            flags &= ~flag;
+        }
+    }
+
+    /**
+     * @return the script text that should be compiled
+     */
+    public String getScriptText() {
+        return mProcessedText == null ? mSourceText : mProcessedText;
+    }
+
+    /**
+     * @return the script text that serve as the origin for this script (can possibly be processed before to be compiled)
+     */
+    public String getSourceText() {
+        return mSourceText;
+    }
+
+    public void setSourceText(String text) {
+        mSourceText = text;
+    }
+
+    public void setProcessedText(String text) {
+        mProcessedText = text;
+    }
+
+    @Override
+    public String toString() {
+        return Utils.formatHex(id, 3) + ": " + name;
     }
 
     public int getType() {

@@ -18,9 +18,9 @@ import org.mozilla.javascript.Token;
  *                            : AssignmentExpression</pre>
  *
  * <i>ConditionalExpressionNoIn</i> :
- *        LogicalORExpressionNoIn
- *        LogicalORExpressionNoIn ? AssignmentExpression
- *                                : AssignmentExpressionNoIn</pre>
+ * LogicalORExpressionNoIn
+ * LogicalORExpressionNoIn ? AssignmentExpression
+ * : AssignmentExpressionNoIn</pre>
  */
 public class ConditionalExpression extends AstNode {
 
@@ -54,6 +54,7 @@ public class ConditionalExpression extends AstNode {
 
     /**
      * Sets test expression, and sets its parent.
+     *
      * @param testExpression test expression
      * @throws IllegalArgumentException if testExpression is {@code null}
      */
@@ -73,6 +74,7 @@ public class ConditionalExpression extends AstNode {
     /**
      * Sets expression to evaluate if test is true, and
      * sets its parent to this node.
+     *
      * @param trueExpression expression to evaluate if test is true
      * @throws IllegalArgumentException if expression is {@code null}
      */
@@ -92,9 +94,10 @@ public class ConditionalExpression extends AstNode {
     /**
      * Sets expression to evaluate if test is false, and sets its
      * parent to this node.
+     *
      * @param falseExpression expression to evaluate if test is false
      * @throws IllegalArgumentException if {@code falseExpression}
-     * is {@code null}
+     *                                  is {@code null}
      */
     public void setFalseExpression(AstNode falseExpression) {
         assertNotNull(falseExpression);
@@ -111,6 +114,7 @@ public class ConditionalExpression extends AstNode {
 
     /**
      * Sets position of ? token
+     *
      * @param questionMarkPosition position of ? token
      */
     public void setQuestionMarkPosition(int questionMarkPosition) {
@@ -126,6 +130,7 @@ public class ConditionalExpression extends AstNode {
 
     /**
      * Sets position of : token
+     *
      * @param colonPosition position of : token
      */
     public void setColonPosition(int colonPosition) {
@@ -135,22 +140,21 @@ public class ConditionalExpression extends AstNode {
     @Override
     public boolean hasSideEffects() {
         if (testExpression == null
-            || trueExpression == null
-            || falseExpression == null) codeBug();
+                || trueExpression == null
+                || falseExpression == null) codeBug();
         return trueExpression.hasSideEffects()
-               && falseExpression.hasSideEffects();
+                && falseExpression.hasSideEffects();
     }
 
     @Override
     public String toSource(int depth) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(makeIndent(depth));
-        sb.append(testExpression.toSource(depth));
-        sb.append(" ? ");
-        sb.append(trueExpression.toSource(0));
-        sb.append(" : ");
-        sb.append(falseExpression.toSource(0));
-        return sb.toString();
+        String sb = makeIndent(depth) +
+                testExpression.toSource(depth) +
+                " ? " +
+                trueExpression.toSource(0) +
+                " : " +
+                falseExpression.toSource(0);
+        return sb;
     }
 
     /**

@@ -37,7 +37,7 @@ public final class ActionsDescription {
     private static final Action[] sAllActions = new Action[]{
             new Action(GlobalConfig.NOTHING, R.string.an_n, Action.CAT_NONE, Action.FLAG_TYPE_DESKTOP | Action.FLAG_TYPE_APP_DRAWER | Action.FLAG_TYPE_SCRIPT, Build.VERSION_CODES.FROYO),
 
-        new Action(GlobalConfig.CATEGORY, R.string.acd_l, Action.CAT_LAUNCH_AND_APPS, Action.FLAG_TYPE_DESKTOP |Action.FLAG_TYPE_APP_DRAWER, Build.VERSION_CODES.FROYO),
+            new Action(GlobalConfig.CATEGORY, R.string.acd_l, Action.CAT_LAUNCH_AND_APPS, Action.FLAG_TYPE_DESKTOP | Action.FLAG_TYPE_APP_DRAWER, Build.VERSION_CODES.FROYO),
             new Action(GlobalConfig.LAUNCH_APP, R.string.an_la, Action.CAT_LAUNCH_AND_APPS, Action.FLAG_TYPE_DESKTOP | Action.FLAG_TYPE_APP_DRAWER, Build.VERSION_CODES.FROYO),
             new Action(GlobalConfig.LAUNCH_SHORTCUT, R.string.an_ls, Action.CAT_LAUNCH_AND_APPS, Action.FLAG_TYPE_DESKTOP | Action.FLAG_TYPE_APP_DRAWER, Build.VERSION_CODES.FROYO),
             new Action(GlobalConfig.LAUNCH_ITEM, R.string.an_i_l, Action.CAT_LAUNCH_AND_APPS, Action.FLAG_TYPE_DESKTOP | Action.FLAG_TYPE_APP_DRAWER | Action.FLAG_ITEM, Build.VERSION_CODES.FROYO),
@@ -47,7 +47,7 @@ public final class ActionsDescription {
             new Action(GlobalConfig.RESTART, R.string.an_re, Action.CAT_LAUNCH_AND_APPS, Action.FLAG_TYPE_DESKTOP | Action.FLAG_TYPE_APP_DRAWER, Build.VERSION_CODES.FROYO),
 
 
-        new Action(GlobalConfig.CATEGORY, R.string.acd_n, Action.CAT_NAVIGATION, Action.FLAG_TYPE_DESKTOP |Action.FLAG_TYPE_APP_DRAWER, Build.VERSION_CODES.FROYO),
+            new Action(GlobalConfig.CATEGORY, R.string.acd_n, Action.CAT_NAVIGATION, Action.FLAG_TYPE_DESKTOP | Action.FLAG_TYPE_APP_DRAWER, Build.VERSION_CODES.FROYO),
             new Action(GlobalConfig.GO_HOME, R.string.an_gh, Action.CAT_NAVIGATION, Action.FLAG_TYPE_DESKTOP, Build.VERSION_CODES.FROYO),
             new Action(GlobalConfig.GO_HOME_ZOOM_TO_ORIGIN, R.string.an_ghz100, Action.CAT_NAVIGATION, Action.FLAG_TYPE_DESKTOP, Build.VERSION_CODES.FROYO),
             new Action(GlobalConfig.GO_DESKTOP_POSITION, R.string.an_gdp, Action.CAT_NAVIGATION, Action.FLAG_TYPE_DESKTOP, Build.VERSION_CODES.FROYO),
@@ -60,7 +60,7 @@ public final class ActionsDescription {
             new Action(GlobalConfig.BACK, R.string.an_b, Action.CAT_NAVIGATION, Action.FLAG_TYPE_DESKTOP, Build.VERSION_CODES.FROYO),
 
 
-        new Action(GlobalConfig.CATEGORY, R.string.acd_m, Action.CAT_MENU_STATUS_BAR, Action.FLAG_TYPE_DESKTOP |Action.FLAG_TYPE_APP_DRAWER, Build.VERSION_CODES.FROYO),
+            new Action(GlobalConfig.CATEGORY, R.string.acd_m, Action.CAT_MENU_STATUS_BAR, Action.FLAG_TYPE_DESKTOP | Action.FLAG_TYPE_APP_DRAWER, Build.VERSION_CODES.FROYO),
             new Action(GlobalConfig.LAUNCHER_MENU, R.string.an_lm, Action.CAT_MENU_STATUS_BAR, Action.FLAG_TYPE_DESKTOP | Action.FLAG_TYPE_APP_DRAWER, Build.VERSION_CODES.FROYO),
             new Action(GlobalConfig.ITEM_MENU, R.string.an_i_me, Action.CAT_MENU_STATUS_BAR, Action.FLAG_TYPE_DESKTOP | Action.FLAG_TYPE_APP_DRAWER | Action.FLAG_ITEM, Build.VERSION_CODES.FROYO),
             new Action(GlobalConfig.CUSTOM_MENU, R.string.an_cm, Action.CAT_MENU_STATUS_BAR, Action.FLAG_TYPE_DESKTOP | Action.FLAG_TYPE_APP_DRAWER, Build.VERSION_CODES.FROYO),
@@ -70,13 +70,13 @@ public final class ActionsDescription {
             new Action(GlobalConfig.SHOW_NOTIFICATIONS, R.string.an_sn, Action.CAT_MENU_STATUS_BAR, Action.FLAG_TYPE_DESKTOP | Action.FLAG_TYPE_APP_DRAWER, Build.VERSION_CODES.FROYO),
 
 
-        new Action(GlobalConfig.CATEGORY, R.string.acd_f, Action.CAT_FOLDERS, Action.FLAG_TYPE_DESKTOP |Action.FLAG_TYPE_APP_DRAWER, Build.VERSION_CODES.FROYO),
+            new Action(GlobalConfig.CATEGORY, R.string.acd_f, Action.CAT_FOLDERS, Action.FLAG_TYPE_DESKTOP | Action.FLAG_TYPE_APP_DRAWER, Build.VERSION_CODES.FROYO),
             new Action(GlobalConfig.OPEN_FOLDER, R.string.an_of, Action.CAT_FOLDERS, Action.FLAG_TYPE_DESKTOP | Action.FLAG_TYPE_APP_DRAWER, Build.VERSION_CODES.FROYO),
             new Action(GlobalConfig.CLOSE_TOPMOST_FOLDER, R.string.an_ctf, Action.CAT_FOLDERS, Action.FLAG_TYPE_DESKTOP | Action.FLAG_TYPE_APP_DRAWER, Build.VERSION_CODES.FROYO),
             new Action(GlobalConfig.CLOSE_ALL_FOLDERS, R.string.an_caf, Action.CAT_FOLDERS, Action.FLAG_TYPE_DESKTOP | Action.FLAG_TYPE_APP_DRAWER, Build.VERSION_CODES.FROYO),
 
 
-        new Action(GlobalConfig.CATEGORY, R.string.acd_ed, Action.CAT_EDITION, Action.FLAG_TYPE_DESKTOP |Action.FLAG_TYPE_APP_DRAWER, Build.VERSION_CODES.FROYO),
+            new Action(GlobalConfig.CATEGORY, R.string.acd_ed, Action.CAT_EDITION, Action.FLAG_TYPE_DESKTOP | Action.FLAG_TYPE_APP_DRAWER, Build.VERSION_CODES.FROYO),
             new Action(GlobalConfig.EDIT_LAYOUT, R.string.an_el, Action.CAT_EDITION, Action.FLAG_TYPE_DESKTOP | Action.FLAG_TYPE_APP_DRAWER, Build.VERSION_CODES.FROYO),
             new Action(GlobalConfig.ADD_ITEM, R.string.an_ao, Action.CAT_EDITION, Action.FLAG_TYPE_DESKTOP, Build.VERSION_CODES.FROYO),
             new Action(GlobalConfig.MOVE_ITEM, R.string.an_i_m, Action.CAT_EDITION, Action.FLAG_TYPE_DESKTOP | Action.FLAG_TYPE_APP_DRAWER | Action.FLAG_ITEM, Build.VERSION_CODES.FROYO),
@@ -86,7 +86,7 @@ public final class ActionsDescription {
             new Action(GlobalConfig.OPEN_HIERARCHY_SCREEN, R.string.an_ohs, Action.CAT_EDITION, Action.FLAG_TYPE_DESKTOP | Action.FLAG_TYPE_APP_DRAWER, Build.VERSION_CODES.FROYO),
 
 
-        new Action(GlobalConfig.CATEGORY, R.string.acd_ex, Action.CAT_EXTERNAL, Action.FLAG_TYPE_DESKTOP |Action.FLAG_TYPE_APP_DRAWER, Build.VERSION_CODES.FROYO),
+            new Action(GlobalConfig.CATEGORY, R.string.acd_ex, Action.CAT_EXTERNAL, Action.FLAG_TYPE_DESKTOP | Action.FLAG_TYPE_APP_DRAWER, Build.VERSION_CODES.FROYO),
             new Action(GlobalConfig.SELECT_WALLPAPER, R.string.an_sw, Action.CAT_EXTERNAL, Action.FLAG_TYPE_DESKTOP | Action.FLAG_TYPE_APP_DRAWER, Build.VERSION_CODES.FROYO),
             new Action(GlobalConfig.WALLPAPER_TAP, R.string.an_wt, Action.CAT_EXTERNAL, Action.FLAG_TYPE_DESKTOP | Action.FLAG_TYPE_APP_DRAWER, Build.VERSION_CODES.FROYO),
             new Action(GlobalConfig.WALLPAPER_SECONDARY_TAP, R.string.an_wst, Action.CAT_EXTERNAL, Action.FLAG_TYPE_DESKTOP | Action.FLAG_TYPE_APP_DRAWER, Build.VERSION_CODES.FROYO),
@@ -96,16 +96,16 @@ public final class ActionsDescription {
             new Action(GlobalConfig.HIDE_FLOATING_DESKTOP, R.string.an_ho, Action.CAT_EXTERNAL, Action.FLAG_TYPE_DESKTOP | Action.FLAG_TYPE_APP_DRAWER, Build.VERSION_CODES.FROYO),
 
 
-        new Action(GlobalConfig.CATEGORY, R.string.acd_a, Action.CAT_ADVANCED, Action.FLAG_TYPE_DESKTOP |Action.FLAG_TYPE_APP_DRAWER |Action.FLAG_TYPE_SCRIPT, Build.VERSION_CODES.FROYO),
+            new Action(GlobalConfig.CATEGORY, R.string.acd_a, Action.CAT_ADVANCED, Action.FLAG_TYPE_DESKTOP | Action.FLAG_TYPE_APP_DRAWER | Action.FLAG_TYPE_SCRIPT, Build.VERSION_CODES.FROYO),
             new Action(GlobalConfig.RUN_SCRIPT, R.string.an_rs, Action.CAT_ADVANCED, Action.FLAG_TYPE_DESKTOP | Action.FLAG_TYPE_APP_DRAWER | Action.FLAG_TYPE_SCRIPT, Build.VERSION_CODES.FROYO),
             new Action(GlobalConfig.SET_VARIABLE, R.string.an_sv, Action.CAT_ADVANCED, Action.FLAG_TYPE_DESKTOP | Action.FLAG_TYPE_APP_DRAWER, Build.VERSION_CODES.FROYO),
             new Action(GlobalConfig.UNSET, R.string.an_u, Action.CAT_ADVANCED, Action.FLAG_TYPE_DESKTOP | Action.FLAG_TYPE_APP_DRAWER | Action.FLAG_TYPE_SCRIPT, Build.VERSION_CODES.FROYO),
     };
 
-	private ArrayList<Action> mActions;
-	private String mActionNames[];
-    private int mType;
-    private boolean mForItem;
+    private final ArrayList<Action> mActions;
+    private final String[] mActionNames;
+    private final int mType;
+    private final boolean mForItem;
 
     public ActionsDescription(Context context, int type, boolean forItem) {
         mActions = new ArrayList<>(sAllActions.length);
@@ -113,7 +113,7 @@ public final class ActionsDescription {
         mForItem = forItem;
         for (Action action : sAllActions) {
             boolean isItem = (action.flags & Action.FLAG_ITEM) == Action.FLAG_ITEM;
-            if (((action.flags&type) == type) && (forItem || !isItem) && Build.VERSION.SDK_INT >= action.minSdkVersion) {
+            if (((action.flags & type) == type) && (forItem || !isItem) && Build.VERSION.SDK_INT >= action.minSdkVersion) {
                 mActions.add(action);
             }
         }
@@ -144,18 +144,18 @@ public final class ActionsDescription {
             }
         }
         return 0;
-	}
+    }
 
     public String getActionName(int action) {
         return mActionNames[getActionIndex(action)];
     }
 
-	public int getActionAt(int index) {
-		return mActions.get(index).action;
-	}
+    public int getActionAt(int index) {
+        return mActions.get(index).action;
+    }
 
 
-	public String[] getActionNames() {
-		return mActionNames;
-	}
+    public String[] getActionNames() {
+        return mActionNames;
+    }
 }

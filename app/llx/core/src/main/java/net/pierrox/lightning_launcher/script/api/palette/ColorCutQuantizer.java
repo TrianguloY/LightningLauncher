@@ -31,11 +31,11 @@ import java.util.PriorityQueue;
 /**
  * An color quantizer based on the Median-cut algorithm, but optimized for picking out distinct
  * colors rather than representation colors.
- *
+ * <p>
  * The color space is represented as a 3-dimensional cube with each dimension being an RGB
  * component. The cube is then repeatedly divided until we have reduced the color space to the
  * requested number of colors. An average color is then generated from each cube.
- *
+ * <p>
  * What makes this different to median-cut is that median-cut divided cubes so that all of the cubes
  * have roughly the same population, where this quantizer divides boxes based on their color volume.
  * This means that the color space is divided into distinct colors, rather than representative
@@ -44,42 +44,30 @@ import java.util.PriorityQueue;
 final class ColorCutQuantizer {
 
     private static final String LOG_TAG = ColorCutQuantizer.class.getSimpleName();
-
-    private final float[] mTempHsl = new float[3];
-
     private static final float BLACK_MAX_LIGHTNESS = 0.05f;
     private static final float WHITE_MIN_LIGHTNESS = 0.95f;
-
     private static final int COMPONENT_RED = -3;
     private static final int COMPONENT_GREEN = -2;
     private static final int COMPONENT_BLUE = -1;
-
+    /**
+     * Comparator which sorts {@link net.pierrox.lightning_launcher.script.api.palette.ColorCutQuantizer.Vbox} instances based on their volume, in descending order
+     */
+    private static final Comparator<Vbox> VBOX_COMPARATOR_VOLUME = new Comparator<Vbox>() {
+        @Override
+        public int compare(Vbox lhs, Vbox rhs) {
+            return rhs.getVolume() - lhs.getVolume();
+        }
+    };
+    private final float[] mTempHsl = new float[3];
     private final int[] mColors;
     private final SparseIntArray mColorPopulations;
-
     private final List<Palette.Swatch> mQuantizedColors;
-
-    /**
-     * Factory-method to generate a {@link net.pierrox.lightning_launcher.script.api.palette.ColorCutQuantizer} from a {@link android.graphics.Bitmap} object.
-     *
-     * @param bitmap Bitmap to extract the pixel data from
-     * @param maxColors The maximum number of colors that should be in the result palette.
-     */
-    static ColorCutQuantizer fromBitmap(Bitmap bitmap, int maxColors) {
-        final int width = bitmap.getWidth();
-        final int height = bitmap.getHeight();
-
-        final int[] pixels = new int[width * height];
-        bitmap.getPixels(pixels, 0, width, 0, 0, width, height);
-
-        return new ColorCutQuantizer(new ColorHistogram(pixels), maxColors);
-    }
 
     /**
      * Private constructor.
      *
      * @param colorHistogram histogram representing an image's pixel data
-     * @param maxColors The maximum number of colors that should be in the result palette.
+     * @param maxColors      The maximum number of colors that should be in the result palette.
      */
     private ColorCutQuantizer(ColorHistogram colorHistogram, int maxColors) {
         if (colorHistogram == null) {
@@ -122,6 +110,51 @@ final class ColorCutQuantizer {
     }
 
     /**
+     * Factory-method to generate a {@link net.pierrox.lightning_launcher.script.api.palette.ColorCutQuantizer} from a {@link android.graphics.Bitmap} object.
+     *
+     * @param bitmap    Bitmap to extract the pixel data from
+     * @param maxColors The maximum number of colors that should be in the result palette.
+     */
+    static ColorCutQuantizer fromBitmap(Bitmap bitmap, int maxColors) {
+        final int width = bitmap.getWidth();
+        final int height = bitmap.getHeight();
+
+        final int[] pixels = new int[width * height];
+        bitmap.getPixels(pixels, 0, width, 0, 0, width, height);
+
+        return new ColorCutQuantizer(new ColorHistogram(pixels), maxColors);
+    }
+
+    private static boolean shouldIgnoreColor(Palette.Swatch color) {
+        return shouldIgnoreColor(color.getHsl());
+    }
+
+    private static boolean shouldIgnoreColor(float[] hslColor) {
+        return isWhite(hslColor) || isBlack(hslColor) || isNearRedILine(hslColor);
+    }
+
+    /**
+     * @return true if the color represents a color which is close to black.
+     */
+    private static boolean isBlack(float[] hslColor) {
+        return hslColor[2] <= BLACK_MAX_LIGHTNESS;
+    }
+
+    /**
+     * @return true if the color represents a color which is close to white.
+     */
+    private static boolean isWhite(float[] hslColor) {
+        return hslColor[2] >= WHITE_MIN_LIGHTNESS;
+    }
+
+    /**
+     * @return true if the color lies close to the red side of the I line.
+     */
+    private static boolean isNearRedILine(float[] hslColor) {
+        return hslColor[0] >= 10f && hslColor[0] <= 37f && hslColor[1] <= 0.82f;
+    }
+
+    /**
      * @return the list of quantized colors
      */
     List<Palette.Swatch> getQuantizedColors() {
@@ -150,7 +183,7 @@ final class ColorCutQuantizer {
      * and splitting them. Once split, the new box and the remaining box are offered back to the
      * queue.
      *
-     * @param queue {@link java.util.PriorityQueue} to poll for boxes
+     * @param queue   {@link java.util.PriorityQueue} to poll for boxes
      * @param maxSize Maximum amount of boxes to split
      */
     private void splitBoxes(final PriorityQueue<Vbox> queue, final int maxSize) {
@@ -183,10 +216,43 @@ final class ColorCutQuantizer {
     }
 
     /**
+     * Modify the significant octet in a packed color int. Allows sorting based on the value of a
+     * single color component.
+     *
+     * @see net.pierrox.lightning_launcher.script.api.palette.ColorCutQuantizer.Vbox#findSplitPoint()
+     */
+    private void modifySignificantOctet(final int dimension, int lowIndex, int highIndex) {
+        switch (dimension) {
+            case COMPONENT_RED:
+                // Already in RGB, no need to do anything
+                break;
+            case COMPONENT_GREEN:
+                // We need to do a RGB to GRB swap, or vice-versa
+                for (int i = lowIndex; i <= highIndex; i++) {
+                    final int color = mColors[i];
+                    mColors[i] = Color.rgb((color >> 8) & 0xFF, (color >> 16) & 0xFF, color & 0xFF);
+                }
+                break;
+            case COMPONENT_BLUE:
+                // We need to do a RGB to BGR swap, or vice-versa
+                for (int i = lowIndex; i <= highIndex; i++) {
+                    final int color = mColors[i];
+                    mColors[i] = Color.rgb(color & 0xFF, (color >> 8) & 0xFF, (color >> 16) & 0xFF);
+                }
+                break;
+        }
+    }
+
+    private boolean shouldIgnoreColor(int color) {
+        ColorUtils.RGBtoHSL(Color.red(color), Color.green(color), Color.blue(color), mTempHsl);
+        return shouldIgnoreColor(mTempHsl);
+    }
+
+    /**
      * Represents a tightly fitting box around a color space.
      */
     private class Vbox {
-        private int lowerIndex;
+        private final int lowerIndex;
         private int upperIndex;
 
         private int minRed, maxRed;
@@ -286,7 +352,7 @@ final class ColorCutQuantizer {
 
         /**
          * Finds the point within this box's lowerIndex and upperIndex index of where to split.
-         *
+         * <p>
          * This is calculated by finding the longest color dimension, and then sorting the
          * sub-array based on that dimension value in each color. The colors are then iterated over
          * until a color is found with at least the midpoint of the whole box's dimension midpoint.
@@ -309,7 +375,7 @@ final class ColorCutQuantizer {
 
             final int dimensionMidPoint = midPoint(longestDimension);
 
-            for (int i = lowerIndex; i < upperIndex; i++)  {
+            for (int i = lowerIndex; i < upperIndex; i++) {
                 final int color = mColors[i];
 
                 switch (longestDimension) {
@@ -375,77 +441,5 @@ final class ColorCutQuantizer {
             }
         }
     }
-
-    /**
-     * Modify the significant octet in a packed color int. Allows sorting based on the value of a
-     * single color component.
-     *
-     * @see net.pierrox.lightning_launcher.script.api.palette.ColorCutQuantizer.Vbox#findSplitPoint()
-     */
-    private void modifySignificantOctet(final int dimension, int lowIndex, int highIndex) {
-        switch (dimension) {
-            case COMPONENT_RED:
-                // Already in RGB, no need to do anything
-                break;
-            case COMPONENT_GREEN:
-                // We need to do a RGB to GRB swap, or vice-versa
-                for (int i = lowIndex; i <= highIndex; i++) {
-                    final int color = mColors[i];
-                    mColors[i] = Color.rgb((color >> 8) & 0xFF, (color >> 16) & 0xFF, color & 0xFF);
-                }
-                break;
-            case COMPONENT_BLUE:
-                // We need to do a RGB to BGR swap, or vice-versa
-                for (int i = lowIndex; i <= highIndex; i++) {
-                    final int color = mColors[i];
-                    mColors[i] = Color.rgb(color & 0xFF, (color >> 8) & 0xFF, (color >> 16) & 0xFF);
-                }
-                break;
-        }
-    }
-
-    private boolean shouldIgnoreColor(int color) {
-        ColorUtils.RGBtoHSL(Color.red(color), Color.green(color), Color.blue(color), mTempHsl);
-        return shouldIgnoreColor(mTempHsl);
-    }
-
-    private static boolean shouldIgnoreColor(Palette.Swatch color) {
-        return shouldIgnoreColor(color.getHsl());
-    }
-
-    private static boolean shouldIgnoreColor(float[] hslColor) {
-        return isWhite(hslColor) || isBlack(hslColor) || isNearRedILine(hslColor);
-    }
-
-    /**
-     * @return true if the color represents a color which is close to black.
-     */
-    private static boolean isBlack(float[] hslColor) {
-        return hslColor[2] <= BLACK_MAX_LIGHTNESS;
-    }
-
-    /**
-     * @return true if the color represents a color which is close to white.
-     */
-    private static boolean isWhite(float[] hslColor) {
-        return hslColor[2] >= WHITE_MIN_LIGHTNESS;
-    }
-
-    /**
-     * @return true if the color lies close to the red side of the I line.
-     */
-    private static boolean isNearRedILine(float[] hslColor) {
-        return hslColor[0] >= 10f && hslColor[0] <= 37f && hslColor[1] <= 0.82f;
-    }
-
-    /**
-     * Comparator which sorts {@link net.pierrox.lightning_launcher.script.api.palette.ColorCutQuantizer.Vbox} instances based on their volume, in descending order
-     */
-    private static final Comparator<Vbox> VBOX_COMPARATOR_VOLUME = new Comparator<Vbox>() {
-        @Override
-        public int compare(Vbox lhs, Vbox rhs) {
-            return rhs.getVolume() - lhs.getVolume();
-        }
-    };
 
 }

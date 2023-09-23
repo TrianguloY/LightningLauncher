@@ -1,8 +1,8 @@
 package com.google.android.vending.licensing.util;
 
 public class Item {
-    private String name;
-    private String value;
+    private final String name;
+    private final String value;
 
     public Item(String n, String v) {
         name = n;

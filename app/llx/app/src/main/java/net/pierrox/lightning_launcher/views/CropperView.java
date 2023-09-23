@@ -45,35 +45,29 @@ import android.widget.ImageView;
 import net.pierrox.lightning_launcher_extreme.R;
 
 public class CropperView extends ImageView {
-    public interface OnCropperViewEvent {
-        public void onCropperViewSelectionChanged(Rect selection);
-        public void onCropperViewClick();
-    }
-
+    private final Paint mSelectionRectPaint;
+    private final Paint mOutHighlightPaint;
+    private final Bitmap mHandleWidthBitmap;
+    private final Bitmap mHandleHeightBitmap;
+    private final float mDensity;
+    private final int mHandleTouchSize;
+    private final int mTouchSlope;
+    private final Matrix mTmpMatrix = new Matrix();
+    RectF mTmpRectF = new RectF();
+    Rect mTmpRect = new Rect();
     private Bitmap mBitmap;
     private Rect mSelectionRect;
-    private Paint mSelectionRectPaint;
-    private Paint mOutHighlightPaint;
-    private Bitmap mHandleWidthBitmap;
-    private Bitmap mHandleHeightBitmap;
-
-    private float mDensity;
-    private int mHandleTouchSize;
-    private int mTouchSlope;
-
     private boolean mIsDown;
     private int mDownX, mDownY;
     private int mCurrentMoveArea;
     private Rect mInitialSelectionRect;
     private long mLastClickDate;
     private boolean mMoving;
-
     private OnCropperViewEvent mListener;
-
-    private Runnable mClickRunnable = new Runnable() {
+    private final Runnable mClickRunnable = new Runnable() {
         @Override
         public void run() {
-            if(mListener != null) mListener.onCropperViewClick();
+            if (mListener != null) mListener.onCropperViewClick();
         }
     };
 
@@ -94,7 +88,7 @@ public class CropperView extends ImageView {
         mSelectionRectPaint.setStyle(Paint.Style.STROKE);
 
         mDensity = resources.getDisplayMetrics().density;
-        mHandleTouchSize = (int)(16*mDensity);
+        mHandleTouchSize = (int) (16 * mDensity);
         mTouchSlope = ViewConfiguration.get(context).getScaledTouchSlop();
     }
 
@@ -109,7 +103,7 @@ public class CropperView extends ImageView {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
 
-        if(w!=0 && h != 0) {
+        if (w != 0 && h != 0) {
             RectF src = new RectF(0, 0, mBitmap.getWidth(), mBitmap.getHeight());
             RectF dst = new RectF(0, 0, w, h);
             Matrix m = new Matrix();
@@ -140,8 +134,8 @@ public class CropperView extends ImageView {
         final int handleHHeight = mHandleHeightBitmap.getHeight();
         canvas.drawBitmap(mHandleWidthBitmap, mSelectionRect.left - handleWWidth / 2, mSelectionRect.centerY() - handleWHeight / 2, null);
         canvas.drawBitmap(mHandleWidthBitmap, mSelectionRect.right - handleWWidth / 2, mSelectionRect.centerY() - handleWHeight / 2, null);
-        canvas.drawBitmap(mHandleHeightBitmap, centerX - handleHWidth /2, mSelectionRect.top- handleHHeight /2, null);
-        canvas.drawBitmap(mHandleHeightBitmap, centerX - handleHWidth /2, mSelectionRect.bottom- handleHHeight /2, null);
+        canvas.drawBitmap(mHandleHeightBitmap, centerX - handleHWidth / 2, mSelectionRect.top - handleHHeight / 2, null);
+        canvas.drawBitmap(mHandleHeightBitmap, centerX - handleHWidth / 2, mSelectionRect.bottom - handleHHeight / 2, null);
     }
 
     @Override
@@ -155,7 +149,7 @@ public class CropperView extends ImageView {
         final int width = getWidth();
         final int height = getHeight();
 
-        switch(event.getAction()) {
+        switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 removeCallbacks(mClickRunnable);
                 mIsDown = true;
@@ -164,15 +158,15 @@ public class CropperView extends ImageView {
                 mDownY = y;
 
                 mCurrentMoveArea = Gravity.NO_GRAVITY;
-                if(mDownX > mSelectionRect.left && mDownX < mSelectionRect.right && Math.abs(mDownY-mSelectionRect.top) < mHandleTouchSize) {
+                if (mDownX > mSelectionRect.left && mDownX < mSelectionRect.right && Math.abs(mDownY - mSelectionRect.top) < mHandleTouchSize) {
                     mCurrentMoveArea = Gravity.TOP;
-                } else if(mDownX > mSelectionRect.left && mDownX < mSelectionRect.right && Math.abs(mDownY-mSelectionRect.bottom) < mHandleTouchSize) {
+                } else if (mDownX > mSelectionRect.left && mDownX < mSelectionRect.right && Math.abs(mDownY - mSelectionRect.bottom) < mHandleTouchSize) {
                     mCurrentMoveArea = Gravity.BOTTOM;
                 } else if (Math.abs(mDownX - mSelectionRect.left) < mHandleTouchSize && mDownY > mSelectionRect.top && mDownY < mSelectionRect.bottom) {
                     mCurrentMoveArea = Gravity.LEFT;
-                } else if(Math.abs(mDownX-mSelectionRect.right) < mHandleTouchSize && mDownY > mSelectionRect.top && mDownY < mSelectionRect.bottom) {
+                } else if (Math.abs(mDownX - mSelectionRect.right) < mHandleTouchSize && mDownY > mSelectionRect.top && mDownY < mSelectionRect.bottom) {
                     mCurrentMoveArea = Gravity.RIGHT;
-                } else if(mSelectionRect.contains(mDownX, mDownY)) {
+                } else if (mSelectionRect.contains(mDownX, mDownY)) {
                     mCurrentMoveArea = Gravity.CENTER;
                 }
                 mInitialSelectionRect = new Rect(mSelectionRect);
@@ -231,7 +225,7 @@ public class CropperView extends ImageView {
                 return true;
 
             case MotionEvent.ACTION_UP:
-                if(mIsDown) {
+                if (mIsDown) {
                     mIsDown = false;
                     removeCallbacks(mClickRunnable);
                     if (!mMoving) {
@@ -278,37 +272,13 @@ public class CropperView extends ImageView {
         mListener = listener;
     }
 
-
-    private Matrix mTmpMatrix = new Matrix();
-    RectF mTmpRectF = new RectF();
-    Rect mTmpRect = new Rect();
-
-
-    public void setSelection(Rect selection) {
-        mTmpRectF.set(selection);
-        mTmpMatrix.set(getImageMatrix());
-        Drawable drawable = getDrawable();
-        Bitmap image = ((BitmapDrawable) drawable).getBitmap();
-        float sx = drawable.getIntrinsicWidth() / (float)image.getWidth();
-        float sy = drawable.getIntrinsicHeight() / (float)image.getHeight();
-        mTmpMatrix.preScale(sx, sy);
-        mTmpMatrix.mapRect(mTmpRectF);
-        mTmpRectF.round(mSelectionRect);
-        if(mSelectionRect.left < 0) mSelectionRect.left = 0;
-        if(mSelectionRect.right > getWidth()) mSelectionRect.right = getWidth();
-        if(mSelectionRect.top < 0) mSelectionRect.bottom = 0;
-        if(mSelectionRect.bottom > getHeight()) mSelectionRect.bottom = getHeight();
-        sendSelectionChangedEvent();
-        invalidate();
-    }
-
     public Rect getSelection() {
         mTmpRectF.set(mSelectionRect);
         getImageMatrix().invert(mTmpMatrix);
         Drawable drawable = getDrawable();
         Bitmap image = ((BitmapDrawable) drawable).getBitmap();
-        float sx = image.getWidth() / (float)drawable.getIntrinsicWidth();
-        float sy = image.getHeight() / (float)drawable.getIntrinsicHeight();
+        float sx = image.getWidth() / (float) drawable.getIntrinsicWidth();
+        float sy = image.getHeight() / (float) drawable.getIntrinsicHeight();
         mTmpMatrix.postScale(sx, sy);
         mTmpMatrix.mapRect(mTmpRectF);
         mTmpRectF.round(mTmpRect);
@@ -316,9 +286,33 @@ public class CropperView extends ImageView {
         return mTmpRect;
     }
 
+    public void setSelection(Rect selection) {
+        mTmpRectF.set(selection);
+        mTmpMatrix.set(getImageMatrix());
+        Drawable drawable = getDrawable();
+        Bitmap image = ((BitmapDrawable) drawable).getBitmap();
+        float sx = drawable.getIntrinsicWidth() / (float) image.getWidth();
+        float sy = drawable.getIntrinsicHeight() / (float) image.getHeight();
+        mTmpMatrix.preScale(sx, sy);
+        mTmpMatrix.mapRect(mTmpRectF);
+        mTmpRectF.round(mSelectionRect);
+        if (mSelectionRect.left < 0) mSelectionRect.left = 0;
+        if (mSelectionRect.right > getWidth()) mSelectionRect.right = getWidth();
+        if (mSelectionRect.top < 0) mSelectionRect.bottom = 0;
+        if (mSelectionRect.bottom > getHeight()) mSelectionRect.bottom = getHeight();
+        sendSelectionChangedEvent();
+        invalidate();
+    }
+
     private void sendSelectionChangedEvent() {
-        if(mListener != null) {
+        if (mListener != null) {
             mListener.onCropperViewSelectionChanged(getSelection());
         }
+    }
+
+    public interface OnCropperViewEvent {
+        void onCropperViewSelectionChanged(Rect selection);
+
+        void onCropperViewClick();
     }
 }

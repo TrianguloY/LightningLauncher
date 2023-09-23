@@ -8,9 +8,15 @@
 
 package org.mozilla.javascript.serialize;
 
-import java.io.*;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.Undefined;
+import org.mozilla.javascript.UniqueTag;
 
-import org.mozilla.javascript.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectStreamClass;
 
 /**
  * Class ScriptableInputStream is used to read in a JavaScript
@@ -24,14 +30,17 @@ import org.mozilla.javascript.*;
 
 public class ScriptableInputStream extends ObjectInputStream {
 
+    private final Scriptable scope;
+    private ClassLoader classLoader;
+
     /**
      * Create a ScriptableInputStream.
-     * @param in the InputStream to read from.
+     *
+     * @param in    the InputStream to read from.
      * @param scope the top-level scope to create the object in.
      */
     public ScriptableInputStream(InputStream in, Scriptable scope)
-        throws IOException
-    {
+            throws IOException {
         super(in);
         this.scope = scope;
         enableResolveObject(true);
@@ -43,8 +52,7 @@ public class ScriptableInputStream extends ObjectInputStream {
 
     @Override
     protected Class<?> resolveClass(ObjectStreamClass desc)
-        throws IOException, ClassNotFoundException
-    {
+            throws IOException, ClassNotFoundException {
         String name = desc.getName();
         if (classLoader != null) {
             try {
@@ -58,23 +66,19 @@ public class ScriptableInputStream extends ObjectInputStream {
 
     @Override
     protected Object resolveObject(Object obj)
-        throws IOException
-    {
+            throws IOException {
         if (obj instanceof ScriptableOutputStream.PendingLookup) {
-            String name = ((ScriptableOutputStream.PendingLookup)obj).getName();
+            String name = ((ScriptableOutputStream.PendingLookup) obj).getName();
             obj = ScriptableOutputStream.lookupQualifiedName(scope, name);
             if (obj == Scriptable.NOT_FOUND) {
                 throw new IOException("Object " + name + " not found upon " +
-                                      "deserialization.");
+                        "deserialization.");
             }
-        }else if (obj instanceof UniqueTag) {
-            obj = ((UniqueTag)obj).readResolve();
-        }else if (obj instanceof Undefined) {
-            obj = ((Undefined)obj).readResolve();
+        } else if (obj instanceof UniqueTag) {
+            obj = ((UniqueTag) obj).readResolve();
+        } else if (obj instanceof Undefined) {
+            obj = ((Undefined) obj).readResolve();
         }
         return obj;
     }
-
-    private Scriptable scope;
-    private ClassLoader classLoader;
 }

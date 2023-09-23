@@ -15,12 +15,12 @@ import java.util.List;
  * A labeled statement.  A statement can have more than one label.  In
  * this AST representation, all labels for a statement are collapsed into
  * the "labels" list of a single {@link LabeledStatement} node. <p>
- *
+ * <p>
  * Node type is {@link Token#EXPR_VOID}. <p>
  */
 public class LabeledStatement extends AstNode {
 
-    private List<Label> labels = new ArrayList<Label>();  // always at least 1
+    private final List<Label> labels = new ArrayList<Label>();  // always at least 1
     private AstNode statement;
 
     {
@@ -48,6 +48,7 @@ public class LabeledStatement extends AstNode {
     /**
      * Sets label list, setting the parent of each label
      * in the list.  Replaces any existing labels.
+     *
      * @throws IllegalArgumentException} if labels is {@code null}
      */
     public void setLabels(List<Label> labels) {
@@ -61,6 +62,7 @@ public class LabeledStatement extends AstNode {
 
     /**
      * Adds a label and sets its parent to this node.
+     *
      * @throws IllegalArgumentException} if label is {@code null}
      */
     public void addLabel(Label label) {
@@ -77,6 +79,17 @@ public class LabeledStatement extends AstNode {
     }
 
     /**
+     * Sets the labeled statement, and sets its parent to this node.
+     *
+     * @throws IllegalArgumentException if {@code statement} is {@code null}
+     */
+    public void setStatement(AstNode statement) {
+        assertNotNull(statement);
+        this.statement = statement;
+        statement.setParent(this);
+    }
+
+    /**
      * Returns label with specified name from the label list for
      * this labeled statement.  Returns {@code null} if there is no
      * label with that name in the list.
@@ -88,16 +101,6 @@ public class LabeledStatement extends AstNode {
             }
         }
         return null;
-    }
-
-    /**
-     * Sets the labeled statement, and sets its parent to this node.
-     * @throws IllegalArgumentException if {@code statement} is {@code null}
-     */
-    public void setStatement(AstNode statement) {
-        assertNotNull(statement);
-        this.statement = statement;
-        statement.setParent(this);
     }
 
     public Label getFirstLabel() {

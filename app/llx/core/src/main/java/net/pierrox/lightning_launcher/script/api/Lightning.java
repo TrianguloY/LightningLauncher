@@ -19,9 +19,9 @@ import net.pierrox.lightning_launcher.api.ScreenIdentity;
 import net.pierrox.lightning_launcher.data.FileUtils;
 import net.pierrox.lightning_launcher.data.Page;
 import net.pierrox.lightning_launcher.engine.LightningEngine;
-import net.pierrox.lightning_launcher.script.ScriptManager;
 import net.pierrox.lightning_launcher.engine.variable.VariableManager;
 import net.pierrox.lightning_launcher.script.ScriptExecutor;
+import net.pierrox.lightning_launcher.script.ScriptManager;
 import net.pierrox.lightning_launcher.script.api.screen.ActivityScreen;
 import net.pierrox.lightning_launcher.script.api.screen.HomeScreen;
 import net.pierrox.lightning_launcher.script.api.screen.Screen;
@@ -48,9 +48,42 @@ import java.util.ArrayList;
  */
 public class Lightning {
 
-    private LightningEngine mEngine;
-    private SparseArray<Container> mCachedContainers = new SparseArray<>();
-    private SparseArray<Item> mCachedItems = new SparseArray<>();
+    private final LightningEngine mEngine;
+    private final SparseArray<Container> mCachedContainers = new SparseArray<>();
+    private final SparseArray<Item> mCachedItems = new SparseArray<>();
+    /**
+     * @hide
+     */
+    private final Page.EmptyPageListener mPageListener = new Page.EmptyPageListener() {
+        @Override
+        public void onPageRemoved(Page page) {
+            int i;
+
+            for (i = mCachedContainers.size() - 1; i >= 0; i--) {
+                Container container = mCachedContainers.valueAt(i);
+                if (container.getPage() == page) {
+                    mCachedContainers.remove(mCachedContainers.keyAt(i));
+                }
+            }
+
+            for (i = mCachedItems.size() - 1; i >= 0; i--) {
+                Item item = mCachedItems.valueAt(i);
+                if (item.getItem().getPage() == page) {
+                    mCachedItems.remove(mCachedItems.keyAt(i));
+                }
+            }
+        }
+
+        @Override
+        public void onPageItemRemoved(Page page, net.pierrox.lightning_launcher.data.Item item) {
+            for (int i = mCachedItems.size() - 1; i >= 0; i--) {
+                Item scriptItem = mCachedItems.valueAt(i);
+                if (scriptItem.getItem() == item) {
+                    mCachedItems.remove(mCachedItems.keyAt(i));
+                }
+            }
+        }
+    };
 
     /**
      * @hide
@@ -74,40 +107,6 @@ public class Lightning {
     /**
      * @hide
      */
-    private Page.EmptyPageListener mPageListener = new Page.EmptyPageListener() {
-        @Override
-        public void onPageRemoved(Page page) {
-            int i;
-
-            for(i=mCachedContainers.size()-1; i>=0; i--) {
-                Container container = mCachedContainers.valueAt(i);
-                if (container.getPage() == page) {
-                    mCachedContainers.remove(mCachedContainers.keyAt(i));
-                }
-            }
-
-            for (i=mCachedItems.size()-1; i>=0; i--) {
-                Item item = mCachedItems.valueAt(i);
-                if(item.getItem().getPage() == page) {
-                    mCachedItems.remove(mCachedItems.keyAt(i));
-                }
-            }
-        }
-
-        @Override
-        public void onPageItemRemoved(Page page, net.pierrox.lightning_launcher.data.Item item) {
-            for (int i=mCachedItems.size()-1; i>=0; i--) {
-                Item scriptItem = mCachedItems.valueAt(i);
-                if(scriptItem.getItem() == item) {
-                    mCachedItems.remove(mCachedItems.keyAt(i));
-                }
-            }
-        }
-    };
-
-    /**
-     * @hide
-     */
     public LightningEngine getEngine() {
         return mEngine;
     }
@@ -115,7 +114,7 @@ public class Lightning {
     /**
      * @hide
      */
-	/*package*/ void scriptError(String message) {
+    /*package*/ void scriptError(String message) {
         mEngine.getScriptExecutor().throwError(message);
     }
 
@@ -150,6 +149,7 @@ public class Lightning {
 
     /**
      * Returns a script item object, creates it if needed. This script item encapsulates an item view (and the linked item data).
+     *
      * @hide
      */
     public Item getCachedItem(ItemView itemView) {
@@ -180,6 +180,7 @@ public class Lightning {
 
     /**
      * Returns a script item object, only if it has already been cached.
+     *
      * @hide
      */
     public Item findCachedItem(ItemView itemView) {
@@ -194,7 +195,7 @@ public class Lightning {
         mCachedItems.remove(item.mItemView.hashCode());
         item.mItemView = newItemView;
         ItemLayout il = newItemView.getParentItemLayout();
-        if(il != null) {
+        if (il != null) {
             il.ensureItemViewReady(newItemView);
         }
         mCachedItems.put(newItemView.hashCode(), item);
@@ -202,6 +203,7 @@ public class Lightning {
 
     /**
      * Returns a script container object, only if it has already been cached.
+     *
      * @hide
      */
     public Container findCachedContainer(ItemLayout itemLayout) {
@@ -246,25 +248,25 @@ public class Lightning {
     /*package*/ Event findEventInStack() {
         // XXX HACK find the local event (closure) in the call stack
         org.mozilla.javascript.Context context = org.mozilla.javascript.Context.getCurrentContext();
-        if(context == null) {
+        if (context == null) {
             return null;
         }
 
         Interpreter.CallFrame lastInterpreterFrame = (Interpreter.CallFrame) context.lastInterpreterFrame;
 
-        if(lastInterpreterFrame == null) {
+        if (lastInterpreterFrame == null) {
             return null;
         }
 
         Scriptable scope = lastInterpreterFrame.scope;
-        for(;;) {
+        for (; ; ) {
             Object e = scope.get("_event", scope);
-            if(e != UniqueTag.NOT_FOUND) {
-                return (Event) ((NativeJavaObject)e).unwrap();
+            if (e != UniqueTag.NOT_FOUND) {
+                return (Event) ((NativeJavaObject) e).unwrap();
             }
 
             scope = scope.getParentScope();
-            if(scope == null) {
+            if (scope == null) {
                 return null;
             }
         }
@@ -275,13 +277,14 @@ public class Lightning {
      */
     public Screen getScriptScreen() {
         Event event = findEventInStack();
-        if(event == null) {
+        if (event == null) {
             Scriptable scope = mEngine.getScriptExecutor().getScriptScope();
             return createScreen((net.pierrox.lightning_launcher.engine.Screen) scope.get(ScriptExecutor.PROPERTY_EVENT_SCREEN, scope));
         } else {
             return event.getScreen();
         }
     }
+
     /**
      * Retrieve the configuration object used to get and set launcher general settings.
      */
@@ -292,6 +295,7 @@ public class Lightning {
     /**
      * Retrieve the currently active screen, the one which is displayed to the user.
      * Note that this is often the same as Lightning.getEvent().getScreen(), but not always : events and script execution can occur in non active screens.
+     *
      * @return the active screen, or null if no screen is active at the moment
      */
     public Screen getActiveScreen() {
@@ -344,11 +348,11 @@ public class Lightning {
      * @hide
      */
     public Screen createScreen(net.pierrox.lightning_launcher.engine.Screen screen) {
-        if(screen == null){
+        if (screen == null) {
             return null;
-        } else if(screen.getIdentity() == ScreenIdentity.HOME) {
+        } else if (screen.getIdentity() == ScreenIdentity.HOME) {
             return new HomeScreen(this, screen);
-        } else if(screen.getContext() instanceof Activity) {
+        } else if (screen.getContext() instanceof Activity) {
             return new ActivityScreen(this, screen);
         } else {
             return new Screen(this, screen);
@@ -366,14 +370,14 @@ public class Lightning {
      * Set a boolean variable. This is a shortcut for <code>getVariables().edit().setInteger(name, value).commit();</code>. When modifying several at once, consider using the {@link net.pierrox.lightning_launcher.script.api.PropertyEditor} object instead for best efficiency.
      */
     public void setVariableInteger(String name, long value) {
-        setVariable(name, (int)value);
+        setVariable(name, (int) value);
     }
 
     /**
      * Set a boolean variable. This is a shortcut for <code>getVariables().edit().setFloat(name, value).commit();</code>. When modifying several at once, consider using the {@link net.pierrox.lightning_launcher.script.api.PropertyEditor} object instead for best efficiency.
      */
     public void setVariableFloat(String name, float value) {
-        if(Float.isNaN(value)) {
+        if (Float.isNaN(value)) {
             throw ScriptRuntime.constructError("setFloat", "Bad argument");
         }
         setVariable(name, value);
@@ -409,6 +413,7 @@ public class Lightning {
 
     /**
      * Retrieve a script by name.
+     *
      * @param name as given by Script#getName()
      * @return a script or null if not found
      */
@@ -418,6 +423,7 @@ public class Lightning {
 
     /**
      * Retrieve a script by its path and name.
+     *
      * @param path as given by Script#getPath()
      * @param name as given by Script#getName()
      * @return a script or null if not found
@@ -429,6 +435,7 @@ public class Lightning {
 
     /**
      * Retrieve a script by its unique identifier
+     *
      * @param id identifier as given by Script#getId()
      * @return a script or null if no script with this id
      */
@@ -436,7 +443,7 @@ public class Lightning {
         try {
             int id_ = Integer.parseInt(id);
             return new Script(mEngine, mEngine.getScriptManager().getOrLoadScript(id_));
-        } catch(NumberFormatException e) {
+        } catch (NumberFormatException e) {
             return null;
         }
     }
@@ -450,6 +457,7 @@ public class Lightning {
 
     /**
      * Create a new script using the default path "/"
+     *
      * @deprecated use {@link #createScript(String, String, String, int)} instead
      */
     public Script createScript(String name, String text, int flags) {
@@ -472,13 +480,14 @@ public class Lightning {
 
     /**
      * Return the collection of scripts matching some flags.
+     *
      * @param flags see Script#FLAG_*
      */
     public Script[] getAllScriptMatching(int flags) {
         ArrayList<net.pierrox.lightning_launcher.script.Script> all_scripts = mEngine.getScriptManager().getAllScriptMatching(flags);
         int length = all_scripts.size();
         Script[] array = new Script[length];
-        for(int i=0; i<length; i++) {
+        for (int i = 0; i < length; i++) {
             array[i] = new Script(mEngine, all_scripts.get(i));
         }
         return array;
@@ -501,7 +510,8 @@ public class Lightning {
     /**
      * Write data to a file. This is for logging and debug purpose only. The path is not configurable and is: <external storage>/LightningLauncher/script/log.txt.
      * Please note that this method won't add newlines automatically when appending data.
-     * @param data text to write to the file
+     *
+     * @param data   text to write to the file
      * @param append whether to clear the file before to write data, or append data to the existing content
      */
     public void writeToLogFile(String data, boolean append) {
@@ -513,7 +523,10 @@ public class Lightning {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            if(fw != null) try { fw.close(); } catch(Exception e) {}
+            if (fw != null) try {
+                fw.close();
+            } catch (Exception e) {
+            }
         }
     }
 
@@ -524,7 +537,8 @@ public class Lightning {
      *     <li>load scripts and set them as event handler (useful in script plugins)</li>
      *     <li>load JSON data, such as theme colors, data, etc.</li>
      * </ul>
-     * @param pkg package name from which to read resources
+     *
+     * @param pkg  package name from which to read resources
      * @param name name of the raw resource. It must not contain the extension of the raw file, this is the Android identifier.
      * @return a string or null if the resource cannot be found or read
      */
@@ -533,7 +547,7 @@ public class Lightning {
             android.content.Context remote_context = mEngine.getContext().createPackageContext(pkg, 0);
             Resources rsrc = remote_context.getResources();
             int id = rsrc.getIdentifier(name, "raw", pkg);
-            if(id != 0) {
+            if (id != 0) {
                 InputStream is = rsrc.openRawResource(id);
                 return FileUtils.readInputStreamContent(is);
             }
@@ -552,13 +566,14 @@ public class Lightning {
 
     /**
      * Send a tasker intent, optionally waiting for its completion to return.
-     * @param intent an intent built with TaskerIntent (see http://tasker.dinglisch.net/invoketasks.html for samples)
+     *
+     * @param intent      an intent built with TaskerIntent (see http://tasker.dinglisch.net/invoketasks.html for samples)
      * @param synchronous when true, Lightning will wait for Tasker task completion before to return, otherwise it will return immediately
      * @return when synchronous is true returns true if the intent has been sent successfully and Tasker reports a success too, when synchronous is false this method always returns true..
      */
     public boolean sendTaskerIntent(TaskerIntent intent, boolean synchronous) {
         final Context context = mEngine.getContext();
-        if(synchronous) {
+        if (synchronous) {
             org.mozilla.javascript.Context cx = RhinoAndroidHelper.prepareContext();
             final ContinuationPending pending;
 
@@ -576,7 +591,7 @@ public class Lightning {
                 context.registerReceiver(br, intent.getCompletionFilter());
                 context.sendBroadcast(intent);
                 throw pending;
-            } catch(IllegalStateException e) {
+            } catch (IllegalStateException e) {
                 Toast.makeText(context, "cannot wait for Tasker result in this context, set 'synchronous' to false", Toast.LENGTH_SHORT).show();
                 return false;
             } finally {
@@ -591,6 +606,7 @@ public class Lightning {
     /**
      * Translate a Java class into a JavaScript object.
      * This is a convenience method that avoid repeated use of fully qualified names while scripting Java.
+     *
      * @param name fully qualified class name
      * @return true if the operation succeeded, false if the class cannot be loaded or if already bound
      */
@@ -600,6 +616,7 @@ public class Lightning {
 
     /**
      * Display a message in a dialog box.
+     *
      * @param message text to display
      */
     public void alert(String message) {
@@ -608,6 +625,7 @@ public class Lightning {
 
     /**
      * Display a message in a dialog box with Ok/Cancel buttons
+     *
      * @param message text to display
      * @return true if the dialog box has been confirmed with the Ok button
      */
@@ -620,8 +638,9 @@ public class Lightning {
 
     /**
      * Display a message in a dialog box with an input text area.
+     *
      * @param message text to display
-     * @param input initial value in the input text
+     * @param input   initial value in the input text
      * @return the inputed text, null if the dialog box has been canceled
      */
     public String prompt(String message, String input) {
@@ -633,7 +652,7 @@ public class Lightning {
 
     private boolean displayDialog(String message, String input, boolean has_cancel) {
         Context context = getScriptScreen().getContext();
-        if(context instanceof Activity) {
+        if (context instanceof Activity) {
             org.mozilla.javascript.Context cx = RhinoAndroidHelper.prepareContext();
             try {
                 ContinuationPending pending = cx.captureContinuation();
@@ -651,27 +670,29 @@ public class Lightning {
             return false;
         }
     }
-    
+
     /**
      * Displays a toast (small message at the bottom of the screen).
      * This is equivalent to <code>Toast.makeText(getEvent().getScreen().getContext(), text, Toast.LENGTH_LONG).show()</code>
      * (you can use that code directly if you want a LENGTH_SHORT toast or to save the toast object instead of showing it).
+     *
      * @param text message to display
      */
-    public void toast(String text){
+    public void toast(String text) {
         Toast.makeText(getScriptScreen().getContext(), text, Toast.LENGTH_LONG).show();
     }
 
     /**
      * Execute a function later.
-     * @param function need to be a function
+     *
+     * @param function    need to be a function
      * @param delayMillis anything below 0 will be handled as 0
      * @return timeout id, can be used with #clearTimeout to cancel it, will return 0 if function is not a function
      */
     public int setTimeout(Object function, int delayMillis) {
-        if(function instanceof org.mozilla.javascript.Script) {
-            if(delayMillis<0) delayMillis = 0;
-            return mEngine.getScriptExecutor().setTimeout((org.mozilla.javascript.Script) function, delayMillis);
+        if (function instanceof org.mozilla.javascript.Script) {
+            if (delayMillis < 0) delayMillis = 0;
+            return mEngine.getScriptExecutor().setTimeout(function, delayMillis);
         }
 
         return 0;
@@ -679,6 +700,7 @@ public class Lightning {
 
     /**
      * Clear a timeout previously set with #setTimeout
+     *
      * @param id identifier returned by #setTimeout
      */
     public void clearTimeout(int id) {
@@ -696,10 +718,10 @@ public class Lightning {
      * Encode a color as an hexadecimal string, prefixed with '#'. Arguments are color component ranging from 0 to 1. For instance calling argb(1, 1, 0, 0) will return #ffff0000
      */
     public String argb(float a, float r, float g, float b) {
-        String hex = Integer.toHexString(Color.argb(Math.round(a*255), Math.round(r*255), Math.round(g*255), Math.round(b*255)));
-        while(hex.length()<8) {
-            hex='0'+hex;
+        String hex = Integer.toHexString(Color.argb(Math.round(a * 255), Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)));
+        while (hex.length() < 8) {
+            hex = '0' + hex;
         }
-        return "#"+hex;
+        return "#" + hex;
     }
 }

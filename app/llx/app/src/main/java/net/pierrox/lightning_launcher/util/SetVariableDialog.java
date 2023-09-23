@@ -25,7 +25,6 @@ SOFTWARE.
 package net.pierrox.lightning_launcher.util;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -46,17 +45,10 @@ import net.pierrox.lightning_launcher_extreme.R;
 import java.util.ArrayList;
 
 public class SetVariableDialog extends AlertDialog implements DialogInterface.OnClickListener, View.OnClickListener {
-    public interface OnSetVariableDialogListener {
-        public void onSetVariableEdited(Variable variable);
-        public void onSetVariableCancel();
-    }
-
-    private Variable mInitValue;
-    private OnSetVariableDialogListener mListener;
-
+    private final Variable mInitValue;
+    private final OnSetVariableDialogListener mListener;
     private EditText mNameEditText;
     private EditText mValueEditText;
-
     public SetVariableDialog(Context context, Variable init_value, OnSetVariableDialogListener listener) {
         super(context);
 
@@ -68,17 +60,17 @@ public class SetVariableDialog extends AlertDialog implements DialogInterface.On
     protected void onCreate(Bundle savedInstanceState) {
         View view = getLayoutInflater().inflate(R.layout.set_var_dialog, null);
 
-        ((TextView)view.findViewById(R.id.sv_nt)).setText(R.string.sv_n);
-        ((TextView)view.findViewById(R.id.sv_vt)).setText(R.string.bd_v);
+        ((TextView) view.findViewById(R.id.sv_nt)).setText(R.string.sv_n);
+        ((TextView) view.findViewById(R.id.sv_vt)).setText(R.string.bd_v);
 
-        mNameEditText = (EditText) view.findViewById(R.id.sv_n);
-        mValueEditText = (EditText) view.findViewById(R.id.sv_v);
+        mNameEditText = view.findViewById(R.id.sv_n);
+        mValueEditText = view.findViewById(R.id.sv_v);
 
-        Button select_var = (Button) view.findViewById(R.id.sv_ns);
+        Button select_var = view.findViewById(R.id.sv_ns);
         select_var.setTypeface(LLApp.get().getIconsTypeface());
         select_var.setOnClickListener(this);
 
-        if(mInitValue != null) {
+        if (mInitValue != null) {
             mNameEditText.setText(mInitValue.name);
             mValueEditText.setText(mInitValue.value.toString());
         }
@@ -104,7 +96,7 @@ public class SetVariableDialog extends AlertDialog implements DialogInterface.On
 
             @Override
             public void afterTextChanged(Editable s) {
-                ok_button.setEnabled(s.length()>0);
+                ok_button.setEnabled(s.length() > 0);
             }
         });
     }
@@ -133,8 +125,14 @@ public class SetVariableDialog extends AlertDialog implements DialogInterface.On
         }
     }
 
+    public interface OnSetVariableDialogListener {
+        void onSetVariableEdited(Variable variable);
+
+        void onSetVariableCancel();
+    }
+
     private class VariableSelectionDialog extends AlertDialog implements AdapterView.OnItemClickListener {
-        private ArrayList<Variable> mUserVariables;
+        private final ArrayList<Variable> mUserVariables;
 
         public VariableSelectionDialog(Context context) {
             super(context);
@@ -144,9 +142,9 @@ public class SetVariableDialog extends AlertDialog implements DialogInterface.On
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
-            if(mUserVariables.size() == 0) {
+            if (mUserVariables.size() == 0) {
                 setMessage(getContext().getString(R.string.uv_e));
-                setButton(BUTTON_POSITIVE, getContext().getString(android.R.string.ok), (OnClickListener)null);
+                setButton(BUTTON_POSITIVE, getContext().getString(android.R.string.ok), (OnClickListener) null);
             } else {
                 setTitle(R.string.bv_pick);
 

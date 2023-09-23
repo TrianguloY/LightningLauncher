@@ -26,11 +26,16 @@ package net.pierrox.lightning_launcher.util;
 
 import android.app.ActivityManager;
 import android.app.Service;
-import android.content.*;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.telephony.TelephonyManager;
+
 import net.pierrox.lightning_launcher.LLApp;
 import net.pierrox.lightning_launcher.activities.Dashboard;
 import net.pierrox.lightning_launcher.activities.LockScreen;
@@ -41,15 +46,16 @@ import java.util.List;
 
 
 public class EmptyService extends Service {
-    private BroadcastReceiver mBroadcastReceiver=new BroadcastReceiver() {
+    private static final int MODE_CHECK_ON_TOP = 0;
+    private final BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (action.equals(Intent.ACTION_SCREEN_OFF)) {
                 boolean launched = false;
-                if(LockScreen.sThis==null && LLApp.get().getAppEngine().getGlobalConfig().lockScreen != Page.NONE) {
+                if (LockScreen.sThis == null && LLApp.get().getAppEngine().getGlobalConfig().lockScreen != Page.NONE) {
                     TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-                    if(tm.getCallState() == TelephonyManager.CALL_STATE_IDLE) {
+                    if (tm.getCallState() == TelephonyManager.CALL_STATE_IDLE) {
                         Intent locked = new Intent(Dashboard.BROADCAST_ACTION_LOCKED);
                         sendBroadcast(locked);
 
@@ -60,12 +66,12 @@ public class EmptyService extends Service {
                     }
                 }
 
-                if((launched || LockScreen.sThis!=null) && mMoveTaskToFront != null) {
+                if ((launched || LockScreen.sThis != null) && mMoveTaskToFront != null) {
                     mMode = MODE_CHECK_ON_TOP;
                     mHandler.postDelayed(mCheckOnTop, 3000);
                 }
-            } else if(LockScreen.sMyTaskId != null && action.equals(Intent.ACTION_SCREEN_ON)) {
-                if(mMoveTaskToFront != null) {
+            } else if (LockScreen.sMyTaskId != null && action.equals(Intent.ACTION_SCREEN_ON)) {
+                if (mMoveTaskToFront != null) {
                     mHandler.removeCallbacks(mCheckOnTop);
                 }
 
@@ -110,20 +116,17 @@ public class EmptyService extends Service {
             }
         }
     };
-
-	@Override
-	public IBinder onBind(Intent arg0) {
-		return null;
-	}
-
+    private static final int MODE_MOVE_ON_TOP_PENDING = 1;
     private ActivityManager mActivityManager;
     private Method mMoveTaskToFront;
     private ComponentName mLockScreenComponenentName;
     private Handler mHandler;
-
-    private static final int MODE_CHECK_ON_TOP = 0;
-    private static final int MODE_MOVE_ON_TOP_PENDING = 1;
     private int mMode;
+
+    @Override
+    public IBinder onBind(Intent arg0) {
+        return null;
+    }
 
     @Override
     public void onCreate() {
@@ -138,10 +141,10 @@ public class EmptyService extends Service {
             mMoveTaskToFront = null;
         }
 
-        if(Build.VERSION.SDK_INT>=8) {
-            IntentFilter intent_filter=new IntentFilter();
+        if (Build.VERSION.SDK_INT >= 8) {
+            IntentFilter intent_filter = new IntentFilter();
             intent_filter.addAction(Intent.ACTION_SCREEN_OFF);
-            if(mMoveTaskToFront != null) {
+            if (mMoveTaskToFront != null) {
                 intent_filter.addAction(Intent.ACTION_SCREEN_ON);
             }
             registerReceiver(mBroadcastReceiver, intent_filter);
@@ -156,13 +159,13 @@ public class EmptyService extends Service {
     }
 
 
-    private Runnable mCheckOnTop = new Runnable() {
+    private final Runnable mCheckOnTop = new Runnable() {
         @Override
         public void run() {
-            if(mMode == MODE_CHECK_ON_TOP) {
-                if(LockScreen.sThis != null) {
+            if (mMode == MODE_CHECK_ON_TOP) {
+                if (LockScreen.sThis != null) {
                     List<ActivityManager.RunningTaskInfo> tasks = mActivityManager.getRunningTasks(1);
-                    if(mLockScreenComponenentName.compareTo(tasks.get(0).topActivity) != 0) {
+                    if (mLockScreenComponenentName.compareTo(tasks.get(0).topActivity) != 0) {
                         mMode = MODE_MOVE_ON_TOP_PENDING;
                         mHandler.postDelayed(mCheckOnTop, 22000);
                     } else {
@@ -170,10 +173,10 @@ public class EmptyService extends Service {
                     }
                 }
             } else {
-                if(LockScreen.sThis != null) {
+                if (LockScreen.sThis != null) {
                     try {
                         TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-                        if(tm.getCallState() == TelephonyManager.CALL_STATE_IDLE) {
+                        if (tm.getCallState() == TelephonyManager.CALL_STATE_IDLE) {
                             mMoveTaskToFront.invoke(mActivityManager, LockScreen.sMyTaskId, 0);
                         }
                         mMode = MODE_CHECK_ON_TOP;
