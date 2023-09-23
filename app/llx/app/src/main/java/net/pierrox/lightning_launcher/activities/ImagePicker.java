@@ -24,6 +24,8 @@ SOFTWARE.
 
 package net.pierrox.lightning_launcher.activities;
 
+import static android.content.ClipData.newPlainText;
+
 import android.Manifest;
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -47,7 +49,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -87,8 +88,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
-import static android.content.ClipData.newPlainText;
 
 
 public class ImagePicker extends ResourceWrapperActivity implements AdapterView.OnItemSelectedListener, AdapterView.OnItemClickListener, View.OnClickListener, ColorPickerDialog.OnColorChangedListener, View.OnLongClickListener, AdapterView.OnItemLongClickListener, EditTextIme.OnEditTextImeListener, TextWatcher {
@@ -151,17 +150,13 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
     private int mLauncherIconDensity;
 
     private View mClickedView;
-
-    private static class BitmapInfo {
-        Bitmap bitmap;
-        boolean isNinePatch; // need to be stored because 9patch chunk is lost during resize
-
-        private BitmapInfo(Bitmap bitmap, boolean isNinePatch) {
-            this.bitmap = bitmap;
-            this.isNinePatch = isNinePatch;
-        }
-    }
     private LruCache<String, BitmapInfo> mThumbnailCache;
+
+    public static void startActivity(Activity from, int requestCode) {
+        final Intent intent = new Intent(from, ImagePicker.class);
+        intent.putExtra(INTENT_EXTRA_CROP, true);
+        from.startActivityForResult(intent, requestCode);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -169,7 +164,7 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
 
         super.onCreate(savedInstanceState);
 
-        if(savedInstanceState == null) {
+        if (savedInstanceState == null) {
             // if recreated because the activity has been disposed by the framework, don't remove
             // the temp file, it will be used for instance in the activity result callback
             Utils.getTmpImageFile().delete();
@@ -191,14 +186,14 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
             protected int sizeOf(String key, BitmapInfo bitmapInfo) {
                 // The cache size will be measured in kilobytes rather than
                 // number of items.
-                if(finalGetByteCount != null) {
+                if (finalGetByteCount != null) {
                     try {
-                        return (Integer)finalGetByteCount.invoke(bitmapInfo.bitmap) / 1024;
+                        return (Integer) finalGetByteCount.invoke(bitmapInfo.bitmap) / 1024;
                     } catch (Exception e) {
                         // pass and continue
                     }
                 }
-                return bitmapInfo.bitmap.getWidth()*bitmapInfo.bitmap.getHeight() * 4 /1024;
+                return bitmapInfo.bitmap.getWidth() * bitmapInfo.bitmap.getHeight() * 4 / 1024;
             }
         };
 
@@ -211,15 +206,15 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
         d.setBounds(0, 0, mDefaultIcon.getWidth(), mDefaultIcon.getHeight());
         d.draw(c);
 
-        mStandardIconSize =getResources().getDimensionPixelSize(android.R.dimen.app_icon_size);
-        mLauncherIconDensity =0;
+        mStandardIconSize = getResources().getDimensionPixelSize(android.R.dimen.app_icon_size);
+        mLauncherIconDensity = 0;
 
         try {
-            Method getLauncherLargeIconSize=ActivityManager.class.getMethod("getLauncherLargeIconSize");
-            Method getLauncherLargeIconDensity=ActivityManager.class.getMethod("getLauncherLargeIconDensity");
-            ActivityManager am=(ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-            mStandardIconSize =(Integer) getLauncherLargeIconSize.invoke(am, (Object[])null);
-            mLauncherIconDensity =(Integer) getLauncherLargeIconDensity.invoke(am, (Object[])null);
+            Method getLauncherLargeIconSize = ActivityManager.class.getMethod("getLauncherLargeIconSize");
+            Method getLauncherLargeIconDensity = ActivityManager.class.getMethod("getLauncherLargeIconDensity");
+            ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+            mStandardIconSize = (Integer) getLauncherLargeIconSize.invoke(am, (Object[]) null);
+            mLauncherIconDensity = (Integer) getLauncherLargeIconDensity.invoke(am, (Object[]) null);
         } catch (Exception e) {
             // pass API level 11, 15
         }
@@ -236,35 +231,33 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
         mCurrentScrollLauncherPage = prefs.getInt(PREF_CURRENT_SCROLL_LAUNCHER_PAGE, 0);
 
 
-
-
         setContentView(R.layout.image_picker);
 
-        mSourceSpinner = (Spinner) findViewById(R.id.source);
+        mSourceSpinner = findViewById(R.id.source);
         ArrayAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.ip_s));
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSourceSpinner.setAdapter(adapter);
         mSourceSpinner.setOnItemSelectedListener(this);
 
-        mIconPackSpinner = (Spinner) findViewById(R.id.icon_pack);
+        mIconPackSpinner = findViewById(R.id.icon_pack);
         mIconPackSpinner.setOnItemSelectedListener(this);
 
-        mPkgSpinner = (Spinner) findViewById(R.id.pkg);
+        mPkgSpinner = findViewById(R.id.pkg);
         mPkgSpinner.setOnItemSelectedListener(this);
 
-        mLauncherPageSpinner = (Spinner) findViewById(R.id.launcher_page);
+        mLauncherPageSpinner = findViewById(R.id.launcher_page);
         mLauncherPageSpinner.setOnItemSelectedListener(this);
 
         mPathTextGrp = findViewById(R.id.path_grp);
-        mPathTextView = (TextView) findViewById(R.id.path);
-        Button up = (Button)findViewById(R.id.path_up);
+        mPathTextView = findViewById(R.id.path);
+        Button up = findViewById(R.id.path_up);
         up.setText(R.string.file_picker_activity_up);
         up.setOnClickListener(this);
 
-        mNoIconTextView = (TextView) findViewById(R.id.no_icon);
+        mNoIconTextView = findViewById(R.id.no_icon);
         mNoIconTextView.setText(R.string.ip_e);
 
-        mGridView = (GridView) findViewById(R.id.grid);
+        mGridView = findViewById(R.id.grid);
         mGridView.setNumColumns(GridView.AUTO_FIT);
         mGridView.setColumnWidth(mStandardIconSize * 2);
         mGridView.setStretchMode(GridView.STRETCH_SPACING_UNIFORM);
@@ -287,7 +280,7 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
         mBackgroundColor = prefs.getInt(PREF_BACKGROUND_COLOR, Color.TRANSPARENT);
         mGridView.setBackgroundColor(mBackgroundColor);
 
-        mSearchText = (EditTextIme) findViewById(R.id.search_text);
+        mSearchText = findViewById(R.id.search_text);
         mSearchText.setOnEditTextImeListener(this);
         mSearchText.addTextChangedListener(this);
 
@@ -295,25 +288,25 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
 
         Typeface typeface = LLApp.get().getIconsTypeface();
 
-        int[] ids = new int[] {
-            R.id.none,
-            R.id.ext_file,
-            R.id.camera,
-            R.id.bgcolor,
-            R.id.solid,
-            R.id.search
+        int[] ids = new int[]{
+                R.id.none,
+                R.id.ext_file,
+                R.id.camera,
+                R.id.bgcolor,
+                R.id.solid,
+                R.id.search
         };
-        for(int id : ids) {
+        for (int id : ids) {
             View v = findViewById(id);
             v.setOnClickListener(this);
             v.setOnLongClickListener(this);
-            ((Button)v).setTypeface(typeface);
+            ((Button) v).setTypeface(typeface);
         }
 
-        if(mCurrentMode == MODE_ICON_PACK) {
+        if (mCurrentMode == MODE_ICON_PACK) {
             mIconPackAdapter = new PkgLabelAdapter(this, true);
             mIconPackSpinner.setAdapter(mIconPackAdapter);
-            if(mIconPackAdapter.getCount()==0) {
+            if (mIconPackAdapter.getCount() == 0) {
                 mCurrentMode = MODE_PKG;
             }
         }
@@ -324,14 +317,14 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
 
         checkPermissions(
                 new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                new int[] { R.string.pr_r4, R.string.pr_r5},
+                new int[]{R.string.pr_r4, R.string.pr_r5},
                 REQUEST_PERMISSION_BASE);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if(areAllPermissionsGranted(grantResults, R.string.pr_f3)) {
-            if(mCurrentMode == MODE_PATH) {
+        if (areAllPermissionsGranted(grantResults, R.string.pr_f3)) {
+            if (mCurrentMode == MODE_PATH) {
                 setMode(MODE_PATH);
             }
         }
@@ -364,18 +357,18 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
 //        if(init == null) {
 //            adapterView.setTag(true);
 //        } else {
-            if (adapterView == mSourceSpinner) {
-                setMode(i);
-            } else if (adapterView == mIconPackSpinner) {
-                String pkg = mIconPackAdapter.getItem(i).pkg;
-                loadIconPack(pkg);
-            } else if (adapterView == mPkgSpinner) {
-                String pkg = mPkgAdapter.getItem(i).pkg;
-                loadPkg(pkg);
-            } else if (adapterView == mLauncherPageSpinner) {
-                String p = mLauncherPageAdapter.getItem(i);
-                loadLauncherPage(p);
-            }
+        if (adapterView == mSourceSpinner) {
+            setMode(i);
+        } else if (adapterView == mIconPackSpinner) {
+            String pkg = mIconPackAdapter.getItem(i).pkg;
+            loadIconPack(pkg);
+        } else if (adapterView == mPkgSpinner) {
+            String pkg = mPkgAdapter.getItem(i).pkg;
+            loadPkg(pkg);
+        } else if (adapterView == mLauncherPageSpinner) {
+            String p = mLauncherPageAdapter.getItem(i);
+            loadLauncherPage(p);
+        }
 //        }
     }
 
@@ -386,50 +379,50 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-        if(adapterView == mGridView) {
+        if (adapterView == mGridView) {
             byte[] buffer = new byte[4096];
             Object item = mGridView.getItemAtPosition(position);
             File tmp_image_file = Utils.getTmpImageFile();
-            if(mCurrentMode == MODE_PATH) {
+            if (mCurrentMode == MODE_PATH) {
                 ImageFile imf = (ImageFile) item;
-                if(imf.file.isDirectory()) {
+                if (imf.file.isDirectory()) {
                     loadPath(imf.file);
                 } else {
                     Utils.copyFileSafe(buffer, imf.file, tmp_image_file);
                     imagePicked(true);
                 }
-            } else if(mCurrentMode == MODE_PKG || mCurrentMode == MODE_ICON_PACK) {
+            } else if (mCurrentMode == MODE_PKG || mCurrentMode == MODE_ICON_PACK) {
                 ImageResource ir = (ImageResource) item;
-                FileOutputStream fos=null;
+                FileOutputStream fos = null;
                 InputStream is = null;
                 try {
                     Resources rsrc = ir.packageName.equals(ANDROID) ? getResources() : createPackageContext(ir.packageName, 0).getResources();
                     int id = ir.res;
                     boolean is_nine_patch = false;
                     Bitmap bmp = null;
-                    if(Utils.sGetDrawableForDensity!=null) {
+                    if (Utils.sGetDrawableForDensity != null) {
                         try {
-                            BitmapDrawable d=(BitmapDrawable) Utils.sGetDrawableForDensity.invoke(rsrc, id, mLauncherIconDensity);
+                            BitmapDrawable d = (BitmapDrawable) Utils.sGetDrawableForDensity.invoke(rsrc, id, mLauncherIconDensity);
                             Bitmap orig_bmp = d.getBitmap();
                             is_nine_patch = NinePatch.isNinePatchChunk(orig_bmp.getNinePatchChunk());
                             bmp = Utils.createStandardSizedIcon(orig_bmp, mStandardIconSize);
-                        } catch(Throwable e) {
+                        } catch (Throwable e) {
                             // pass, continue with classic method
                         }
                     }
-                    if(bmp == null) {
+                    if (bmp == null) {
                         bmp = BitmapFactory.decodeResource(rsrc, id);
-                        if(bmp != null) {
+                        if (bmp != null) {
                             is_nine_patch = NinePatch.isNinePatchChunk(bmp.getNinePatchChunk());
                         }
                     }
-                    if(bmp != null) {
-                        if(is_nine_patch) {
+                    if (bmp != null) {
+                        if (is_nine_patch) {
                             // nine patches need to be copied as is
                             is = rsrc.openRawResource(ir.res);
-                            fos=new FileOutputStream(tmp_image_file);
+                            fos = new FileOutputStream(tmp_image_file);
                             int n;
-                            while((n=is.read(buffer))>0) {
+                            while ((n = is.read(buffer)) > 0) {
                                 fos.write(buffer, 0, n);
                             }
                         } else {
@@ -445,10 +438,16 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
                     e.printStackTrace();
                     tmp_image_file.delete();
                 } finally {
-                    if(is!=null) try { is.close(); } catch(Exception e) {}
-                    if(fos!=null) try { fos.close(); } catch(Exception e) {}
+                    if (is != null) try {
+                        is.close();
+                    } catch (Exception e) {
+                    }
+                    if (fos != null) try {
+                        fos.close();
+                    } catch (Exception e) {
+                    }
                 }
-            } else if(mCurrentMode == MODE_LAUNCHER_PAGE) {
+            } else if (mCurrentMode == MODE_LAUNCHER_PAGE) {
                 ImageFile imf = (ImageFile) item;
                 Utils.copyFileSafe(buffer, imf.file, tmp_image_file);
                 imagePicked(true);
@@ -461,15 +460,15 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
         String label;
         String clip_text;
         Object item = adapterView.getItemAtPosition(i);
-        if(mCurrentMode == MODE_PATH || mCurrentMode == MODE_LAUNCHER_PAGE) {
+        if (mCurrentMode == MODE_PATH || mCurrentMode == MODE_LAUNCHER_PAGE) {
             ImageFile f = (ImageFile) item;
             label = f.file.getAbsolutePath();
             clip_text = label;
         } else {
             ImageResource pkg = (ImageResource) item;
             String s = pkg.packageName.equals(ANDROID) ? "android" : pkg.packageName;
-            label = s+"/"+pkg.label;
-            clip_text = "\""+s+"\", \""+pkg.label+"\"";
+            label = s + "/" + pkg.label;
+            clip_text = "\"" + s + "\", \"" + pkg.label + "\"";
         }
         ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
         ClipData clip = newPlainText("llx", clip_text);
@@ -487,7 +486,7 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
         mClickedView = view;
 
         final int id = view.getId();
-        switch(id) {
+        switch (id) {
             case R.id.none:
                 Utils.getTmpImageFile().delete();
                 imagePicked(false);
@@ -512,7 +511,7 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
 
             case R.id.bgcolor:
             case R.id.solid:
-                color_picker_dialog = new ColorPickerDialog(this, id ==R.id.bgcolor ? mBackgroundColor : Color.WHITE);
+                color_picker_dialog = new ColorPickerDialog(this, id == R.id.bgcolor ? mBackgroundColor : Color.WHITE);
                 color_picker_dialog.setAlphaSliderVisible(true);
                 color_picker_dialog.setOnColorChangedListener(this);
                 color_picker_dialog.show();
@@ -524,7 +523,7 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
 
             case R.id.path_up:
                 File parent = mCurrentPath.getParentFile();
-                if(parent != null) {
+                if (parent != null) {
                     loadPath(parent);
                 }
                 break;
@@ -535,13 +534,25 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
     @Override
     public boolean onLongClick(View view) {
         int label_res = 0;
-        switch(view.getId()) {
-            case R.id.none: label_res = R.string.ip_none; break;
-            case R.id.ext_file: label_res = R.string.ip_ext_file; break;
-            case R.id.camera: label_res = R.string.ip_camera; break;
-            case R.id.bgcolor: label_res = R.string.ip_bgcolor; break;
-            case R.id.solid: label_res = R.string.ip_solid; break;
-            case R.id.search: label_res = R.string.ip_search; break;
+        switch (view.getId()) {
+            case R.id.none:
+                label_res = R.string.ip_none;
+                break;
+            case R.id.ext_file:
+                label_res = R.string.ip_ext_file;
+                break;
+            case R.id.camera:
+                label_res = R.string.ip_camera;
+                break;
+            case R.id.bgcolor:
+                label_res = R.string.ip_bgcolor;
+                break;
+            case R.id.solid:
+                label_res = R.string.ip_solid;
+                break;
+            case R.id.search:
+                label_res = R.string.ip_search;
+                break;
         }
         Toast.makeText(this, label_res, Toast.LENGTH_SHORT).show();
         return true;
@@ -551,13 +562,13 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case REQUEST_CAPTURE_IMAGE:
-                if(resultCode == RESULT_OK) {
+                if (resultCode == RESULT_OK) {
                     imagePicked(true);
                 }
                 break;
 
             case REQUEST_PICK_IMAGE:
-                if(resultCode == RESULT_OK) {
+                if (resultCode == RESULT_OK) {
                     FileOutputStream fos = null;
                     InputStream is = null;
                     try {
@@ -565,21 +576,27 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
                         is = getContentResolver().openInputStream(data.getData());
                         byte[] buffer = new byte[4096];
                         int n;
-                        while((n=is.read(buffer))>0) {
+                        while ((n = is.read(buffer)) > 0) {
                             fos.write(buffer, 0, n);
                         }
                         imagePicked(true);
-                    } catch(IOException e) {
+                    } catch (IOException e) {
                         // pass
                     } finally {
-                        if(fos != null) try { fos.close(); } catch(IOException e) {}
-                        if(is != null) try { is.close(); } catch(IOException e) {}
+                        if (fos != null) try {
+                            fos.close();
+                        } catch (IOException e) {
+                        }
+                        if (is != null) try {
+                            is.close();
+                        } catch (IOException e) {
+                        }
                     }
                 }
                 break;
 
             case REQUEST_CROP_IMAGE:
-                if(resultCode == RESULT_OK) {
+                if (resultCode == RESULT_OK) {
                     setResult(RESULT_OK);
                     finish();
                 }
@@ -589,12 +606,6 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
                 super.onActivityResult(requestCode, resultCode, data);
                 break;
         }
-    }
-
-    public static void startActivity(Activity from, int requestCode) {
-        final Intent intent = new Intent(from, ImagePicker.class);
-        intent.putExtra(INTENT_EXTRA_CROP, true);
-        from.startActivityForResult(intent, requestCode);
     }
 
     private void setGridViewAdapter(ListAdapter adapter) {
@@ -609,25 +620,25 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
         boolean launcher_page = false;
         int pos = 0;
         int count;
-        switch(mode) {
+        switch (mode) {
             case MODE_ICON_PACK:
                 icon_pack = true;
-                if(mIconPackAdapter == null) {
+                if (mIconPackAdapter == null) {
                     mIconPackAdapter = new PkgLabelAdapter(this, true);
                     mIconPackSpinner.setAdapter(mIconPackAdapter);
                 }
-                if(mIconPackAdapter.getCount() == 0) {
+                if (mIconPackAdapter.getCount() == 0) {
                     setGridViewAdapter(null);
                 }
 
                 count = mIconPackAdapter.getCount();
-                for(int i=0; i<count; i++) {
-                    if(mIconPackAdapter.getItem(i).pkg.equals(mCurrentIconPack)) {
+                for (int i = 0; i < count; i++) {
+                    if (mIconPackAdapter.getItem(i).pkg.equals(mCurrentIconPack)) {
                         pos = i;
                         break;
                     }
                 }
-                if(mIconPackSpinner.getSelectedItemPosition() != pos) {
+                if (mIconPackSpinner.getSelectedItemPosition() != pos) {
                     mIconPackSpinner.setSelection(pos);
                 } else {
                     loadIconPack(mCurrentIconPack);
@@ -643,17 +654,17 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
                 launcher_page = true;
                 File base_dir = LLApp.get().getAppEngine().getBaseDir();
                 ArrayList<String> pages = new ArrayList<String>();
-                if(mLauncherPageAdapter == null) {
-                    for(int p = Page.FIRST_DASHBOARD_PAGE; p< Page.LAST_DASHBOARD_PAGE; p++) {
+                if (mLauncherPageAdapter == null) {
+                    for (int p = Page.FIRST_DASHBOARD_PAGE; p < Page.LAST_DASHBOARD_PAGE; p++) {
                         File f = Page.getIconDir(base_dir, p);
-                        if(f.exists()) {
+                        if (f.exists()) {
                             pages.add(String.valueOf(p));
                         }
                     }
                     pages.add(String.valueOf(Page.APP_DRAWER_PAGE));
-                    for(int p = Page.FIRST_FOLDER_PAGE; p< Page.LAST_FOLDER_PAGE; p++) {
+                    for (int p = Page.FIRST_FOLDER_PAGE; p < Page.LAST_FOLDER_PAGE; p++) {
                         File f = Page.getIconDir(base_dir, p);
-                        if(f.exists()) {
+                        if (f.exists()) {
                             pages.add(String.valueOf(p));
                         }
                     }
@@ -663,14 +674,14 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
                 }
 
                 count = mLauncherPageAdapter.getCount();
-                for(int i=0; i<count; i++) {
-                    if(mLauncherPageAdapter.getItem(i).equals(mCurrentLauncherPage)) {
+                for (int i = 0; i < count; i++) {
+                    if (mLauncherPageAdapter.getItem(i).equals(mCurrentLauncherPage)) {
                         pos = i;
                         break;
                     }
                 }
 
-                if(mLauncherPageSpinner.getSelectedItemPosition() != pos) {
+                if (mLauncherPageSpinner.getSelectedItemPosition() != pos) {
                     mLauncherPageSpinner.setSelection(pos);
                 } else {
                     loadLauncherPage(mCurrentLauncherPage);
@@ -680,18 +691,18 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
 
             case MODE_PKG:
                 pkg = true;
-                if(mPkgAdapter == null) {
+                if (mPkgAdapter == null) {
                     mPkgAdapter = new PkgLabelAdapter(this, false);
                     mPkgSpinner.setAdapter(mPkgAdapter);
                 }
                 count = mPkgAdapter.getCount();
-                for(int i=0; i<count; i++) {
-                    if(mPkgAdapter.getItem(i).pkg.equals(mCurrentPkg)) {
+                for (int i = 0; i < count; i++) {
+                    if (mPkgAdapter.getItem(i).pkg.equals(mCurrentPkg)) {
                         pos = i;
                         break;
                     }
                 }
-                if(mPkgSpinner.getSelectedItemPosition() != pos) {
+                if (mPkgSpinner.getSelectedItemPosition() != pos) {
                     mPkgSpinner.setSelection(pos);
                 } else {
                     loadPkg(mCurrentPkg);
@@ -725,7 +736,7 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
 
         File[] files = path.listFiles();
 
-        if(files != null) {
+        if (files != null) {
             for (File f : files) {
                 if (f.isDirectory()) {
                     images.add(new ImageFile(f));
@@ -805,8 +816,8 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
             ArrayList<ImageResource> pkgs = new ArrayList<ImageResource>();
             Resources rsrc = remoteContext.getResources();
             int start = isAndroidPackage ? 0x01080000 : 0x7f020000;
-            int end = start+0x1000;
-            for(int i=start; i<end; i++) {
+            int end = start + 0x1000;
+            for (int i = start; i < end; i++) {
 
                 try {
                     String label = rsrc.getResourceEntryName(i);
@@ -815,7 +826,7 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
                     ir.label = label;
                     ir.res = i;
                     pkgs.add(ir);
-                } catch(Resources.NotFoundException e) {
+                } catch (Resources.NotFoundException e) {
                     break;
                 }
             }
@@ -831,7 +842,7 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
     }
 
     private void storeGridViewScroll() {
-        if(mGridMode != MODE_NONE) {
+        if (mGridMode != MODE_NONE) {
             int offset = mStandardIconSize / 3;
             int index = mCurrentScrollIndex;//mGridView.getFirstVisiblePosition();
             final View first = mGridView.getChildAt(0);
@@ -839,19 +850,27 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
                 offset -= first.getTop();
             }
 
-            int y = (index<<16) | offset;
+            int y = (index << 16) | offset;
 
             switch (mGridMode) {
-                case MODE_PKG: mCurrentScrollPkg = y; break;
-                case MODE_PATH: mCurrentScrollPath = y; break;
-                case MODE_ICON_PACK: mCurrentScrollIconPack = y; break;
-                case MODE_LAUNCHER_PAGE: mCurrentScrollLauncherPage = y; break;
+                case MODE_PKG:
+                    mCurrentScrollPkg = y;
+                    break;
+                case MODE_PATH:
+                    mCurrentScrollPath = y;
+                    break;
+                case MODE_ICON_PACK:
+                    mCurrentScrollIconPack = y;
+                    break;
+                case MODE_LAUNCHER_PAGE:
+                    mCurrentScrollLauncherPage = y;
+                    break;
             }
         }
     }
 
     private void setGridViewScroll(int scroll) {
-        if(mGridMode == mCurrentMode) {
+        if (mGridMode == mCurrentMode) {
             mGridView.setSelection(0);
         } else {
             mGridMode = mCurrentMode;
@@ -862,7 +881,7 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
 
     @Override
     public void onColorChanged(int color) {
-        switch(mClickedView.getId()) {
+        switch (mClickedView.getId()) {
             case R.id.solid:
                 Bitmap b = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888);
                 b.eraseColor(color);
@@ -874,7 +893,10 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 } finally {
-                    if(fos != null) try { fos.close(); } catch(IOException e) {}
+                    if (fos != null) try {
+                        fos.close();
+                    } catch (IOException e) {
+                    }
                 }
 
 
@@ -901,13 +923,13 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
     private void imagePicked(boolean allow_crop) {
 //        if(getIntent().getBooleanExtra(INTENT_EXTRA_CROP, false) && allow_crop) {
         File file = Utils.getTmpImageFile();
-        if(allow_crop) {
-            if(Utils.isSvgFile(file)) {
+        if (allow_crop) {
+            if (Utils.isSvgFile(file)) {
                 allow_crop = false;
             }
         }
 
-        if(allow_crop) {
+        if (allow_crop) {
             ImageCropper.startActivity(this, file, REQUEST_CROP_IMAGE);
         } else {
             setResult(RESULT_OK);
@@ -916,9 +938,9 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
     }
 
     private void setSearchMode(boolean on) {
-        InputMethodManager imm = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         View src_grp = findViewById(R.id.src_grp);
-        if(on) {
+        if (on) {
             mSearchText.setVisibility(View.VISIBLE);
             mSearchText.setText("");
             mSearchText.requestFocus();
@@ -947,7 +969,7 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         ArrayAdapter<?> adapter = (ArrayAdapter<?>) mGridView.getAdapter();
-        if(adapter != null) {
+        if (adapter != null) {
             adapter.getFilter().filter(s.toString());
         }
     }
@@ -955,6 +977,16 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
     @Override
     public void afterTextChanged(Editable s) {
 
+    }
+
+    private static class BitmapInfo {
+        Bitmap bitmap;
+        boolean isNinePatch; // need to be stored because 9patch chunk is lost during resize
+
+        private BitmapInfo(Bitmap bitmap, boolean isNinePatch) {
+            this.bitmap = bitmap;
+            this.isNinePatch = isNinePatch;
+        }
     }
 
     private static class PkgLabel {
@@ -972,11 +1004,52 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
         }
     }
 
+    private static class ImageResource {
+        int res;
+        String packageName;
+        String label;
+
+        @Override
+        public String toString() {
+            return label;
+        }
+    }
+
+    private static class ImageFile {
+        File file;
+
+        private ImageFile(File file) {
+            this.file = file;
+        }
+
+        @Override
+        public String toString() {
+            return file.getName();
+        }
+    }
+
+    private static class TextFilter extends Filter {
+
+        TextFilter() {
+
+        }
+
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            return null;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+
+        }
+    }
+
     private abstract class MyFilterArrayAdapter<T> extends ArrayAdapter<T> {
+        private final Object mLock = new Object();
         private Filter mFilter;
         private List<T> mOriginalItems;
         private List<T> mItems;
-        private final Object mLock = new Object();
 
 
         public MyFilterArrayAdapter(Context context, int resource) {
@@ -1065,9 +1138,6 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
         }
     }
 
-
-
-
     private class PkgLabelAdapter extends MyFilterArrayAdapter<PkgLabel> {
 
         public PkgLabelAdapter(Context context, boolean icon) {
@@ -1076,20 +1146,20 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
             PackageManager pm = getPackageManager();
 
             ArrayList<PkgLabel> items = new ArrayList<PkgLabel>();
-            if(icon) {
+            if (icon) {
                 String myPackagename = getPackageName();
                 Intent filter = new Intent("org.adw.launcher.icons.ACTION_PICK_ICON");
                 List<ResolveInfo> ris = pm.queryIntentActivities(filter, 0);
                 for (ResolveInfo ri : ris) {
                     String packageName = ri.activityInfo.packageName;
-                    if(!myPackagename.equals(packageName)) {
+                    if (!myPackagename.equals(packageName)) {
                         PkgLabel pkg = new PkgLabel(packageName, ri.loadLabel(pm).toString());
                         items.add(pkg);
                     }
                 }
             } else {
                 List<PackageInfo> pis = pm.getInstalledPackages(0);
-                for(PackageInfo pi : pis) {
+                for (PackageInfo pi : pis) {
                     PkgLabel pkg = new PkgLabel(pi.packageName, pi.applicationInfo.loadLabel(pm).toString());
                     items.add(pkg);
                 }
@@ -1100,7 +1170,7 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
                     return Utils.sItemNameCollator.compare(pkg1.label, pkg2.label);
                 }
             });
-            if(!icon) {
+            if (!icon) {
                 PkgLabel android_pkg = new PkgLabel(ANDROID, "Android");
                 items.add(0, android_pkg);
             }
@@ -1111,42 +1181,30 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            if(convertView == null) {
+            if (convertView == null) {
                 convertView = getLayoutInflater().inflate(android.R.layout.simple_spinner_item, null);
             }
 
-            ((TextView)convertView.findViewById(android.R.id.text1)).setText(getItem(position).label);
+            ((TextView) convertView.findViewById(android.R.id.text1)).setText(getItem(position).label);
 
             return convertView;
         }
 
         @Override
         public View getDropDownView(int position, View convertView, ViewGroup parent) {
-            if(convertView == null) {
+            if (convertView == null) {
                 convertView = getLayoutInflater().inflate(android.R.layout.simple_spinner_dropdown_item, parent, false);
             }
 
-            ((TextView)convertView.findViewById(android.R.id.text1)).setText(getItem(position).label);
+            ((TextView) convertView.findViewById(android.R.id.text1)).setText(getItem(position).label);
 
             return convertView;
         }
     }
 
-    private static class ImageResource {
-        int res;
-        String packageName;
-        String label;
-
-        @Override
-        public String toString() {
-            return label;
-        }
-    }
-
-
     private class ImageResourceAdapter extends MyFilterArrayAdapter<ImageResource> {
 
-        private boolean mDisplayLabels;
+        private final boolean mDisplayLabels;
 
         public ImageResourceAdapter(Context context, int resource, List<ImageResource> objects, boolean display_labels) {
             super(context, resource);
@@ -1158,23 +1216,23 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            if(convertView == null) {
+            if (convertView == null) {
                 convertView = getLayoutInflater().inflate(R.layout.item, null);
             }
 
             final ImageResource ir = getItem(position);
 
-            final TextView title = (TextView) convertView.findViewById(R.id.label);
-            final ImageView thumbnail = (ImageView) convertView.findViewById(R.id.icon);
+            final TextView title = convertView.findViewById(R.id.label);
+            final ImageView thumbnail = convertView.findViewById(R.id.icon);
 
-            if(mDisplayLabels) {
+            if (mDisplayLabels) {
                 title.setText(ir.label);
                 title.setVisibility(View.VISIBLE);
             } else {
                 title.setVisibility(View.GONE);
             }
-            BitmapInfo bitmap_info = mThumbnailCache.get(ir.packageName+ir.res);
-            if(bitmap_info != null) {
+            BitmapInfo bitmap_info = mThumbnailCache.get(ir.packageName + ir.res);
+            if (bitmap_info != null) {
                 Bitmap bitmap = bitmap_info.bitmap;
                 thumbnail.setImageBitmap(bitmap);
                 title.setTypeface(null, bitmap_info.isNinePatch ? Typeface.BOLD_ITALIC : Typeface.NORMAL);
@@ -1182,7 +1240,7 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
             } else {
                 thumbnail.setTag(ir);
                 thumbnail.setImageBitmap(null);
-                new AsyncTask<ImageResource,Void,Bitmap>() {
+                new AsyncTask<ImageResource, Void, Bitmap>() {
                     private ImageResource mPackage;
                     private boolean mIsNinePatch;
 
@@ -1195,36 +1253,36 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
                             String pkg_name = ir.packageName;
                             Resources rsrc = pkg_name.equals(ANDROID) ? getResources() : createPackageContext(pkg_name, 0).getResources();
                             mIsNinePatch = false;
-                            if(Utils.sGetDrawableForDensity!=null) {
+                            if (Utils.sGetDrawableForDensity != null) {
                                 try {
-                                    BitmapDrawable d=(BitmapDrawable) Utils.sGetDrawableForDensity.invoke(rsrc, id, mLauncherIconDensity);
+                                    BitmapDrawable d = (BitmapDrawable) Utils.sGetDrawableForDensity.invoke(rsrc, id, mLauncherIconDensity);
                                     Bitmap orig_bmp = d.getBitmap();
                                     mIsNinePatch = NinePatch.isNinePatchChunk(orig_bmp.getNinePatchChunk());
                                     bmp = Utils.createStandardSizedIcon(orig_bmp, mStandardIconSize);
-                                } catch(Throwable e) {
+                                } catch (Throwable e) {
                                     // pass, continue with classic method
                                 }
                             }
-                            if(bmp == null) {
+                            if (bmp == null) {
                                 bmp = BitmapFactory.decodeResource(rsrc, id);
-                                if(bmp != null) {
+                                if (bmp != null) {
                                     mIsNinePatch = NinePatch.isNinePatchChunk(bmp.getNinePatchChunk());
                                 }
                             }
                         } catch (Throwable e) {
                             e.printStackTrace();
                         }
-                        if(bmp == null) {
+                        if (bmp == null) {
                             bmp = mDefaultIcon;
                         }
 
-                        mThumbnailCache.put(ir.packageName+ir.res, new BitmapInfo(bmp, mIsNinePatch));
+                        mThumbnailCache.put(ir.packageName + ir.res, new BitmapInfo(bmp, mIsNinePatch));
                         return bmp;
                     }
 
                     @Override
                     protected void onPostExecute(Bitmap bmp) {
-                        if(thumbnail.getTag() == mPackage) {
+                        if (thumbnail.getTag() == mPackage) {
                             thumbnail.setImageBitmap(bmp);
                             title.setTypeface(null, mIsNinePatch ? Typeface.BOLD_ITALIC : Typeface.NORMAL);
                         }
@@ -1236,30 +1294,17 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
         }
     }
 
-    private static class ImageFile {
-        File file;
-
-        private ImageFile(File file) {
-            this.file = file;
-        }
-
-        @Override
-        public String toString() {
-            return file.getName();
-        }
-    }
-
     private class ImageFileAdapter extends MyFilterArrayAdapter<ImageFile> {
 
-        private boolean mDisplayLabels;
-        private Bitmap mFolderIcon;
+        private final boolean mDisplayLabels;
+        private final Bitmap mFolderIcon;
 
         public ImageFileAdapter(Context context, int resource, List<ImageFile> objects, boolean display_labels) {
             super(context, resource);
 
             mDisplayLabels = display_labels;
 
-            int[] textSizeAttr = new int[] { android.R.attr.colorForeground };
+            int[] textSizeAttr = new int[]{android.R.attr.colorForeground};
             TypedArray a = context.obtainStyledAttributes(textSizeAttr);
             mFolderIcon = Utils.createIconFromText(Utils.getStandardIconSize(), "f", a.getColor(0, 0));
 
@@ -1268,22 +1313,22 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            if(convertView == null) {
+            if (convertView == null) {
                 convertView = getLayoutInflater().inflate(R.layout.item, null);
             }
 
             final ImageFile imf = getItem(position);
 
-            final TextView title = (TextView) convertView.findViewById(R.id.label);
-            final ImageView thumbnail = (ImageView) convertView.findViewById(R.id.icon);
+            final TextView title = convertView.findViewById(R.id.label);
+            final ImageView thumbnail = convertView.findViewById(R.id.icon);
 
-            if(mDisplayLabels) {
+            if (mDisplayLabels) {
                 title.setText(imf.file.getName());
                 title.setVisibility(View.VISIBLE);
             } else {
                 title.setVisibility(View.GONE);
             }
-            if(imf.file.isDirectory()) {
+            if (imf.file.isDirectory()) {
                 thumbnail.setImageBitmap(mFolderIcon);
             } else {
                 BitmapInfo bitmap_info = mThumbnailCache.get(imf.file.getAbsolutePath());
@@ -1334,22 +1379,5 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
 //        public boolean getDisplayLabels() {
 //            return mDisplayLabels;
 //        }
-    }
-
-    private static class TextFilter extends Filter {
-
-        TextFilter() {
-
-        }
-
-        @Override
-        protected FilterResults performFiltering(CharSequence constraint) {
-            return null;
-        }
-
-        @Override
-        protected void publishResults(CharSequence constraint, FilterResults results) {
-
-        }
     }
 }

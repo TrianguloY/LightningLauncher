@@ -35,33 +35,35 @@ package com.google.android.vending.licensing;
 public interface LicenseCheckerCallback {
 
     /**
-     * Allow use. App should proceed as normal.
-     * 
-     * @param reason Policy.LICENSED or Policy.RETRY typically. (although in
-     *            theory the policy can return Policy.NOT_LICENSED here as well)
+     * Application error codes.
      */
-    public void allow(int reason);
+    int ERROR_INVALID_PACKAGE_NAME = 1;
+    int ERROR_NON_MATCHING_UID = 2;
+    int ERROR_NOT_MARKET_MANAGED = 3;
+    int ERROR_CHECK_IN_PROGRESS = 4;
+    int ERROR_INVALID_PUBLIC_KEY = 5;
+    int ERROR_MISSING_PERMISSION = 6;
+
+    /**
+     * Allow use. App should proceed as normal.
+     *
+     * @param reason Policy.LICENSED or Policy.RETRY typically. (although in
+     *               theory the policy can return Policy.NOT_LICENSED here as well)
+     */
+    void allow(int reason);
 
     /**
      * Don't allow use. App should inform user and take appropriate action.
-     * 
+     *
      * @param reason Policy.NOT_LICENSED or Policy.RETRY. (although in theory
-     *            the policy can return Policy.LICENSED here as well ---
-     *            perhaps the call to the LVL took too long, for example)
+     *               the policy can return Policy.LICENSED here as well ---
+     *               perhaps the call to the LVL took too long, for example)
      */
-    public void dontAllow(int reason);
-
-    /** Application error codes. */
-    public static final int ERROR_INVALID_PACKAGE_NAME = 1;
-    public static final int ERROR_NON_MATCHING_UID = 2;
-    public static final int ERROR_NOT_MARKET_MANAGED = 3;
-    public static final int ERROR_CHECK_IN_PROGRESS = 4;
-    public static final int ERROR_INVALID_PUBLIC_KEY = 5;
-    public static final int ERROR_MISSING_PERMISSION = 6;
+    void dontAllow(int reason);
 
     /**
      * Error in application code. Caller did not call or set up license checker
      * correctly. Should be considered fatal.
      */
-    public void applicationError(int errorCode);
+    void applicationError(int errorCode);
 }

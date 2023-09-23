@@ -30,7 +30,7 @@ import java.util.List;
 
 /**
  * A helper class to extract prominent colors from an image.
- *
+ * <p>
  * This is extracted from https://android.googlesource.com/platform/frameworks/support/+/master/v7/palette/src/android/support/v7/graphics.
  * For an example on how to use this class in Lightning Launcher, please have a look at http://www.pierrox.net/android/applications/lightning_launcher/wiki/doku.php?id=script_palette
  *
@@ -64,48 +64,53 @@ import java.util.List;
  */
 public final class Palette {
 
-    /**
-     * Listener to be used with {@link #generateAsync(android.graphics.Bitmap, net.pierrox.lightning_launcher.script.api.palette.Palette.PaletteAsyncListener)} or
-     * {@link #generateAsync(android.graphics.Bitmap, int, net.pierrox.lightning_launcher.script.api.palette.Palette.PaletteAsyncListener)}
-     */
-    public interface PaletteAsyncListener {
-
-        /**
-         * Called when the {@link net.pierrox.lightning_launcher.script.api.palette.Palette} has been generated.
-         */
-        void onGenerated(Palette palette);
-    }
-
     private static final int CALCULATE_BITMAP_MIN_DIMENSION = 100;
     private static final int DEFAULT_CALCULATE_NUMBER_COLORS = 16;
-
     private static final float TARGET_DARK_LUMA = 0.26f;
     private static final float MAX_DARK_LUMA = 0.45f;
-
     private static final float MIN_LIGHT_LUMA = 0.55f;
     private static final float TARGET_LIGHT_LUMA = 0.74f;
-
     private static final float MIN_NORMAL_LUMA = 0.3f;
     private static final float TARGET_NORMAL_LUMA = 0.5f;
     private static final float MAX_NORMAL_LUMA = 0.7f;
-
     private static final float TARGET_MUTED_SATURATION = 0.3f;
     private static final float MAX_MUTED_SATURATION = 0.4f;
-
     private static final float TARGET_VIBRANT_SATURATION = 1f;
     private static final float MIN_VIBRANT_SATURATION = 0.35f;
-
     private final List<Swatch> mSwatches;
     private final int mHighestPopulation;
-
+    private final Swatch mMutedSwatch;
+    private final Swatch mDarkMutedSwatch;
+    private final Swatch mLightVibrantSwatch;
+    private final Swatch mLightMutedColor;
     private Swatch mVibrantSwatch;
-    private Swatch mMutedSwatch;
-
     private Swatch mDarkVibrantSwatch;
-    private Swatch mDarkMutedSwatch;
 
-    private Swatch mLightVibrantSwatch;
-    private Swatch mLightMutedColor;
+    private Palette(List<Swatch> swatches) {
+        mSwatches = swatches;
+        mHighestPopulation = findMaxPopulation();
+
+        mVibrantSwatch = findColor(TARGET_NORMAL_LUMA, MIN_NORMAL_LUMA, MAX_NORMAL_LUMA,
+                TARGET_VIBRANT_SATURATION, MIN_VIBRANT_SATURATION, 1f);
+
+        mLightVibrantSwatch = findColor(TARGET_LIGHT_LUMA, MIN_LIGHT_LUMA, 1f,
+                TARGET_VIBRANT_SATURATION, MIN_VIBRANT_SATURATION, 1f);
+
+        mDarkVibrantSwatch = findColor(TARGET_DARK_LUMA, 0f, MAX_DARK_LUMA,
+                TARGET_VIBRANT_SATURATION, MIN_VIBRANT_SATURATION, 1f);
+
+        mMutedSwatch = findColor(TARGET_NORMAL_LUMA, MIN_NORMAL_LUMA, MAX_NORMAL_LUMA,
+                TARGET_MUTED_SATURATION, 0f, MAX_MUTED_SATURATION);
+
+        mLightMutedColor = findColor(TARGET_LIGHT_LUMA, MIN_LIGHT_LUMA, 1f,
+                TARGET_MUTED_SATURATION, 0f, MAX_MUTED_SATURATION);
+
+        mDarkMutedSwatch = findColor(TARGET_DARK_LUMA, 0f, MAX_DARK_LUMA,
+                TARGET_MUTED_SATURATION, 0f, MAX_MUTED_SATURATION);
+
+        // Now try and generate any missing colors
+        generateEmptySwatches();
+    }
 
     /**
      * Generate a {@link net.pierrox.lightning_launcher.script.api.palette.Palette} from a {@link android.graphics.Bitmap} using the default number of colors.
@@ -148,7 +153,6 @@ public final class Palette {
      * what would be created by calling {@link #generate(android.graphics.Bitmap)}.
      *
      * @param listener Listener to be invoked when the {@link net.pierrox.lightning_launcher.script.api.palette.Palette} has been generated.
-     *
      * @return the {@link android.os.AsyncTask} used to asynchronously generate the instance.
      */
     public static AsyncTask<Bitmap, Void, Palette> generateAsync(
@@ -162,7 +166,6 @@ public final class Palette {
      * would be created by calling {@link #generate(android.graphics.Bitmap, int)}.
      *
      * @param listener Listener to be invoked when the {@link net.pierrox.lightning_launcher.script.api.palette.Palette} has been generated.
-     *
      * @return the {@link android.os.AsyncTask} used to asynchronously generate the instance.
      */
     public static AsyncTask<Bitmap, Void, Palette> generateAsync(
@@ -172,46 +175,107 @@ public final class Palette {
         checkAsyncListenerParam(listener);
 
         return new AsyncTask<Bitmap, Void, Palette>() {
-                    @Override
-                    protected Palette doInBackground(Bitmap... params) {
-                        return generate(bitmap, numColors);
-                    }
+            @Override
+            protected Palette doInBackground(Bitmap... params) {
+                return generate(bitmap, numColors);
+            }
 
-                    @Override
-                    protected void onPostExecute(Palette colorExtractor) {
-                        try {
-                            listener.onGenerated(colorExtractor);
-                        } catch(RhinoException e) {
-                            ScriptExecutor.getCurrent().displayScriptError(e);
-                        }
-                    }
-                };
+            @Override
+            protected void onPostExecute(Palette colorExtractor) {
+                try {
+                    listener.onGenerated(colorExtractor);
+                } catch (RhinoException e) {
+                    ScriptExecutor.getCurrent().displayScriptError(e);
+                }
+            }
+        };
     }
 
-    private Palette(List<Swatch> swatches) {
-        mSwatches = swatches;
-        mHighestPopulation = findMaxPopulation();
+    /**
+     * Scale the bitmap down so that it's smallest dimension is
+     * {@value #CALCULATE_BITMAP_MIN_DIMENSION}px. If {@code bitmap} is smaller than this, than it
+     * is returned.
+     */
+    private static Bitmap scaleBitmapDown(Bitmap bitmap) {
+        final int minDimension = Math.min(bitmap.getWidth(), bitmap.getHeight());
 
-        mVibrantSwatch = findColor(TARGET_NORMAL_LUMA, MIN_NORMAL_LUMA, MAX_NORMAL_LUMA,
-                TARGET_VIBRANT_SATURATION, MIN_VIBRANT_SATURATION, 1f);
+        if (minDimension <= CALCULATE_BITMAP_MIN_DIMENSION) {
+            // If the bitmap is small enough already, just return it
+            return bitmap;
+        }
 
-        mLightVibrantSwatch = findColor(TARGET_LIGHT_LUMA, MIN_LIGHT_LUMA, 1f,
-                TARGET_VIBRANT_SATURATION, MIN_VIBRANT_SATURATION, 1f);
+        final float scaleRatio = CALCULATE_BITMAP_MIN_DIMENSION / (float) minDimension;
+        return Bitmap.createScaledBitmap(bitmap,
+                Math.round(bitmap.getWidth() * scaleRatio),
+                Math.round(bitmap.getHeight() * scaleRatio),
+                false);
+    }
 
-        mDarkVibrantSwatch = findColor(TARGET_DARK_LUMA, 0f, MAX_DARK_LUMA,
-                TARGET_VIBRANT_SATURATION, MIN_VIBRANT_SATURATION, 1f);
+    private static float createComparisonValue(float saturation, float targetSaturation,
+                                               float luma, float targetLuma,
+                                               int population, int highestPopulation) {
+        return weightedMean(
+                invertDiff(saturation, targetSaturation), 3f,
+                invertDiff(luma, targetLuma), 6.5f,
+                population / (float) highestPopulation, 0.5f
+        );
+    }
 
-        mMutedSwatch = findColor(TARGET_NORMAL_LUMA, MIN_NORMAL_LUMA, MAX_NORMAL_LUMA,
-                TARGET_MUTED_SATURATION, 0f, MAX_MUTED_SATURATION);
+    /**
+     * Copy a {@link net.pierrox.lightning_launcher.script.api.palette.Palette.Swatch}'s HSL values into a new float[].
+     */
+    private static float[] copyHslValues(Swatch color) {
+        final float[] newHsl = new float[3];
+        System.arraycopy(color.getHsl(), 0, newHsl, 0, 3);
+        return newHsl;
+    }
 
-        mLightMutedColor = findColor(TARGET_LIGHT_LUMA, MIN_LIGHT_LUMA, 1f,
-                TARGET_MUTED_SATURATION, 0f, MAX_MUTED_SATURATION);
+    /**
+     * Returns a value in the range 0-1. 1 is returned when {@code value} equals the
+     * {@code targetValue} and then decreases as the absolute difference between {@code value} and
+     * {@code targetValue} increases.
+     *
+     * @param value       the item's value
+     * @param targetValue the value which we desire
+     */
+    private static float invertDiff(float value, float targetValue) {
+        return 1f - Math.abs(value - targetValue);
+    }
 
-        mDarkMutedSwatch = findColor(TARGET_DARK_LUMA, 0f, MAX_DARK_LUMA,
-                TARGET_MUTED_SATURATION, 0f, MAX_MUTED_SATURATION);
+    private static float weightedMean(float... values) {
+        float sum = 0f;
+        float sumWeight = 0f;
 
-        // Now try and generate any missing colors
-        generateEmptySwatches();
+        for (int i = 0; i < values.length; i += 2) {
+            float value = values[i];
+            float weight = values[i + 1];
+
+            sum += (value * weight);
+            sumWeight += weight;
+        }
+
+        return sum / sumWeight;
+    }
+
+    private static void checkBitmapParam(Bitmap bitmap) {
+        if (bitmap == null) {
+            throw new IllegalArgumentException("bitmap can not be null");
+        }
+        if (bitmap.isRecycled()) {
+            throw new IllegalArgumentException("bitmap can not be recycled");
+        }
+    }
+
+    private static void checkNumberColorsParam(int numColors) {
+        if (numColors < 1) {
+            throw new IllegalArgumentException("numColors must be 1 of greater");
+        }
+    }
+
+    private static void checkAsyncListenerParam(PaletteAsyncListener listener) {
+        if (listener == null) {
+            throw new IllegalArgumentException("listener can not be null");
+        }
     }
 
     /**
@@ -387,90 +451,15 @@ public final class Palette {
     }
 
     /**
-     * Scale the bitmap down so that it's smallest dimension is
-     * {@value #CALCULATE_BITMAP_MIN_DIMENSION}px. If {@code bitmap} is smaller than this, than it
-     * is returned.
+     * Listener to be used with {@link #generateAsync(android.graphics.Bitmap, net.pierrox.lightning_launcher.script.api.palette.Palette.PaletteAsyncListener)} or
+     * {@link #generateAsync(android.graphics.Bitmap, int, net.pierrox.lightning_launcher.script.api.palette.Palette.PaletteAsyncListener)}
      */
-    private static Bitmap scaleBitmapDown(Bitmap bitmap) {
-        final int minDimension = Math.min(bitmap.getWidth(), bitmap.getHeight());
+    public interface PaletteAsyncListener {
 
-        if (minDimension <= CALCULATE_BITMAP_MIN_DIMENSION) {
-            // If the bitmap is small enough already, just return it
-            return bitmap;
-        }
-
-        final float scaleRatio = CALCULATE_BITMAP_MIN_DIMENSION / (float) minDimension;
-        return Bitmap.createScaledBitmap(bitmap,
-                Math.round(bitmap.getWidth() * scaleRatio),
-                Math.round(bitmap.getHeight() * scaleRatio),
-                false);
-    }
-
-    private static float createComparisonValue(float saturation, float targetSaturation,
-            float luma, float targetLuma,
-            int population, int highestPopulation) {
-        return weightedMean(
-                invertDiff(saturation, targetSaturation), 3f,
-                invertDiff(luma, targetLuma), 6.5f,
-                population / (float) highestPopulation, 0.5f
-        );
-    }
-
-    /**
-     * Copy a {@link net.pierrox.lightning_launcher.script.api.palette.Palette.Swatch}'s HSL values into a new float[].
-     */
-    private static float[] copyHslValues(Swatch color) {
-        final float[] newHsl = new float[3];
-        System.arraycopy(color.getHsl(), 0, newHsl, 0, 3);
-        return newHsl;
-    }
-
-    /**
-     * Returns a value in the range 0-1. 1 is returned when {@code value} equals the
-     * {@code targetValue} and then decreases as the absolute difference between {@code value} and
-     * {@code targetValue} increases.
-     *
-     * @param value the item's value
-     * @param targetValue the value which we desire
-     */
-    private static float invertDiff(float value, float targetValue) {
-        return 1f - Math.abs(value - targetValue);
-    }
-
-    private static float weightedMean(float... values) {
-        float sum = 0f;
-        float sumWeight = 0f;
-
-        for (int i = 0; i < values.length; i += 2) {
-            float value = values[i];
-            float weight = values[i + 1];
-
-            sum += (value * weight);
-            sumWeight += weight;
-        }
-
-        return sum / sumWeight;
-    }
-
-    private static void checkBitmapParam(Bitmap bitmap) {
-        if (bitmap == null) {
-            throw new IllegalArgumentException("bitmap can not be null");
-        }
-        if (bitmap.isRecycled()) {
-            throw new IllegalArgumentException("bitmap can not be recycled");
-        }
-    }
-
-    private static void checkNumberColorsParam(int numColors) {
-        if (numColors < 1) {
-            throw new IllegalArgumentException("numColors must be 1 of greater");
-        }
-    }
-
-    private static void checkAsyncListenerParam(PaletteAsyncListener listener) {
-        if (listener == null) {
-            throw new IllegalArgumentException("listener can not be null");
-        }
+        /**
+         * Called when the {@link net.pierrox.lightning_launcher.script.api.palette.Palette} has been generated.
+         */
+        void onGenerated(Palette palette);
     }
 
     /**
@@ -510,9 +499,9 @@ public final class Palette {
 
         /**
          * Return this swatch's HSL values.
-         *     hsv[0] is Hue [0 .. 360)
-         *     hsv[1] is Saturation [0...1]
-         *     hsv[2] is Lightness [0...1]
+         * hsv[0] is Hue [0 .. 360)
+         * hsv[1] is Saturation [0...1]
+         * hsv[2] is Lightness [0...1]
          */
         public float[] getHsl() {
             if (mHsl == null) {
@@ -532,10 +521,10 @@ public final class Palette {
 
         @Override
         public String toString() {
-            return new StringBuilder(getClass().getSimpleName()).append(" ")
-                    .append("[").append(Integer.toHexString(getRgb())).append(']')
-                    .append("[HSL: ").append(Arrays.toString(getHsl())).append(']')
-                    .append("[Population: ").append(mPopulation).append(']').toString();
+            return getClass().getSimpleName() + " " +
+                    "[" + Integer.toHexString(getRgb()) + ']' +
+                    "[HSL: " + Arrays.toString(getHsl()) + ']' +
+                    "[Population: " + mPopulation + ']';
         }
     }
 

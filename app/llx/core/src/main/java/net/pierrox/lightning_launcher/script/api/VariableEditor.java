@@ -18,14 +18,15 @@ import java.util.ArrayList;
  */
 public class VariableEditor {
 
-    private VariableManager mVariableManager;
-    private ArrayList<String> mNames;
-    private ArrayList<Object> mValues;
+    private final VariableManager mVariableManager;
+    private final ArrayList<String> mNames;
+    private final ArrayList<Object> mValues;
 
     /**
      * @hide
      */
-    /*package*/ public VariableEditor(VariableManager vm) {
+    /*package*/
+    public VariableEditor(VariableManager vm) {
         mVariableManager = vm;
 
         mNames = new ArrayList<>();
@@ -45,7 +46,7 @@ public class VariableEditor {
     }
 
     public VariableEditor setFloat(String name, float value) {
-        if(Float.isNaN(value)) {
+        if (Float.isNaN(value)) {
             throw ScriptRuntime.constructError("setFloat", "Bad argument");
         }
         mNames.add(name);
@@ -64,7 +65,7 @@ public class VariableEditor {
         int l = mNames.size();
 
         mVariableManager.edit();
-        for(int i=0; i<l; i++) {
+        for (int i = 0; i < l; i++) {
             mVariableManager.setVariable(mNames.get(i), mValues.get(i));
         }
         mVariableManager.commit();

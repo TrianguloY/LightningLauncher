@@ -29,32 +29,31 @@ import java.util.Comparator;
 public class ScriptManager {
     public static final int BUILTIN_USER_MENU = -2;
     public static final int BUILTIN_REPOSITORY_IMPORTER = -3;
-    private final Script[] BUILTINS;
     private static final String SCRIPT_DIR = "scripts";
-
-    private LightningEngine mLightningEngine;
-    private SparseArray<File> mScriptFiles = new SparseArray<>();
-    private SparseArray<Script> mScripts = new SparseArray<>();
+    private final Script[] BUILTINS;
+    private final LightningEngine mLightningEngine;
+    private final SparseArray<File> mScriptFiles = new SparseArray<>();
+    private final SparseArray<Script> mScripts = new SparseArray<>();
     private int mNextTranscientId = -0xff;
 
     public ScriptManager(LightningEngine lightningEngine) {
         mLightningEngine = lightningEngine;
 
-        BUILTINS = new Script[] {
+        BUILTINS = new Script[]{
                 new Script(this, Script.TYPE_BUILTIN, BUILTIN_USER_MENU, null,
-                        "var item = getEvent().getItem();\n"+
-                                "var screen = getEvent().getScreen();\n"+
-                                "screen.runAction(EventHandler.CLOSE_TOPMOST_FOLDER);\n"+
-                                "switch(item.getName()) {\n"+
-                                "  case 'wallpaper': screen.runAction(EventHandler.SELECT_WALLPAPER); break;\n"+
+                        "var item = getEvent().getItem();\n" +
+                                "var screen = getEvent().getScreen();\n" +
+                                "screen.runAction(EventHandler.CLOSE_TOPMOST_FOLDER);\n" +
+                                "switch(item.getName()) {\n" +
+                                "  case 'wallpaper': screen.runAction(EventHandler.SELECT_WALLPAPER); break;\n" +
                                 "  case 'theme': " +
-                                "      var intent=new Intent(Intent.ACTION_VIEW, Uri.parse('"+ Version.BROWSE_TEMPLATES_URI+"'));\n"+
-                                "      intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);\n"+
-                                "      screen.startActivity(intent);\n"+
-                                "      break;\n"+
-                                "  case 'add_item': screen.runAction(EventHandler.ADD_ITEM); break;\n"+
-                                "  case 'edit_layout': screen.runAction(EventHandler.EDIT_LAYOUT); break;\n"+
-                                "  case 'settings': screen.runAction(EventHandler.CUSTOMIZE_LAUNCHER); break;\n"+
+                                "      var intent=new Intent(Intent.ACTION_VIEW, Uri.parse('" + Version.BROWSE_TEMPLATES_URI + "'));\n" +
+                                "      intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);\n" +
+                                "      screen.startActivity(intent);\n" +
+                                "      break;\n" +
+                                "  case 'add_item': screen.runAction(EventHandler.ADD_ITEM); break;\n" +
+                                "  case 'edit_layout': screen.runAction(EventHandler.EDIT_LAYOUT); break;\n" +
+                                "  case 'settings': screen.runAction(EventHandler.CUSTOMIZE_LAUNCHER); break;\n" +
                                 "}",
                         null
                 ),
@@ -66,6 +65,18 @@ public class ScriptManager {
                         null
                 )
         };
+    }
+
+    public static String sanitizeRelativePath(String path) {
+        if (path == null) {
+            return "/";
+        } else if (!path.startsWith("/")) {
+            return "/" + path;
+        } else if (path.startsWith(".")) {
+            return "/";
+        } else {
+            return path;
+        }
     }
 
     public void init() {
@@ -81,7 +92,7 @@ public class ScriptManager {
         // should be 0 but a bug produced scripts with id -1
         if (id >= -1) {
             File file = getScriptFile(id);
-            if(file == null) {
+            if (file == null) {
                 return null;
             }
             JSONObject json = FileUtils.readJSONObjectFromFile(file);
@@ -119,12 +130,12 @@ public class ScriptManager {
     }
 
     public Script getOrLoadScript(String path, String name) {
-        if(path != null) {
+        if (path != null) {
             path = sanitizeRelativePath(path);
         }
         // look in loaded scripts first
         Script script = getScriptByPathAndName(path, name);
-        if(script != null) {
+        if (script != null) {
             return script;
         }
 
@@ -158,7 +169,7 @@ public class ScriptManager {
             case Script.TYPE_FILE:
                 File file = script.getFile();
                 File directory = file.getParentFile();
-                if(!directory.exists()) {
+                if (!directory.exists()) {
                     directory.mkdirs();
                 }
                 mScriptFiles.put(script.id, file);
@@ -206,7 +217,7 @@ public class ScriptManager {
         mScripts.remove(id);
         if (script.getType() == Script.TYPE_FILE) {
             File scriptFile = getScriptFile(id);
-            if(scriptFile != null) {
+            if (scriptFile != null) {
                 scriptFile.delete();
                 removeEmptyDirectories(scriptFile.getParentFile());
                 mScriptFiles.remove(id);
@@ -214,11 +225,15 @@ public class ScriptManager {
         }
     }
 
+    //    public boolean doesScriptExist(File base_dir, String name) {
+    //        return new File(base_dir, SCRIPT_DIR+"/"+name).exists();
+    //    }
+
     public Script importScript(Script script) {
         int newId = findFreeScriptId();
         File file;
-        if(script.getType() == Script.TYPE_FILE) {
-            file = new File(getScriptsDir()+script.getRelativePath()+"/"+newId);
+        if (script.getType() == Script.TYPE_FILE) {
+            file = new File(getScriptsDir() + script.getRelativePath() + "/" + newId);
         } else {
             file = null;
         }
@@ -228,10 +243,6 @@ public class ScriptManager {
         saveScript(copy);
         return copy;
     }
-
-    //    public boolean doesScriptExist(File base_dir, String name) {
-    //        return new File(base_dir, SCRIPT_DIR+"/"+name).exists();
-    //    }
 
     public int findFreeScriptId() {
         for (int i = 0; i < 10000; i++) {
@@ -275,22 +286,10 @@ public class ScriptManager {
 
     public String getRelativePath(File file) {
         String path = file.getAbsolutePath().substring(getScriptsDir().getAbsolutePath().length());
-        if(path.equals("")) {
+        if (path.equals("")) {
             path = "/";
         }
         return path;
-    }
-
-    public static String sanitizeRelativePath(String path) {
-        if(path == null) {
-            return "/";
-        } else if(!path.startsWith("/")) {
-            return "/" + path;
-        } else if(path.startsWith(".")) {
-            return "/";
-        } else {
-            return path;
-        }
     }
 
     private void loadScriptsInDirectory(ArrayList<Script> scripts, File directory, int criteria) {
@@ -396,7 +395,7 @@ public class ScriptManager {
 
     public Script createScriptForFile(String name, String relativePath) {
         int id = findFreeScriptId();
-        Script script = new Script(this, Script.TYPE_FILE, id, name, null, new File(getScriptsDir() + relativePath+"/"+id));
+        Script script = new Script(this, Script.TYPE_FILE, id, name, null, new File(getScriptsDir() + relativePath + "/" + id));
         mScriptFiles.put(script.id, script.getFile());
         return script;
     }
@@ -407,12 +406,12 @@ public class ScriptManager {
         // build the new file and create directories as needed
         File toDir = new File(getScriptsDir() + toRelativePath);
         File toFile = new File(toDir, String.valueOf(script.id));
-        if(!toDir.exists()) {
+        if (!toDir.exists()) {
             toDir.mkdirs();
         }
 
         File fromFile = script.getFile();
-        if(fromFile.equals(toFile)) {
+        if (fromFile.equals(toFile)) {
             return;
         }
 
@@ -427,9 +426,9 @@ public class ScriptManager {
 
     private void removeEmptyDirectories(File directory) {
         File scriptsDir = getScriptsDir();
-        while(!directory.equals(scriptsDir)) {
+        while (!directory.equals(scriptsDir)) {
             String[] list = directory.list();
-            if(list != null && list.length > 0) {
+            if (list != null && list.length > 0) {
                 break;
             }
             File parent = directory.getParentFile();

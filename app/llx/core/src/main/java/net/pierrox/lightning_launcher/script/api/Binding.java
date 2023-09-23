@@ -5,9 +5,9 @@ package net.pierrox.lightning_launcher.script.api;
  * An instance of this object can be created with {@link #Binding(String, String, boolean)}; or retrieved with {@link Item#getBindingByTarget(String)} or {@link Item#getBindings()}.
  */
 public class Binding {
-    private boolean enabled;
-    private String target;
-    private String formula;
+    private final boolean enabled;
+    private final String target;
+    private final String formula;
 
     public Binding(String target, String formula, boolean enabled) {
         this.target = target;
@@ -36,6 +36,6 @@ public class Binding {
 
     @Override
     public String toString() {
-        return "target: "+target+", formula: "+formula+(enabled ? " (enabled)":" (disabled)");
+        return "target: " + target + ", formula: " + formula + (enabled ? " (enabled)" : " (disabled)");
     }
 }

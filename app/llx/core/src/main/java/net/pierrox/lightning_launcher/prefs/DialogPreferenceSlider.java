@@ -18,21 +18,17 @@ import net.pierrox.lightning_launcher.R;
 import java.text.DecimalFormat;
 
 public class DialogPreferenceSlider extends AlertDialog implements SeekBar.OnSeekBarChangeListener, View.OnClickListener, DialogInterface.OnClickListener, DialogInterface.OnCancelListener {
-    public interface OnDialogPreferenceSliderListener {
-        public void onDialogPreferenceSliderValueSet(float value);
-        public void onDialogPreferenceSliderCancel();
-    }
-
-    private boolean mIsFloat;
-    private float mMinValue;
-    private float mMaxValue;
-    private float mInterval;
-    private String mUnit;
-
+    private static final DecimalFormat sFloatFormat0 = new DecimalFormat("0.#");
+    private static final DecimalFormat sFloatFormat1 = new DecimalFormat("0.0");
+    private final boolean mIsFloat;
+    private final float mMinValue;
+    private final float mMaxValue;
+    private final float mInterval;
+    private final String mUnit;
+    private final OnDialogPreferenceSliderListener mListener;
     private SeekBar mDialogSeekBar;
     private EditText mDialogEditText;
     private float mDialogValue;
-    private OnDialogPreferenceSliderListener mListener;
 
     public DialogPreferenceSlider(Context context, float value, boolean is_float, float min, float max, float interval, String unit, OnDialogPreferenceSliderListener listener) {
         super(context);
@@ -46,6 +42,22 @@ public class DialogPreferenceSlider extends AlertDialog implements SeekBar.OnSee
         mListener = listener;
     }
 
+    /*package*/
+    static String valueAsText(boolean is_float, String unit, float value, float interval) {
+        String text;
+        if (is_float) {
+            if (unit != null && unit.equals("%")) {
+                text = String.valueOf(Math.round(value * 100));
+            } else {
+                DecimalFormat format = interval < 1 ? sFloatFormat1 : sFloatFormat0;
+                text = format.format(value);
+            }
+        } else {
+            text = String.valueOf(Math.round(value));
+        }
+        return text;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -54,15 +66,15 @@ public class DialogPreferenceSlider extends AlertDialog implements SeekBar.OnSee
 
         view.findViewById(R.id.minus).setOnClickListener(this);
         view.findViewById(R.id.plus).setOnClickListener(this);
-        mDialogSeekBar = (SeekBar) view.findViewById(R.id.seek_bar);
-        mDialogSeekBar.setMax((int)((mMaxValue - mMinValue)/mInterval));
+        mDialogSeekBar = view.findViewById(R.id.seek_bar);
+        mDialogSeekBar.setMax((int) ((mMaxValue - mMinValue) / mInterval));
         mDialogSeekBar.setProgress(getProgressForValue(mDialogValue));
         mDialogSeekBar.setOnSeekBarChangeListener(this);
-        mDialogEditText = (EditText) view.findViewById(R.id.value);
-        if(mIsFloat) {
+        mDialogEditText = view.findViewById(R.id.value);
+        if (mIsFloat) {
             mDialogEditText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL | (mMinValue < 0 ? InputType.TYPE_NUMBER_FLAG_SIGNED : InputType.TYPE_NUMBER_VARIATION_NORMAL));
         } else {
-            mDialogEditText.setInputType(InputType.TYPE_CLASS_NUMBER | (mMinValue<0 ? InputType.TYPE_NUMBER_FLAG_SIGNED : InputType.TYPE_NUMBER_VARIATION_NORMAL));
+            mDialogEditText.setInputType(InputType.TYPE_CLASS_NUMBER | (mMinValue < 0 ? InputType.TYPE_NUMBER_FLAG_SIGNED : InputType.TYPE_NUMBER_VARIATION_NORMAL));
         }
         String value = valueAsText(mIsFloat, mUnit, mDialogValue, mInterval);
         mDialogEditText.setText(value);
@@ -75,26 +87,26 @@ public class DialogPreferenceSlider extends AlertDialog implements SeekBar.OnSee
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count,
-                    int after) {
+                                          int after) {
                 // pass
             }
 
             @Override
             public void afterTextChanged(Editable s) {
                 try {
-                    float value=Float.parseFloat(s.toString().replace(',', '.'));
-                    if("%".equals(mUnit)) {
-                        value/=100;
+                    float value = Float.parseFloat(s.toString().replace(',', '.'));
+                    if ("%".equals(mUnit)) {
+                        value /= 100;
                     }
                     mDialogSeekBar.setProgress(getProgressForValue(value));
                     mDialogValue = value;
-                } catch(NumberFormatException e) {
+                } catch (NumberFormatException e) {
                     // pass
                 }
             }
         });
 
-        TextView unitv = (TextView) view.findViewById(R.id.unit);
+        TextView unitv = view.findViewById(R.id.unit);
         unitv.setText(mUnit);
 
         setView(view);
@@ -106,15 +118,14 @@ public class DialogPreferenceSlider extends AlertDialog implements SeekBar.OnSee
         super.onCreate(savedInstanceState);
     }
 
-
     @Override
     public void onClick(View v) {
-        if(v.getId()==R.id.minus) {
-            mDialogValue-=mInterval;
-            if(mDialogValue<mMinValue) mDialogValue=mMinValue;
+        if (v.getId() == R.id.minus) {
+            mDialogValue -= mInterval;
+            if (mDialogValue < mMinValue) mDialogValue = mMinValue;
         } else {
-            mDialogValue+=mInterval;
-            if(mDialogValue>mMaxValue) mDialogValue=mMaxValue;
+            mDialogValue += mInterval;
+            if (mDialogValue > mMaxValue) mDialogValue = mMaxValue;
         }
         String value = valueAsText(mIsFloat, mUnit, mDialogValue, mInterval);
         mDialogEditText.setText(value);
@@ -124,13 +135,13 @@ public class DialogPreferenceSlider extends AlertDialog implements SeekBar.OnSee
 
     @Override
     public void onClick(DialogInterface dialog, int which) {
-        switch(which) {
-        case BUTTON_POSITIVE:
-            mListener.onDialogPreferenceSliderValueSet(mDialogValue);
-            break;
-        case BUTTON_NEGATIVE:
-            mListener.onDialogPreferenceSliderCancel();
-            break;
+        switch (which) {
+            case BUTTON_POSITIVE:
+                mListener.onDialogPreferenceSliderValueSet(mDialogValue);
+                break;
+            case BUTTON_NEGATIVE:
+                mListener.onDialogPreferenceSliderCancel();
+                break;
         }
     }
 
@@ -141,7 +152,7 @@ public class DialogPreferenceSlider extends AlertDialog implements SeekBar.OnSee
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        if(fromUser) {
+        if (fromUser) {
             String value = valueAsText(mIsFloat, mUnit, getValueForCurrentProgress(), mInterval);
             mDialogEditText.setText(value);
             mDialogEditText.setSelection(value.length());
@@ -159,27 +170,16 @@ public class DialogPreferenceSlider extends AlertDialog implements SeekBar.OnSee
     }
 
     private float getValueForCurrentProgress() {
-        return mDialogSeekBar.getProgress()*(mMaxValue-mMinValue)/mDialogSeekBar.getMax()+mMinValue;
+        return mDialogSeekBar.getProgress() * (mMaxValue - mMinValue) / mDialogSeekBar.getMax() + mMinValue;
     }
 
     private int getProgressForValue(float value) {
-        return (int)((value-mMinValue)/(mMaxValue-mMinValue)*mDialogSeekBar.getMax());
+        return (int) ((value - mMinValue) / (mMaxValue - mMinValue) * mDialogSeekBar.getMax());
     }
 
-    private static DecimalFormat sFloatFormat0 = new DecimalFormat("0.#");
-    private static DecimalFormat sFloatFormat1 = new DecimalFormat("0.0");
-    /*package*/ static String valueAsText(boolean is_float, String unit, float value, float interval) {
-        String text;
-        if (is_float) {
-            if(unit!=null && unit.equals("%")) {
-                text=String.valueOf(Math.round(value*100));
-            } else {
-                DecimalFormat format=interval<1 ? sFloatFormat1 : sFloatFormat0;
-                text=format.format(value);
-            }
-        } else {
-            text=String.valueOf(Math.round(value));
-        }
-        return text;
+    public interface OnDialogPreferenceSliderListener {
+        void onDialogPreferenceSliderValueSet(float value);
+
+        void onDialogPreferenceSliderCancel();
     }
 }

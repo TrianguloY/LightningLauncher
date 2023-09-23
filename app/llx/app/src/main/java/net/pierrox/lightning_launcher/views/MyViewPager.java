@@ -24,8 +24,6 @@ SOFTWARE.
 
 package net.pierrox.lightning_launcher.views;
 
-import java.util.ArrayList;
-
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -35,76 +33,28 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.Scroller;
 
+import java.util.ArrayList;
+
 public class MyViewPager extends ViewGroup {
-	/**
-     * Callback interface for responding to changing state of the selected page.
-     */
-    public interface OnPageChangeListener {
-
-        /**
-         * This method will be invoked when the current page is scrolled, either as part
-         * of a programmatically initiated smooth scroll or a user initiated touch scroll.
-         *
-         * @param position Position index of the first page currently being displayed.
-         *                 Page position+1 will be visible if positionOffset is nonzero.
-         * @param positionOffset Value from [0, 1) indicating the offset from the page at position.
-         * @param positionOffsetPixels Value in pixels indicating the offset from position.
-         */
-        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels);
-
-        /**
-         * This method will be invoked when a new page becomes selected. Animation is not
-         * necessarily complete.
-         *
-         * @param position Position index of the new selected page.
-         */
-        public void onPageSelected(int position);
-
-        /**
-         * Called when the scroll state changes. Useful for discovering when the user
-         * begins dragging, when the pager is automatically settling to the current page,
-         * or when it is fully stopped/idle.
-         *
-         * @param state The new scroll state.
-         * @see ViewPager#SCROLL_STATE_IDLE
-         * @see ViewPager#SCROLL_STATE_DRAGGING
-         * @see ViewPager#SCROLL_STATE_SETTLING
-         */
-        public void onPageScrollStateChanged(int state);
-    }
-    
     /**
      * Indicates that the pager is in an idle, settled state. The current page
      * is fully in view and no animation is in progress.
      */
     public static final int SCROLL_STATE_IDLE = 0;
-
     /**
      * Indicates that the pager is currently being dragged by the user.
      */
     public static final int SCROLL_STATE_DRAGGING = 1;
-
     /**
      * Indicates that the pager is in the process of settling to a final position.
      */
     public static final int SCROLL_STATE_SETTLING = 2;
-
-    
-    
-	protected static class ItemInfo {
-        View v;
-        int position;
-        boolean scrolling;
-    }
-
     protected final ArrayList<ItemInfo> mItems = new ArrayList<ItemInfo>(2);
     private OnPageChangeListener mOnPageChangeListener;
     private int mScrollState = SCROLL_STATE_IDLE;
     private Scroller mScroller;
     private int mCurItem;
-    
     private boolean mScrolling;
-
     private int mChildWidthMeasureSpec;
     private int mChildHeightMeasureSpec;
     private boolean mIsBeingDragged;
@@ -113,22 +63,20 @@ public class MyViewPager extends ViewGroup {
     private float mInitialMotionX;
     private float mLastMotionX;
     private float mLastMotionY;
-    
     private VelocityTracker mVelocityTracker;
     private int mMinimumVelocity;
     private int mMaximumVelocity;
-    
-	public MyViewPager(Context context, AttributeSet attrs) {
-		super(context, attrs);
-		
-		initViewPager();
-	}
 
-	
-	@Override
-	protected void onFinishInflate() {
-		initPagerItems();
-	}
+    public MyViewPager(Context context, AttributeSet attrs) {
+        super(context, attrs);
+
+        initViewPager();
+    }
+
+    @Override
+    protected void onFinishInflate() {
+        initPagerItems();
+    }
 
     @Override
     public void removeViewAt(int index) {
@@ -138,11 +86,11 @@ public class MyViewPager extends ViewGroup {
 
     protected void initPagerItems() {
         mItems.clear();
-        int n=getChildCount();
+        int n = getChildCount();
         int index = 0;
-        for(int i=0; i<n; i++) {
+        for (int i = 0; i < n; i++) {
             View view = getChildAt(i);
-            if(view.getVisibility() == VISIBLE) {
+            if (view.getVisibility() == VISIBLE) {
                 ItemInfo ii = new ItemInfo();
                 ii.v = view;
                 ii.position = index++;
@@ -151,14 +99,13 @@ public class MyViewPager extends ViewGroup {
             }
         }
         int size = mItems.size() - 1;
-        if(mCurItem > size) {
+        if (mCurItem > size) {
             setCurrentItemInternal(size, false, true);
         }
         requestLayout();
     }
 
-
-	@Override
+    @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         // For simple implementation, or internal size is always 0.
         // We depend on the container to specify the layout size of
@@ -189,23 +136,23 @@ public class MyViewPager extends ViewGroup {
         super.onSizeChanged(w, h, oldw, oldh);
 
         // Make sure scroll position is set correctly.
-        int scrollPos = mCurItem*w;
+        int scrollPos = mCurItem * w;
         if (scrollPos != getScrollX()) {
             completeScroll();
             scrollTo(scrollPos, getScrollY());
         }
     }
 
-	@Override
+    @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         final int count = getChildCount();
-        final int width = r-l;
+        final int width = r - l;
 
         for (int i = 0; i < count; i++) {
             View child = getChildAt(i);
             ItemInfo ii;
-            if (child.getVisibility() != GONE && (ii=infoForChild(child)) != null) {
-                int loff = width*ii.position;
+            if (child.getVisibility() != GONE && (ii = infoForChild(child)) != null) {
+                int loff = width * ii.position;
                 int childLeft = getPaddingLeft() + loff;
                 int childTop = getPaddingTop();
                 child.layout(childLeft, childTop,
@@ -214,8 +161,8 @@ public class MyViewPager extends ViewGroup {
             }
         }
     }
-	
-	@Override
+
+    @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         /*
          * This method JUST determines whether we want to intercept the motion.
@@ -250,7 +197,6 @@ public class MyViewPager extends ViewGroup {
                  * mIsBeingDragged == false, otherwise the shortcut would have caught it. Check
                  * whether the user has moved far enough from his original down touch.
                  */
-
 
 
                 final float x = ev.getX();
@@ -299,9 +245,9 @@ public class MyViewPager extends ViewGroup {
         }
 
         /*
-        * The only time we want to intercept motion events is if we are in the
-        * drag mode.
-        */
+         * The only time we want to intercept motion events is if we are in the
+         * drag mode.
+         */
         return mIsBeingDragged;
     }
 
@@ -377,13 +323,13 @@ public class MyViewPager extends ViewGroup {
                 if (mIsBeingDragged) {
                     final VelocityTracker velocityTracker = mVelocityTracker;
                     velocityTracker.computeCurrentVelocity(1000, mMaximumVelocity);
-                    int initialVelocity = (int)velocityTracker.getYVelocity();
+                    int initialVelocity = (int) velocityTracker.getYVelocity();
                     if ((Math.abs(initialVelocity) > mMinimumVelocity)
-                            || Math.abs(mInitialMotionX-mLastMotionX) >= (getWidth()/3)) {
+                            || Math.abs(mInitialMotionX - mLastMotionX) >= (getWidth() / 3)) {
                         if (mLastMotionX > mInitialMotionX) {
-                            setCurrentItemInternal(mCurItem-1, true, true);
+                            setCurrentItemInternal(mCurItem - 1, true, true);
                         } else {
-                            setCurrentItemInternal(mCurItem+1, true, true);
+                            setCurrentItemInternal(mCurItem + 1, true, true);
                         }
                     } else {
                         setCurrentItemInternal(mCurItem, true, true);
@@ -401,7 +347,7 @@ public class MyViewPager extends ViewGroup {
         }
         return true;
     }
-	
+
     @Override
     public void computeScroll() {
         if (!mScroller.isFinished()) {
@@ -432,30 +378,30 @@ public class MyViewPager extends ViewGroup {
         // Done with scroll, clean up state.
         completeScroll();
     }
-    
+
     public void setOnPageChangeListener(OnPageChangeListener listener) {
         mOnPageChangeListener = listener;
     }
-    
+
+    public int getCurrentItem() {
+        return mCurItem;
+    }
+
     public void setCurrentItem(int item) {
         setCurrentItemInternal(item, true, false);
     }
 
+    public View getCurrentView() {
+        return mItems.get(mCurItem).v;
+    }
+
     public void setCurrentView(View v) {
-        for(ItemInfo ii : mItems) {
-            if(ii.v == v) {
+        for (ItemInfo ii : mItems) {
+            if (ii.v == v) {
                 setCurrentItemInternal(ii.position, false, false);
                 break;
             }
         }
-    }
-    
-    public int getCurrentItem() {
-    	return mCurItem;
-    }
-
-    public View getCurrentView() {
-        return mItems.get(mCurItem).v;
     }
 
     public boolean isFirst() {
@@ -463,9 +409,9 @@ public class MyViewPager extends ViewGroup {
     }
 
     public boolean isLast() {
-        return mCurItem == mItems.size()-1;
+        return mCurItem == mItems.size() - 1;
     }
-    
+
     private void endDrag() {
         mIsBeingDragged = false;
         mIsUnableToDrag = false;
@@ -475,7 +421,7 @@ public class MyViewPager extends ViewGroup {
             mVelocityTracker = null;
         }
     }
-    
+
     private void setCurrentItemInternal(int item, boolean smoothScroll, boolean always) {
         if (!always && mCurItem == item && mItems.size() != 0) {
             return;
@@ -488,18 +434,18 @@ public class MyViewPager extends ViewGroup {
                 item = size;
             }
         }
-        if (item > (mCurItem+1) || item < (mCurItem-1)) {
+        if (item > (mCurItem + 1) || item < (mCurItem - 1)) {
             // We are doing a jump by more than one page.  To avoid
             // glitches, we want to keep all current pages in the view
             // until the scroll ends.
-            for (int i=0; i<mItems.size(); i++) {
+            for (int i = 0; i < mItems.size(); i++) {
                 mItems.get(i).scrolling = true;
             }
         }
         final boolean dispatchSelected = mCurItem != item;
         mCurItem = item;
         if (smoothScroll) {
-            smoothScrollTo(getWidth()*item, 0);
+            smoothScrollTo(getWidth() * item, 0);
             if (dispatchSelected && mOnPageChangeListener != null) {
                 mOnPageChangeListener.onPageSelected(item);
             }
@@ -508,11 +454,11 @@ public class MyViewPager extends ViewGroup {
                 mOnPageChangeListener.onPageSelected(item);
             }
             completeScroll();
-            scrollTo(getWidth()*item, 0);
+            scrollTo(getWidth() * item, 0);
         }
     }
-    
-	private void initViewPager() {
+
+    private void initViewPager() {
         setWillNotDraw(false);
         mScroller = new Scroller(getContext());
         final ViewConfiguration configuration = ViewConfiguration.get(getContext());
@@ -521,13 +467,13 @@ public class MyViewPager extends ViewGroup {
         mMaximumVelocity = configuration.getScaledMaximumFlingVelocity();
     }
 
-	private ItemInfo infoForChild(View child) {
-		for(ItemInfo ii : mItems) {
-			if(ii.v == child) return ii;
-		}
+    private ItemInfo infoForChild(View child) {
+        for (ItemInfo ii : mItems) {
+            if (ii.v == child) return ii;
+        }
         return null;
     }
-	
+
     /**
      * Like {@link View#scrollBy}, but scroll smoothly instead of immediately.
      *
@@ -553,8 +499,8 @@ public class MyViewPager extends ViewGroup {
         mScroller.startScroll(sx, sy, dx, dy);
         invalidate();
     }
-	
-	private void completeScroll() {
+
+    private void completeScroll() {
         if (mScrolling) {
             // Done with scroll, no longer want to cache view drawing.
             mScroller.abortAnimation();
@@ -568,15 +514,15 @@ public class MyViewPager extends ViewGroup {
             setScrollState(SCROLL_STATE_IDLE);
         }
         mScrolling = false;
-        for (int i=0; i<mItems.size(); i++) {
+        for (int i = 0; i < mItems.size(); i++) {
             ItemInfo ii = mItems.get(i);
             if (ii.scrolling) {
                 ii.scrolling = false;
             }
         }
     }
-	
-	private void setScrollState(int newState) {
+
+    private void setScrollState(int newState) {
         if (mScrollState == newState) {
             return;
         }
@@ -585,5 +531,48 @@ public class MyViewPager extends ViewGroup {
         if (mOnPageChangeListener != null) {
             mOnPageChangeListener.onPageScrollStateChanged(newState);
         }
+    }
+
+    /**
+     * Callback interface for responding to changing state of the selected page.
+     */
+    public interface OnPageChangeListener {
+
+        /**
+         * This method will be invoked when the current page is scrolled, either as part
+         * of a programmatically initiated smooth scroll or a user initiated touch scroll.
+         *
+         * @param position             Position index of the first page currently being displayed.
+         *                             Page position+1 will be visible if positionOffset is nonzero.
+         * @param positionOffset       Value from [0, 1) indicating the offset from the page at position.
+         * @param positionOffsetPixels Value in pixels indicating the offset from position.
+         */
+        void onPageScrolled(int position, float positionOffset, int positionOffsetPixels);
+
+        /**
+         * This method will be invoked when a new page becomes selected. Animation is not
+         * necessarily complete.
+         *
+         * @param position Position index of the new selected page.
+         */
+        void onPageSelected(int position);
+
+        /**
+         * Called when the scroll state changes. Useful for discovering when the user
+         * begins dragging, when the pager is automatically settling to the current page,
+         * or when it is fully stopped/idle.
+         *
+         * @param state The new scroll state.
+         * @see ViewPager#SCROLL_STATE_IDLE
+         * @see ViewPager#SCROLL_STATE_DRAGGING
+         * @see ViewPager#SCROLL_STATE_SETTLING
+         */
+        void onPageScrollStateChanged(int state);
+    }
+
+    protected static class ItemInfo {
+        View v;
+        int position;
+        boolean scrolling;
     }
 }

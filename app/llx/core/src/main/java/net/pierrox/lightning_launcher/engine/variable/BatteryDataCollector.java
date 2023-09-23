@@ -15,20 +15,20 @@ import net.pierrox.lightning_launcher.R;
     private static final String VAR_VOLTAGE = "bat_voltage";
     private static final String VAR_PLUGGED = "bat_plugged";
 
-    private Context mContext;
-    private BroadcastReceiver mBatteryReceiver;
+    private final Context mContext;
+    private final BroadcastReceiver mBatteryReceiver;
 
     /*package*/ BatteryDataCollector(Context context, final VariableManager vm) {
         mContext = context;
-        mBatteryReceiver=new BroadcastReceiver() {
+        mBatteryReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                int level=intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
-                int scale=intent.getIntExtra(BatteryManager.EXTRA_SCALE, 100);
-                int status=intent.getIntExtra(BatteryManager.EXTRA_STATUS, BatteryManager.BATTERY_STATUS_UNKNOWN);
-                int voltage=intent.getIntExtra(BatteryManager.EXTRA_VOLTAGE, 0);
-                int plugged=intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, 0);
-                vm.setVariable(VAR_LEVEL, level*100/scale);
+                int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
+                int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, 100);
+                int status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, BatteryManager.BATTERY_STATUS_UNKNOWN);
+                int voltage = intent.getIntExtra(BatteryManager.EXTRA_VOLTAGE, 0);
+                int plugged = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, 0);
+                vm.setVariable(VAR_LEVEL, level * 100 / scale);
                 vm.setVariable(VAR_STATUS, status);
                 vm.setVariable(VAR_VOLTAGE, voltage);
                 vm.setVariable(VAR_PLUGGED, plugged);
@@ -53,7 +53,7 @@ import net.pierrox.lightning_launcher.R;
 
     @Override
     public BuiltinVariable[] getBuiltinVariables(Resources resources) {
-        return new BuiltinVariable[] {
+        return new BuiltinVariable[]{
                 new BuiltinVariable(VAR_LEVEL, resources.getString(R.string.bv_batl)),
                 new BuiltinVariable(VAR_STATUS, resources.getString(R.string.bv_batst)),
                 new BuiltinVariable(VAR_VOLTAGE, resources.getString(R.string.bv_batv)),

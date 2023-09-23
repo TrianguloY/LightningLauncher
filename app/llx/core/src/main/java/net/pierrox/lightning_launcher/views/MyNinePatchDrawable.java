@@ -4,7 +4,7 @@ import android.graphics.NinePatch;
 import android.graphics.drawable.NinePatchDrawable;
 
 public class MyNinePatchDrawable extends NinePatchDrawable {
-    private NinePatch mNinePatch;
+    private final NinePatch mNinePatch;
 
     public MyNinePatchDrawable(NinePatch np) {
         super(np);

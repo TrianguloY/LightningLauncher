@@ -7,23 +7,24 @@
 package org.mozilla.javascript.json;
 
 import org.mozilla.javascript.Context;
-import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptRuntime;
+import org.mozilla.javascript.Scriptable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * This class converts a stream of JSON tokens into a JSON value.
- *
+ * <p>
  * See ECMA 15.12.
+ *
  * @author Raphael Speyer
  * @author Hannes Wallnoefer
  */
 public class JsonParser {
 
-    private Context cx;
-    private Scriptable scope;
+    private final Context cx;
+    private final Scriptable scope;
 
     private int pos;
     private int length;
@@ -93,7 +94,7 @@ public class JsonParser {
         consumeWhitespace();
         while (pos < length) {
             char c = src.charAt(pos++);
-            switch(c) {
+            switch (c) {
                 case '}':
                     return object;
                 case ',':
@@ -112,9 +113,9 @@ public class JsonParser {
 
                     long index = ScriptRuntime.indexFromString(id);
                     if (index < 0) {
-                      object.put(id, object, value);
+                        object.put(id, object, value);
                     } else {
-                      object.put((int)index, object, value);
+                        object.put((int) index, object, value);
                     }
 
                     needsComma = true;
@@ -133,7 +134,7 @@ public class JsonParser {
         consumeWhitespace();
         while (pos < length) {
             char c = src.charAt(pos);
-            switch(c) {
+            switch (c) {
                 case ']':
                     pos += 1;
                     return cx.newArray(scope, list.toArray());
@@ -163,7 +164,7 @@ public class JsonParser {
             if (c <= '\u001F') {
                 throw new ParseException("String contains control character");
             }
-            switch(c) {
+            switch (c) {
                 case '\\':
                     if (pos >= length) {
                         throw new ParseException("Unterminated string");
@@ -251,7 +252,7 @@ public class JsonParser {
                 }
             }
             final double dval = Double.parseDouble(num);
-            final int ival = (int)dval;
+            final int ival = (int) dval;
             if (ival == dval) {
                 return Integer.valueOf(ival);
             } else {
@@ -319,16 +320,15 @@ public class JsonParser {
         }
         char c = src.charAt(pos++);
         if (c == token) {
-            return;
         } else {
             throw new ParseException("Expected " + token + " found " + c);
         }
     }
 
     public static class ParseException extends Exception {
-        
+
         static final long serialVersionUID = 4804542791749920772L;
-        
+
         ParseException(String message) {
             super(message);
         }

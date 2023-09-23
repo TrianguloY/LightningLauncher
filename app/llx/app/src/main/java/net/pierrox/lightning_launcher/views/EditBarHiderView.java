@@ -37,9 +37,9 @@ import net.pierrox.lightning_launcher.data.Utils;
 import net.pierrox.lightning_launcher_extreme.R;
 
 public class EditBarHiderView extends ImageButton implements Runnable {
-    private static final long ANIM_DURATION =200;
+    private static final long ANIM_DURATION = 200;
 
-    private Bitmap mBitmap;
+    private final Bitmap mBitmap;
     private float mAngle;
     private Matrix mMatrix;
     private long mAnimStart;
@@ -64,15 +64,15 @@ public class EditBarHiderView extends ImageButton implements Runnable {
     @Override
     public void run() {
         long delta = AnimationUtils.currentAnimationTimeMillis() - mAnimStart;
-        if(delta> ANIM_DURATION) {
+        if (delta > ANIM_DURATION) {
             delta = ANIM_DURATION;
         }
-        float angle = 180f*delta / ANIM_DURATION;
-        if(!mAnimDirection) {
+        float angle = 180f * delta / ANIM_DURATION;
+        if (!mAnimDirection) {
             angle = 180 - angle;
         }
         setEditBarHiderRotation(angle);
-        if(delta == ANIM_DURATION) {
+        if (delta == ANIM_DURATION) {
             mMatrix = null;
         } else {
             post(this);
@@ -87,7 +87,7 @@ public class EditBarHiderView extends ImageButton implements Runnable {
     private void updateMatrix() {
         int dw = mBitmap.getWidth() / 2;
         int dh = mBitmap.getHeight() / 2;
-        if(mMatrix == null) {
+        if (mMatrix == null) {
             mMatrix = new Matrix();
         } else {
             mMatrix.reset();
@@ -99,7 +99,7 @@ public class EditBarHiderView extends ImageButton implements Runnable {
     }
 
     public void setArrowDirection(boolean open) {
-        if(mAnimDirection != open) {
+        if (mAnimDirection != open) {
             mAnimDirection = open;
             removeCallbacks(this);
             mAnimStart = AnimationUtils.currentAnimationTimeMillis();

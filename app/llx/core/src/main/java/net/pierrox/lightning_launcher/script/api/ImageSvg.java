@@ -2,17 +2,17 @@ package net.pierrox.lightning_launcher.script.api;
 
 import android.graphics.drawable.Drawable;
 
-import net.pierrox.lightning_launcher.script.api.svg.SvgSvg;
 import net.pierrox.android.lsvg.SvgDrawable;
+import net.pierrox.lightning_launcher.script.api.svg.SvgSvg;
 
 /**
  * An image backed by a SVG document
- *
+ * <p>
  * An instance of this object can be retrieved with any function that returns an {@link Image} when that image is an ImageSvg.
  */
 
 public class ImageSvg extends Image {
-    private SvgDrawable mSvgDrawable;
+    private final SvgDrawable mSvgDrawable;
 
     /**
      * @hide

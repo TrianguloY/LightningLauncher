@@ -3,7 +3,7 @@ package net.pierrox.lightning_launcher.engine.variable;
 import android.os.Handler;
 
 /*package*/ abstract class PollingDataCollector extends Thread implements DataCollector {
-    private int mPeriod;
+    private final int mPeriod;
     protected Handler mHandler;
     protected VariableManager mVariableManager;
     private boolean mPaused;
@@ -22,7 +22,7 @@ import android.os.Handler;
         do {
             collectData();
 
-            if(mEnd) break;
+            if (mEnd) break;
 
             try {
                 sleep(mPeriod);
@@ -30,7 +30,7 @@ import android.os.Handler;
                 // interrupted, will likely end
             }
 
-            if(mPaused) {
+            if (mPaused) {
                 synchronized (this) {
                     try {
                         wait();
@@ -39,7 +39,7 @@ import android.os.Handler;
                     }
                 }
             }
-        } while(!mEnd);
+        } while (!mEnd);
     }
 
     @Override

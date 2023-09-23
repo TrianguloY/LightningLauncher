@@ -34,7 +34,6 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Handler;
 import android.util.DisplayMetrics;
 
@@ -60,10 +59,10 @@ import net.pierrox.lightning_launcher.data.Item;
 import net.pierrox.lightning_launcher.data.LightningIntent;
 import net.pierrox.lightning_launcher.data.Page;
 import net.pierrox.lightning_launcher.data.PageIndicator;
-import net.pierrox.lightning_launcher.engine.LightningEngine;
 import net.pierrox.lightning_launcher.data.PageProcessor;
 import net.pierrox.lightning_launcher.data.Shortcut;
 import net.pierrox.lightning_launcher.data.Utils;
+import net.pierrox.lightning_launcher.engine.LightningEngine;
 import net.pierrox.lightning_launcher.script.ScriptManager;
 import net.pierrox.lightning_launcher_extreme.BuildConfig;
 import net.pierrox.lightning_launcher_extreme.R;
@@ -73,17 +72,53 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class Setup {
-    public interface OnFirstTimeInitEvent {
-        public void onFirstTimeInitStart(boolean is_import);
-        public void onFirstTimeInitEnd(boolean success, boolean was_import, Item all_apps_item);
-    }
+    private static final String[] CN_DOCK_0 = new String[]{
+            // phone
+            "com.android.contacts/.activities.DialtactsActivity",
+            "com.android.contacts/.DialtactsActivity",
+            "com.android.contacts/com.android.dialer.DialtactsActivity",
+            "com.android.dialer/.DialtactsActivity",
+            "com.android.htccontacts/.DialerTabActivity",
+            "com.google.android.dialer/.extensions.GoogleDialtactsActivity",
+            "com.sec.android.app.dialertab/.DialerTabActivity",
+            "com.sonyericsson.android.socialphonebook/.DialerEntryActivity",
+
+            // camera
+            "com.android.camera/.Camera",
+            "com.android.camera/.CameraEntry",
+            "com.asus.camera/.CameraApp",
+            "com.cyngn.cameranext/com.android.camera.CameraLauncher",
+            "com.google.android.GoogleCamera/com.android.camera.CameraLauncher",
+            "com.motorola.camera/.Camera",
+            "com.sec.android.app.camera/.Camera",
+            "com.sonyericsson.android.camera/.CameraActivity",
+    };
+    private static final String[] CN_DOCK_1 = new String[]{
+            "com.android.settings/.Settings",
+            "com.android.settings/.GridSettings",
+
+    };
+    //    private static final String[] CN_DOCK_2 = new String[] {
+//            "net.pierrox.lightning_launcher_extreme/net.pierrox.lightning_launcher.activities.AppDrawerX"
+//    };
+    private static final String[] CN_DOCK_3 = new String[]{
+            "com.android.chrome/com.google.android.apps.chrome.Main",
+            "com.android.browser/.BrowserActivity",
+            "com.asus.browser/com.android.browser.BrowserActivity",
+            "com.opera.mini.android/.Browser",
+            "com.sec.android.app.sbrowser/.SBrowserMainActivity",
+
+    };
+    private static final String[] CN_DOCK_4 = new String[]{
+            "com.android.vending/.AssetBrowserActivity"
+    };
 
     @SuppressWarnings("deprecation")
     public static void firstTimeInit(final OnFirstTimeInitEvent listener) {
         final LightningEngine engine = LLApp.get().getAppEngine();
 
         Context tmp = null;
-        if(!BuildConfig.IS_TRIAL) {
+        if (!BuildConfig.IS_TRIAL) {
             try {
                 tmp = LLApp.get().createPackageContext(LLApp.LL_PKG_NAME, 0);
             } catch (PackageManager.NameNotFoundException e) {
@@ -104,7 +139,7 @@ public class Setup {
             protected Boolean doInBackground(Void... params) {
                 was_import = import_data;
 
-                if(!import_data) {
+                if (!import_data) {
                     try {
                         Thread.sleep(4000);
                     } catch (InterruptedException e) {
@@ -122,7 +157,7 @@ public class Setup {
 
                         // ll is here but no valid data
                         engine.reloadGlobalConfig();
-                        if(engine.shouldDoFirstTimeInit()) {
+                        if (engine.shouldDoFirstTimeInit()) {
                             was_import = false;
                             mAllAppsItem = defaultSetup(engine);
                             return true;
@@ -131,7 +166,7 @@ public class Setup {
                         LightningEngine.PageManager pageManager = engine.getPageManager();
                         pageManager.clear();
                         ArrayList<Page> mImportedPages = new ArrayList<>();
-                        for(int p : pageManager.getAllPagesIds()) {
+                        for (int p : pageManager.getAllPagesIds()) {
                             mImportedPages.add(pageManager.getOrLoadPage(p));
                         }
 
@@ -156,55 +191,13 @@ public class Setup {
             }
 
 
-        }.execute((Void)null);
+        }.execute((Void) null);
     }
-
-    private static final String[] CN_DOCK_0 = new String[] {
-            // phone
-        "com.android.contacts/.activities.DialtactsActivity",
-        "com.android.contacts/.DialtactsActivity",
-        "com.android.contacts/com.android.dialer.DialtactsActivity",
-        "com.android.dialer/.DialtactsActivity",
-        "com.android.htccontacts/.DialerTabActivity",
-        "com.google.android.dialer/.extensions.GoogleDialtactsActivity",
-        "com.sec.android.app.dialertab/.DialerTabActivity",
-        "com.sonyericsson.android.socialphonebook/.DialerEntryActivity",
-
-            // camera
-        "com.android.camera/.Camera",
-        "com.android.camera/.CameraEntry",
-        "com.asus.camera/.CameraApp",
-        "com.cyngn.cameranext/com.android.camera.CameraLauncher",
-        "com.google.android.GoogleCamera/com.android.camera.CameraLauncher",
-        "com.motorola.camera/.Camera",
-        "com.sec.android.app.camera/.Camera",
-        "com.sonyericsson.android.camera/.CameraActivity",
-};
-
-    private static final String[] CN_DOCK_1 = new String[] {
-        "com.android.settings/.Settings",
-        "com.android.settings/.GridSettings",
-
-};
-//    private static final String[] CN_DOCK_2 = new String[] {
-//            "net.pierrox.lightning_launcher_extreme/net.pierrox.lightning_launcher.activities.AppDrawerX"
-//    };
-    private static final String[] CN_DOCK_3 = new String[] {
-    "com.android.chrome/com.google.android.apps.chrome.Main",
-    "com.android.browser/.BrowserActivity",
-    "com.asus.browser/com.android.browser.BrowserActivity",
-    "com.opera.mini.android/.Browser",
-    "com.sec.android.app.sbrowser/.SBrowserMainActivity",
-
-};
-    private static final String[] CN_DOCK_4 = new String[] {
-        "com.android.vending/.AssetBrowserActivity"
-    };
 
     private static Item defaultSetup(LightningEngine engine) {
 
         File dir = engine.getBaseDir();
-        if(!dir.exists()) {
+        if (!dir.exists()) {
             dir.mkdirs();
         }
         Utils.deleteDirectory(dir, false);
@@ -219,8 +212,8 @@ public class Setup {
 
         GlobalConfig globalConfig = engine.getGlobalConfig();
 
-        if(!BuildConfig.IS_TRIAL || LLApp.get().isTrialVersion()) {
-            Page lockscreen = engine.getOrLoadPage(Page.FIRST_DASHBOARD_PAGE+1);
+        if (!BuildConfig.IS_TRIAL || LLApp.get().isTrialVersion()) {
+            Page lockscreen = engine.getOrLoadPage(Page.FIRST_DASHBOARD_PAGE + 1);
             setupLockScreen(lockscreen);
 
             globalConfig.screensOrder = new int[2];
@@ -234,7 +227,7 @@ public class Setup {
         }
 
         // create dashboard default config
-        int page= Page.FIRST_DASHBOARD_PAGE;
+        int page = Page.FIRST_DASHBOARD_PAGE;
         Page dashboard = pm.getOrLoadPage(page);
         Item all_apps_item = setupDashboard(dashboard, drawer);
 
@@ -256,7 +249,6 @@ public class Setup {
         final DisplayMetrics displayMetrics = resources.getDisplayMetrics();
         float density = displayMetrics.density;
         int color_primary_dark = resources.getColor(R.color.color_primary_dark);
-
 
 
         final PageConfig dashboard_config = dashboard.config;
@@ -302,7 +294,7 @@ public class Setup {
         ic.box_s = ic.box.toString(dashboard_config.defaultItemConfig.box);
         pi.notifyChanged();
 
-        if(!LLApp.get().isFreeVersion()) {
+        if (!LLApp.get().isFreeVersion()) {
             // install date and time dynamic texts
             DynamicText dt = Utils.addDynamicText(dashboard, DynamicTextConfig.Source.DATE, true);
             dt.getCell().set(3, 4, 5, 5);
@@ -348,7 +340,7 @@ public class Setup {
 
 
         // hints
-        intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Version.WIKI_PREFIX+"desktops"));
+        intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Version.WIKI_PREFIX + "desktops"));
         s = Utils.addShortcut(resources.getString(R.string.ds_hn), null, intent, dashboard, 6, 2, 1, true);
         s.getCell().set(6, 2, 9, 3);
         sc = s.modifyShortcutConfig();
@@ -356,7 +348,7 @@ public class Setup {
         sc.labelMaxLines = 7;
         s.notifyChanged();
 
-        intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Version.WIKI_PREFIX+"concepts"));
+        intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Version.WIKI_PREFIX + "concepts"));
         s = Utils.addShortcut(resources.getString(R.string.ds_um), null, intent, dashboard, 6, 2, 1, true);
         s.getCell().set(-4, 2, -1, 3);
         sc = s.modifyShortcutConfig();
@@ -365,54 +357,53 @@ public class Setup {
         s.notifyChanged();
 
 
-
         // start here folder
         Folder start_here;
         Page start_here_page;
-        start_here=Utils.addFolder(dashboard, 2, 1, 1, true, resources.getString(R.string.ds_sh));
+        start_here = Utils.addFolder(dashboard, 2, 1, 1, true, resources.getString(R.string.ds_sh));
         start_here.getCell().set(0, 0, 1, 1);
 
         FolderConfig fc = start_here.modifyFolderConfig();
-        fc.iconStyle= FolderConfig.FolderIconStyle.NORMAL;
+        fc.iconStyle = FolderConfig.FolderIconStyle.NORMAL;
         fc.titleVisibility = false;
         fc.wAH = Box.AlignH.LEFT;
 //        fc.wAV = Box.AlignV.TOP;
         fc.animationIn = FolderConfig.FolderAnimation.SLIDE_FROM_LEFT;
         fc.animationOut = FolderConfig.FolderAnimation.SLIDE_FROM_RIGHT;
         fc.autoClose = true;
-        Bitmap icon= Utils.createIconFromText(start_here.getStdIconSize(), "q");
+        Bitmap icon = Utils.createIconFromText(start_here.getStdIconSize(), "q");
         Utils.saveIconToFile(start_here.getDefaultIconFile(), icon);
 
 
         start_here_page = start_here.getOrLoadFolderPage();
-        PageConfig folder_config=start_here_page.config;
-        folder_config.defaultShortcutConfig.labelMaxLines=2;
+        PageConfig folder_config = start_here_page.config;
+        folder_config.defaultShortcutConfig.labelMaxLines = 2;
         folder_config.useDesktopSize = false;
 //        folder_config.gridPRowMode = PageConfig.SizeMode.AUTO;
         folder_config.gridPRowNum = 6;
-        folder_config.gridPColumnMode= PageConfig.SizeMode.AUTO;
+        folder_config.gridPColumnMode = PageConfig.SizeMode.AUTO;
 
         start_here.notifyChanged();
 
         start_here_page.saveConfig();
-        final String youtube="http://www.youtube.com/watch?v=";
-        installShortcut(start_here_page, 0, 0, "u", resources.getString(R.string.tut_concepts), Version.WIKI_PREFIX+"concepts", null);
-        installShortcut(start_here_page, 0, 1, "a", resources.getString(R.string.tut_wiki), Version.WIKI_PREFIX+"start", null);
+        final String youtube = "http://www.youtube.com/watch?v=";
+        installShortcut(start_here_page, 0, 0, "u", resources.getString(R.string.tut_concepts), Version.WIKI_PREFIX + "concepts", null);
+        installShortcut(start_here_page, 0, 1, "a", resources.getString(R.string.tut_wiki), Version.WIKI_PREFIX + "start", null);
         installShortcut(start_here_page, 0, 2, "y", resources.getString(R.string.language_t), Version.LANGUAGE_PACK_INSTALL_URI.toString(), null);
         installShortcut(start_here_page, 0, 3, "r", resources.getString(R.string.ds_uc), Version.USER_COMMUNITY, null);
-        installShortcut(start_here_page, 0, 4, "t", resources.getString(R.string.tut_intro), youtube+"muY61GMH3mQ", null);
+        installShortcut(start_here_page, 0, 4, "t", resources.getString(R.string.tut_intro), youtube + "muY61GMH3mQ", null);
 
         // start here tutorials folder
         Folder tutorials;
         Page tutorials_page;
-        tutorials=Utils.addFolder(start_here_page, 0, 5, 1, true, resources.getString(R.string.tutorials));
+        tutorials = Utils.addFolder(start_here_page, 0, 5, 1, true, resources.getString(R.string.tutorials));
         tutorials.getCell().set(0, 5, 1, 6);
         start_here_page.getAndCreateIconDir();
         icon = Utils.createIconFromText(Utils.getStandardIconSize(), "v");
         Utils.saveIconToFile(tutorials.getDefaultIconFile(), icon);
 
         fc = tutorials.modifyFolderConfig();
-        fc.iconStyle= FolderConfig.FolderIconStyle.NORMAL;
+        fc.iconStyle = FolderConfig.FolderIconStyle.NORMAL;
         fc.titleVisibility = false;
         fc.wAH = Box.AlignH.LEFT;
 //        fc.wAV = Box.AlignV.TOP;
@@ -422,14 +413,14 @@ public class Setup {
 
         tutorials_page = tutorials.getOrLoadFolderPage();
         tutorials_page.config.useDesktopSize = false;
-        tutorials_page.config.gridPColumnMode= PageConfig.SizeMode.AUTO;
+        tutorials_page.config.gridPColumnMode = PageConfig.SizeMode.AUTO;
 
         tutorials.notifyChanged();
 
         installShortcut(tutorials_page, 0, 0, "s", resources.getString(R.string.ds_tt), Version.WIKI_PREFIX + "tips_tricks", null);
-        installShortcut(tutorials_page, 0, 1, "v", resources.getString(R.string.tut_custo), youtube+"Gkh_RdH8FTk", null);
-        installShortcut(tutorials_page, 0, 2, "v", resources.getString(R.string.tut_pin), youtube+"eUFgtyea5Ak", null);
-        installShortcut(tutorials_page, 0, 3, "v", resources.getString(R.string.tut_scroll), youtube+"4Kic7av9eac", null);
+        installShortcut(tutorials_page, 0, 1, "v", resources.getString(R.string.tut_custo), youtube + "Gkh_RdH8FTk", null);
+        installShortcut(tutorials_page, 0, 2, "v", resources.getString(R.string.tut_pin), youtube + "eUFgtyea5Ak", null);
+        installShortcut(tutorials_page, 0, 3, "v", resources.getString(R.string.tut_scroll), youtube + "4Kic7av9eac", null);
 
         return all_apps_item;
     }
@@ -484,7 +475,7 @@ public class Setup {
     private static Item findItem(ArrayList<Item> items, String[] component_names) {
         // try to match package and class first, otherwise try to match the package only
         Item item = findItemByPackageName(items, component_names, false);
-        if(item == null) {
+        if (item == null) {
             item = findItemByPackageName(items, component_names, true);
         }
 
@@ -492,13 +483,13 @@ public class Setup {
     }
 
     private static Item findItemByPackageName(ArrayList<Item> items, String[] component_names, boolean package_only) {
-        for(Item i : items) {
-            if(!(i instanceof Shortcut)) continue;
+        for (Item i : items) {
+            if (!(i instanceof Shortcut)) continue;
 
-            Shortcut s=(Shortcut)i;
-            Intent intent=s.getIntent();
+            Shortcut s = (Shortcut) i;
+            Intent intent = s.getIntent();
             final ComponentName item_cn = intent.getComponent();
-            if(item_cn != null) {
+            if (item_cn != null) {
                 final String item_pkg = item_cn.getPackageName();
                 for (String cn_s : component_names) {
                     ComponentName cn = ComponentName.unflattenFromString(cn_s);
@@ -514,11 +505,11 @@ public class Setup {
 
     private static Item installDockShortcut(Page dashboard, Page app_drawer, int x, int y, String[] component_names) {
         Item item = findItem(app_drawer.items, component_names);
-        if(item != null) {
+        if (item != null) {
             Shortcut shortcut = Utils.copyShortcut(item, dashboard, x, y, 1);
 
-            ItemConfig ic_dock=shortcut.modifyItemConfig();
-            ic_dock.pinMode=ItemConfig.PinMode.XY;
+            ItemConfig ic_dock = shortcut.modifyItemConfig();
+            ic_dock.pinMode = ItemConfig.PinMode.XY;
 //            ic_dock.rotate=true;
             ic_dock.box.av = Box.AlignV.BOTTOM;
             ic_dock.box_s = ic_dock.box.toString(null);
@@ -528,7 +519,7 @@ public class Setup {
             sc_dock.iconReflectionOverlap = 0;
             sc_dock.iconReflectionSize = 0.7f;
             sc_dock.labelVisibility = false;
-            shortcut.getCell().set(x, y, x+1, y+1);
+            shortcut.getCell().set(x, y, x + 1, y + 1);
 
             shortcut.notifyChanged();
 
@@ -539,14 +530,14 @@ public class Setup {
     }
 
     private static void installShortcut(Page page, int x, int y, String icon_code, String label, String uri, Intent intent) {
-        if(intent==null) {
-            intent=new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+        if (intent == null) {
+            intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
         }
-        Shortcut new_item=new Shortcut(page);
-        int new_id=page.findFreeItemId();
-        File icon_dir=page.getAndCreateIconDir();
+        Shortcut new_item = new Shortcut(page);
+        int new_id = page.findFreeItemId();
+        File icon_dir = page.getAndCreateIconDir();
         icon_dir.mkdirs();
-        new_item.init(new_id, new Rect(x, y, x+1, y+1), null, label, intent);
+        new_item.init(new_id, new Rect(x, y, x + 1, y + 1), null, label, intent);
         int size = Utils.getStandardIconSize();
         Bitmap icon = Utils.createIconFromText(size, icon_code);
         Utils.saveIconToFile(new_item.getCustomIconFile(), icon);
@@ -562,13 +553,13 @@ public class Setup {
         int color_primary_dark = resources.getColor(R.color.color_primary_dark);
 
         Page page = engine.getOrLoadPage(Page.USER_MENU_PAGE);
-        PageConfig page_config=page.config;
+        PageConfig page_config = page.config;
         page_config.gridPColumnNum = 5;
 //        page_config.gridPRowNum = 7;
         page_config.gridPRowMode = PageConfig.SizeMode.AUTO;
 //        page_config.gridPRowSize = (int)(large_icon_size * resources.getDisplayMetrics().scaledDensity * 1.5f);
 
-        File icon_dir=page.getAndCreateIconDir();
+        File icon_dir = page.getAndCreateIconDir();
         icon_dir.mkdirs();
 
         Folder folder = new Folder(page);
@@ -616,17 +607,23 @@ public class Setup {
         Shortcut shortcut;
         Intent intent;
 
-        File icon_dir=page.getAndCreateIconDir();
+        File icon_dir = page.getAndCreateIconDir();
 
         id = page.findFreeItemId();
         shortcut = new Shortcut(page);
         intent = new Intent(context, Dashboard.class);
         intent.putExtra(LightningIntent.INTENT_EXTRA_ACTION, GlobalConfig.RUN_SCRIPT);
         intent.putExtra(LightningIntent.INTENT_EXTRA_DATA, String.valueOf(ScriptManager.BUILTIN_USER_MENU));
-        shortcut.init(id, new Rect(x, 0, x+1, 1), null, label, intent);
+        shortcut.init(id, new Rect(x, 0, x + 1, 1), null, label, intent);
         shortcut.setName(name);
         Bitmap icon = Utils.createIconFromText(shortcut.getStdIconSize(), icon_code);
         Utils.saveIconToFile(shortcut.getDefaultIconFile(), icon);
         page.addItem(shortcut);
+    }
+
+    public interface OnFirstTimeInitEvent {
+        void onFirstTimeInitStart(boolean is_import);
+
+        void onFirstTimeInitEnd(boolean success, boolean was_import, Item all_apps_item);
     }
 }

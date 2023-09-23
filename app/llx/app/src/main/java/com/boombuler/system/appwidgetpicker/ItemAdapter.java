@@ -15,8 +15,6 @@
  */
 package com.boombuler.system.appwidgetpicker;
 
-import java.util.ArrayList;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,49 +25,48 @@ import android.widget.TextView;
 
 import net.pierrox.lightning_launcher_extreme.R;
 
+import java.util.ArrayList;
+
 
 public class ItemAdapter extends ArrayAdapter<SubItem> {
-	private final ArrayList<SubItem> items;
-	private final Context fContext;
+    private final ArrayList<SubItem> items;
+    private final Context fContext;
 
-	public ItemAdapter(Context context, int textViewResourceId, ArrayList<SubItem> items) {
+    public ItemAdapter(Context context, int textViewResourceId, ArrayList<SubItem> items) {
         super(context, textViewResourceId, items);
         this.items = items;
         fContext = context;
-	}
+    }
 
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
         View v = convertView;
         if (v == null) {
-            LayoutInflater vi = (LayoutInflater)fContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater vi = (LayoutInflater) fContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             v = vi.inflate(R.layout.appwidgetpicker, null);
         }
         SubItem o = items.get(position);
         v.setTag(o);
         if (o != null) {
-            TextView tv = (TextView) v.findViewById(R.id.appwidgetpicker_textview);
-            TextView count_view = (TextView) v.findViewById(R.id.appwidgetpicker_count);
-            ImageView iv = (ImageView) v.findViewById(R.id.appwidgetpicker_imageview);
+            TextView tv = v.findViewById(R.id.appwidgetpicker_textview);
+            TextView count_view = v.findViewById(R.id.appwidgetpicker_count);
+            ImageView iv = v.findViewById(R.id.appwidgetpicker_imageview);
             if (tv != null) {
-                  tv.setText(o.getName());
+                tv.setText(o.getName());
             }
             if (count_view != null) {
-            	if (o instanceof Item)
-            	{
-            		int cnt = ((Item)o).getItems().size();
-            		if (cnt > 1) {
-            			count_view.setText(String.format(fContext.getString(R.string.widget_count), cnt));
-            			count_view.setVisibility(View.VISIBLE);
-            		}
-            		else
-            			count_view.setVisibility(View.GONE);
-            	}
-            	else
-            		count_view.setVisibility(View.GONE);
+                if (o instanceof Item) {
+                    int cnt = ((Item) o).getItems().size();
+                    if (cnt > 1) {
+                        count_view.setText(String.format(fContext.getString(R.string.widget_count), cnt));
+                        count_view.setVisibility(View.VISIBLE);
+                    } else
+                        count_view.setVisibility(View.GONE);
+                } else
+                    count_view.setVisibility(View.GONE);
             }
-            if(iv != null){
-            	iv.setImageDrawable(o.getImage());
+            if (iv != null) {
+                iv.setImageDrawable(o.getImage());
             }
         }
         return v;

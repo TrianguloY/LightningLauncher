@@ -30,29 +30,29 @@ public interface Policy {
     /**
      * LICENSED means that the server returned back a valid license response
      */
-    public static final int LICENSED = 0x16f8e94;
+    int LICENSED = 0x16f8e94;
     /**
      * NOT_LICENSED means that the server returned back a valid license response
      * that indicated that the user definitively is not licensed
      */
-    public static final int NOT_LICENSED = 0x1;
+    int NOT_LICENSED = 0x1;
     /**
      * RETRY means that the license response was unable to be determined ---
      * perhaps as a result of faulty networking
      */
-    public static final int RETRY = 0x56ee981;
+    int RETRY = 0x56ee981;
     /**
      * NO_SERVICE means no connection with the Google Play service
      */
-    public static final int NO_SERVICE = 0x936af1;
+    int NO_SERVICE = 0x936af1;
 
     /**
      * Provide results from contact with the license server. Retry counts are
      * incremented if the current value of response is RETRY. Results will be
      * used for any future policy decisions.
-     * 
+     *
      * @param response the result from validating the server response
-     * @param rawData the raw server response data, can be null for RETRY
+     * @param rawData  the raw server response data, can be null for RETRY
      */
     void processServerResponse(int response, ResponseData rawData);
 

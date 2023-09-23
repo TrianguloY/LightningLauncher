@@ -17,40 +17,41 @@
 package net.pierrox.lightning_launcher.views;
 
 import android.content.Context;
-import android.graphics.*;
+import android.graphics.Bitmap;
+import android.graphics.BlurMaskFilter;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 
 public class HolographicOutlineHelper {
-    private final Paint mHolographicPaint = new Paint();
-    private final Paint mBlurPaint = new Paint();
-    private final Paint mErasePaint = new Paint();
-
-    public int mMaxOuterBlurRadius;
-    public int mMinOuterBlurRadius;
-
-    private BlurMaskFilter mExtraThickOuterBlurMaskFilter;
-    private BlurMaskFilter mThickOuterBlurMaskFilter;
-    private BlurMaskFilter mMediumOuterBlurMaskFilter;
-    private BlurMaskFilter mThinOuterBlurMaskFilter;
-    private BlurMaskFilter mThickInnerBlurMaskFilter;
-    private BlurMaskFilter mExtraThickInnerBlurMaskFilter;
-    private BlurMaskFilter mMediumInnerBlurMaskFilter;
-
     private static final int THICK = 0;
     private static final int MEDIUM = 1;
     private static final int EXTRA_THICK = 2;
-
     static HolographicOutlineHelper INSTANCE;
+    private final Paint mHolographicPaint = new Paint();
+    private final Paint mBlurPaint = new Paint();
+    private final Paint mErasePaint = new Paint();
+    private final BlurMaskFilter mExtraThickOuterBlurMaskFilter;
+    private final BlurMaskFilter mThickOuterBlurMaskFilter;
+    private final BlurMaskFilter mMediumOuterBlurMaskFilter;
+    private final BlurMaskFilter mThinOuterBlurMaskFilter;
+    private final BlurMaskFilter mThickInnerBlurMaskFilter;
+    private final BlurMaskFilter mExtraThickInnerBlurMaskFilter;
+    private final BlurMaskFilter mMediumInnerBlurMaskFilter;
+    public int mMaxOuterBlurRadius;
+    public int mMinOuterBlurRadius;
 
     private HolographicOutlineHelper(Context context) {
         final float scale = context.getResources().getDisplayMetrics().density;
 
-        mMinOuterBlurRadius = (int) (scale * 1.0f);
+        mMinOuterBlurRadius = (int) (scale);
         mMaxOuterBlurRadius = (int) (scale * 12.0f);
 
         mExtraThickOuterBlurMaskFilter = new BlurMaskFilter(scale * 12.0f, BlurMaskFilter.Blur.OUTER);
         mThickOuterBlurMaskFilter = new BlurMaskFilter(scale * 6.0f, BlurMaskFilter.Blur.OUTER);
         mMediumOuterBlurMaskFilter = new BlurMaskFilter(scale * 2.0f, BlurMaskFilter.Blur.OUTER);
-        mThinOuterBlurMaskFilter = new BlurMaskFilter(scale * 1.0f, BlurMaskFilter.Blur.OUTER);
+        mThinOuterBlurMaskFilter = new BlurMaskFilter(scale, BlurMaskFilter.Blur.OUTER);
         mExtraThickInnerBlurMaskFilter = new BlurMaskFilter(scale * 6.0f, BlurMaskFilter.Blur.NORMAL);
         mThickInnerBlurMaskFilter = new BlurMaskFilter(scale * 4.0f, BlurMaskFilter.Blur.NORMAL);
         mMediumInnerBlurMaskFilter = new BlurMaskFilter(scale * 2.0f, BlurMaskFilter.Blur.NORMAL);
@@ -97,12 +98,13 @@ public class HolographicOutlineHelper {
      * bitmap.
      */
     void applyExpensiveOutlineWithBlur(Bitmap srcDst, Canvas srcDstCanvas, int color,
-            int outlineColor, int thickness) {
+                                       int outlineColor, int thickness) {
         applyExpensiveOutlineWithBlur(srcDst, srcDstCanvas, color, outlineColor, true,
                 thickness);
     }
+
     void applyExpensiveOutlineWithBlur(Bitmap srcDst, Canvas srcDstCanvas, int color,
-            int outlineColor, boolean clipAlpha, int thickness) {
+                                       int outlineColor, boolean clipAlpha, int thickness) {
 
         // We start by removing most of the alpha channel so as to ignore shadows, and
         // other types of partial transparency when defining the shape of the object
@@ -201,23 +203,23 @@ public class HolographicOutlineHelper {
     }
 
     public void applyExtraThickExpensiveOutlineWithBlur(Bitmap srcDst, Canvas srcDstCanvas, int color,
-            int outlineColor) {
+                                                        int outlineColor) {
         applyExpensiveOutlineWithBlur(srcDst, srcDstCanvas, color, outlineColor, EXTRA_THICK);
     }
 
     void applyThickExpensiveOutlineWithBlur(Bitmap srcDst, Canvas srcDstCanvas, int color,
-            int outlineColor) {
+                                            int outlineColor) {
         applyExpensiveOutlineWithBlur(srcDst, srcDstCanvas, color, outlineColor, THICK);
     }
 
     void applyMediumExpensiveOutlineWithBlur(Bitmap srcDst, Canvas srcDstCanvas, int color,
-            int outlineColor, boolean clipAlpha) {
+                                             int outlineColor, boolean clipAlpha) {
         applyExpensiveOutlineWithBlur(srcDst, srcDstCanvas, color, outlineColor, clipAlpha,
                 MEDIUM);
     }
 
     public void applyMediumExpensiveOutlineWithBlur(Bitmap srcDst, Canvas srcDstCanvas, int color,
-            int outlineColor) {
+                                                    int outlineColor) {
         applyExpensiveOutlineWithBlur(srcDst, srcDstCanvas, color, outlineColor, MEDIUM);
     }
 

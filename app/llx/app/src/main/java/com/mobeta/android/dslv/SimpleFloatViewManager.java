@@ -14,13 +14,10 @@ import android.widget.ListView;
  */
 public class SimpleFloatViewManager implements DragSortListView.FloatViewManager {
 
+    private final ListView mListView;
     private Bitmap mFloatBitmap;
-
     private ImageView mImageView;
-
     private int mFloatBGColor = Color.BLACK;
-
-    private ListView mListView;
 
     public SimpleFloatViewManager(ListView lv) {
         mListView = lv;

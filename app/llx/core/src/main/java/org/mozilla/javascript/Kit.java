@@ -16,8 +16,7 @@ import java.util.Map;
  * Collection of utilities
  */
 
-public class Kit
-{
+public class Kit {
     /**
      * Reflection of Throwable.initCause(Throwable) from JDK 1.4
      * or nul if it is not available.
@@ -28,21 +27,20 @@ public class Kit
         // Are we running on a JDK 1.4 or later system?
         try {
             Class<?> ThrowableClass = Kit.classOrNull("java.lang.Throwable");
-            Class<?>[] signature = { ThrowableClass };
+            Class<?>[] signature = {ThrowableClass};
             Throwable_initCause
-                = ThrowableClass.getMethod("initCause", signature);
+                    = ThrowableClass.getMethod("initCause", signature);
         } catch (Exception ex) {
             // Assume any exceptions means the method does not exist.
         }
     }
 
-    public static Class<?> classOrNull(String className)
-    {
+    public static Class<?> classOrNull(String className) {
         try {
             return Class.forName(className);
-        } catch  (ClassNotFoundException ex) {
-        } catch  (SecurityException ex) {
-        } catch  (LinkageError ex) {
+        } catch (ClassNotFoundException ex) {
+        } catch (SecurityException ex) {
+        } catch (LinkageError ex) {
         } catch (IllegalArgumentException e) {
             // Can be thrown if name has characters that a class name
             // can not contain
@@ -54,8 +52,7 @@ public class Kit
      * Attempt to load the class of the given name. Note that the type parameter
      * isn't checked.
      */
-    public static Class<?> classOrNull(ClassLoader loader, String className)
-    {
+    public static Class<?> classOrNull(ClassLoader loader, String className) {
         try {
             return loader.loadClass(className);
         } catch (ClassNotFoundException ex) {
@@ -68,12 +65,11 @@ public class Kit
         return null;
     }
 
-    static Object newInstanceOrNull(Class<?> cl)
-    {
+    static Object newInstanceOrNull(Class<?> cl) {
         try {
             return cl.newInstance();
         } catch (SecurityException x) {
-        } catch  (LinkageError ex) {
+        } catch (LinkageError ex) {
         } catch (InstantiationException x) {
         } catch (IllegalAccessException x) {
         }
@@ -83,30 +79,26 @@ public class Kit
     /**
      * Check that testClass is accessible from the given loader.
      */
-    static boolean testIfCanLoadRhinoClasses(ClassLoader loader)
-    {
+    static boolean testIfCanLoadRhinoClasses(ClassLoader loader) {
         Class<?> testClass = ScriptRuntime.ContextFactoryClass;
         Class<?> x = Kit.classOrNull(loader, testClass.getName());
-        if (x != testClass) {
-            // The check covers the case when x == null =>
-            // loader does not know about testClass or the case
-            // when x != null && x != testClass =>
-            // loader loads a class unrelated to testClass
-            return false;
-        }
-        return true;
+        // The check covers the case when x == null =>
+        // loader does not know about testClass or the case
+        // when x != null && x != testClass =>
+        // loader loads a class unrelated to testClass
+        return x == testClass;
     }
 
     /**
      * If initCause methods exists in Throwable, call
      * <tt>ex.initCause(cause)</tt> or otherwise do nothing.
+     *
      * @return The <tt>ex</tt> argument.
      */
     public static RuntimeException initCause(RuntimeException ex,
-                                             Throwable cause)
-    {
+                                             Throwable cause) {
         if (Throwable_initCause != null) {
-            Object[] args = { cause };
+            Object[] args = {cause};
             try {
                 Throwable_initCause.invoke(ex, args);
             } catch (Exception e) {
@@ -121,13 +113,15 @@ public class Kit
      * <tt>accumulator</tt> * 16 plus corresponding
      * number. Otherise return -1.
      */
-    public static int xDigitToInt(int c, int accumulator)
-    {
-        check: {
+    public static int xDigitToInt(int c, int accumulator) {
+        check:
+        {
             // Use 0..9 < A..Z < a..z
             if (c <= '9') {
                 c -= '0';
-                if (0 <= c) { break check; }
+                if (0 <= c) {
+                    break check;
+                }
             } else if (c <= 'F') {
                 if ('A' <= c) {
                     c -= ('A' - 10);
@@ -186,23 +180,22 @@ public class Kit
      * </pre>
      *
      * @param listener Listener to add to <i>bag</i>
-     * @param bag Current collection of listeners.
+     * @param bag      Current collection of listeners.
      * @return A new bag containing all listeners from <i>bag</i> and
-     *          <i>listener</i>.
+     * <i>listener</i>.
      * @see #removeListener(Object bag, Object listener)
      * @see #getListener(Object bag, int index)
      */
-    public static Object addListener(Object bag, Object listener)
-    {
+    public static Object addListener(Object bag, Object listener) {
         if (listener == null) throw new IllegalArgumentException();
         if (listener instanceof Object[]) throw new IllegalArgumentException();
 
         if (bag == null) {
             bag = listener;
         } else if (!(bag instanceof Object[])) {
-            bag = new Object[] { bag, listener };
+            bag = new Object[]{bag, listener};
         } else {
-            Object[] array = (Object[])bag;
+            Object[] array = (Object[]) bag;
             int L = array.length;
             // bag has at least 2 elements if it is array
             if (L < 2) throw new IllegalArgumentException();
@@ -225,21 +218,20 @@ public class Kit
      * For usage example, see {@link #addListener(Object bag, Object listener)}.
      *
      * @param listener Listener to remove from <i>bag</i>
-     * @param bag Current collection of listeners.
+     * @param bag      Current collection of listeners.
      * @return A new bag containing all listeners from <i>bag</i> except
-     *          <i>listener</i>.
+     * <i>listener</i>.
      * @see #addListener(Object bag, Object listener)
      * @see #getListener(Object bag, int index)
      */
-    public static Object removeListener(Object bag, Object listener)
-    {
+    public static Object removeListener(Object bag, Object listener) {
         if (listener == null) throw new IllegalArgumentException();
         if (listener instanceof Object[]) throw new IllegalArgumentException();
 
         if (bag == listener) {
             bag = null;
         } else if (bag instanceof Object[]) {
-            Object[] array = (Object[])bag;
+            Object[] array = (Object[]) bag;
             int L = array.length;
             // bag has at least 2 elements if it is array
             if (L < 2) throw new IllegalArgumentException();
@@ -273,20 +265,19 @@ public class Kit
      * <p>
      * For usage example, see {@link #addListener(Object bag, Object listener)}.
      *
-     * @param bag Current collection of listeners.
+     * @param bag   Current collection of listeners.
      * @param index Index of the listener to access.
      * @return Listener at the given index or null.
      * @see #addListener(Object bag, Object listener)
      * @see #removeListener(Object bag, Object listener)
      */
-    public static Object getListener(Object bag, int index)
-    {
+    public static Object getListener(Object bag, int index) {
         if (index == 0) {
             if (bag == null)
                 return null;
             if (!(bag instanceof Object[]))
                 return bag;
-            Object[] array = (Object[])bag;
+            Object[] array = (Object[]) bag;
             // bag has at least 2 elements if it is array
             if (array.length < 2) throw new IllegalArgumentException();
             return array[0];
@@ -295,12 +286,12 @@ public class Kit
                 if (bag == null) throw new IllegalArgumentException();
                 return null;
             }
-            Object[] array = (Object[])bag;
+            Object[] array = (Object[]) bag;
             // the array access will check for index on its own
             return array[1];
         } else {
             // bag has to array
-            Object[] array = (Object[])bag;
+            Object[] array = (Object[]) bag;
             int L = array.length;
             if (L < 2) throw new IllegalArgumentException();
             if (index == L)
@@ -309,8 +300,7 @@ public class Kit
         }
     }
 
-    static Object initHash(Map<Object,Object> h, Object key, Object initialValue)
-    {
+    static Object initHash(Map<Object, Object> h, Object key, Object initialValue) {
         synchronized (h) {
             Object current = h.get(key);
             if (current == null) {
@@ -322,52 +312,21 @@ public class Kit
         return initialValue;
     }
 
-    private final static class ComplexKey
-    {
-        private Object key1;
-        private Object key2;
-        private int hash;
-
-        ComplexKey(Object key1, Object key2)
-        {
-            this.key1 = key1;
-            this.key2 = key2;
-        }
-
-        @Override
-        public boolean equals(Object anotherObj)
-        {
-            if (!(anotherObj instanceof ComplexKey))
-                return false;
-            ComplexKey another = (ComplexKey)anotherObj;
-            return key1.equals(another.key1) && key2.equals(another.key2);
-        }
-
-        @Override
-        public int hashCode()
-        {
-            if (hash == 0) {
-                hash = key1.hashCode() ^ key2.hashCode();
-            }
-            return hash;
-        }
-    }
-
-    public static Object makeHashKeyFromPair(Object key1, Object key2)
-    {
+    public static Object makeHashKeyFromPair(Object key1, Object key2) {
         if (key1 == null) throw new IllegalArgumentException();
         if (key2 == null) throw new IllegalArgumentException();
         return new ComplexKey(key1, key2);
     }
 
     public static String readReader(Reader r)
-        throws IOException
-    {
+            throws IOException {
         char[] buffer = new char[512];
         int cursor = 0;
-        for (;;) {
+        for (; ; ) {
             int n = r.read(buffer, cursor, buffer.length - cursor);
-            if (n < 0) { break; }
+            if (n < 0) {
+                break;
+            }
             cursor += n;
             if (cursor == buffer.length) {
                 char[] tmp = new char[buffer.length * 2];
@@ -379,17 +338,18 @@ public class Kit
     }
 
     public static byte[] readStream(InputStream is, int initialBufferCapacity)
-        throws IOException
-    {
+            throws IOException {
         if (initialBufferCapacity <= 0) {
             throw new IllegalArgumentException(
-                "Bad initialBufferCapacity: "+initialBufferCapacity);
+                    "Bad initialBufferCapacity: " + initialBufferCapacity);
         }
         byte[] buffer = new byte[initialBufferCapacity];
         int cursor = 0;
-        for (;;) {
+        for (; ; ) {
             int n = is.read(buffer, cursor, buffer.length - cursor);
-            if (n < 0) { break; }
+            if (n < 0) {
+                break;
+            }
             cursor += n;
             if (cursor == buffer.length) {
                 byte[] tmp = new byte[buffer.length * 2];
@@ -412,8 +372,7 @@ public class Kit
      * <tt>Kit.codeBug()</tt> triggers unreachable code error.
      */
     public static RuntimeException codeBug()
-        throws RuntimeException
-    {
+            throws RuntimeException {
         RuntimeException ex = new IllegalStateException("FAILED ASSERTION");
         // Print stack trace ASAP
         ex.printStackTrace(System.err);
@@ -427,12 +386,38 @@ public class Kit
      * <tt>Kit.codeBug()</tt> triggers unreachable code error.
      */
     public static RuntimeException codeBug(String msg)
-        throws RuntimeException
-    {
+            throws RuntimeException {
         msg = "FAILED ASSERTION: " + msg;
         RuntimeException ex = new IllegalStateException(msg);
         // Print stack trace ASAP
         ex.printStackTrace(System.err);
         throw ex;
+    }
+
+    private final static class ComplexKey {
+        private final Object key1;
+        private final Object key2;
+        private int hash;
+
+        ComplexKey(Object key1, Object key2) {
+            this.key1 = key1;
+            this.key2 = key2;
+        }
+
+        @Override
+        public boolean equals(Object anotherObj) {
+            if (!(anotherObj instanceof ComplexKey))
+                return false;
+            ComplexKey another = (ComplexKey) anotherObj;
+            return key1.equals(another.key1) && key2.equals(another.key2);
+        }
+
+        @Override
+        public int hashCode() {
+            if (hash == 0) {
+                hash = key1.hashCode() ^ key2.hashCode();
+            }
+            return hash;
+        }
     }
 }

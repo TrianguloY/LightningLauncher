@@ -36,8 +36,8 @@ import net.pierrox.lightning_launcher.views.item.ItemView;
 import java.util.ArrayList;
 
 /**
-* Created by pierrot on 18/03/2015.
-*/
+ * Created by pierrot on 18/03/2015.
+ */
 public class SnappingContext {
     public static final int SNAP_LEFT = 1;
     public static final int SNAP_RIGHT = 2;
@@ -46,16 +46,16 @@ public class SnappingContext {
     public static final int SNAP_CENTER = 16;
     public static final int SNAP_ALL = 31;
 
-    private int snap_what;
-    private float touch_slop;
+    private final int snap_what;
+    private final float touch_slop;
+    private final ItemView my_item_view;
     public float min_dx = Float.MAX_VALUE;
     public float min_dy = Float.MAX_VALUE;
     public float anchor_x = Float.MAX_VALUE;
     public float anchor_y = Float.MAX_VALUE;
+    public ItemLayout item_layout;
     private ArrayList<ItemView> snapped_items;
     private ArrayList<RectF> snapped_bounds;
-    private ItemView my_item_view;
-    public ItemLayout item_layout;
 
     public SnappingContext(ItemView my_item_view, float touch_slop, int snap_what) {
         this.my_item_view = my_item_view;
@@ -67,7 +67,7 @@ public class SnappingContext {
     }
 
     public void stop() {
-        for(ItemView i : snapped_items) {
+        for (ItemView i : snapped_items) {
             i.setFocused(false);
         }
         my_item_view.setFocused(false);
@@ -79,7 +79,7 @@ public class SnappingContext {
     public void computeSnaps(Matrix item_transform) {
         Rect hr = new Rect();
         item_layout.getHitRect(hr);
-        RectF screen_bounds=new RectF(hr);
+        RectF screen_bounds = new RectF(hr);
 
         // compute corners and center of the moving item
         RectF bounds_from = new RectF();
@@ -87,7 +87,7 @@ public class SnappingContext {
 
         computeItemViewSnapBounds(my_item_view, item_transform, bounds_from);
 
-        for(ItemView i : snapped_items) {
+        for (ItemView i : snapped_items) {
             i.setFocused(false);
         }
         my_item_view.setFocused(false);
@@ -100,9 +100,9 @@ public class SnappingContext {
         snapped_bounds.clear();
 
         // first pass to compute the minimum distance
-        for(int n=item_layout.getChildCount()-1; n>=0; n--) {
+        for (int n = item_layout.getChildCount() - 1; n >= 0; n--) {
             View v = item_layout.getChildAt(n);
-            if(v instanceof ItemView) {
+            if (v instanceof ItemView) {
                 ItemView i = (ItemView) v;
                 if (i.isSelected() || i == my_item_view) continue;
 
@@ -117,9 +117,9 @@ public class SnappingContext {
         }
 
         // second pass to find item snapping with the minimum distance
-        for(int n=item_layout.getChildCount()-1; n>=0; n--) {
+        for (int n = item_layout.getChildCount() - 1; n >= 0; n--) {
             View v = item_layout.getChildAt(n);
-            if(v instanceof ItemView) {
+            if (v instanceof ItemView) {
                 ItemView i = (ItemView) v;
                 if (i.isSelected() || i == my_item_view) continue;
 
@@ -136,7 +136,7 @@ public class SnappingContext {
             }
         }
 
-        for(ItemView i : snapped_items) {
+        for (ItemView i : snapped_items) {
             i.setFocused(true);
         }
     }
@@ -144,7 +144,7 @@ public class SnappingContext {
     public void applySnaps(Matrix item_transform) {
         item_layout.setSnappingData(anchor_x, anchor_y, snapped_bounds);
 
-        if(snapped_bounds.size() > 0) {
+        if (snapped_bounds.size() > 0) {
             RectF bounds_to = new RectF();
             computeItemViewSnapBounds(my_item_view, item_transform, bounds_to);
             snapped_bounds.add(bounds_to);
@@ -156,7 +156,7 @@ public class SnappingContext {
         Item item = itemView.getItem();
         float cw = item_layout.getCellWidth();
         float ch = item_layout.getCellHeight();
-        if(item.getItemConfig().onGrid) {
+        if (item.getItemConfig().onGrid) {
             outBounds.set(item.getCell());
             outBounds.left *= cw;
             outBounds.right *= cw;
@@ -166,34 +166,34 @@ public class SnappingContext {
             outBounds.set(0, 0, item.getViewWidth(), item.getViewHeight());
             itemTransform.mapRect(outBounds);
         }
-        Matrix t=item_layout.getTransformForItemView(itemView);
-        if(t!=null) {
+        Matrix t = item_layout.getTransformForItemView(itemView);
+        if (t != null) {
             t.mapRect(outBounds);
         }
-        if(item.getClass() == StopPoint.class) {
-            outBounds.offset(-outBounds.width()/2, -outBounds.height()/2);
+        if (item.getClass() == StopPoint.class) {
+            outBounds.offset(-outBounds.width() / 2, -outBounds.height() / 2);
         }
     }
 
     private boolean checkSnap(RectF from, RectF to) {
         boolean snap = false;
-        if((snap_what&SNAP_LEFT)!=0) {
+        if ((snap_what & SNAP_LEFT) != 0) {
             snap |= doesSnapX(from.left, to.left);
             snap |= doesSnapX(from.left, to.right);
         }
-        if((snap_what&SNAP_RIGHT)!=0) {
+        if ((snap_what & SNAP_RIGHT) != 0) {
             snap |= doesSnapX(from.right, to.right);
             snap |= doesSnapX(from.right, to.left);
         }
-        if((snap_what&SNAP_CENTER)!=0) {
+        if ((snap_what & SNAP_CENTER) != 0) {
             snap |= doesSnapX(from.centerX(), to.centerX());
             snap |= doesSnapY(from.centerY(), to.centerY());
         }
-        if((snap_what&SNAP_TOP)!=0) {
+        if ((snap_what & SNAP_TOP) != 0) {
             snap |= doesSnapY(from.top, to.top);
             snap |= doesSnapY(from.top, to.bottom);
         }
-        if((snap_what&SNAP_BOTTOM)!=0) {
+        if ((snap_what & SNAP_BOTTOM) != 0) {
             snap |= doesSnapY(from.bottom, to.bottom);
             snap |= doesSnapY(from.bottom, to.top);
         }
@@ -202,9 +202,9 @@ public class SnappingContext {
     }
 
     private boolean doesSnapX(float from, float to) {
-        float diff = to-from;
+        float diff = to - from;
         float abs_diff = Math.abs(diff);
-        if(abs_diff<touch_slop && abs_diff<=Math.abs(min_dx)) {
+        if (abs_diff < touch_slop && abs_diff <= Math.abs(min_dx)) {
             min_dx = diff;
             anchor_x = to;
             return true;
@@ -214,9 +214,9 @@ public class SnappingContext {
     }
 
     private boolean doesSnapY(float from, float to) {
-        float diff = to-from;
+        float diff = to - from;
         float abs_diff = Math.abs(diff);
-        if(abs_diff<touch_slop && abs_diff<=Math.abs(min_dy)) {
+        if (abs_diff < touch_slop && abs_diff <= Math.abs(min_dy)) {
             min_dy = diff;
             anchor_y = to;
             return true;

@@ -24,10 +24,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class PageProcessor {
-    private ComponentName drawer_from;
-    private ComponentName drawer_to;
-    private String pkg_name_from;
-    private String pkg_name_to;
+    private final ComponentName drawer_from;
+    private final ComponentName drawer_to;
+    private final String pkg_name_from;
+    private final String pkg_name_to;
 
     private boolean do_scale;
     private float sx;
@@ -39,7 +39,7 @@ public class PageProcessor {
 //    private int to_screen_width;
 //    private int to_screen_height;
 //    private int to_sb_height;
-    
+
     private boolean enforce_holo;
     private boolean process_global_config;
 
@@ -47,8 +47,8 @@ public class PageProcessor {
     private SparseIntArray translated_script_ids;
 
     public PageProcessor() {
-        ComponentName ll_app_drawer = new ComponentName(LLApp.LL_PKG_NAME, LLApp.LL_PKG_NAME+".activities.AppDrawer");
-        ComponentName llx_app_drawer = new ComponentName(LLApp.LLX_PKG_NAME, LLApp.LLX_PKG_NAME+".activities.AppDrawerX");
+        ComponentName ll_app_drawer = new ComponentName(LLApp.LL_PKG_NAME, LLApp.LL_PKG_NAME + ".activities.AppDrawer");
+        ComponentName llx_app_drawer = new ComponentName(LLApp.LLX_PKG_NAME, LLApp.LLX_PKG_NAME + ".activities.AppDrawerX");
 
         String my_pkg_name = LLApp.get().getPackageName();
         boolean is_llx = my_pkg_name.equals(LLApp.LLX_PKG_NAME);
@@ -81,25 +81,25 @@ public class PageProcessor {
 //        this.to_screen_width = to_screen_width;
 //        this.to_screen_height = to_screen_height;
 //        this.to_sb_height = to_sb_height;
-        if(to_screen_width != 0) {
+        if (to_screen_width != 0) {
             do_scale = true;
-            sx = to_screen_width / (float)from_screen_width;
-            sy = (to_screen_height - to_sb_height) / (float)(from_screen_height - from_sb_height);
+            sx = to_screen_width / (float) from_screen_width;
+            sy = (to_screen_height - to_sb_height) / (float) (from_screen_height - from_sb_height);
         }
     }
-    
+
     public void setEnforceHoloSelection(boolean enforce_holo) {
         this.enforce_holo = enforce_holo;
     }
 
     public void postProcessPages(ArrayList<Page> pages) {
-        for(Page page : pages) {
+        for (Page page : pages) {
             postProcessPage(page);
             page.setModified();
             page.save();
         }
 
-        if(process_global_config && pages.size() > 0) {
+        if (process_global_config && pages.size() > 0) {
             // TODO see whether this can be replaced with direct access of engine.getGlobalConfigFile()
             File base_dir = pages.get(0).getEngine().getBaseDir();
             File global_config_file = FileUtils.getGlobalConfigFile(base_dir);
@@ -133,18 +133,18 @@ public class PageProcessor {
 
                 // check that the home page is valid, otherwise fix it
                 boolean valid = false;
-                for(Page page : pages) {
-                    if(page.id == gc.homeScreen) {
+                for (Page page : pages) {
+                    if (page.id == gc.homeScreen) {
                         valid = true;
                         break;
                     }
                 }
-                if(!valid) {
+                if (!valid) {
                     // use the first dashboard page
-                    if(pages.size() > 0) {
-                        for(Page page : pages) {
+                    if (pages.size() > 0) {
+                        for (Page page : pages) {
                             int id = page.id;
-                            if(Page.isDashboard(id)) {
+                            if (Page.isDashboard(id)) {
                                 gc.homeScreen = id;
                                 break;
                             }
@@ -163,7 +163,7 @@ public class PageProcessor {
             }
         }
     }
-    
+
     public void copyAndTranslatePage(Page pageFrom, LightningEngine engineTo, boolean keepAppWidgetId) {
         byte[] buffer = new byte[1024];
 
@@ -173,7 +173,7 @@ public class PageProcessor {
         File baseDirFrom = pageFrom.getEngine().getBaseDir();
         File baseDirTo = engineTo.getBaseDir();
         Page p = engineTo.getPageManager().getPage(new_page_id);
-        if(p != null) {
+        if (p != null) {
             throw new RuntimeException("Attempt to overwrite an existing page during import");
         } else {
             // make sure that the place is clean
@@ -190,7 +190,7 @@ public class PageProcessor {
         pageTo.config.copyFrom(pageFrom.config);
         pageTo.items = new ArrayList<>(pageFrom.items.size());
 
-        for(Item old_item : pageFrom.items) {
+        for (Item old_item : pageFrom.items) {
             int old_item_id = old_item.getId();
             int new_item_id = Page.composeItemId(new_page_id, Page.getBaseItemId(old_item_id));
 
@@ -200,7 +200,7 @@ public class PageProcessor {
             try {
                 JSONObject json = old_item.toJSONObject();
                 json.put(JsonFields.ITEM_ID, new_item_id);
-                if(!keepAppWidgetId && old_item instanceof Widget) {
+                if (!keepAppWidgetId && old_item instanceof Widget) {
                     json.put(JsonFields.WIDGET_APP_WIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
                 }
                 new_item = Item.loadItemFromJSONObject(pageTo, json);
@@ -209,8 +209,8 @@ public class PageProcessor {
                 new_item = null;
             }
 
-            if(new_item instanceof Folder) {
-                Folder f = (Folder)new_item;
+            if (new_item instanceof Folder) {
+                Folder f = (Folder) new_item;
                 f.setFolderPageId(translated_page_ids.get(f.getFolderPageId()));
             }
 
@@ -237,14 +237,14 @@ public class PageProcessor {
 
         PageConfig c = page.config;
 
-        if(do_scale) {
+        if (do_scale) {
             c.gridLColumnSize *= sx;
             c.gridPColumnSize *= sx;
             c.gridLRowSize *= sy;
             c.gridPRowSize *= sy;
         }
 
-        if(enforce_holo && c.defaultItemConfig.selectionEffect == ItemConfig.SelectionEffect.MATERIAL) {
+        if (enforce_holo && c.defaultItemConfig.selectionEffect == ItemConfig.SelectionEffect.MATERIAL) {
             c.defaultItemConfig.selectionEffect = ItemConfig.SelectionEffect.HOLO;
         }
 
@@ -290,7 +290,7 @@ public class PageProcessor {
         postProcessEventAction(pic.menu);
 
         FolderConfig pfc = c.defaultFolderConfig;
-        if(do_scale && (pfc.wAH == Box.AlignH.CUSTOM || pfc.wAV == Box.AlignV.CUSTOM || pfc.wW!=0 || pfc.wH!=0)) {
+        if (do_scale && (pfc.wAH == Box.AlignH.CUSTOM || pfc.wAV == Box.AlignV.CUSTOM || pfc.wW != 0 || pfc.wH != 0)) {
             pfc.wX *= sx;
             pfc.wY *= sy;
             pfc.wW *= sx;
@@ -298,9 +298,9 @@ public class PageProcessor {
         }
 
         ArrayList<Item> items = page.items;
-        for(Item i : items) {
+        for (Item i : items) {
             ItemConfig ic = i.getItemConfig();
-            if(ic != pic) {
+            if (ic != pic) {
                 postProcessEventAction(ic.tap);
                 postProcessEventAction(ic.longTap);
                 postProcessEventAction(ic.swipeLeft);
@@ -313,8 +313,8 @@ public class PageProcessor {
                 postProcessEventAction(ic.menu);
             }
 
-            if(!ic.onGrid && do_scale) {
-                i.setViewWidth((int)(i.getViewWidth() * sx));
+            if (!ic.onGrid && do_scale) {
+                i.setViewWidth((int) (i.getViewWidth() * sx));
                 i.setViewHeight((int) (i.getViewHeight() * sy));
                 Matrix m = i.getTransform();
                 m.getValues(matrix_values);
@@ -325,24 +325,24 @@ public class PageProcessor {
             }
 
             Class<?> cls = i.getClass();
-            if(cls == StopPoint.class) {
-                postProcessEventAction(((StopPoint)i).getReachedAction());
-            } else if(cls == CustomView.class) {
+            if (cls == StopPoint.class) {
+                postProcessEventAction(((StopPoint) i).getReachedAction());
+            } else if (cls == CustomView.class) {
                 CustomView customView = (CustomView) i;
                 String newIdData = translateScriptAction(customView.onCreate);
-                if(newIdData != null) customView.onCreate = newIdData;
+                if (newIdData != null) customView.onCreate = newIdData;
                 newIdData = translateScriptAction(customView.onDestroy);
-                if(newIdData != null) customView.onDestroy = newIdData;
+                if (newIdData != null) customView.onDestroy = newIdData;
             }
-            if(cls == Shortcut.class && page.id != Page.APP_DRAWER_PAGE) {
-                Shortcut s = (Shortcut)i;
+            if (cls == Shortcut.class && page.id != Page.APP_DRAWER_PAGE) {
+                Shortcut s = (Shortcut) i;
                 Intent intent = s.getIntent();
                 postProcessIntent(intent);
-            } else if(cls == Folder.class && do_scale) {
-                Folder f = (Folder)i;
+            } else if (cls == Folder.class && do_scale) {
+                Folder f = (Folder) i;
                 FolderConfig fc = f.getFolderConfig();
-                if(fc != pfc) {
-                    if(fc.wAH == Box.AlignH.CUSTOM || fc.wAV == Box.AlignV.CUSTOM || fc.wW!=0 || fc.wH!=0) {
+                if (fc != pfc) {
+                    if (fc.wAH == Box.AlignH.CUSTOM || fc.wAV == Box.AlignV.CUSTOM || fc.wW != 0 || fc.wH != 0) {
                         fc.wX *= sx;
                         fc.wY *= sy;
                         fc.wW *= sx;
@@ -354,7 +354,7 @@ public class PageProcessor {
     }
 
     private String translateScriptAction(String data) {
-        if(data == null || translated_script_ids == null) {
+        if (data == null || translated_script_ids == null) {
             return null;
         }
 
@@ -363,22 +363,22 @@ public class PageProcessor {
             int oldScriptId = id_data.first;
             int newScriptId = translated_script_ids.get(oldScriptId);
             return Script.encodeIdAndData(newScriptId, id_data.second);
-        } catch(NumberFormatException e) {
+        } catch (NumberFormatException e) {
             // pass
             return null;
         }
     }
 
     private String postProcessData(int action, String data) {
-        if(action == GlobalConfig.OPEN_FOLDER && translated_page_ids != null) {
+        if (action == GlobalConfig.OPEN_FOLDER && translated_page_ids != null) {
             try {
                 int old_folder_page_id = Integer.parseInt(data);
                 int new_folder_page_id = translated_page_ids.get(old_folder_page_id);
                 return String.valueOf(new_folder_page_id);
-            } catch(NumberFormatException e) {
+            } catch (NumberFormatException e) {
                 // pass
             }
-        } else if(action == GlobalConfig.RUN_SCRIPT && translated_script_ids != null) {
+        } else if (action == GlobalConfig.RUN_SCRIPT && translated_script_ids != null) {
             return translateScriptAction(data);
         }
 
@@ -389,25 +389,25 @@ public class PageProcessor {
         boolean modified = false;
 
         ComponentName cn = intent.getComponent();
-        if(cn != null) {
-            if(cn.equals(drawer_from)) {
+        if (cn != null) {
+            if (cn.equals(drawer_from)) {
                 intent.setComponent(drawer_to);
                 modified = true;
-            } else if(cn.getPackageName().equals(pkg_name_from)) {
+            } else if (cn.getPackageName().equals(pkg_name_from)) {
                 intent.setComponent(new ComponentName(pkg_name_to, cn.getClassName()));
                 modified = true;
             }
 
             cn = intent.getComponent();
-            if(cn.getPackageName().equals(pkg_name_to)) {
-                if(intent.hasExtra(LightningIntent.INTENT_EXTRA_DESKTOP) && translated_page_ids != null) {
+            if (cn.getPackageName().equals(pkg_name_to)) {
+                if (intent.hasExtra(LightningIntent.INTENT_EXTRA_DESKTOP) && translated_page_ids != null) {
                     int old_bookmark_page = intent.getIntExtra(LightningIntent.INTENT_EXTRA_DESKTOP, Page.NONE);
                     intent.putExtra(LightningIntent.INTENT_EXTRA_DESKTOP, translated_page_ids.get(old_bookmark_page));
                     modified = true;
                 } else {
                     EventAction ea = Utils.decodeEventActionFromLightningIntent(intent);
-                    if(ea != null) {
-                        if(postProcessEventAction(ea)) {
+                    if (ea != null) {
+                        if (postProcessEventAction(ea)) {
                             intent.removeExtra(LightningIntent.INTENT_EXTRA_ACTION);
                             intent.removeExtra(LightningIntent.INTENT_EXTRA_DATA);
                             intent.putExtra(LightningIntent.INTENT_EXTRA_EVENT_ACTION, JsonLoader.toJSONObject(ea, null).toString());
@@ -416,10 +416,10 @@ public class PageProcessor {
                     }
                 }
 
-                if(do_scale) {
-                    if(intent.hasExtra(LightningIntent.INTENT_EXTRA_X)) {
+                if (do_scale) {
+                    if (intent.hasExtra(LightningIntent.INTENT_EXTRA_X)) {
                         boolean absolute = intent.getBooleanExtra(LightningIntent.INTENT_EXTRA_ABSOLUTE, true);
-                        if(absolute) {
+                        if (absolute) {
                             intent.putExtra(LightningIntent.INTENT_EXTRA_X, intent.getFloatExtra(LightningIntent.INTENT_EXTRA_X, 0) * sx);
                             intent.putExtra(LightningIntent.INTENT_EXTRA_Y, intent.getFloatExtra(LightningIntent.INTENT_EXTRA_Y, 0) * sy);
                             modified = true;
@@ -434,11 +434,11 @@ public class PageProcessor {
 
     private boolean postProcessEventAction(EventAction ea) {
         boolean res = false;
-        if(ea.action == GlobalConfig.LAUNCH_APP || ea.action == GlobalConfig.LAUNCH_SHORTCUT || ea.action == GlobalConfig.GO_DESKTOP_POSITION) {
+        if (ea.action == GlobalConfig.LAUNCH_APP || ea.action == GlobalConfig.LAUNCH_SHORTCUT || ea.action == GlobalConfig.GO_DESKTOP_POSITION) {
             try {
                 Intent intent = Intent.parseUri(ea.data, 0);
                 boolean modified = postProcessIntent(intent);
-                if(modified) {
+                if (modified) {
                     ea.data = intent.toUri(0);
                 }
                 res = modified;
@@ -447,13 +447,13 @@ public class PageProcessor {
             }
         } else {
             String new_data = postProcessData(ea.action, ea.data);
-            if(new_data != null) {
+            if (new_data != null) {
                 ea.data = new_data;
                 res = true;
             }
         }
 
-        if(ea.next != null) {
+        if (ea.next != null) {
             return postProcessEventAction(ea.next) || res;
         } else {
             return res;

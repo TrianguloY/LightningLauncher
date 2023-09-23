@@ -47,14 +47,48 @@ import net.pierrox.lightning_launcher.util.SetVariableDialog;
 import net.pierrox.lightning_launcher_extreme.R;
 
 public class Shortcuts extends ResourceWrapperListActivity {
-	private static final String INDENT = "    ";
+    private static final String INDENT = "    ";
 
-	private String[] mItems;
-	private boolean mIsForTaskerScript;
-	private boolean mIsForTaskerVariable;
+    private String[] mItems;
+    private boolean mIsForTaskerScript;
+    private boolean mIsForTaskerVariable;
+
+    public static Intent getShortcutForIntent(Activity activity, String name, Intent intent) {
+        if (forTasker(activity)) {
+            Intent result = new Intent();
+
+            Bundle bundle = new Bundle();
+            bundle.putString("i", intent.toUri(0));
+            result.putExtra(com.twofortyfouram.locale.Intent.EXTRA_BUNDLE, bundle);
+            result.putExtra(com.twofortyfouram.locale.Intent.EXTRA_STRING_BLURB, name);
+            return result;
+        } else {
+            int p;
+            String path = intent.getStringExtra(Customize.INTENT_EXTRA_PAGE_PATH);
+            if (path == null) {
+                p = intent.getIntExtra(Customize.INTENT_EXTRA_PAGE_ID, Page.FIRST_DASHBOARD_PAGE);
+            } else {
+                p = new ContainerPath(path).getLast();
+            }
+            int icon = p == Page.APP_DRAWER_PAGE ? R.drawable.all_apps : R.drawable.icon;
+            Parcelable icon_resource = Intent.ShortcutIconResource.fromContext(activity, icon);
+
+            Intent shortcut = new Intent();
+            shortcut.putExtra(Intent.EXTRA_SHORTCUT_INTENT, intent);
+            shortcut.putExtra(Intent.EXTRA_SHORTCUT_NAME, name);
+            shortcut.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon_resource);
+
+            return shortcut;
+        }
+    }
+
+    private static boolean forTasker(Activity activity) {
+        final String action = activity.getIntent().getAction();
+        return action != null && action.equals(com.twofortyfouram.locale.Intent.ACTION_EDIT_SETTING);
+    }
 
     @Override
-	protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         final Intent intent = getIntent();
         String className = intent.getComponent().getClassName();
         mIsForTaskerScript = className.endsWith("TS");
@@ -62,14 +96,12 @@ public class Shortcuts extends ResourceWrapperListActivity {
 
         Utils.setTheme(this, mIsForTaskerScript ? Utils.APP_THEME_TRANSLUCENT : Utils.APP_THEME);
 
-		super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);
 
-        if(mIsForTaskerScript) {
+        if (mIsForTaskerScript) {
             pickScriptAndCreateShortcut();
-            return;
-        } else if(mIsForTaskerVariable) {
+        } else if (mIsForTaskerVariable) {
             pickVariableAndCreateShortcut();
-            return;
         } else {
             mItems = new String[]{
                     getString(R.string.settings),                            // 0
@@ -110,11 +142,11 @@ public class Shortcuts extends ResourceWrapperListActivity {
         }
     }
 
-	@Override
-	protected void onListItemClick(ListView l, View v, int position, long id) {
-		Intent intent;
-		String name;
-		
+    @Override
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+        Intent intent;
+        String name;
+
         if (position == 29) {
             intent = new Intent(this, ScreenManager.class);
             intent.setAction(Intent.ACTION_EDIT);
@@ -195,38 +227,9 @@ public class Shortcuts extends ResourceWrapperListActivity {
             } else if (position >= 17 && position < 29) {
                 intent.putExtra(Customize.INTENT_EXTRA_PAGE_ID, new ContainerPath(Page.APP_DRAWER_PAGE).toString());
             }
-		}
-		
-		createShortcutForIntent(name, intent);
-	}
-
-    public static Intent getShortcutForIntent(Activity activity, String name, Intent intent) {
-        if(forTasker(activity)) {
-            Intent result = new Intent();
-
-            Bundle bundle = new Bundle();
-            bundle.putString("i", intent.toUri(0));
-            result.putExtra(com.twofortyfouram.locale.Intent.EXTRA_BUNDLE, bundle);
-            result.putExtra(com.twofortyfouram.locale.Intent.EXTRA_STRING_BLURB, name);
-            return result;
-        } else {
-            int p;
-            String path = intent.getStringExtra(Customize.INTENT_EXTRA_PAGE_PATH);
-            if(path == null) {
-                p = intent.getIntExtra(Customize.INTENT_EXTRA_PAGE_ID, Page.FIRST_DASHBOARD_PAGE);
-            } else {
-                p = new ContainerPath(path).getLast();
-            }
-            int icon = p == Page.APP_DRAWER_PAGE ? R.drawable.all_apps : R.drawable.icon;
-            Parcelable icon_resource = Intent.ShortcutIconResource.fromContext(activity, icon);
-
-            Intent shortcut = new Intent();
-            shortcut.putExtra(Intent.EXTRA_SHORTCUT_INTENT, intent);
-            shortcut.putExtra(Intent.EXTRA_SHORTCUT_NAME, name);
-            shortcut.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon_resource);
-
-            return shortcut;
         }
+
+        createShortcutForIntent(name, intent);
     }
 
     private void createShortcutForIntent(String name, Intent intent) {
@@ -239,7 +242,7 @@ public class Shortcuts extends ResourceWrapperListActivity {
         Script script = LLApp.get().getAppEngine().getScriptManager().getOrLoadScript(id);
         String extra_data = Script.encodeIdAndData(id, data);
 
-        if(forTasker(this)) {
+        if (forTasker(this)) {
             // for scripts triggered by Tasker, pass the data as a string extra otherwise '%' is escaped in Intent.toUri
             Intent result = new Intent();
 
@@ -252,16 +255,16 @@ public class Shortcuts extends ResourceWrapperListActivity {
             }
             result.putExtra(com.twofortyfouram.locale.Intent.EXTRA_BUNDLE, bundle);
             String data_e;
-            if(data == null) {
+            if (data == null) {
                 data_e = "";
             } else {
-                if(data.length()>30) {
-                    data_e = data.substring(0, 30)+"…";
+                if (data.length() > 30) {
+                    data_e = data.substring(0, 30) + "…";
                 } else {
                     data_e = data;
                 }
             }
-            result.putExtra(com.twofortyfouram.locale.Intent.EXTRA_STRING_BLURB, script.name+data_e);
+            result.putExtra(com.twofortyfouram.locale.Intent.EXTRA_STRING_BLURB, script.name + data_e);
             setResult(RESULT_OK, result);
         } else {
             Intent intent = new Intent(Shortcuts.this, Dashboard.class);
@@ -282,14 +285,14 @@ public class Shortcuts extends ResourceWrapperListActivity {
             public void onScriptPicked(String id_data, int target) {
                 final Pair<Integer, String> pair = Script.decodeIdAndData(id_data);
                 createScriptShortcut(pair.first, pair.second, target);
-                if(mIsForTaskerScript) {
+                if (mIsForTaskerScript) {
                     finish();
                 }
             }
 
             @Override
             public void onScriptPickerCanceled() {
-                if(mIsForTaskerScript) {
+                if (mIsForTaskerScript) {
                     finish();
                 }
             }
@@ -307,7 +310,7 @@ public class Shortcuts extends ResourceWrapperListActivity {
 
                 Bundle bundle = new Bundle();
                 bundle.putInt(LightningIntent.INTENT_EXTRA_ACTION, GlobalConfig.SET_VARIABLE);
-                bundle.putString(LightningIntent.INTENT_EXTRA_DATA,  variable.encode());
+                bundle.putString(LightningIntent.INTENT_EXTRA_DATA, variable.encode());
                 if (TaskerPlugin.Setting.hostSupportsOnFireVariableReplacement(Shortcuts.this)) {
                     TaskerPlugin.Setting.setVariableReplaceKeys(bundle, new String[]{LightningIntent.INTENT_EXTRA_DATA});
                 }
@@ -323,10 +326,5 @@ public class Shortcuts extends ResourceWrapperListActivity {
                 finish();
             }
         }).show();
-    }
-
-    private static boolean forTasker(Activity activity) {
-        final String action = activity.getIntent().getAction();
-        return action != null && action.equals(com.twofortyfouram.locale.Intent.ACTION_EDIT_SETTING);
     }
 }

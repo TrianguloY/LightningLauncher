@@ -12,11 +12,11 @@ import java.io.File;
  * A kind of image which can play an animation (often loaded from GIF files).
  *
  * <b>Note</b>: as of today backgrounds and icon layers do not support animations, only the first frame will be displayed.
- *
+ * <p>
  * An instance of this object can be created with {@link Image#createAnimation(int, int, int, int, int)}; or retrieved with any function that returns an {@link Image} when that image is an ImageAnimation.
  */
 public class ImageAnimation extends Image {
-    private SharedAsyncGraphicsDrawable mDrawable;
+    private final SharedAsyncGraphicsDrawable mDrawable;
 
     /**
      * @hide
@@ -78,6 +78,18 @@ public class ImageAnimation extends Image {
     }
 
     /**
+     * Change the number of frames for this animation.
+     * When increasing the number of frames, existing frames are kept while new one are created fully transparent, with a default delay of 100ms. Decreasing the number of frames will also keep frames whose index is below the count, other will be freed.
+     * Warning: this will ensure that <i>count</i> images are allocated, this is a costly operation.
+     *
+     * @param count number of frames
+     */
+    public void setFrameCount(int count) {
+        mDrawable.setAnimationFrameCount(count);
+        setModified();
+    }
+
+    /**
      * Return the image at a given index.
      * If this image is modified using {@link ImageBitmap#draw()}, call {@link ImageBitmap#update()} to validate changes.
      *
@@ -106,18 +118,6 @@ public class ImageAnimation extends Image {
     }
 
     /**
-     * Change the number of frames for this animation.
-     * When increasing the number of frames, existing frames are kept while new one are created fully transparent, with a default delay of 100ms. Decreasing the number of frames will also keep frames whose index is below the count, other will be freed.
-     * Warning: this will ensure that <i>count</i> images are allocated, this is a costly operation.
-     *
-     * @param count number of frames
-     */
-    public void setFrameCount(int count) {
-        mDrawable.setAnimationFrameCount(count);
-        setModified();
-    }
-
-    /**
      * Return the maximal number of loop set (can be modified with #start).
      */
     public int getLoopCount() {
@@ -126,12 +126,14 @@ public class ImageAnimation extends Image {
 
     /**
      * Set the maximum number of times to play the animation.
+     *
      * @param count number of loops to play, use 0 for infinite
      */
     public void setLoopCount(int count) {
         mDrawable.setAnimationLoopCount(count);
         setModified();
     }
+
     /**
      * Return the sum of all frames duration.
      */
@@ -144,6 +146,7 @@ public class ImageAnimation extends Image {
      * Save the animation to file using the GIF format.
      * Animated GIFs support a maximum of 256 colors and no transluceny (only binary tranparency): saved animations may appear differently when reloaded.
      * This is an experimental and sub-optimal feature.
+     *
      * @param path where to store the file
      * @return true if the operation succeeded
      */

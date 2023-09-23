@@ -37,11 +37,15 @@ import com.faendir.rhino_android.RhinoAndroidHelper;
 import net.dinglisch.android.tasker.ActionCodes;
 import net.dinglisch.android.tasker.TaskerIntent;
 import net.margaritov.preference.colorpicker.ColorPickerDialog;
-import net.pierrox.lightning_launcher.engine.LightningEngine;
+import net.pierrox.android.lsvg.SvgDrawable;
 import net.pierrox.lightning_launcher.LLApp;
+import net.pierrox.lightning_launcher.R;
 import net.pierrox.lightning_launcher.activities.MultiPurposeTransparentActivity;
 import net.pierrox.lightning_launcher.data.Utils;
+import net.pierrox.lightning_launcher.engine.LightningEngine;
 import net.pierrox.lightning_launcher.engine.Screen;
+import net.pierrox.lightning_launcher.engine.variable.Value;
+import net.pierrox.lightning_launcher.engine.variable.VariableManager;
 import net.pierrox.lightning_launcher.prefs.DialogPreferenceSlider;
 import net.pierrox.lightning_launcher.script.api.Android;
 import net.pierrox.lightning_launcher.script.api.Binding;
@@ -57,13 +61,9 @@ import net.pierrox.lightning_launcher.script.api.Menu;
 import net.pierrox.lightning_launcher.script.api.Property;
 import net.pierrox.lightning_launcher.script.api.RectL;
 import net.pierrox.lightning_launcher.util.AnimationDecoder;
-import net.pierrox.lightning_launcher.engine.variable.Value;
-import net.pierrox.lightning_launcher.engine.variable.VariableManager;
-import net.pierrox.lightning_launcher.R;
 import net.pierrox.lightning_launcher.views.Graphics;
 import net.pierrox.lightning_launcher.views.ItemLayout;
 import net.pierrox.lightning_launcher.views.SharedAsyncGraphicsDrawable;
-import net.pierrox.android.lsvg.SvgDrawable;
 import net.pierrox.lightning_launcher.views.item.ItemView;
 
 import org.mozilla.javascript.Callable;
@@ -80,30 +80,26 @@ import java.io.File;
 import java.util.HashMap;
 
 public class ScriptExecutor {
-    private LightningEngine mEngine;
-    private Handler mHandler;
-
-    private Lightning mScriptLightning;
-    private LL mScriptLL;
-    private Android mScriptAndroid;
+    public static final String PROPERTY_EVENT_SCREEN = "ev_sc";
+    // TODO remove this hack, was needed to get a context while throwing execution in callbacks
+    private static ScriptExecutor sCurrentScriptExecutor;
+    private final LightningEngine mEngine;
+    private final Handler mHandler;
+    private final Lightning mScriptLightning;
+    private final LL mScriptLL;
+    private final Android mScriptAndroid;
+    private final StringBuilder mScriptBuilder = new StringBuilder();
+    private final HashMap<Integer, Runnable> mScriptTimeouts = new HashMap<>();
+    org.mozilla.javascript.Context mCurrentContext;
     private Scriptable mScriptScope;
-
     private Script mCurrentScript;
     private Script mPausedScript;
     private boolean mCurrentScriptDialog;
-    private StringBuilder mScriptBuilder = new StringBuilder();
-    private HashMap<Integer,Runnable> mScriptTimeouts = new HashMap<>();
-
     private ContinuationPending mPickImageContinuation;
     private int mPickImageMaxPixels;
-
     private ContinuationPending mCropImageContinuation;
-
-    // TODO remove this hack, was needed to get a context while throwing execution in callbacks
-    private static ScriptExecutor sCurrentScriptExecutor;
-    public static ScriptExecutor getCurrent() {
-        return sCurrentScriptExecutor;
-    }
+    private Script mRecursionScript;
+    private ItemView mRecursionItemView;
 
     public ScriptExecutor(LightningEngine engine) {
         mEngine = engine;
@@ -114,12 +110,16 @@ public class ScriptExecutor {
         mScriptAndroid = new Android(engine.getContext());
     }
 
+    public static ScriptExecutor getCurrent() {
+        return sCurrentScriptExecutor;
+    }
+
     public LightningEngine getEngine() {
         return mEngine;
     }
 
     public Scriptable prepareScriptScope() {
-        if(mScriptScope == null) {
+        if (mScriptScope == null) {
             org.mozilla.javascript.Context cx = RhinoAndroidHelper.prepareContext();
             Scriptable root_scope = cx.initStandardObjects();
             cx.setOptimizationLevel(-1);
@@ -134,7 +134,7 @@ public class ScriptExecutor {
             ScriptableObject.putProperty(mScriptScope, "self", mScriptScope);
 
             ScriptableObject.defineProperty(mScriptScope, "animate", new NativeFunction() {
-                private String[] mParamOrVarNames = new String[]{"var", "duration", "type"};
+                private final String[] mParamOrVarNames = new String[]{"var", "duration", "type"};
 
                 @Override
                 protected int getLanguageVersion() {
@@ -239,7 +239,7 @@ public class ScriptExecutor {
     }
 
     public void terminate() {
-        for(Runnable timeout : mScriptTimeouts.values()) {
+        for (Runnable timeout : mScriptTimeouts.values()) {
             mHandler.removeCallbacks(timeout);
         }
         mScriptTimeouts.clear();
@@ -262,7 +262,7 @@ public class ScriptExecutor {
         try {
             Class<?> cls = Class.forName(name);
             String simpleName = cls.getSimpleName();
-            if(mScriptScope.has(simpleName, null)) {
+            if (mScriptScope.has(simpleName, null)) {
                 return false;
             } else {
                 ScriptableObject.defineProperty(mScriptScope, simpleName, new NativeJavaClass(mScriptScope, cls), 0);
@@ -283,10 +283,10 @@ public class ScriptExecutor {
                 org.mozilla.javascript.Context cx = RhinoAndroidHelper.prepareContext();
                 try {
                     cx.callFunctionWithContinuations((Callable) function, mScriptScope, new Object[]{});
-                } catch(ContinuationPending cp) {
+                } catch (ContinuationPending cp) {
                     // will happen when displaying a popup
                     mPausedScript = mCurrentScript;
-                } catch(RhinoException e) {
+                } catch (RhinoException e) {
                     displayScriptError(e);
                 } finally {
                     // Exit from the context.
@@ -302,13 +302,13 @@ public class ScriptExecutor {
 
     public void clearTimeout(int id) {
         Runnable timeout = mScriptTimeouts.remove(id);
-        if(timeout != null) {
+        if (timeout != null) {
             mHandler.removeCallbacks(timeout);
         }
     }
 
     public void displayScriptError(RhinoException e) {
-        displayScriptError("At line "+e.lineNumber()+": "+e.details(), e.lineNumber());
+        displayScriptError("At line " + e.lineNumber() + ": " + e.details(), e.lineNumber());
         e.printStackTrace();
     }
 
@@ -316,9 +316,8 @@ public class ScriptExecutor {
         final Context context = mScriptLightning.getScriptScreen().getContext();
         final int script_id = mCurrentScript.id;
 
-        if(mCurrentScript.hasFlag(Script.FLAG_DISABLED) || mCurrentScriptDialog) {
-            return;
-        } else if(context instanceof Activity) {
+        if (mCurrentScript.hasFlag(Script.FLAG_DISABLED) || mCurrentScriptDialog) {
+        } else if (context instanceof Activity) {
 
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setTitle(mCurrentScript.name);
@@ -330,7 +329,7 @@ public class ScriptExecutor {
                 }
             });
             final LLApp app = LLApp.get();
-            if(app.hasScriptEditor()) {
+            if (app.hasScriptEditor()) {
                 builder.setNeutralButton(R.string.sc_view, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -364,7 +363,7 @@ public class ScriptExecutor {
 
     public boolean displayScriptDialog(String message, final String input, boolean has_cancel, final ContinuationPending pending) {
         final Context context = mScriptLightning.getScriptScreen().getContext();
-        if(mCurrentScript.hasFlag(Script.FLAG_DISABLED) || mCurrentScriptDialog || !(context instanceof Activity)) {
+        if (mCurrentScript.hasFlag(Script.FLAG_DISABLED) || mCurrentScriptDialog || !(context instanceof Activity)) {
             // need to execute this later so that the caller can finish its execution, and throw the ContinuationPending exception
             mHandler.post(new Runnable() {
                 @Override
@@ -377,11 +376,11 @@ public class ScriptExecutor {
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setTitle(mCurrentScript.name);
             View content = LayoutInflater.from(context).inflate(R.layout.dialog_script, null);
-            ((TextView)content.findViewById(R.id.msg)).setText(message);
-            final EditText input_text = (EditText) content.findViewById(R.id.input);
-            input_text.setVisibility(input==null ? View.GONE : View.VISIBLE);
+            ((TextView) content.findViewById(R.id.msg)).setText(message);
+            final EditText input_text = content.findViewById(R.id.input);
+            input_text.setVisibility(input == null ? View.GONE : View.VISIBLE);
 
-            if(input != null) {
+            if (input != null) {
                 input_text.setText(input);
                 input_text.setSelection(0, input.length());
             }
@@ -393,7 +392,7 @@ public class ScriptExecutor {
                     continuePendingContinuation(pending, input == null ? true : input_text.getText().toString());
                 }
             });
-            if(has_cancel) {
+            if (has_cancel) {
                 builder.setNeutralButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -470,23 +469,23 @@ public class ScriptExecutor {
     }
 
     public void setFileForPickImage(File image_file) {
-        if(image_file == null) {
+        if (image_file == null) {
             continuePendingContinuation(mPickImageContinuation, null);
             mPickImageContinuation = null;
         } else {
             Image image = null;
-            if(Utils.isGifFile(image_file)) {
+            if (Utils.isGifFile(image_file)) {
                 AnimationDecoder decoder = new AnimationDecoder();
-                if(decoder.read(image_file)) {
+                if (decoder.read(image_file)) {
                     SharedAsyncGraphicsDrawable sd = new SharedAsyncGraphicsDrawable(new Graphics(decoder, decoder.getWidth(), decoder.getHeight()), false);
                     image = new ImageAnimation(mScriptLightning, sd);
                 }
-            } else if(Utils.isSvgFile(image_file)) {
+            } else if (Utils.isSvgFile(image_file)) {
                 SvgDrawable svgDrawable = new SvgDrawable(image_file);
 //                SharedAsyncGraphicsDrawable sd = new SharedAsyncGraphicsDrawable(new Graphics(svgDrawable), false);
                 image = new ImageSvg(mScriptLightning, svgDrawable);
             }
-            if(image == null){
+            if (image == null) {
                 Bitmap bitmap = Utils.loadBitmap(image_file, mPickImageMaxPixels, 0, 0);
                 if (bitmap != null) {
                     byte[] chunk = bitmap.getNinePatchChunk();
@@ -506,7 +505,7 @@ public class ScriptExecutor {
     }
 
     public void setImageForCropImage(ImageBitmap image) {
-        if(image == null) {
+        if (image == null) {
             continuePendingContinuation(mCropImageContinuation, null);
             mCropImageContinuation = null;
         } else {
@@ -521,9 +520,9 @@ public class ScriptExecutor {
             try {
                 mCurrentScript = mPausedScript;
                 cx.resumeContinuation(pending.getContinuation(), mScriptScope, result);
-            } catch(ContinuationPending e) {
+            } catch (ContinuationPending e) {
                 mPausedScript = mCurrentScript;
-            } catch(RhinoException e) {
+            } catch (RhinoException e) {
                 displayScriptError(e);
             }
         } finally {
@@ -531,17 +530,11 @@ public class ScriptExecutor {
         }
     }
 
-    org.mozilla.javascript.Context mCurrentContext;
-
     public void throwError(String message) {
-        if(mCurrentContext != null) {
+        if (mCurrentContext != null) {
             throw ScriptRuntime.throwError(mCurrentContext, mScriptScope, message);
         }
     }
-
-    private Script mRecursionScript;
-    private ItemView mRecursionItemView;
-
 
     public void runScript(Screen screen, int id, String source, String data) {
         Script script = mEngine.getScriptManager().getOrLoadScript(id);
@@ -562,15 +555,14 @@ public class ScriptExecutor {
         runScript(screen, script, source, data, il, null);
     }
 
-    public static final String PROPERTY_EVENT_SCREEN = "ev_sc";
     public void runScript(Screen screen, Script script, String source, String data, ItemLayout il, ItemView itemView) {
-        if(!canRunScript(script)) {
+        if (!canRunScript(script)) {
             return;
         }
 
         mCurrentScript = script;
-        if(mCurrentScript != null && !mCurrentScript.hasFlag(Script.FLAG_DISABLED)) {
-            if(script == mRecursionScript && ((itemView ==null && mRecursionItemView ==null) || (itemView !=null && itemView.equals(mRecursionItemView)))) {
+        if (mCurrentScript != null && !mCurrentScript.hasFlag(Script.FLAG_DISABLED)) {
+            if (script == mRecursionScript && ((itemView == null && mRecursionItemView == null) || (itemView != null && itemView.equals(mRecursionItemView)))) {
 //                String details = "Recursion detected";
 //                if(item != null) {
 //                    details += ", item: "+item.formatForDisplay(true, 0);
@@ -604,7 +596,7 @@ public class ScriptExecutor {
             ScriptableObject.putProperty(mScriptScope, "ev_iv", itemView);
 
             try {
-                if(mCurrentScript.compiledScript == null) {
+                if (mCurrentScript.compiledScript == null) {
                     mScriptBuilder.setLength(0);
                     mScriptBuilder.append("javascript:(function() {var _event = createEvent(ev_sc, ev_se, ev_d, ev_t, ev_il, ev_iv); var getEvent = function() { return _event;};\n")
                             .append(mCurrentScript.getScriptText())
@@ -613,19 +605,19 @@ public class ScriptExecutor {
                     mCurrentScript.compiledScript = cx.compileString(mScriptBuilder.toString(), script.name, 0, null);
                 }
 
-                if(mCurrentScript.compiledScript != null) {
+                if (mCurrentScript.compiledScript != null) {
                     try {
                         cx.executeScriptWithContinuations(mCurrentScript.compiledScript, mScriptScope);
-                    } catch(ContinuationPending cp) {
+                    } catch (ContinuationPending cp) {
                         // will happen when displaying a popup
                         mPausedScript = mCurrentScript;
-                    } catch(IllegalStateException e) {
+                    } catch (IllegalStateException e) {
                         // running a script from an already running script with continuation
                         // try to run it again without support for continuation
                         mCurrentScript.compiledScript.exec(cx, mScriptScope);
                     }
                 }
-            } catch(RhinoException e) {
+            } catch (RhinoException e) {
                 displayScriptError(e);
                 e.printStackTrace();
             } finally {
@@ -640,44 +632,43 @@ public class ScriptExecutor {
     }
 
 
-
     public boolean runScriptTouchEvent(Screen screen, int id, ItemView itemView, MotionEvent event) {
-        Object res = runScriptAsFunction(screen, id, "item, event", new Object[] { mScriptLightning.getCachedItem(itemView), event }, true, true);
-        if(res == null || res.getClass()!=Boolean.class) {
+        Object res = runScriptAsFunction(screen, id, "item, event", new Object[]{mScriptLightning.getCachedItem(itemView), event}, true, true);
+        if (res == null || res.getClass() != Boolean.class) {
             return false;
         } else {
-            return (Boolean)res;
+            return (Boolean) res;
         }
     }
 
     public Object runScriptMenu(Screen screen, int id, ItemLayout il, ItemView itemView, Menu menu, String data) {
         return runScriptAsFunction(screen, id, "container, item, menu, data",
-                new Object[] {
-                    il == null ? null : mScriptLightning.getCachedContainer(il),
-                    itemView == null ? null : mScriptLightning.getCachedItem(itemView),
-                    menu, data
-            },
+                new Object[]{
+                        il == null ? null : mScriptLightning.getCachedContainer(il),
+                        itemView == null ? null : mScriptLightning.getCachedItem(itemView),
+                        menu, data
+                },
                 true, true);
     }
 
     public Object runScriptFunction(Screen screen, int id, ItemView itemView, String data) {
-        return runScriptAsFunction(screen, id, "item, data", new Object[] { mScriptLightning.getCachedItem(itemView), data }, false, true);
+        return runScriptAsFunction(screen, id, "item, data", new Object[]{mScriptLightning.getCachedItem(itemView), data}, false, true);
     }
 
     public void runScriptActivityResult(Screen screen, int resultCode, Intent data, int id, String token) {
-        runScriptAsFunction(screen, id, "resultCode, data, token", new Object[] { resultCode, data, token}, true, true);
+        runScriptAsFunction(screen, id, "resultCode, data, token", new Object[]{resultCode, data, token}, true, true);
     }
 
     public Object runScriptAsFunction(Screen screen, int id, String parameters, Object[] arguments, boolean allow_continuation, boolean display_errors) {
         Script script = mEngine.getScriptManager().getOrLoadScript(id);
-        if(!canRunScript(script)) {
+        if (!canRunScript(script)) {
             return null;
         }
         return runScriptAsFunction(screen, script, parameters, arguments, allow_continuation, display_errors);
     }
 
     public Object runScriptAsFunction(Screen screen, String code, String parameters, Object[] arguments, boolean allow_continuation, boolean display_errors) {
-        if(!canRunScriptGlobally()) {
+        if (!canRunScriptGlobally()) {
             return null;
         }
         Script script = new Script(mEngine.getScriptManager(), Script.TYPE_IN_MEMORY, Script.NO_ID, null, code, null);
@@ -686,7 +677,7 @@ public class ScriptExecutor {
 
     private Object runScriptAsFunction(Screen screen, Script script, String parameters, Object[] arguments, boolean allow_continuation, boolean display_errors) {
         mCurrentScript = script;
-        if(mCurrentScript != null && !mCurrentScript.hasFlag(Script.FLAG_DISABLED)) {
+        if (mCurrentScript != null && !mCurrentScript.hasFlag(Script.FLAG_DISABLED)) {
             prepareScriptScope();
 
 //            LLApp.get().onScriptRun();
@@ -697,7 +688,7 @@ public class ScriptExecutor {
             ScriptableObject.putProperty(mScriptScope, PROPERTY_EVENT_SCREEN, screen);
 
             try {
-                if(mCurrentScript.compiledFunction == null) {
+                if (mCurrentScript.compiledFunction == null) {
                     mScriptBuilder.setLength(0);
                     mScriptBuilder.append("function(")
                             .append(parameters)
@@ -710,8 +701,8 @@ public class ScriptExecutor {
                 }
 
                 return runFunction(mCurrentScript.compiledFunction, arguments, allow_continuation, display_errors);
-            } catch(RhinoException e) {
-                if(display_errors) {
+            } catch (RhinoException e) {
+                if (display_errors) {
                     displayScriptError(e);
                 }
             } finally {
@@ -724,8 +715,8 @@ public class ScriptExecutor {
         return null;
     }
 
-    public Object runFunction(Function function, Object[]arguments, boolean allow_continuation, boolean display_errors) {
-        if(!canRunScriptGlobally()) {
+    public Object runFunction(Function function, Object[] arguments, boolean allow_continuation, boolean display_errors) {
+        if (!canRunScriptGlobally()) {
             return null;
         }
 
@@ -735,7 +726,7 @@ public class ScriptExecutor {
         mCurrentContext = cx;
         sCurrentScriptExecutor = this;
         try {
-            if(allow_continuation) {
+            if (allow_continuation) {
                 try {
                     return cx.callFunctionWithContinuations(function, mScriptScope, arguments);
                 } catch (IllegalStateException e) {
@@ -744,15 +735,15 @@ public class ScriptExecutor {
             } else {
                 return function.call(cx, mScriptScope, mScriptScope, arguments);
             }
-        } catch(ContinuationPending cp) {
+        } catch (ContinuationPending cp) {
             // will happen when displaying a popup
             mPausedScript = mCurrentScript;
-        } catch(RhinoException e) {
-            if(display_errors) {
+        } catch (RhinoException e) {
+            if (display_errors) {
                 displayScriptError(e);
             }
-        } catch(Throwable t) {
-            if(display_errors) {
+        } catch (Throwable t) {
+            if (display_errors) {
                 displayScriptError(t.getMessage(), -1);
             }
             t.printStackTrace();
@@ -770,11 +761,11 @@ public class ScriptExecutor {
     }
 
     private boolean canRunScript(Script script) {
-        if(script == null) {
+        if (script == null) {
             return false;
         }
 
-        if(script.id < Script.NO_ID) {
+        if (script.id < Script.NO_ID) {
             return true;
         }
 

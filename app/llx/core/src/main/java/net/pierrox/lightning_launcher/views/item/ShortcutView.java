@@ -14,20 +14,18 @@ import net.pierrox.lightning_launcher.configuration.ShortcutConfig;
 import net.pierrox.lightning_launcher.data.Item;
 import net.pierrox.lightning_launcher.data.Shortcut;
 import net.pierrox.lightning_launcher.data.Utils;
-import net.pierrox.lightning_launcher.engine.Screen;
 import net.pierrox.lightning_launcher.views.IconLabelView;
 import net.pierrox.lightning_launcher.views.IconView;
 import net.pierrox.lightning_launcher.views.MyTextView;
 import net.pierrox.lightning_launcher.views.SharedAsyncGraphicsDrawable;
 
 public class ShortcutView extends ItemView {
+    private final int mStdIconWidth;
+    private final int mStdIconHeight;
+    // ease of use, to avoid casts
+    private final Shortcut mShortcut;
     protected IconLabelView mIconLabelView;
     private Bitmap mHighlightBitmap;
-
-    private int mStdIconWidth;
-    private int mStdIconHeight;
-    // ease of use, to avoid casts
-    private Shortcut mShortcut;
 
     public ShortcutView(Context context, Item item, int std_icon_width, int std_icon_height) {
         super(context, item);
@@ -41,12 +39,12 @@ public class ShortcutView extends ItemView {
     public void init() {
         ItemConfig ic = mItem.getItemConfig();
         ShortcutConfig sc = mShortcut.getShortcutConfig();
-        mIconLabelView=new IconLabelView(getContext(), mShortcut.getLabel(), mStdIconWidth, mStdIconHeight, mShortcut.getSharedAsyncGraphicsDrawable(), ic, sc);
+        mIconLabelView = new IconLabelView(getContext(), mShortcut.getLabel(), mStdIconWidth, mStdIconHeight, mShortcut.getSharedAsyncGraphicsDrawable(), ic, sc);
         setView(mIconLabelView);
 
-        if(mResumed) {
+        if (mResumed) {
             SharedAsyncGraphicsDrawable d = mShortcut.getSharedAsyncGraphicsDrawable();
-            if(sc.iconSizeMode == ShortcutConfig.IconSizeMode.NORMALIZED) {
+            if (sc.iconSizeMode == ShortcutConfig.IconSizeMode.NORMALIZED) {
                 d.setFilterBitmap(true);
             }
             if (d != null) {
@@ -63,7 +61,7 @@ public class ShortcutView extends ItemView {
     public void destroy() {
         super.destroy();
 
-        if(isInitDone() && mIconLabelView != null) {
+        if (isInitDone() && mIconLabelView != null) {
             mIconLabelView.destroy();
         }
     }
@@ -73,7 +71,7 @@ public class ShortcutView extends ItemView {
         super.pause();
 
         SharedAsyncGraphicsDrawable d = mShortcut.getSharedAsyncGraphicsDrawable();
-        if(d != null) {
+        if (d != null) {
             d.pause();
         }
     }
@@ -83,7 +81,7 @@ public class ShortcutView extends ItemView {
         super.resume();
 
         SharedAsyncGraphicsDrawable d = mShortcut.getSharedAsyncGraphicsDrawable();
-        if(d != null) {
+        if (d != null) {
             d.resume();
         }
     }
@@ -93,18 +91,18 @@ public class ShortcutView extends ItemView {
     }
 
     public void updateLabelText() {
-        if(mIconLabelView!=null) {
-            TextView tv=mIconLabelView.getTextView();
-            if(tv!=null) {
+        if (mIconLabelView != null) {
+            TextView tv = mIconLabelView.getTextView();
+            if (tv != null) {
                 tv.setText(mShortcut.getLabel());
             }
         }
     }
 
     public void updateLabelColor() {
-        if(mIconLabelView!=null) {
-            TextView tv=mIconLabelView.getTextView();
-            if(tv!=null) {
+        if (mIconLabelView != null) {
+            TextView tv = mIconLabelView.getTextView();
+            if (tv != null) {
                 ShortcutConfig shortcutConfig = mShortcut.getShortcutConfig();
                 // highlighted: higher priority, then focused, then normal
                 tv.setTextColor(mHighlighted ? shortcutConfig.selectionColorLabel : (mFocused ? shortcutConfig.focusColorLabel : shortcutConfig.labelFontColor));
@@ -113,7 +111,7 @@ public class ShortcutView extends ItemView {
     }
 
     public void updateLabelFontSize() {
-        if(mIconLabelView!=null) {
+        if (mIconLabelView != null) {
             MyTextView tv = mIconLabelView.getTextView();
             if (tv != null) {
                 tv.setTextSize(mShortcut.getShortcutConfig().labelFontSize);
@@ -122,7 +120,7 @@ public class ShortcutView extends ItemView {
     }
 
     public void updateLabelFontStyle() {
-        if(mIconLabelView!=null) {
+        if (mIconLabelView != null) {
             MyTextView tv = mIconLabelView.getTextView();
             if (tv != null) {
                 mShortcut.getShortcutConfig().applyFontStyleToTextView(tv);
@@ -131,22 +129,22 @@ public class ShortcutView extends ItemView {
     }
 
     public void updateLabelVisibility() {
-        if(mIconLabelView!=null) {
+        if (mIconLabelView != null) {
             mIconLabelView.updateLabelVisibility(mShortcut.getLabel());
         }
     }
 
     public void updateIconVisibility() {
-        if(mIconLabelView!=null) {
+        if (mIconLabelView != null) {
             mIconLabelView.updateIconVisibility(mShortcut.getSharedAsyncGraphicsDrawable());
         }
     }
 
     public void updateIconGraphics() {
         IconView iv = mIconLabelView.getIconView();
-        if(iv != null) {
+        if (iv != null) {
             SharedAsyncGraphicsDrawable d = mShortcut.getSharedAsyncGraphicsDrawable();
-            if(mResumed) {
+            if (mResumed) {
                 d.pause();
             }
 
@@ -158,7 +156,7 @@ public class ShortcutView extends ItemView {
             int std_icon_height = mShortcut.computeTotalHeight(iconSize);
             mIconLabelView.updateSharedAsyncGraphicsDrawable(d, std_icon_width, std_icon_height);
 
-            if(mResumed) {
+            if (mResumed) {
                 d.resume();
             }
         }
@@ -169,19 +167,19 @@ public class ShortcutView extends ItemView {
     }
 
     public void highlightText(String text) {
-        if(!isInitDone()) {
+        if (!isInitDone()) {
             return;
         }
         TextView tv = mIconLabelView.getTextView();
-        if(tv != null) {
+        if (tv != null) {
             String label = mShortcut.getLabel();
-            if(text == null) {
+            if (text == null) {
                 tv.setText(label);
             } else {
                 Spannable t = new SpannableStringBuilder(label);
                 BackgroundColorSpan hl_color = new BackgroundColorSpan(0x80808080);
                 int start = label.toLowerCase().indexOf(text);
-                t.setSpan(hl_color, start, start+text.length(), 0);
+                t.setSpan(hl_color, start, start + text.length(), 0);
                 tv.setText(t);
             }
         }
@@ -189,30 +187,30 @@ public class ShortcutView extends ItemView {
 
     protected Bitmap createHighlightBitmap() {
         ItemConfig ic = mItem.getItemConfig();
-        if(ic.selectionEffect != ItemConfig.SelectionEffect.HOLO) {
+        if (ic.selectionEffect != ItemConfig.SelectionEffect.HOLO) {
             return null;
         }
 
-        if(mHighlightBitmap != null) {
+        if (mHighlightBitmap != null) {
             return mHighlightBitmap;
         }
 
-        if(mIconLabelView == null) {
+        if (mIconLabelView == null) {
             return null;
         }
 
         try {
             final int padding = mOutlineHelper.mMaxOuterBlurRadius;
-            final Bitmap b = Bitmap.createBitmap(mIconLabelView.getWidth() + padding*2, mIconLabelView.getHeight() + padding*2, Bitmap.Config.ARGB_8888);
+            final Bitmap b = Bitmap.createBitmap(mIconLabelView.getWidth() + padding * 2, mIconLabelView.getHeight() + padding * 2, Bitmap.Config.ARGB_8888);
 
             Canvas canvas = new Canvas();
             canvas.setBitmap(b);
             View tv = mIconLabelView.getTextView();
-            if(tv != null) tv.setVisibility(View.INVISIBLE);
+            if (tv != null) tv.setVisibility(View.INVISIBLE);
             canvas.translate(padding, padding);
             mIconLabelView.draw(canvas);
             canvas.translate(-padding, -padding);
-            if(tv != null) tv.setVisibility(View.VISIBLE);
+            if (tv != null) tv.setVisibility(View.VISIBLE);
             int color = ic.box.ccs;
             mOutlineHelper.applyExtraThickExpensiveOutlineWithBlur(b, canvas, color, color);
 
@@ -239,16 +237,16 @@ public class ShortcutView extends ItemView {
     @Override
     public void prepareDraggedBitmap() {
         View tv = mIconLabelView == null ? null : mIconLabelView.getTextView();
-        if(tv != null) tv.setVisibility(View.INVISIBLE);
+        if (tv != null) tv.setVisibility(View.INVISIBLE);
         super.prepareDraggedBitmap();
-        if(tv != null) tv.setVisibility(View.VISIBLE);
+        if (tv != null) tv.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void updateViewSize() {
         super.updateViewSize();
         ShortcutConfig sc = mShortcut.getShortcutConfig();
-        if(sc.iconSizeMode != ShortcutConfig.IconSizeMode.STANDARD && sc.iconSizeMode != ShortcutConfig.IconSizeMode.NORMALIZED) {
+        if (sc.iconSizeMode != ShortcutConfig.IconSizeMode.STANDARD && sc.iconSizeMode != ShortcutConfig.IconSizeMode.NORMALIZED) {
             final SharedAsyncGraphicsDrawable d = mShortcut.getSharedAsyncGraphicsDrawable();
             if (d != null && d.getType() != SharedAsyncGraphicsDrawable.TYPE_SVG) {
                 d.loadGraphicsAsync();

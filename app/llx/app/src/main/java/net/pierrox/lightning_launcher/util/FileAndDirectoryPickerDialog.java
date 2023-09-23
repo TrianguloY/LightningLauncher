@@ -60,44 +60,22 @@ import java.util.HashMap;
 import java.util.List;
 
 public class FileAndDirectoryPickerDialog extends AlertDialog implements DialogInterface.OnClickListener, View.OnClickListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
-    public interface FileAndDirectoryPickerDialogListener {
-        void onFileSelected(File file, File newDirectory);
-    }
-
-    private boolean mForDirectory;
-    private boolean mForFont;
-    private boolean mMergeSingleDirectories;
-    private ScriptManager mScriptManager;
-    private File mRootDirectory;
-    private FileAndDirectoryPickerDialogListener mListener;
-
+    private static final String FONT_ITEM_PREVIEW = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private final boolean mForDirectory;
+    private final boolean mForFont;
+    private final boolean mMergeSingleDirectories;
+    private final ScriptManager mScriptManager;
+    private final File mRootDirectory;
+    private final FileAndDirectoryPickerDialogListener mListener;
+    private final String[] mExtensions;
+    private final Bitmap mDirectoryIcon;
+    private final Bitmap mFileIcon;
     private Button mUpButton;
     private ListView mFileListView;
     private TextView mCurrentPathView;
     private TextView mEmptyView;
     private File mCurrentDirectory;
     private FileFilter mFileFilter;
-    private String[] mExtensions;
-
-    private Bitmap mDirectoryIcon;
-    private Bitmap mFileIcon;
-
-    public static void showForFont(Context context, File initialDirectory, FileAndDirectoryPickerDialogListener listener) {
-        String[] ttfExtensions = {".ttf", ".otf"};
-        File rootDirectory = new File("/");
-        if(initialDirectory == null) {
-            initialDirectory = Environment.getExternalStorageDirectory();
-        }
-        new FileAndDirectoryPickerDialog(context, false, true, initialDirectory, rootDirectory, ttfExtensions, null, listener).show();
-    }
-
-    public static void showForScriptDirectory(Context context, File initialDirectory, ScriptManager scriptManager, FileAndDirectoryPickerDialogListener listener) {
-        File rootDirectory = scriptManager.getScriptsDir();
-        if(initialDirectory == null) {
-            initialDirectory = rootDirectory;
-        }
-        new FileAndDirectoryPickerDialog(context, true, false, initialDirectory, rootDirectory, null, scriptManager, listener).show();
-    }
 
     private FileAndDirectoryPickerDialog(Context context, boolean forDirectory, boolean forFont, File initialDirectory, File rootDirectory, String[] extensions, ScriptManager scriptManager, FileAndDirectoryPickerDialogListener listener) {
         super(context);
@@ -118,7 +96,7 @@ public class FileAndDirectoryPickerDialog extends AlertDialog implements DialogI
         mDirectoryIcon = Utils.createIconFromText(size, ".", fgColor);
         mFileIcon = Utils.createIconFromText(size, "/", fgColor);
 
-        if(mForDirectory) {
+        if (mForDirectory) {
 //            mFileFilter = new FileFilter() {
 //                @Override
 //                public boolean accept(File pathname) {
@@ -140,27 +118,44 @@ public class FileAndDirectoryPickerDialog extends AlertDialog implements DialogI
         }
     }
 
+    public static void showForFont(Context context, File initialDirectory, FileAndDirectoryPickerDialogListener listener) {
+        String[] ttfExtensions = {".ttf", ".otf"};
+        File rootDirectory = new File("/");
+        if (initialDirectory == null) {
+            initialDirectory = Environment.getExternalStorageDirectory();
+        }
+        new FileAndDirectoryPickerDialog(context, false, true, initialDirectory, rootDirectory, ttfExtensions, null, listener).show();
+    }
+
+    public static void showForScriptDirectory(Context context, File initialDirectory, ScriptManager scriptManager, FileAndDirectoryPickerDialogListener listener) {
+        File rootDirectory = scriptManager.getScriptsDir();
+        if (initialDirectory == null) {
+            initialDirectory = rootDirectory;
+        }
+        new FileAndDirectoryPickerDialog(context, true, false, initialDirectory, rootDirectory, null, scriptManager, listener).show();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         View view = getLayoutInflater().inflate(R.layout.file_dir_picker_dialog, null);
         setView(view);
 
-        mUpButton = (Button) view.findViewById(R.id.up);
+        mUpButton = view.findViewById(R.id.up);
         mUpButton.setText(R.string.file_picker_activity_up);
         mUpButton.setOnClickListener(this);
 
-        mCurrentPathView = (TextView) view.findViewById(R.id.path);
+        mCurrentPathView = view.findViewById(R.id.path);
 
-        mFileListView = (ListView) view.findViewById(android.R.id.list);
+        mFileListView = view.findViewById(android.R.id.list);
         mFileListView.setOnItemClickListener(this);
         mFileListView.setOnItemLongClickListener(this);
 
-        mEmptyView = (TextView) view.findViewById(R.id.empty);
+        mEmptyView = view.findViewById(R.id.empty);
         mEmptyView.setText(R.string.nfh);
 
         setButton(BUTTON_NEGATIVE, getContext().getString(android.R.string.cancel), this);
-        if(mForDirectory) {
+        if (mForDirectory) {
             setButton(BUTTON_POSITIVE, getContext().getString(android.R.string.ok), this);
         }
 
@@ -169,7 +164,7 @@ public class FileAndDirectoryPickerDialog extends AlertDialog implements DialogI
         super.onCreate(savedInstanceState);
 
         getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
-        ViewGroup content = (ViewGroup) getWindow().findViewById(android.R.id.content);
+        ViewGroup content = getWindow().findViewById(android.R.id.content);
         View child = content.getChildAt(0);
         child.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
         child.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
@@ -182,7 +177,7 @@ public class FileAndDirectoryPickerDialog extends AlertDialog implements DialogI
 
     @Override
     public void onClick(DialogInterface dialog, int which) {
-        if(which == BUTTON_POSITIVE) {
+        if (which == BUTTON_POSITIVE) {
             mListener.onFileSelected(mCurrentDirectory, mCurrentDirectory);
             dismiss();
         }
@@ -190,18 +185,18 @@ public class FileAndDirectoryPickerDialog extends AlertDialog implements DialogI
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == R.id.up) {
+        if (v.getId() == R.id.up) {
             // remove symlinks to ensure that it's not possible to go back elsewhere
             String canonicalCurrent, canonicalRoot;
             try {
                 canonicalCurrent = mCurrentDirectory.getCanonicalPath();
                 canonicalRoot = mRootDirectory.getCanonicalPath();
-            } catch(IOException e) {
+            } catch (IOException e) {
                 canonicalCurrent = "";
                 canonicalRoot = "";
             }
 
-            if(mMergeSingleDirectories) {
+            if (mMergeSingleDirectories) {
                 while (!canonicalCurrent.equals(canonicalRoot)) {
                     File parent = mCurrentDirectory.getParentFile();
                     if (parent != null) {
@@ -220,9 +215,9 @@ public class FileAndDirectoryPickerDialog extends AlertDialog implements DialogI
 
                 }
             } else {
-                if(!canonicalCurrent.equals(canonicalRoot)) {
+                if (!canonicalCurrent.equals(canonicalRoot)) {
                     File parent = mCurrentDirectory.getParentFile();
-                    if(parent != null) {
+                    if (parent != null) {
                         gotoDirectory(parent);
                     }
                 }
@@ -233,10 +228,10 @@ public class FileAndDirectoryPickerDialog extends AlertDialog implements DialogI
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         File file = (File) mFileListView.getAdapter().getItem(position);
-        if(file.isDirectory()) {
+        if (file.isDirectory()) {
             gotoDirectory(file);
         } else {
-            if(!mForDirectory) {
+            if (!mForDirectory) {
                 mListener.onFileSelected(file, mCurrentDirectory);
                 dismiss();
             }
@@ -246,8 +241,8 @@ public class FileAndDirectoryPickerDialog extends AlertDialog implements DialogI
     @Override
     public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
         File file = (File) mFileListView.getAdapter().getItem(i);
-        if(!file.isDirectory()) {
-            if(mForFont) {
+        if (!file.isDirectory()) {
+            if (mForFont) {
                 showDeleteFontDialog(file);
             } else {
                 showDeleteFileDialog(file);
@@ -259,7 +254,7 @@ public class FileAndDirectoryPickerDialog extends AlertDialog implements DialogI
     }
 
     private void showDeleteFileDialog(final File file) {
-        AlertDialog.Builder builder=new AlertDialog.Builder(getContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle(R.string.delete_file);
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
@@ -291,12 +286,12 @@ public class FileAndDirectoryPickerDialog extends AlertDialog implements DialogI
     }
 
     private boolean matchExtension(String name) {
-        if(mExtensions == null) {
+        if (mExtensions == null) {
             return true;
         }
         String lname = name.toLowerCase();
-        for(String e : mExtensions) {
-            if(lname.endsWith(e)) {
+        for (String e : mExtensions) {
+            if (lname.endsWith(e)) {
                 return true;
             }
         }
@@ -307,13 +302,13 @@ public class FileAndDirectoryPickerDialog extends AlertDialog implements DialogI
         mCurrentDirectory = dir;
 
         File[] files = mCurrentDirectory.listFiles(mFileFilter);
-        if(files != null) {
-            if(mMergeSingleDirectories) {
-                for (int n=files.length-1; n>=0; n--) {
+        if (files != null) {
+            if (mMergeSingleDirectories) {
+                for (int n = files.length - 1; n >= 0; n--) {
                     File d = files[n];
-                    for(;;) {
+                    for (; ; ) {
                         File[] subDirs = d.listFiles();
-                        if(subDirs != null && subDirs.length == 1 && subDirs[0].isDirectory()) {
+                        if (subDirs != null && subDirs.length == 1 && subDirs[0].isDirectory()) {
                             d = subDirs[0];
                         } else {
                             break;
@@ -326,8 +321,8 @@ public class FileAndDirectoryPickerDialog extends AlertDialog implements DialogI
             Arrays.sort(files, new Comparator<File>() {
                 @Override
                 public int compare(File arg0, File arg1) {
-                    if(arg0.isDirectory() && !arg1.isDirectory()) return -1;
-                    if(arg1.isDirectory() && !arg0.isDirectory()) return 1;
+                    if (arg0.isDirectory() && !arg1.isDirectory()) return -1;
+                    if (arg1.isDirectory() && !arg0.isDirectory()) return 1;
                     return arg0.getName().compareTo(arg1.getName());
                 }
             });
@@ -338,14 +333,14 @@ public class FileAndDirectoryPickerDialog extends AlertDialog implements DialogI
 
         mFileListView.setAdapter(new FileAdapter(getContext(), items));
         String rootPath = mRootDirectory.getAbsolutePath();
-        if(!rootPath.endsWith("/")) {
+        if (!rootPath.endsWith("/")) {
             rootPath += "/";
         }
         String currentPath = mCurrentDirectory.getAbsolutePath();
-        if(!currentPath.endsWith("/")) {
+        if (!currentPath.endsWith("/")) {
             currentPath += "/";
         }
-        String path = "/" + currentPath.substring(rootPath.length(), currentPath.length());
+        String path = "/" + currentPath.substring(rootPath.length());
 
         /*
         /  / -> /
@@ -354,12 +349,15 @@ public class FileAndDirectoryPickerDialog extends AlertDialog implements DialogI
         /scripts/a -> /a
         */
         mCurrentPathView.setText(path);
-        mEmptyView.setVisibility(files.length==0 ? View.VISIBLE : View.GONE);
+        mEmptyView.setVisibility(files.length == 0 ? View.VISIBLE : View.GONE);
     }
 
-    private static final String FONT_ITEM_PREVIEW = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    public interface FileAndDirectoryPickerDialogListener {
+        void onFileSelected(File file, File newDirectory);
+    }
+
     private class FileAdapter extends ArrayAdapter<File> {
-        private HashMap<File,Typeface> mTypefaces = new HashMap<>();
+        private final HashMap<File, Typeface> mTypefaces = new HashMap<>();
 
         public FileAdapter(Context context, List<File> objects) {
             super(context, 0, objects);
@@ -367,26 +365,26 @@ public class FileAndDirectoryPickerDialog extends AlertDialog implements DialogI
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            if(convertView == null) {
+            if (convertView == null) {
                 convertView = getLayoutInflater().inflate(R.layout.two_lines_list_item, null);
             }
 
             File f = getItem(position);
-            CheckedTextView line1 = (CheckedTextView) convertView.findViewById(android.R.id.text1);
-            TextView line2 = (TextView) convertView.findViewById(android.R.id.text2);
+            CheckedTextView line1 = convertView.findViewById(android.R.id.text1);
+            TextView line2 = convertView.findViewById(android.R.id.text2);
             String text1, text2 = null;
             Typeface typeface = Typeface.DEFAULT;
             String name = f.getName();
-            if(f.isDirectory()) {
+            if (f.isDirectory()) {
                 int length = mCurrentDirectory.getAbsolutePath().length();
-                if(length > 1) {
+                if (length > 1) {
                     // different from "/"
                     length++;
                 }
                 text1 = f.getAbsolutePath().substring(length);
                 Utils.setEnabledStateOnViews(convertView, true);
             } else {
-                if(mScriptManager != null) {
+                if (mScriptManager != null) {
                     text1 = null;
                     try {
                         int id = Integer.parseInt(name);
@@ -395,7 +393,7 @@ public class FileAndDirectoryPickerDialog extends AlertDialog implements DialogI
                     } catch (NumberFormatException e) {
                         // pass
                     }
-                    if(text1 == null) {
+                    if (text1 == null) {
                         text1 = name;
                     }
                 } else {
@@ -418,7 +416,7 @@ public class FileAndDirectoryPickerDialog extends AlertDialog implements DialogI
                 }
                 Utils.setEnabledStateOnViews(convertView, !mForDirectory);
             }
-            if(text2 == null) {
+            if (text2 == null) {
                 line2.setVisibility(View.GONE);
             } else {
                 line2.setVisibility(View.VISIBLE);
@@ -427,7 +425,7 @@ public class FileAndDirectoryPickerDialog extends AlertDialog implements DialogI
             }
             line1.setText(text1);
 
-            ((ImageView)convertView.findViewById(android.R.id.icon)).setImageBitmap(f.isDirectory() ? mDirectoryIcon : mFileIcon);
+            ((ImageView) convertView.findViewById(android.R.id.icon)).setImageBitmap(f.isDirectory() ? mDirectoryIcon : mFileIcon);
 
 
             return convertView;

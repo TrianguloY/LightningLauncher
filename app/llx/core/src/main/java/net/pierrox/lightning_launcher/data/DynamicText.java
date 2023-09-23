@@ -1,7 +1,16 @@
 package net.pierrox.lightning_launcher.data;
 
-import android.accounts.*;
-import android.content.*;
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.accounts.AccountManagerCallback;
+import android.accounts.AccountManagerFuture;
+import android.accounts.AuthenticatorException;
+import android.accounts.OperationCanceledException;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.graphics.Rect;
@@ -13,10 +22,10 @@ import android.os.StatFs;
 import android.provider.CallLog;
 import android.text.format.Formatter;
 
+import net.pierrox.lightning_launcher.R;
 import net.pierrox.lightning_launcher.configuration.DynamicTextConfig;
 import net.pierrox.lightning_launcher.configuration.JsonFields;
 import net.pierrox.lightning_launcher.configuration.ShortcutConfig;
-import net.pierrox.lightning_launcher.R;
 import net.pierrox.lightning_launcher.views.item.ItemView;
 import net.pierrox.lightning_launcher.views.item.ShortcutView;
 
@@ -55,6 +64,35 @@ public class DynamicText extends Shortcut {
         super(page);
     }
 
+    public static ComponentName getDefaultComponentNameForSource(DynamicTextConfig.Source source) {
+        String cn = null;
+        switch (source) {
+            case MISSED_CALLS:
+                cn = "com.android.contacts/.DialtactsActivity";
+                break;
+            case UNREAD_SMS:
+                cn = "com.android.mms/.ui.ConversationList";
+                break;
+            case UNREAD_GMAIL:
+                cn = "com.google.android.gm/.ConversationListActivityGmail";
+                break;
+            case DATE:
+                cn = "com.google.android.deskclock/com.android.deskclock.DeskClock";
+                break;
+            case STORAGE:
+                cn = "com.android.settings/.Settings";
+                break;
+            case BATTERY_LEVEL:
+                cn = "com.android.settings/.BatteryInfo";
+                break;
+            case HEAP_FREE:
+            case HEAP_MAX:
+                cn = "com.android.settings/.Settings";
+                break;
+        }
+        return ComponentName.unflattenFromString(cn);
+    }
+
     public DynamicTextConfig getDynamicTextConfig() {
         return mDynamicTextConfig;
     }
@@ -72,10 +110,10 @@ public class DynamicText extends Shortcut {
 
     @Override
     public void createFromJSONObject(JSONObject o) throws JSONException {
-        JSONObject json_configuration=o.optJSONObject(JsonFields.DYNAMIC_TEXT_CONFIGURATION);
+        JSONObject json_configuration = o.optJSONObject(JsonFields.DYNAMIC_TEXT_CONFIGURATION);
         DynamicTextConfig defaultDynamicTextConfig = mPage.config.defaultDynamicTextConfig;
-        if(json_configuration!=null) {
-            mDynamicTextConfig=DynamicTextConfig.readFromJsonObject(json_configuration, defaultDynamicTextConfig);
+        if (json_configuration != null) {
+            mDynamicTextConfig = DynamicTextConfig.readFromJsonObject(json_configuration, defaultDynamicTextConfig);
         } else {
             mDynamicTextConfig = defaultDynamicTextConfig;
         }
@@ -89,10 +127,10 @@ public class DynamicText extends Shortcut {
         Intent intent = new Intent();
         intent.setComponent(getDefaultComponentNameForSource(source));
         super.init(id, cell_p, cell_l, "", intent);
-        mShortcutConfig=new ShortcutConfig();
+        mShortcutConfig = new ShortcutConfig();
         mShortcutConfig.iconVisibility = false;
-        mSharedShortcutConfig=false;
-        mDynamicTextConfig=new DynamicTextConfig();
+        mSharedShortcutConfig = false;
+        mDynamicTextConfig = new DynamicTextConfig();
         mDynamicTextConfig.source = source;
     }
 
@@ -103,13 +141,13 @@ public class DynamicText extends Shortcut {
 
     private void create() {
         final Context context = mPage.getEngine().getContext();
-        switch(mDynamicTextConfig.source) {
+        switch (mDynamicTextConfig.source) {
             case DATE:
                 mHandler = new Handler();
                 try {
                     mDateFormat = new SimpleDateFormat(mDynamicTextConfig.dateFormat);
                 } catch (IllegalArgumentException e) {
-                    mDateFormat = new SimpleDateFormat("'"+context.getString(R.string.dt_format_error)+"'");
+                    mDateFormat = new SimpleDateFormat("'" + context.getString(R.string.dt_format_error) + "'");
                 }
                 break;
 
@@ -121,12 +159,12 @@ public class DynamicText extends Shortcut {
 
             case BATTERY_LEVEL:
                 mBatteryContext = context.getApplicationContext();
-                mBatteryReceiver=new BroadcastReceiver() {
+                mBatteryReceiver = new BroadcastReceiver() {
                     @Override
                     public void onReceive(Context context, Intent intent) {
-                        int new_level=intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
-                        if(new_level!=mBatteryLevel) {
-                            mBatteryLevel=new_level;
+                        int new_level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
+                        if (new_level != mBatteryLevel) {
+                            mBatteryLevel = new_level;
                             updateText();
                         }
                     }
@@ -134,7 +172,7 @@ public class DynamicText extends Shortcut {
                 try {
                     mCountFormat = new DecimalFormat(mDynamicTextConfig.countFormat);
                 } catch (IllegalArgumentException e) {
-                    mCountFormat = new DecimalFormat("'"+context.getString(R.string.dt_format_error)+"'");
+                    mCountFormat = new DecimalFormat("'" + context.getString(R.string.dt_format_error) + "'");
                 }
                 break;
 
@@ -144,11 +182,11 @@ public class DynamicText extends Shortcut {
                 try {
                     mCountFormat = new DecimalFormat(mDynamicTextConfig.countFormat);
                 } catch (IllegalArgumentException e) {
-                    mCountFormat = new DecimalFormat("'"+context.getString(R.string.dt_format_error)+"'");
+                    mCountFormat = new DecimalFormat("'" + context.getString(R.string.dt_format_error) + "'");
                 }
 
                 mHandler = new Handler();
-                mContentObserver=new ContentObserver(mHandler) {
+                mContentObserver = new ContentObserver(mHandler) {
                     @Override
                     public void onChange(boolean selfChange) {
                         updateText();
@@ -157,13 +195,13 @@ public class DynamicText extends Shortcut {
                 mCursor = null;
 
                 try {
-                    switch(mDynamicTextConfig.source) {
+                    switch (mDynamicTextConfig.source) {
                         case MISSED_CALLS:
-                            String[] projection = { CallLog.Calls.CACHED_NAME, CallLog.Calls.CACHED_NUMBER_LABEL, CallLog.Calls.TYPE };
-                            String where = CallLog.Calls.TYPE+"="+CallLog.Calls.MISSED_TYPE+" and "+CallLog.Calls.NEW+"=1";
+                            String[] projection = {CallLog.Calls.CACHED_NAME, CallLog.Calls.CACHED_NUMBER_LABEL, CallLog.Calls.TYPE};
+                            String where = CallLog.Calls.TYPE + "=" + CallLog.Calls.MISSED_TYPE + " and " + CallLog.Calls.NEW + "=1";
                             try {
                                 mCursor = context.getContentResolver().query(CallLog.Calls.CONTENT_URI, projection, where, null, null);
-                            } catch(SecurityException e) {
+                            } catch (SecurityException e) {
                                 mPage.onItemError(this, Error.MISSING_PERMISSION_READ_CALL_LOG);
                             }
                             break;
@@ -172,13 +210,13 @@ public class DynamicText extends Shortcut {
                             Uri sms_content = Uri.parse("content://sms");
                             try {
                                 mCursor = context.getContentResolver().query(sms_content, null, "read = 0", null, null);
-                            } catch(SecurityException e) {
+                            } catch (SecurityException e) {
                                 mPage.onItemError(this, Error.MISSING_PERMISSION_READ_SMS);
                             }
                             break;
 
                         case UNREAD_GMAIL:
-                            if(GmailContract.canReadLabels(context)) {
+                            if (GmailContract.canReadLabels(context)) {
                                 AccountManager.get(context).getAccountsByTypeAndFeatures(GmailContract.ACCOUNT_TYPE_GOOGLE, GmailContract.FEATURES_MAIL,
                                         new AccountManagerCallback<Account[]>() {
                                             @Override
@@ -196,11 +234,11 @@ public class DynamicText extends Shortcut {
                                         }, null /* handler */);
                             }
                     }
-                } catch(Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
-                if(mCursor != null) {
+                if (mCursor != null) {
                     setupMessagingCursor();
                 }
                 break;
@@ -212,8 +250,8 @@ public class DynamicText extends Shortcut {
     @Override
     public void pause() {
         super.pause();
-        if(!mCreated) return;
-        switch(mDynamicTextConfig.source) {
+        if (!mCreated) return;
+        switch (mDynamicTextConfig.source) {
             case DATE:
             case STORAGE:
             case HEAP_FREE:
@@ -241,12 +279,12 @@ public class DynamicText extends Shortcut {
     @Override
     public void resume() {
         super.resume();
-        if(!mCreated) {
+        if (!mCreated) {
             create();
         }
 
 //        Log.i("XXX", "DT resume "+mId);
-        switch(mDynamicTextConfig.source) {
+        switch (mDynamicTextConfig.source) {
             case DATE:
             case STORAGE:
             case HEAP_FREE:
@@ -273,7 +311,6 @@ public class DynamicText extends Shortcut {
         super.resume();
     }
 
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -282,10 +319,10 @@ public class DynamicText extends Shortcut {
 
     @Override
     public void onDestroy() {
-        if(!mCreated) return;
+        if (!mCreated) return;
 
 //        Log.i("XXX", "DT destroy " + mId);
-        if(mCursor != null) {
+        if (mCursor != null) {
             mCursor.close();
         }
 
@@ -297,33 +334,10 @@ public class DynamicText extends Shortcut {
         super.onDestroy();
     }
 
-    public static ComponentName getDefaultComponentNameForSource(DynamicTextConfig.Source source) {
-        String cn = null;
-        switch(source) {
-            case MISSED_CALLS: cn="com.android.contacts/.DialtactsActivity"; break;
-            case UNREAD_SMS: cn="com.android.mms/.ui.ConversationList"; break;
-            case UNREAD_GMAIL: cn="com.google.android.gm/.ConversationListActivityGmail"; break;
-            case DATE: cn="com.google.android.deskclock/com.android.deskclock.DeskClock"; break;
-            case STORAGE: cn="com.android.settings/.Settings"; break;
-            case BATTERY_LEVEL: cn="com.android.settings/.BatteryInfo"; break;
-            case HEAP_FREE:
-            case HEAP_MAX: cn="com.android.settings/.Settings"; break;
-        }
-        return ComponentName.unflattenFromString(cn);
-    }
-
     public void setEditMode(boolean edit_mode) {
         mEditMode = edit_mode;
         updateVisibility();
     }
-
-    private Runnable mTimerRunnable = new Runnable() {
-        @Override
-        public void run() {
-            updateText();
-            mHandler.postDelayed(mTimerRunnable, 1000);
-        }
-    };
 
     private void onAccountResults(Context context, Account[] accounts) {
         if (accounts != null && accounts.length > 0) {
@@ -349,12 +363,20 @@ public class DynamicText extends Shortcut {
                         setupMessagingCursor();
                     }
                 }
-            } catch(Exception e) {
+            } catch (Exception e) {
                 // pass
                 e.printStackTrace();
             }
         }
     }
+
+    private final Runnable mTimerRunnable = new Runnable() {
+        @Override
+        public void run() {
+            updateText();
+            mHandler.postDelayed(mTimerRunnable, 1000);
+        }
+    };
 
     private void setupMessagingCursor() {
         mCursor.registerContentObserver(mContentObserver);
@@ -365,9 +387,9 @@ public class DynamicText extends Shortcut {
 
         String new_text = null;
 
-        switch(mDynamicTextConfig.source) {
+        switch (mDynamicTextConfig.source) {
             case DATE:
-                if(mDateFormat == null) {
+                if (mDateFormat == null) {
                     mDateFormat = new SimpleDateFormat(DynamicTextConfig.DEFAULT_DATE_FORMAT);
                 }
                 new_text = mDateFormat.format(new Date());
@@ -380,29 +402,34 @@ public class DynamicText extends Shortcut {
                 long total_blocks = stat.getBlockCount();
                 long available_blocks = stat.getAvailableBlocks();
                 long value;
-                switch(mDynamicTextConfig.storageWhat) {
-                case LEFT: value = available_blocks; break;
-                case USED: value = total_blocks-available_blocks; break;
-                default: value = total_blocks;
+                switch (mDynamicTextConfig.storageWhat) {
+                    case LEFT:
+                        value = available_blocks;
+                        break;
+                    case USED:
+                        value = total_blocks - available_blocks;
+                        break;
+                    default:
+                        value = total_blocks;
                 }
                 value *= block_size;
-                switch(mDynamicTextConfig.storageFormat) {
-                case NORMAL:
-                    new_text = Formatter.formatFileSize(mPage.getEngine().getContext(), value);
-                    break;
+                switch (mDynamicTextConfig.storageFormat) {
+                    case NORMAL:
+                        new_text = Formatter.formatFileSize(mPage.getEngine().getContext(), value);
+                        break;
 
-                case SHORT:
-                    new_text = Formatter.formatShortFileSize(mPage.getEngine().getContext(), value);
-                    break;
+                    case SHORT:
+                        new_text = Formatter.formatShortFileSize(mPage.getEngine().getContext(), value);
+                        break;
 
-                case PERCENT:
-                    new_text = String.valueOf(value*100 / (total_blocks*block_size))+"%";
-                    break;
+                    case PERCENT:
+                        new_text = value * 100 / (total_blocks * block_size) + "%";
+                        break;
 
-                case BYTES:
-                default:
-                    new_text = String.valueOf(value);
-                    break;
+                    case BYTES:
+                    default:
+                        new_text = String.valueOf(value);
+                        break;
                 }
                 new_text = mDynamicTextConfig.textFormat.replace("%s", new_text);
                 break;
@@ -411,7 +438,7 @@ public class DynamicText extends Shortcut {
             case HEAP_MAX:
                 Runtime r = Runtime.getRuntime();
                 long m = r.maxMemory();
-                if(mDynamicTextConfig.source== DynamicTextConfig.Source.HEAP_FREE) {
+                if (mDynamicTextConfig.source == DynamicTextConfig.Source.HEAP_FREE) {
                     r.gc();
                     m -= (r.totalMemory() - r.freeMemory());
                 }
@@ -423,8 +450,8 @@ public class DynamicText extends Shortcut {
             case UNREAD_SMS:
             case UNREAD_GMAIL:
                 mCount = 0;
-                if(mDynamicTextConfig.source== DynamicTextConfig.Source.UNREAD_GMAIL) {
-                    if(mGMailInboxUri != null) {
+                if (mDynamicTextConfig.source == DynamicTextConfig.Source.UNREAD_GMAIL) {
+                    if (mGMailInboxUri != null) {
                         Cursor c = mPage.getEngine().getContext().getContentResolver().query(Uri.parse(mGMailInboxUri), null, null, null, null);
                         c.moveToNext();
                         int n = c.getColumnIndex(GmailContract.Labels.NUM_UNREAD_CONVERSATIONS);
@@ -435,24 +462,24 @@ public class DynamicText extends Shortcut {
                         new_text = "   ";
                     }
                 } else {
-                	if(mCursor != null) {
-	                    mCursor.requery();
-	                    mCursor.moveToFirst();
+                    if (mCursor != null) {
+                        mCursor.requery();
+                        mCursor.moveToFirst();
                         mCount = mCursor.getCount();
                         new_text = mCountFormat.format(mCount);
                     } else {
                         new_text = "   ";
-                	}
+                    }
                 }
                 updateVisibility();
                 break;
 
             case BATTERY_LEVEL:
-                new_text = mBatteryLevel==-1 ? "" : mCountFormat.format(mBatteryLevel);
+                new_text = mBatteryLevel == -1 ? "" : mCountFormat.format(mBatteryLevel);
                 break;
         }
-        if(new_text != null) {
-            if(!new_text.equals(getLabel())) {
+        if (new_text != null) {
+            if (!new_text.equals(getLabel())) {
                 // TODO propagate changes to views
                 setLabel(new_text);
             }
@@ -462,4 +489,6 @@ public class DynamicText extends Shortcut {
     private void updateVisibility() {
         setVisible(mCount != 0 || mDynamicTextConfig.displayEmpty || mEditMode);
     }
+
+
 }

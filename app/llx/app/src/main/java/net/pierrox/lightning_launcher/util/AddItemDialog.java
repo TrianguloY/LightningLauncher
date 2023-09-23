@@ -74,42 +74,22 @@ public class AddItemDialog extends AlertDialog implements View.OnClickListener, 
     public static final int AI_BOOKMARK = 16;
     public static final int AI_LIGHTNING_ACTION = 17;
     public static final int AI_CUSTOM_VIEW = 18;
-
-    public interface AddItemDialogInterface {
-        boolean isDialogAddItemEnabled(int id);
-        void onBuiltinItemClicked(int id);
-        void onPluginClicked(Plugin plugin);
-        void onPluginLongClicked(Plugin plugin);
-    }
-
-    public static class Plugin {
-        public CharSequence label;
-        public Drawable icon;
-        public Intent intent;
-
-        public Plugin(CharSequence label, Drawable icon, Intent intent) {
-            this.label = label;
-            this.icon = icon;
-            this.intent = intent;
-        }
-    }
-
-    private AddItemDialogInterface mAddItemDialogInterface;
-    private LayoutInflater mInflater;
+    private final AddItemDialogInterface mAddItemDialogInterface;
+    private final LayoutInflater mInflater;
 
     public AddItemDialog(final Context context, boolean showPlugins, final AddItemDialogInterface addItemDialogInterface) {
         super(context);
 
         mAddItemDialogInterface = addItemDialogInterface;
 
-        String[] labels=context.getResources().getStringArray(R.array.dialog_action_values);
+        String[] labels = context.getResources().getStringArray(R.array.dialog_action_values);
 
         mInflater = LayoutInflater.from(context);
         final ViewGroup content = (ViewGroup) mInflater.inflate(R.layout.add_dialog, null);
-        final MyViewPager pager = (MyViewPager) content.findViewById(R.id.pager);
-        ViewGroup builtinsView = (ViewGroup) content.findViewById(R.id.builtins);
-        final ListView pluginsListView = (ListView) content.findViewById(R.id.plugins);
-        final TabHost tabHost = (TabHost) content.findViewById(R.id.tab);
+        final MyViewPager pager = content.findViewById(R.id.pager);
+        ViewGroup builtinsView = content.findViewById(R.id.builtins);
+        final ListView pluginsListView = content.findViewById(R.id.plugins);
+        final TabHost tabHost = content.findViewById(R.id.tab);
         tabHost.setup();
         tabHost.addTab(tabHost.newTabSpec("B").setIndicator(context.getString(R.string.ad_b)).setContent(R.id.empty));
         tabHost.addTab(tabHost.newTabSpec("P").setIndicator(context.getString(R.string.ad_p)).setContent(R.id.empty));
@@ -121,7 +101,8 @@ public class AddItemDialog extends AlertDialog implements View.OnClickListener, 
         });
         pager.setOnPageChangeListener(new MyViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) { }
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
 
             @Override
             public void onPageSelected(int position) {
@@ -129,7 +110,8 @@ public class AddItemDialog extends AlertDialog implements View.OnClickListener, 
             }
 
             @Override
-            public void onPageScrollStateChanged(int state) { }
+            public void onPageScrollStateChanged(int state) {
+            }
         });
 
         pluginsListView.setOnItemClickListener(this);
@@ -137,7 +119,7 @@ public class AddItemDialog extends AlertDialog implements View.OnClickListener, 
 
         setView(content);
 
-        if(!showPlugins) {
+        if (!showPlugins) {
             tabHost.setVisibility(View.GONE);
             pager.removeViewAt(1);
         } else {
@@ -225,18 +207,18 @@ public class AddItemDialog extends AlertDialog implements View.OnClickListener, 
 
     private ViewGroup addDialogAddCategory(ViewGroup root, int title) {
         View cat = mInflater.inflate(R.layout.add_dialog_cat, root, false);
-        ((TextView)cat.findViewById(R.id.title)).setText(title);
+        ((TextView) cat.findViewById(R.id.title)).setText(title);
         root.addView(cat);
-        return (ViewGroup) cat.findViewById(R.id.content);
+        return cat.findViewById(R.id.content);
     }
 
     private void addDialogAddItem(ViewGroup root, String label, String icon, int id) {
         View item = mInflater.inflate(R.layout.add_dialog_item, root, false);
-        TextView i = (TextView)item.findViewById(R.id.icon);
+        TextView i = item.findViewById(R.id.icon);
         i.setText(icon);
         LLAppPhone app = (LLAppPhone) LLApp.get();
         i.setTypeface(app.getIconsTypeface());
-        ((TextView)item.findViewById(R.id.label)).setText(label);
+        ((TextView) item.findViewById(R.id.label)).setText(label);
         item.setOnClickListener(this);
         item.setTag(id);
         Utils.setEnabledStateOnViews(item, mAddItemDialogInterface.isDialogAddItemEnabled(id));
@@ -245,8 +227,30 @@ public class AddItemDialog extends AlertDialog implements View.OnClickListener, 
         root.addView(item);
     }
 
+    public interface AddItemDialogInterface {
+        boolean isDialogAddItemEnabled(int id);
+
+        void onBuiltinItemClicked(int id);
+
+        void onPluginClicked(Plugin plugin);
+
+        void onPluginLongClicked(Plugin plugin);
+    }
+
+    public static class Plugin {
+        public CharSequence label;
+        public Drawable icon;
+        public Intent intent;
+
+        public Plugin(CharSequence label, Drawable icon, Intent intent) {
+            this.label = label;
+            this.icon = icon;
+            this.intent = intent;
+        }
+    }
+
     private static class PluginAdapter extends ArrayAdapter<Plugin> {
-        private LayoutInflater mLayoutInflater;
+        private final LayoutInflater mLayoutInflater;
 
         public PluginAdapter(Context context, List<Plugin> objects) {
             super(context, 0, objects);
@@ -261,7 +265,7 @@ public class AddItemDialog extends AlertDialog implements View.OnClickListener, 
 
             Plugin plugin = getItem(position);
 
-            CheckedTextView line1 = (CheckedTextView) convertView.findViewById(android.R.id.text1);
+            CheckedTextView line1 = convertView.findViewById(android.R.id.text1);
             line1.setText(plugin.label);
             convertView.findViewById(android.R.id.text2).setVisibility(View.GONE);
             ((ImageView) convertView.findViewById(android.R.id.icon)).setImageDrawable(plugin.icon);

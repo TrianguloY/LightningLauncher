@@ -43,6 +43,7 @@ public class DoLoop extends Loop {
 
     /**
      * Sets loop condition, and sets its parent to this node.
+     *
      * @throws IllegalArgumentException if condition is null
      */
     public void setCondition(AstNode condition) {
@@ -67,14 +68,13 @@ public class DoLoop extends Loop {
 
     @Override
     public String toSource(int depth) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(makeIndent(depth));
-        sb.append("do ");
-        sb.append(body.toSource(depth).trim());
-        sb.append(" while (");
-        sb.append(condition.toSource(0));
-        sb.append(");\n");
-        return sb.toString();
+        String sb = makeIndent(depth) +
+                "do " +
+                body.toSource(depth).trim() +
+                " while (" +
+                condition.toSource(0) +
+                ");\n";
+        return sb;
     }
 
     /**

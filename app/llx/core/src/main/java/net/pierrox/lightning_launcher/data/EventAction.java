@@ -18,14 +18,6 @@ public class EventAction {
     public String data;
     public EventAction next;
 
-    public static EventAction UNSET() {
-    	return new EventAction(GlobalConfig.UNSET, null);
-    }
-    
-    public static final EventAction NOTHING() {
-    	return new EventAction(GlobalConfig.NOTHING, null);
-    }
-
     public EventAction() {
         // empty constructor for serialization
     }
@@ -41,22 +33,30 @@ public class EventAction {
         this.next = next;
     }
 
+    public static EventAction UNSET() {
+        return new EventAction(GlobalConfig.UNSET, null);
+    }
+
+    public static final EventAction NOTHING() {
+        return new EventAction(GlobalConfig.NOTHING, null);
+    }
+
     public EventAction clone() {
-        return new EventAction(action, data, next==null ? null : next.clone());
+        return new EventAction(action, data, next == null ? null : next.clone());
     }
 
     public boolean equals(Object o) {
-        if(o == null) return false;
-        if(o.getClass() != EventAction.class) return false;
-        EventAction ea = (EventAction)o;
-        if(this.action != ea.action) return false;
-        if((this.data == null && ea.data != null) || (this.data != null && !this.data.equals(ea.data))) return false;
-        if((this.next == null && ea.next != null) || (this.next != null && !this.next.equals(ea.next))) return false;
-        return true;
+        if (o == null) return false;
+        if (o.getClass() != EventAction.class) return false;
+        EventAction ea = (EventAction) o;
+        if (this.action != ea.action) return false;
+        if ((this.data == null && ea.data != null) || (this.data != null && !this.data.equals(ea.data)))
+            return false;
+        return (this.next != null || ea.next == null) && (this.next == null || this.next.equals(ea.next));
     }
 
     public String describe(LightningEngine engine) {
-        if(data != null) {
+        if (data != null) {
             switch (action) {
                 case GlobalConfig.RUN_SCRIPT:
                     Pair<Integer, String> idData = Script.decodeIdAndData(data);
@@ -88,14 +88,14 @@ public class EventAction {
                         int p = intent.getIntExtra(LightningIntent.INTENT_EXTRA_DESKTOP, Page.FIRST_DASHBOARD_PAGE);
                         Page page = engine.getOrLoadPage(p);
                         String description = Utils.formatPageName(page, page.findFirstOpener());
-                        if(intent.hasExtra(LightningIntent.INTENT_EXTRA_X)) {
+                        if (intent.hasExtra(LightningIntent.INTENT_EXTRA_X)) {
                             float x = intent.getFloatExtra(LightningIntent.INTENT_EXTRA_X, 0);
                             float y = intent.getFloatExtra(LightningIntent.INTENT_EXTRA_Y, 0);
                             float s = intent.getFloatExtra(LightningIntent.INTENT_EXTRA_SCALE, 1);
                             boolean absolute = intent.getBooleanExtra(LightningIntent.INTENT_EXTRA_ABSOLUTE, true);
                             DecimalFormat df = new DecimalFormat("0.##");
                             description += absolute ? " @" : " +";
-                            description += df.format(x)+"x"+df.format(y)+"/"+df.format(s);
+                            description += df.format(x) + "x" + df.format(y) + "/" + df.format(s);
                         }
                         return description;
                     } catch (URISyntaxException e) {
@@ -115,7 +115,7 @@ public class EventAction {
 
                 case GlobalConfig.SET_VARIABLE:
                     Variable v = Variable.decode(data);
-                    if(v != null) {
+                    if (v != null) {
                         return v.describe();
                     }
                     break;

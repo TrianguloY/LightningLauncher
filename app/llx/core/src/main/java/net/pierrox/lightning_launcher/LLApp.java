@@ -12,6 +12,7 @@ import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.view.ViewGroup;
+
 import net.pierrox.lightning_launcher.activities.ResourcesWrapperHelper;
 import net.pierrox.lightning_launcher.api.ScreenIdentity;
 import net.pierrox.lightning_launcher.configuration.SystemConfig;
@@ -26,6 +27,7 @@ import net.pierrox.lightning_launcher.script.api.Property;
 import net.pierrox.lightning_launcher.views.MyAppWidgetHostView;
 import net.pierrox.lightning_launcher.views.NativeImage;
 import net.pierrox.lightning_launcher.views.SharedAsyncGraphicsDrawable;
+
 import org.json.JSONObject;
 
 import java.io.File;
@@ -34,86 +36,91 @@ import java.util.HashMap;
 import java.util.List;
 
 public abstract class LLApp extends Application {
-    public interface SystemConfigListener {
-        void onSystemConfigChanged(SystemConfig newSystemConfig);
-    }
-
-
-    public static final String LL_PKG_NAME="net.pierrox.lightning_launcher";
-	public static final String LLX_PKG_NAME="net.pierrox.lightning_launcher_extreme";
-    public static final String LKP_PKG_NAME="net.pierrox.lightning_locker_p";
-	public static final String INTENT_ITEM_ACTION=LL_PKG_NAME+".ITEM_ACTION";
-
+    public static final String LL_PKG_NAME = "net.pierrox.lightning_launcher";
+    public static final String LLX_PKG_NAME = "net.pierrox.lightning_launcher_extreme";
+    public static final String LKP_PKG_NAME = "net.pierrox.lightning_locker_p";
+    public static final String INTENT_ITEM_ACTION = LL_PKG_NAME + ".ITEM_ACTION";
     private static final int SYSTEM_CONFIG_FILE_VERSION = 1;
-
     private static LLApp sThis;
-
+    private final HashMap<String, LightningEngine> mLightningEngines = new HashMap<>();
+    private final ArrayList<Screen> mScreens = new ArrayList<>();
     protected LightningEngine mAppEngine;
-    private HashMap<String, LightningEngine> mLightningEngines = new HashMap<>();
-
-    private MyAppWidgetHost mAppWidgetHost;
+    private final BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equals(Intent.ACTION_SCREEN_OFF)) {
+                Screen screen = getActiveScreen();
+                if (screen != null) {
+                    screen.runAction(mAppEngine, "SCREEN_OFF", mAppEngine.getGlobalConfig().screenOff);
+                }
+            } else if (action.equals(Intent.ACTION_SCREEN_ON)) {
+                Screen screen = getActiveScreen();
+                if (screen != null) {
+                    screen.runAction(mAppEngine, "SCREEN_ON", mAppEngine.getGlobalConfig().screenOn);
+                }
+            }
+        }
+    };
     protected SystemConfig mSystemConfig;
-
-	private ArrayList<SystemConfigListener> mSystemConfigListeners;
+    protected Screen mBackgroundScreen;
+    private MyAppWidgetHost mAppWidgetHost;
+    private ArrayList<SystemConfigListener> mSystemConfigListeners;
     private ResourcesWrapperHelper mResourcesWrapperHelper;
-
-	private String mLanguage;
-
+    private String mLanguage;
     private int mActiveDashboardPage;
-
-
     private Typeface mIconsTypeface;
-
     private int mWidgetHostStartListeningCount;
 
-    private ArrayList<Screen> mScreens = new ArrayList<>();
-    protected Screen mBackgroundScreen;
+    public static LLApp get() {
+        return sThis;
+    }
 
-	@Override
-	public void onCreate() {
-		super.onCreate();
+    @Override
+    public void onCreate() {
+        super.onCreate();
 
         sThis = this;
 
-		NativeImage.init(this);
+        NativeImage.init(this);
 
         Utils.deleteDirectory(FileUtils.getCachedDrawablesDir(this), false);
 
-        mAppWidgetHost=new MyAppWidgetHost(this, 1968);
+        mAppWidgetHost = new MyAppWidgetHost(this, 1968);
         try {
             mAppWidgetHost.startListening();
         } catch (Throwable e) {
             // pass
         }
 
-        mSystemConfigListeners=new ArrayList<>(10);
+        mSystemConfigListeners = new ArrayList<>(10);
 
         loadSystemConfig();
 
         migrate();
 
-		Utils.retrieveStandardIcon(this);
+        Utils.retrieveStandardIcon(this);
 
         SharedAsyncGraphicsDrawable.setPoolSize((long) (mSystemConfig.imagePoolSize * Runtime.getRuntime().maxMemory()));
 
 //        Utils.setTheme(this, Utils.APP_THEME);
-		
 
-		if(mSystemConfig.language != null) {
+
+        if (mSystemConfig.language != null) {
             mLanguage = mSystemConfig.language;
-		} else {
-            List<ResolveInfo> r=getPackageManager().queryIntentActivities(new Intent("net.pierrox.lightning_launcher.lp.ENUMERATE"), 0);
+        } else {
+            List<ResolveInfo> r = getPackageManager().queryIntentActivities(new Intent("net.pierrox.lightning_launcher.lp.ENUMERATE"), 0);
             mLanguage = null;
-            for(ResolveInfo ri : r) {
+            for (ResolveInfo ri : r) {
                 String p = ri.activityInfo.packageName;
-                if(!p.equals(LL_PKG_NAME) && !p.equals(LLX_PKG_NAME)) {
+                if (!p.equals(LL_PKG_NAME) && !p.equals(LLX_PKG_NAME)) {
                     mLanguage = p;
                     break;
                 }
             }
-		}
+        }
 
-        if(getPackageName().equals(mLanguage)) {
+        if (getPackageName().equals(mLanguage)) {
             mLanguage = null;
         }
 
@@ -129,17 +136,17 @@ public abstract class LLApp extends Application {
 
         mAppEngine.getOrLoadPage(Page.APP_DRAWER_PAGE);
 
-        IntentFilter intent_filter=new IntentFilter();
+        IntentFilter intent_filter = new IntentFilter();
         intent_filter.addAction(Intent.ACTION_SCREEN_OFF);
         intent_filter.addAction(Intent.ACTION_SCREEN_ON);
         registerReceiver(mBroadcastReceiver, intent_filter);
 
         mBackgroundScreen.runAction(mAppEngine, "STARTUP", mAppEngine.getGlobalConfig().startup);
     }
-	
-	@Override
-	public void onTerminate() {
-		super.onTerminate();
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
 
         unregisterReceiver(mBroadcastReceiver);
 
@@ -162,10 +169,10 @@ public abstract class LLApp extends Application {
         saveSystemConfig();
     }
 
-	@Override
-	public Resources getResources() {
-		return mResourcesWrapperHelper == null ? super.getResources() : mResourcesWrapperHelper.getResources();
-	}
+    @Override
+    public Resources getResources() {
+        return mResourcesWrapperHelper == null ? super.getResources() : mResourcesWrapperHelper.getResources();
+    }
 
     public SystemConfig getSystemConfig() {
         return mSystemConfig;
@@ -179,9 +186,9 @@ public abstract class LLApp extends Application {
     public LightningEngine getEngine(File baseDir, boolean doInit) {
         String key = baseDir.getAbsolutePath();
         LightningEngine engine = mLightningEngines.get(key);
-        if(engine == null) {
+        if (engine == null) {
             engine = new LightningEngine(this, baseDir);
-            if(doInit) {
+            if (doInit) {
                 engine.init();
             }
             mLightningEngines.put(key, engine);
@@ -190,35 +197,31 @@ public abstract class LLApp extends Application {
         return engine;
     }
 
-	public void notifySystemConfigChanged() {
-		for(SystemConfigListener l : mSystemConfigListeners) {
-			l.onSystemConfigChanged(mSystemConfig);
-		}
-	}
+    public void notifySystemConfigChanged() {
+        for (SystemConfigListener l : mSystemConfigListeners) {
+            l.onSystemConfigChanged(mSystemConfig);
+        }
+    }
 
     public void saveSystemConfig() {
         mSystemConfig.version = SYSTEM_CONFIG_FILE_VERSION;
         JsonLoader.saveObjectToFile(mSystemConfig, FileUtils.getSystemConfigFile(this));
     }
-	
-	public void registerSystemConfigListener(SystemConfigListener l) {
+
+    public void registerSystemConfigListener(SystemConfigListener l) {
         mSystemConfigListeners.add(l);
-	}
-	
-	public void unregisterSystemConfigListener(SystemConfigListener l) {
+    }
+
+    public void unregisterSystemConfigListener(SystemConfigListener l) {
         mSystemConfigListeners.remove(l);
-	}
-	
-	public static LLApp get() {
-		return sThis;
-	}
-	
-	public MyAppWidgetHost getAppWidgetHost() {
+    }
+
+    public MyAppWidgetHost getAppWidgetHost() {
         return mAppWidgetHost;
-	}
+    }
 
     public void appWidgetHostStartListening() {
-        if(mWidgetHostStartListeningCount == 0) {
+        if (mWidgetHostStartListeningCount == 0) {
             mAppWidgetHost.startListening();
         }
         mWidgetHostStartListeningCount++;
@@ -226,28 +229,28 @@ public abstract class LLApp extends Application {
 
     public void appWidgetHostStopListening() {
         mWidgetHostStartListeningCount--;
-        if(mWidgetHostStartListeningCount == 0) {
+        if (mWidgetHostStartListeningCount == 0) {
             mAppWidgetHost.stopListening();
         }
     }
 
     public abstract void displayPagerPage(int page, boolean reset_navigation_history);
 
+    public int getActiveDashboardPage() {
+        return mActiveDashboardPage;
+    }
+
     public void setActiveDashboardPage(int page) {
         mActiveDashboardPage = page;
     }
 
-    public int getActiveDashboardPage() {
-        return mActiveDashboardPage;
+    protected void loadSystemConfig() {
+        mSystemConfig = JsonLoader.readObject(SystemConfig.class, FileUtils.getSystemConfigFile(this));
     }
-	
-	protected void loadSystemConfig() {
-		mSystemConfig = JsonLoader.readObject(SystemConfig.class, FileUtils.getSystemConfigFile(this));
-	}
 
     public void onScreenCreated(Screen screen) {
         int index;
-        if(screen.getIdentity() == ScreenIdentity.LIVE_WALLPAPER) {
+        if (screen.getIdentity() == ScreenIdentity.LIVE_WALLPAPER) {
             // never put the live wallpaper at the top of the stack, always the bottom
             index = 0;
         } else {
@@ -262,7 +265,7 @@ public abstract class LLApp extends Application {
 
     public void onScreenResumed(Screen screen) {
         // never bring the LWP to the top of the stack
-        if(screen.getIdentity() != ScreenIdentity.LIVE_WALLPAPER && mScreens.size() > 1) {
+        if (screen.getIdentity() != ScreenIdentity.LIVE_WALLPAPER && mScreens.size() > 1) {
             mScreens.remove(screen);
             mScreens.add(screen);
         }
@@ -270,7 +273,7 @@ public abstract class LLApp extends Application {
 
     public void onScreenPaused(Screen screen) {
         // the LWP is always at the bottom of the stack
-        if(screen.getIdentity() != ScreenIdentity.LIVE_WALLPAPER) {
+        if (screen.getIdentity() != ScreenIdentity.LIVE_WALLPAPER) {
             int size = mScreens.size();
             if (size > 2) {
                 mScreens.remove(screen);
@@ -281,7 +284,7 @@ public abstract class LLApp extends Application {
 
     public Screen getScreen(ScreenIdentity identity) {
         for (Screen screen : mScreens) {
-            if(screen.getIdentity() == identity) {
+            if (screen.getIdentity() == identity) {
                 return screen;
             }
         }
@@ -294,11 +297,11 @@ public abstract class LLApp extends Application {
 
     public Screen getActiveScreen() {
         int l = mScreens.size();
-        return l==0 ? null : mScreens.get(l-1);
+        return l == 0 ? null : mScreens.get(l - 1);
     }
 
     public Typeface getIconsTypeface() {
-        if(mIconsTypeface == null) {
+        if (mIconsTypeface == null) {
             mIconsTypeface = Typeface.createFromAsset(getAssets(), "icons.ttf");
         }
         return mIconsTypeface;
@@ -365,52 +368,69 @@ public abstract class LLApp extends Application {
 
     private void migrate() {
         // migrate fields that were previously in the global config object
-        if(mSystemConfig.version == 0) {
+        if (mSystemConfig.version == 0) {
             File from = FileUtils.getGlobalConfigFile(getFilesDir());
             JSONObject json = FileUtils.readJSONObjectFromFile(from);
 
-            if(json != null) {
+            if (json != null) {
                 mSystemConfig.autoEdit = json.optBoolean("autoEdit", false);
                 mSystemConfig.alwaysShowStopPoints = json.optBoolean("alwaysShowStopPoints", false);
                 mSystemConfig.keepInMemory = json.optBoolean("keepInMemory", true);
                 mSystemConfig.language = json.optString("language", null);
                 mSystemConfig.expertMode = json.optBoolean("expertMode", false);
                 mSystemConfig.hotwords = json.optBoolean("hotwords", false);
-                if(json.has("appStyle")) mSystemConfig.appStyle = SystemConfig.AppStyle.valueOf(json.optString("appStyle"));
+                if (json.has("appStyle"))
+                    mSystemConfig.appStyle = SystemConfig.AppStyle.valueOf(json.optString("appStyle"));
                 mSystemConfig.hints = json.optInt("hints", 0);
-                if(json.optBoolean("showHelpHint", true)) mSystemConfig.hints |= SystemConfig.HINT_CUSTOMIZE_HELP;
-                if(json.optBoolean("showRateHint", true)) mSystemConfig.hints |= SystemConfig.HINT_RATE;
-                if(json.optBoolean("myDrawerHint", true)) mSystemConfig.hints |= SystemConfig.HINT_MY_DRAWER;
+                if (json.optBoolean("showHelpHint", true))
+                    mSystemConfig.hints |= SystemConfig.HINT_CUSTOMIZE_HELP;
+                if (json.optBoolean("showRateHint", true))
+                    mSystemConfig.hints |= SystemConfig.HINT_RATE;
+                if (json.optBoolean("myDrawerHint", true))
+                    mSystemConfig.hints |= SystemConfig.HINT_MY_DRAWER;
                 mSystemConfig.imagePoolSize = (float) json.optDouble("imagePoolSize", 0);
-                mSystemConfig.switches = json.optInt("switches", SystemConfig.SWITCH_SNAP|SystemConfig.SWITCH_EDIT_BARS|SystemConfig.SWITCH_CONTENT_ZOOMED|SystemConfig.SWITCH_HONOUR_PINNED_ITEMS);
+                mSystemConfig.switches = json.optInt("switches", SystemConfig.SWITCH_SNAP | SystemConfig.SWITCH_EDIT_BARS | SystemConfig.SWITCH_CONTENT_ZOOMED | SystemConfig.SWITCH_HONOUR_PINNED_ITEMS);
                 mSystemConfig.editBoxMode = json.optInt("editBoxMode", SystemConfig.EDIT_BOX_NONE);
                 mSystemConfig.editBoxPropHeight = json.optInt("editBoxPropHeight", 0);
             }
         }
 
         // update the version number now
-        if(mSystemConfig.version < SYSTEM_CONFIG_FILE_VERSION) {
+        if (mSystemConfig.version < SYSTEM_CONFIG_FILE_VERSION) {
             saveSystemConfig();
         }
     }
 
-    private BroadcastReceiver mBroadcastReceiver=new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action=intent.getAction();
-            if (action.equals(Intent.ACTION_SCREEN_OFF)) {
-                Screen screen = getActiveScreen();
-                if(screen != null) {
-                    screen.runAction(mAppEngine, "SCREEN_OFF", mAppEngine.getGlobalConfig().screenOff);
-                }
-            } else if (action.equals(Intent.ACTION_SCREEN_ON)) {
-                Screen screen = getActiveScreen();
-                if(screen != null) {
-                    screen.runAction(mAppEngine, "SCREEN_ON", mAppEngine.getGlobalConfig().screenOn);
-                }
-            }
+    public interface SystemConfigListener {
+        void onSystemConfigChanged(SystemConfig newSystemConfig);
+    }
+
+    public static final class MyAppWidgetHost extends AppWidgetHost {
+
+        HashMap<Integer, AppWidgetHostView> mViews = new HashMap<>();
+
+        public MyAppWidgetHost(Context context, int hostId) {
+            super(context, hostId);
         }
-    };
+
+        public AppWidgetHostView getWidgetView(Context context, int appWidgetId, AppWidgetProviderInfo appWidget) {
+            AppWidgetHostView v = mViews.get(appWidgetId);
+            if (v == null) {
+                v = createView(context, appWidgetId, appWidget);
+                mViews.put(appWidgetId, v);
+            } else {
+                ViewGroup parent = (ViewGroup) v.getParent();
+                parent.removeView(v);
+            }
+
+            return v;
+        }
+
+        @Override
+        protected AppWidgetHostView onCreateView(Context context, int appWidgetId, AppWidgetProviderInfo appWidget) {
+            return new MyAppWidgetHostView(context);
+        }
+    }
 
     private class BackgroundScreen extends Screen {
 
@@ -426,33 +446,6 @@ public abstract class LLApp extends Application {
         @Override
         protected Resources getRealResources() {
             return LLApp.super.getResources();
-        }
-    }
-
-    public static final class MyAppWidgetHost extends AppWidgetHost {
-
-        HashMap<Integer,AppWidgetHostView> mViews = new HashMap<>();
-
-        public MyAppWidgetHost(Context context, int hostId) {
-            super(context, hostId);
-        }
-
-        public AppWidgetHostView getWidgetView(Context context, int appWidgetId, AppWidgetProviderInfo appWidget) {
-            AppWidgetHostView v = mViews.get(appWidgetId);
-            if(v == null) {
-                v = createView(context, appWidgetId, appWidget);
-                mViews.put(appWidgetId, v);
-            } else {
-                ViewGroup parent = (ViewGroup) v.getParent();
-                parent.removeView(v);
-            }
-
-            return v;
-        }
-
-        @Override
-        protected AppWidgetHostView onCreateView(Context context, int appWidgetId, AppWidgetProviderInfo appWidget) {
-            return new MyAppWidgetHostView(context);
         }
     }
 

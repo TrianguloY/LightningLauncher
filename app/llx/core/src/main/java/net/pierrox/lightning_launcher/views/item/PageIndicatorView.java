@@ -17,10 +17,11 @@ import net.pierrox.lightning_launcher.data.PageIndicator;
 import net.pierrox.lightning_launcher.views.MyTextView;
 
 public class PageIndicatorView extends ItemView {
-    private PageIndicator mPageIndicator;
-
+    private static final RectF sTmpRectF1 = new RectF();
+    private static final RectF sTmpRectF2 = new RectF();
+    private static final Rect sTmpRect = new Rect();
+    private final PageIndicator mPageIndicator;
     private IndicatorView mIndicatorView;
-
     private boolean mIsDummyPreview;
     private float mContainerX;
     private float mContainerY;
@@ -42,7 +43,7 @@ public class PageIndicatorView extends ItemView {
 
         Context context = getContext();
 
-        switch(mPageIndicator.style) {
+        switch (mPageIndicator.style) {
             case DOTS:
                 width = height = ViewGroup.LayoutParams.WRAP_CONTENT;
                 v = new DotsView(context);
@@ -75,13 +76,13 @@ public class PageIndicatorView extends ItemView {
         }
 
         mIndicatorView = v;
-        if(mContainerBounds != null) {
+        if (mContainerBounds != null) {
             mIndicatorView.update();
         }
 
         View result;
-        if(width==ViewGroup.LayoutParams.MATCH_PARENT && height==ViewGroup.LayoutParams.MATCH_PARENT) {
-            result = (View)v;
+        if (width == ViewGroup.LayoutParams.MATCH_PARENT && height == ViewGroup.LayoutParams.MATCH_PARENT) {
+            result = (View) v;
         } else {
             FrameLayout c = new FrameLayout(context);
             FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(width, height, Gravity.CENTER);
@@ -103,7 +104,7 @@ public class PageIndicatorView extends ItemView {
     }
 
     public void onItemLayoutPositionChanged(float x, float y, float scale, float width, float height, Rect bounds) {
-        if(!mIsDummyPreview) {
+        if (!mIsDummyPreview) {
             mContainerX = x;
             mContainerY = y;
             mContainerScale = scale;
@@ -115,14 +116,14 @@ public class PageIndicatorView extends ItemView {
         mIndicatorView.update();
     }
 
-    private interface IndicatorView  {
-        public void update();
+    private interface IndicatorView {
+        void update();
     }
 
     private class DotsView extends View implements IndicatorView {
 
-        private Paint mOuterCirclePaint;
-        private Paint mInnerCirclePaint;
+        private final Paint mOuterCirclePaint;
+        private final Paint mInnerCirclePaint;
 
         private int mMinX, mMaxX;
         private int mMinY, mMaxY;
@@ -144,21 +145,21 @@ public class PageIndicatorView extends ItemView {
             final int py = mMaxY - mMinY;
             float stroke_width = mPageIndicator.dotsOuterStrokeWidth == 0 ? 1 : mPageIndicator.dotsOuterStrokeWidth;
             float radius = Math.max(mPageIndicator.dotsInnerRadius, mPageIndicator.dotsOuterRadius + stroke_width);
-            int width = (int) Math.ceil((radius * 2) * px + mPageIndicator.dotsMarginX * (px>0 ? px-1 : 0));
-            int height = (int) Math.ceil((radius * 2) * py + mPageIndicator.dotsMarginY * (py>0 ? py-1 : 0));
+            int width = (int) Math.ceil((radius * 2) * px + mPageIndicator.dotsMarginX * (px > 0 ? px - 1 : 0));
+            int height = (int) Math.ceil((radius * 2) * py + mPageIndicator.dotsMarginY * (py > 0 ? py - 1 : 0));
             setMeasuredDimension(width, height);
         }
 
         @Override
         protected void onDraw(Canvas canvas) {
-            if(mContainerWidth == 0 || mContainerHeight == 0) {
+            if (mContainerWidth == 0 || mContainerHeight == 0) {
                 return;
             }
 
             int num_dots_x = mMaxX - mMinX;
             int num_dots_y = mMaxY - mMinY;
 
-            if(num_dots_x * num_dots_y > 250) {
+            if (num_dots_x * num_dots_y > 250) {
                 return;
             }
 
@@ -169,53 +170,55 @@ public class PageIndicatorView extends ItemView {
             float ad = (stroke_width % 2) == 0 ? 0 : 0.5f;
 
             float radius = Math.max(mPageIndicator.dotsInnerRadius, mPageIndicator.dotsOuterRadius + stroke_width);
-            float scaled_cont_x = -(mContainerX-mContainerWidth/2)/mContainerScale;
-            float scaled_cont_y = -(mContainerY-mContainerHeight/2)/mContainerScale;
+            float scaled_cont_x = -(mContainerX - mContainerWidth / 2) / mContainerScale;
+            float scaled_cont_y = -(mContainerY - mContainerHeight / 2) / mContainerScale;
             float pos_x_f = scaled_cont_x / mContainerWidth - 0.5f;
             float pos_y_f = scaled_cont_y / mContainerHeight - 0.5f;
 
             float max_alpha = Color.alpha(mPageIndicator.dotsInnerColor) / 255f;
             float cy = radius;
-            for(int y=mMinY; y<mMaxY; y++) {
+            for (int y = mMinY; y < mMaxY; y++) {
                 float cx = radius;
-                for(int x=mMinX; x<mMaxX; x++) {
-                    canvas.drawCircle(cx+ad, cy+ad, mPageIndicator.dotsOuterRadius, mOuterCirclePaint);
+                for (int x = mMinX; x < mMaxX; x++) {
+                    canvas.drawCircle(cx + ad, cy + ad, mPageIndicator.dotsOuterRadius, mOuterCirclePaint);
 
-                    if(x == mMinX && pos_x_f > mMaxX-1) {
+                    if (x == mMinX && pos_x_f > mMaxX - 1) {
                         pos_x_f = x - mMaxX + pos_x_f;
-                    } else if(x == mMaxX-1 && pos_x_f < mMinX) {
+                    } else if (x == mMaxX - 1 && pos_x_f < mMinX) {
                         pos_x_f = x + 1 + pos_x_f - mMinX;
                     }
-                    if(y == mMinY && pos_y_f > mMaxY-1) {
+                    if (y == mMinY && pos_y_f > mMaxY - 1) {
                         pos_y_f = y - mMaxY + pos_y_f;
-                    } else if(y == mMaxY-1 && pos_y_f < mMinY) {
+                    } else if (y == mMaxY - 1 && pos_y_f < mMinY) {
                         pos_y_f = y + 1 + pos_y_f - mMinY;
                     }
-                    float dx = Math.abs(pos_x_f-x);
-                    float dy = Math.abs(pos_y_f-y);
-                    if(dx>1) dx=1; dx = 1-dx;
-                    if(dy>1) dy=1; dy = 1-dy;
-                    mInnerCirclePaint.setAlpha((int) (255*dx*dy*max_alpha));
-                    canvas.drawCircle(cx+ad, cy+ad, mPageIndicator.dotsInnerRadius, mInnerCirclePaint);
+                    float dx = Math.abs(pos_x_f - x);
+                    float dy = Math.abs(pos_y_f - y);
+                    if (dx > 1) dx = 1;
+                    dx = 1 - dx;
+                    if (dy > 1) dy = 1;
+                    dy = 1 - dy;
+                    mInnerCirclePaint.setAlpha((int) (255 * dx * dy * max_alpha));
+                    canvas.drawCircle(cx + ad, cy + ad, mPageIndicator.dotsInnerRadius, mInnerCirclePaint);
 
-                    cx += radius*2 + mPageIndicator.dotsMarginX;
+                    cx += radius * 2 + mPageIndicator.dotsMarginX;
                 }
-                cy += radius*2 + mPageIndicator.dotsMarginY;
+                cy += radius * 2 + mPageIndicator.dotsMarginY;
             }
         }
 
         @Override
         public void update() {
-            if(mContainerWidth !=0 && mContainerHeight != 0) {
+            if (mContainerWidth != 0 && mContainerHeight != 0) {
                 int min_x = (int) -Math.ceil(-mContainerBounds.left / mContainerWidth);
                 int max_x = (int) Math.ceil(mContainerBounds.right / mContainerWidth);
                 int min_y = (int) -Math.ceil(-mContainerBounds.top / mContainerHeight);
                 int max_y = (int) Math.ceil(mContainerBounds.bottom / mContainerHeight);
-                if (min_x!=mMinX || max_x!=mMaxX || min_y!=mMinY || max_y!=mMaxY) {
-                    mMinX=min_x;
-                    mMaxX=max_x;
-                    mMinY=min_y;
-                    mMaxY=max_y;
+                if (min_x != mMinX || max_x != mMaxX || min_y != mMinY || max_y != mMaxY) {
+                    mMinX = min_x;
+                    mMaxX = max_x;
+                    mMinY = min_y;
+                    mMaxY = max_y;
                     requestLayout();
                 }
                 invalidate();
@@ -223,18 +226,13 @@ public class PageIndicatorView extends ItemView {
         }
     }
 
-
-    private static RectF sTmpRectF1 = new RectF();
-    private static RectF sTmpRectF2 = new RectF();
-    private static Rect sTmpRect = new Rect();
     private class MiniMapView extends View implements IndicatorView {
-        private Matrix mDrawMatrix = new Matrix();
+        private final Matrix mDrawMatrix = new Matrix();
+        private final Paint mOutStrokePaint;
+        private final Paint mOutFillPaint;
+        private final Paint mInStrokePaint;
+        private final Paint mInFillPaint;
         private int mWidth, mHeight;
-
-        private Paint mOutStrokePaint;
-        private Paint mOutFillPaint;
-        private Paint mInStrokePaint;
-        private Paint mInFillPaint;
 
         public MiniMapView(Context context) {
             super(context);
@@ -261,7 +259,7 @@ public class PageIndicatorView extends ItemView {
 
         @Override
         protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-            if(mContainerBounds == null) {
+            if (mContainerBounds == null) {
                 super.onMeasure(widthMeasureSpec, heightMeasureSpec);
                 return;
             }
@@ -279,14 +277,14 @@ public class PageIndicatorView extends ItemView {
         @Override
         protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
             sTmpRectF1.set(mContainerBounds);
-            float s = mPageIndicator.miniMapInStrokeWidth ==0 ? 1 : mPageIndicator.miniMapOutStrokeWidth /2f;
+            float s = mPageIndicator.miniMapInStrokeWidth == 0 ? 1 : mPageIndicator.miniMapOutStrokeWidth / 2f;
             sTmpRectF2.set(s, s, right - left - s, bottom - top - s);
             mDrawMatrix.setRectToRect(sTmpRectF1, sTmpRectF2, Matrix.ScaleToFit.CENTER);
         }
 
         @Override
         protected void onDraw(Canvas canvas) {
-            if(mContainerBounds == null) {
+            if (mContainerBounds == null) {
                 return;
             }
 
@@ -305,7 +303,7 @@ public class PageIndicatorView extends ItemView {
         public void update() {
             int w = mContainerBounds.width();
             int h = mContainerBounds.height();
-            if(w!=mWidth || h!=mHeight) {
+            if (w != mWidth || h != mHeight) {
                 mWidth = w;
                 mHeight = h;
                 requestLayout();
@@ -325,7 +323,7 @@ public class PageIndicatorView extends ItemView {
 
         @Override
         public void update() {
-            if(mContainerWidth !=0 && mContainerHeight != 0) {
+            if (mContainerWidth != 0 && mContainerHeight != 0) {
                 int min_x = (int) -Math.ceil(-mContainerBounds.left / mContainerWidth);
                 int max_x = (int) Math.ceil(mContainerBounds.right / mContainerWidth);
                 int min_y = (int) -Math.ceil(-mContainerBounds.top / mContainerHeight);
@@ -336,12 +334,12 @@ public class PageIndicatorView extends ItemView {
                 float pos_y_f = scaled_cont_y / mContainerHeight - 0.5f;
                 int width = max_x - min_x;
                 int height = max_y - min_y;
-                if(pos_x_f >= (max_x-0.5f)) pos_x_f -= width;
-                if(pos_y_f >= (max_y-0.5f)) pos_y_f -= height;
+                if (pos_x_f >= (max_x - 0.5f)) pos_x_f -= width;
+                if (pos_y_f >= (max_y - 0.5f)) pos_y_f -= height;
                 String text;
                 try {
                     text = String.format(mPageIndicator.rawFormat, pos_x_f, pos_y_f, mContainerScale);
-                } catch(Exception e) {
+                } catch (Exception e) {
                     text = getContext().getString(R.string.dt_format_error);
                 }
                 setText(text);
@@ -352,11 +350,11 @@ public class PageIndicatorView extends ItemView {
 
     private class LineView extends View implements IndicatorView {
 
-        private int mLineWidth;
-        private Matrix mDrawMatrix = new Matrix();
+        private final int mLineWidth;
+        private final Matrix mDrawMatrix = new Matrix();
 
-        private Paint mBgPaint;
-        private Paint mFgPaint;
+        private final Paint mBgPaint;
+        private final Paint mFgPaint;
 
         public LineView(Context context) {
             super(context);
@@ -390,7 +388,7 @@ public class PageIndicatorView extends ItemView {
 
         @Override
         protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-            if(mContainerBounds == null) {
+            if (mContainerBounds == null) {
                 return;
             }
 
@@ -401,17 +399,17 @@ public class PageIndicatorView extends ItemView {
 
         @Override
         protected void onDraw(Canvas canvas) {
-            if(mContainerBounds == null) {
+            if (mContainerBounds == null) {
                 return;
             }
 
             int w = getWidth();
             int h = getHeight();
 
-            float bg_shift=0, fg_shift=0; // for LEFT_TOP
-            switch(mPageIndicator.lineGravity) {
+            float bg_shift = 0, fg_shift = 0; // for LEFT_TOP
+            switch (mPageIndicator.lineGravity) {
                 case RIGHT_BOTTOM:
-                    if(mPageIndicator.lineBgWidth > mPageIndicator.lineFgWidth) {
+                    if (mPageIndicator.lineBgWidth > mPageIndicator.lineFgWidth) {
                         bg_shift = 0;
                         fg_shift = mPageIndicator.lineBgWidth - mPageIndicator.lineFgWidth;
                     } else {
@@ -421,7 +419,7 @@ public class PageIndicatorView extends ItemView {
                     break;
 
                 case CENTER:
-                    if(mPageIndicator.lineBgWidth > mPageIndicator.lineFgWidth) {
+                    if (mPageIndicator.lineBgWidth > mPageIndicator.lineFgWidth) {
                         bg_shift = 0;
                         fg_shift = (mPageIndicator.lineBgWidth - mPageIndicator.lineFgWidth) / 2;
                     } else {
@@ -440,19 +438,19 @@ public class PageIndicatorView extends ItemView {
             sTmpRectF2.set(-mContainerX / mContainerScale, -mContainerY / mContainerScale, (mContainerWidth - mContainerX) / mContainerScale, (mContainerHeight - mContainerY) / mContainerScale);
             mDrawMatrix.mapRect(sTmpRectF2);
 
-            switch(mPageIndicator.style) {
+            switch (mPageIndicator.style) {
                 case LINE_X:
                     sTmpRectF1.top = bg_shift;
-                    sTmpRectF1.bottom = bg_shift+ mPageIndicator.lineBgWidth;
+                    sTmpRectF1.bottom = bg_shift + mPageIndicator.lineBgWidth;
                     sTmpRectF2.top = fg_shift;
-                    sTmpRectF2.bottom = fg_shift+ mPageIndicator.lineFgWidth;
+                    sTmpRectF2.bottom = fg_shift + mPageIndicator.lineFgWidth;
                     break;
 
                 case LINE_Y:
                     sTmpRectF1.left = bg_shift;
-                    sTmpRectF1.right = bg_shift+ mPageIndicator.lineBgWidth;
+                    sTmpRectF1.right = bg_shift + mPageIndicator.lineBgWidth;
                     sTmpRectF2.left = fg_shift;
-                    sTmpRectF2.right = fg_shift+ mPageIndicator.lineFgWidth;
+                    sTmpRectF2.right = fg_shift + mPageIndicator.lineFgWidth;
                     break;
             }
 

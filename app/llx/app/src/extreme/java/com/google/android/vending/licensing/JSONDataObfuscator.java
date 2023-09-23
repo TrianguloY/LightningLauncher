@@ -17,9 +17,7 @@
 package com.google.android.vending.licensing;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.provider.Settings;
-import android.util.Log;
 
 import net.pierrox.lightning_launcher.data.FileUtils;
 
@@ -32,15 +30,15 @@ import java.io.IOException;
 
 public class JSONDataObfuscator {
 
-    private static final byte[] SALT = new byte[] {
+    private static final byte[] SALT = new byte[]{
             42, 13, 27, -7, 1, 63, -51, 94, 107, 120, 4,
             -54, -77, 123, -12, -72, -99, 10, 0, 73
     };
 
-    private File mFile;
-    private String mPackageName;
-    private JSONObject mData;
+    private final File mFile;
+    private final String mPackageName;
     private final Obfuscator mObfuscator;
+    private JSONObject mData;
 
 
     public JSONDataObfuscator(Context context) {
@@ -49,10 +47,10 @@ public class JSONDataObfuscator {
         mFile = new File(context.getCacheDir(), "icon");
         mObfuscator = new AESObfuscator(SALT, mPackageName, deviceId);
         String obfuscated_data = FileUtils.readFileContent(mFile);
-        if(obfuscated_data != null) {
+        if (obfuscated_data != null) {
             try {
                 String data = mObfuscator.unobfuscate(obfuscated_data, context.getPackageName());
-                if(data != null) {
+                if (data != null) {
                     mData = new JSONObject(data);
                 }
             } catch (Exception e) {
@@ -60,7 +58,7 @@ public class JSONDataObfuscator {
             }
 
         }
-        if(mData == null) {
+        if (mData == null) {
             mData = new JSONObject();
         }
     }

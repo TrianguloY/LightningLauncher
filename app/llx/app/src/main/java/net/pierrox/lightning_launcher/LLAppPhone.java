@@ -27,7 +27,6 @@ package net.pierrox.lightning_launcher;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Build;
 import android.view.View;
 import android.widget.Toast;
 
@@ -103,7 +102,7 @@ public abstract class LLAppPhone extends LLApp {
 
     @Override
     public void unlockLockScreen(boolean restore_previous_task) {
-        if(LockScreen.sThis != null) {
+        if (LockScreen.sThis != null) {
             LockScreen.sThis.unlock(restore_previous_task);
         } else {
             Toast.makeText(this, net.pierrox.lightning_launcher_extreme.R.string.nly, Toast.LENGTH_SHORT).show();
@@ -133,7 +132,7 @@ public abstract class LLAppPhone extends LLApp {
             screen.pause();
         }
         saveAllData();
-        if(relaunch) {
+        if (relaunch) {
             Intent i = new Intent(this, Dashboard.class);
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(i);
@@ -144,10 +143,8 @@ public abstract class LLAppPhone extends LLApp {
     @Override
     public boolean isLightningIntent(Intent intent) {
         ComponentName cn = intent.getComponent();
-        if(cn != null) {
-            if(cn.getPackageName().equals(getPackageName()) && cn.getClassName().equals(Dashboard.class.getName())) {
-                return true;
-            }
+        if (cn != null) {
+            return cn.getPackageName().equals(getPackageName()) && cn.getClassName().equals(Dashboard.class.getName());
         }
         return false;
     }
@@ -156,7 +153,7 @@ public abstract class LLAppPhone extends LLApp {
     @Override
     public void displayPagerPage(int page, boolean reset_navigation_history) {
         Screen homeScreen = getScreen(ScreenIdentity.HOME);
-        if(homeScreen != null) {
+        if (homeScreen != null) {
             homeScreen.loadRootItemLayout(page, reset_navigation_history, true, true);
         } else {
             mAppEngine.writeCurrentPage(page);

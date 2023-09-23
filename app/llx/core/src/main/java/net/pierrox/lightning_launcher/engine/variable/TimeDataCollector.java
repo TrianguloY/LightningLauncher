@@ -22,49 +22,20 @@ public class TimeDataCollector extends PollingDataCollector {
     private static final String VAR_DAY_NAME = "ll_day_name";
     private static final String VAR_MONTH_NAME = "ll_month_name";
 
-    private SimpleDateFormat mDfSecond = new SimpleDateFormat("ss");
-    private SimpleDateFormat mDfMinute = new SimpleDateFormat("mm");
-    private SimpleDateFormat mDfHour12 = new SimpleDateFormat("hh");
-    private SimpleDateFormat mDfHour24 = new SimpleDateFormat("HH");
-    private SimpleDateFormat mDfDay = new SimpleDateFormat("dd");
-    private SimpleDateFormat mDfMonth = new SimpleDateFormat("MM");
-    private SimpleDateFormat mDfWeek = new SimpleDateFormat("w");
-    private SimpleDateFormat mDfYear = new SimpleDateFormat("yyyy");
-    private SimpleDateFormat mDfAmPm = new SimpleDateFormat("a");
-    private SimpleDateFormat mDfDayName = new SimpleDateFormat("EEEE");
-    private SimpleDateFormat mDfMonthName = new SimpleDateFormat("MMMM");
+    private final SimpleDateFormat mDfSecond = new SimpleDateFormat("ss");
+    private final SimpleDateFormat mDfMinute = new SimpleDateFormat("mm");
+    private final SimpleDateFormat mDfHour12 = new SimpleDateFormat("hh");
+    private final SimpleDateFormat mDfHour24 = new SimpleDateFormat("HH");
+    private final SimpleDateFormat mDfDay = new SimpleDateFormat("dd");
+    private final SimpleDateFormat mDfMonth = new SimpleDateFormat("MM");
+    private final SimpleDateFormat mDfWeek = new SimpleDateFormat("w");
+    private final SimpleDateFormat mDfYear = new SimpleDateFormat("yyyy");
+    private final SimpleDateFormat mDfAmPm = new SimpleDateFormat("a");
+    private final SimpleDateFormat mDfDayName = new SimpleDateFormat("EEEE");
+    private final SimpleDateFormat mDfMonthName = new SimpleDateFormat("MMMM");
 
     private int mPreviousSecond = -1;
-
-    public TimeDataCollector(Handler handler, VariableManager vm) {
-        super(1000, handler, vm);
-
-        mSetVariablesRunnable.run();
-    }
-
-    @Override
-    protected void collectData() {
-        mHandler.post(mSetVariablesRunnable);
-    }
-
-    public BuiltinVariable[] getBuiltinVariables(Resources resources) {
-        return new BuiltinVariable[] {
-                new BuiltinVariable(VAR_SECOND, resources.getString(R.string.bv_sec)),
-                new BuiltinVariable(VAR_MINUTE, resources.getString(R.string.bv_min)),
-                new BuiltinVariable(VAR_HOUR12, resources.getString(R.string.bv_h12)),
-                new BuiltinVariable(VAR_HOUR24, resources.getString(R.string.bv_h24)),
-                new BuiltinVariable(VAR_AM_PM, resources.getString(R.string.bv_ampm)),
-                new BuiltinVariable(VAR_DAY, resources.getString(R.string.bv_day)),
-                new BuiltinVariable(VAR_MONTH, resources.getString(R.string.bv_mon)),
-                new BuiltinVariable(VAR_WEEK, resources.getString(R.string.bv_week)),
-                new BuiltinVariable(VAR_YEAR, resources.getString(R.string.bv_year)),
-                new BuiltinVariable(VAR_DAY_NAME, resources.getString(R.string.bv_dayn)),
-                new BuiltinVariable(VAR_MONTH_NAME, resources.getString(R.string.bv_monn)),
-                new BuiltinVariable(VAR_TIMESTAMP, resources.getString(R.string.bv_ts)),
-        };
-    }
-
-    private Runnable mSetVariablesRunnable = new Runnable() {
+    private final Runnable mSetVariablesRunnable = new Runnable() {
         @Override
         public void run() {
             // text fields, but some of them can be converted to integer
@@ -72,8 +43,8 @@ public class TimeDataCollector extends PollingDataCollector {
             int second = now.getSeconds();
             mVariableManager.edit();
             mVariableManager.setVariable(VAR_SECOND, mDfSecond.format(now));
-            mVariableManager.setVariable(VAR_TIMESTAMP, now.getTime()/1000);
-            if(mPreviousSecond == -1 || second<mPreviousSecond) {
+            mVariableManager.setVariable(VAR_TIMESTAMP, now.getTime() / 1000);
+            if (mPreviousSecond == -1 || second < mPreviousSecond) {
                 mVariableManager.setVariable(VAR_MINUTE, mDfMinute.format(now));
                 mVariableManager.setVariable(VAR_HOUR12, mDfHour12.format(now));
                 mVariableManager.setVariable(VAR_HOUR24, mDfHour24.format(now));
@@ -89,6 +60,34 @@ public class TimeDataCollector extends PollingDataCollector {
             mVariableManager.commit();
         }
     };
+
+    public TimeDataCollector(Handler handler, VariableManager vm) {
+        super(1000, handler, vm);
+
+        mSetVariablesRunnable.run();
+    }
+
+    @Override
+    protected void collectData() {
+        mHandler.post(mSetVariablesRunnable);
+    }
+
+    public BuiltinVariable[] getBuiltinVariables(Resources resources) {
+        return new BuiltinVariable[]{
+                new BuiltinVariable(VAR_SECOND, resources.getString(R.string.bv_sec)),
+                new BuiltinVariable(VAR_MINUTE, resources.getString(R.string.bv_min)),
+                new BuiltinVariable(VAR_HOUR12, resources.getString(R.string.bv_h12)),
+                new BuiltinVariable(VAR_HOUR24, resources.getString(R.string.bv_h24)),
+                new BuiltinVariable(VAR_AM_PM, resources.getString(R.string.bv_ampm)),
+                new BuiltinVariable(VAR_DAY, resources.getString(R.string.bv_day)),
+                new BuiltinVariable(VAR_MONTH, resources.getString(R.string.bv_mon)),
+                new BuiltinVariable(VAR_WEEK, resources.getString(R.string.bv_week)),
+                new BuiltinVariable(VAR_YEAR, resources.getString(R.string.bv_year)),
+                new BuiltinVariable(VAR_DAY_NAME, resources.getString(R.string.bv_dayn)),
+                new BuiltinVariable(VAR_MONTH_NAME, resources.getString(R.string.bv_monn)),
+                new BuiltinVariable(VAR_TIMESTAMP, resources.getString(R.string.bv_ts)),
+        };
+    }
 
     @Override
     public void onResume() {

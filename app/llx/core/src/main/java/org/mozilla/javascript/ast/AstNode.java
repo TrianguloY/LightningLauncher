@@ -21,7 +21,7 @@ import java.util.Map;
  * physical source code, to make it useful for code-processing tools such
  * as IDEs or pretty-printers.  The parser must not rewrite the parse tree
  * when producing this representation. <p>
- *
+ * <p>
  * The {@code AstNode} hierarchy sits atop the older {@link Node} class,
  * which was designed for code generation.  The {@code Node} class is a
  * flexible, weakly-typed class suitable for creating and rewriting code
@@ -31,23 +31,23 @@ import java.util.Map;
  * and common properties, but under the hood it's still using a linked list
  * of child nodes.  It isn't a very good idea to use the child list directly
  * unless you know exactly what you're doing.</p>
- *
+ * <p>
  * Note that {@code AstNode} records additional information, including
  * the node's position, length, and parent node.  Also, some {@code AstNode}
  * subclasses record some of their child nodes in instance members, since
  * they are not needed for code generation.  In a nutshell, only the code
  * generator should be mixing and matching {@code AstNode} and {@code Node}
  * objects.<p>
- *
+ * <p>
  * All offset fields in all subclasses of AstNode are relative to their
  * parent.  For things like paren, bracket and keyword positions, the
  * position is relative to the current node.  The node start position is
  * relative to the parent node. <p>
- *
+ * <p>
  * During the actual parsing, node positions are absolute; adding the node to
  * its parent fixes up the offsets to be relative.  By the time you see the AST
  * (e.g. using the {@code Visitor} interface), the offsets are relative. <p>
- *
+ * <p>
  * {@code AstNode} objects have property lists accessible via the
  * {@link #getProp} and {@link #putProp} methods.  The property lists are
  * integer-keyed with arbitrary {@code Object} values.  For the most part the
@@ -56,19 +56,15 @@ import java.util.Map;
  * annotations to the tree.  The Rhino code generator acts as a client and
  * uses node properties extensively.  You are welcome to use the property-list
  * API for anything your client needs.<p>
- *
+ * <p>
  * This hierarchy does not have separate branches for expressions and
  * statements, as the distinction in JavaScript is not as clear-cut as in
  * Java or C++. <p>
  */
 public abstract class AstNode extends Node implements Comparable<AstNode> {
 
-    protected int position = -1;
-    protected int length = 1;
-    protected AstNode parent;
-
-    private static Map<Integer,String> operatorNames =
-            new HashMap<Integer,String>();
+    private static final Map<Integer, String> operatorNames =
+            new HashMap<Integer, String>();
 
     static {
         operatorNames.put(Token.IN, "in");
@@ -119,18 +115,9 @@ public abstract class AstNode extends Node implements Comparable<AstNode> {
         operatorNames.put(Token.VOID, "void");
     }
 
-    public static class PositionComparator implements Comparator<AstNode>, Serializable {
-        private static final long serialVersionUID = 1L;
-
-        /**
-         * Sorts nodes by (relative) start position.  The start positions are
-         * relative to their parent, so this comparator is only meaningful for
-         * comparing siblings.
-         */
-        public int compare(AstNode n1, AstNode n2) {
-            return n1.position - n2.position;
-        }
-    }
+    protected int position = -1;
+    protected int length = 1;
+    protected AstNode parent;
 
     public AstNode() {
         super(Token.ERROR);
@@ -138,6 +125,7 @@ public abstract class AstNode extends Node implements Comparable<AstNode> {
 
     /**
      * Constructs a new AstNode
+     *
      * @param pos the start position
      */
     public AstNode(int pos) {
@@ -147,14 +135,36 @@ public abstract class AstNode extends Node implements Comparable<AstNode> {
 
     /**
      * Constructs a new AstNode
+     *
      * @param pos the start position
      * @param len the number of characters spanned by the node in the source
-     * text
+     *            text
      */
     public AstNode(int pos, int len) {
         this();
         position = pos;
         length = len;
+    }
+
+    /**
+     * Returns the string name for this operator.
+     *
+     * @param op the token type, e.g. {@link Token#ADD} or {@link Token#TYPEOF}
+     * @return the source operator string, such as "+" or "typeof"
+     */
+    public static String operatorToString(int op) {
+        String result = operatorNames.get(op);
+        if (result == null)
+            throw new IllegalArgumentException("Invalid operator: " + op);
+        return result;
+    }
+
+    /**
+     * @see Kit#codeBug
+     */
+    public static RuntimeException codeBug()
+            throws RuntimeException {
+        throw Kit.codeBug();
     }
 
     /**
@@ -212,9 +222,10 @@ public abstract class AstNode extends Node implements Comparable<AstNode> {
     /**
      * Make this node's position relative to a parent.
      * Typically only used by the parser when constructing the node.
+     *
      * @param parentPosition the absolute parent position; the
-     * current node position is assumed to be absolute and is
-     * decremented by parentPosition.
+     *                       current node position is assumed to be absolute and is
+     *                       decremented by parentPosition.
      */
     public void setRelative(int parentPosition) {
         this.position -= parentPosition;
@@ -230,6 +241,7 @@ public abstract class AstNode extends Node implements Comparable<AstNode> {
     /**
      * Sets the node parent.  This method automatically adjusts the
      * current node's start position to be relative to the new parent.
+     *
      * @param parent the new parent. Can be {@code null}.
      */
     public void setParent(AstNode parent) {
@@ -253,6 +265,7 @@ public abstract class AstNode extends Node implements Comparable<AstNode> {
      * Sets the parent of the child to this node, and fixes up
      * the start position of the child to be relative to this node.
      * Sets the length of this node to include the new child.
+     *
      * @param kid the child
      * @throws IllegalArgumentException if kid is {@code null}
      */
@@ -266,6 +279,7 @@ public abstract class AstNode extends Node implements Comparable<AstNode> {
 
     /**
      * Returns the root of the tree containing this node.
+     *
      * @return the {@link AstRoot} at the root of this node's parent
      * chain, or {@code null} if the topmost parent is not an {@code AstRoot}.
      */
@@ -274,13 +288,13 @@ public abstract class AstNode extends Node implements Comparable<AstNode> {
         while (parent != null && !(parent instanceof AstRoot)) {
             parent = parent.getParent();
         }
-        return (AstRoot)parent;
+        return (AstRoot) parent;
     }
 
     /**
      * Emits source code for this node.  Callee is responsible for calling this
      * function recursively on children, incrementing indent as appropriate.<p>
-     *
+     * <p>
      * Note: if the parser was in error-recovery mode, some AST nodes may have
      * {@code null} children that are expected to be non-{@code null}
      * when no errors are present.  In this situation, the behavior of the
@@ -289,7 +303,7 @@ public abstract class AstNode extends Node implements Comparable<AstNode> {
      * intended to be invoked only at runtime after a successful parse.<p>
      *
      * @param depth the current recursion depth, typically beginning at 0
-     * when called on the root node.
+     *              when called on the root node.
      */
     public abstract String toSource(int depth);
 
@@ -302,6 +316,7 @@ public abstract class AstNode extends Node implements Comparable<AstNode> {
 
     /**
      * Constructs an indentation string.
+     *
      * @param indent the number of indentation steps
      */
     public String makeIndent(int indent) {
@@ -323,27 +338,15 @@ public abstract class AstNode extends Node implements Comparable<AstNode> {
     }
 
     /**
-     * Returns the string name for this operator.
-     * @param op the token type, e.g. {@link Token#ADD} or {@link Token#TYPEOF}
-     * @return the source operator string, such as "+" or "typeof"
-     */
-    public static String operatorToString(int op) {
-        String result = operatorNames.get(op);
-        if (result == null)
-            throw new IllegalArgumentException("Invalid operator: " + op);
-        return result;
-    }
-
-    /**
      * Visits this node and its children in an arbitrary order. <p>
-     *
+     * <p>
      * It's up to each node subclass to decide the order for processing
      * its children.  The subclass also decides (and should document)
      * which child nodes are not passed to the {@code NodeVisitor}.
      * For instance, nodes representing keywords like {@code each} or
      * {@code in} may not be passed to the visitor object.  The visitor
      * can simply query the current node for these children if desired.<p>
-     *
+     * <p>
      * Generally speaking, the order will be deterministic; the order is
      * whatever order is decided by each child node.  Normally child nodes
      * will try to visit their children in lexical order, but there may
@@ -354,85 +357,85 @@ public abstract class AstNode extends Node implements Comparable<AstNode> {
     public abstract void visit(NodeVisitor visitor);
 
     // subclasses with potential side effects should override this
-    public boolean hasSideEffects()
-    {
+    public boolean hasSideEffects() {
         switch (getType()) {
-          case Token.ASSIGN:
-          case Token.ASSIGN_ADD:
-          case Token.ASSIGN_BITAND:
-          case Token.ASSIGN_BITOR:
-          case Token.ASSIGN_BITXOR:
-          case Token.ASSIGN_DIV:
-          case Token.ASSIGN_LSH:
-          case Token.ASSIGN_MOD:
-          case Token.ASSIGN_MUL:
-          case Token.ASSIGN_RSH:
-          case Token.ASSIGN_SUB:
-          case Token.ASSIGN_URSH:
-          case Token.BLOCK:
-          case Token.BREAK:
-          case Token.CALL:
-          case Token.CATCH:
-          case Token.CATCH_SCOPE:
-          case Token.CONST:
-          case Token.CONTINUE:
-          case Token.DEC:
-          case Token.DELPROP:
-          case Token.DEL_REF:
-          case Token.DO:
-          case Token.ELSE:
-          case Token.ENTERWITH:
-          case Token.ERROR:         // Avoid cascaded error messages
-          case Token.EXPORT:
-          case Token.EXPR_RESULT:
-          case Token.FINALLY:
-          case Token.FUNCTION:
-          case Token.FOR:
-          case Token.GOTO:
-          case Token.IF:
-          case Token.IFEQ:
-          case Token.IFNE:
-          case Token.IMPORT:
-          case Token.INC:
-          case Token.JSR:
-          case Token.LABEL:
-          case Token.LEAVEWITH:
-          case Token.LET:
-          case Token.LETEXPR:
-          case Token.LOCAL_BLOCK:
-          case Token.LOOP:
-          case Token.NEW:
-          case Token.REF_CALL:
-          case Token.RETHROW:
-          case Token.RETURN:
-          case Token.RETURN_RESULT:
-          case Token.SEMI:
-          case Token.SETELEM:
-          case Token.SETELEM_OP:
-          case Token.SETNAME:
-          case Token.SETPROP:
-          case Token.SETPROP_OP:
-          case Token.SETVAR:
-          case Token.SET_REF:
-          case Token.SET_REF_OP:
-          case Token.SWITCH:
-          case Token.TARGET:
-          case Token.THROW:
-          case Token.TRY:
-          case Token.VAR:
-          case Token.WHILE:
-          case Token.WITH:
-          case Token.WITHEXPR:
-          case Token.YIELD:
-            return true;
+            case Token.ASSIGN:
+            case Token.ASSIGN_ADD:
+            case Token.ASSIGN_BITAND:
+            case Token.ASSIGN_BITOR:
+            case Token.ASSIGN_BITXOR:
+            case Token.ASSIGN_DIV:
+            case Token.ASSIGN_LSH:
+            case Token.ASSIGN_MOD:
+            case Token.ASSIGN_MUL:
+            case Token.ASSIGN_RSH:
+            case Token.ASSIGN_SUB:
+            case Token.ASSIGN_URSH:
+            case Token.BLOCK:
+            case Token.BREAK:
+            case Token.CALL:
+            case Token.CATCH:
+            case Token.CATCH_SCOPE:
+            case Token.CONST:
+            case Token.CONTINUE:
+            case Token.DEC:
+            case Token.DELPROP:
+            case Token.DEL_REF:
+            case Token.DO:
+            case Token.ELSE:
+            case Token.ENTERWITH:
+            case Token.ERROR:         // Avoid cascaded error messages
+            case Token.EXPORT:
+            case Token.EXPR_RESULT:
+            case Token.FINALLY:
+            case Token.FUNCTION:
+            case Token.FOR:
+            case Token.GOTO:
+            case Token.IF:
+            case Token.IFEQ:
+            case Token.IFNE:
+            case Token.IMPORT:
+            case Token.INC:
+            case Token.JSR:
+            case Token.LABEL:
+            case Token.LEAVEWITH:
+            case Token.LET:
+            case Token.LETEXPR:
+            case Token.LOCAL_BLOCK:
+            case Token.LOOP:
+            case Token.NEW:
+            case Token.REF_CALL:
+            case Token.RETHROW:
+            case Token.RETURN:
+            case Token.RETURN_RESULT:
+            case Token.SEMI:
+            case Token.SETELEM:
+            case Token.SETELEM_OP:
+            case Token.SETNAME:
+            case Token.SETPROP:
+            case Token.SETPROP_OP:
+            case Token.SETVAR:
+            case Token.SET_REF:
+            case Token.SET_REF_OP:
+            case Token.SWITCH:
+            case Token.TARGET:
+            case Token.THROW:
+            case Token.TRY:
+            case Token.VAR:
+            case Token.WHILE:
+            case Token.WITH:
+            case Token.WITHEXPR:
+            case Token.YIELD:
+                return true;
 
-          default:
-            return false;
+            default:
+                return false;
         }
     }
 
     /**
      * Bounces an IllegalArgumentException up if arg is {@code null}.
+     *
      * @param arg any method argument
      * @throws IllegalArgumentException if the argument is {@code null}
      */
@@ -443,8 +446,9 @@ public abstract class AstNode extends Node implements Comparable<AstNode> {
 
     /**
      * Prints a comma-separated item list into a {@link StringBuilder}.
+     *
      * @param items a list to print
-     * @param sb a {@link StringBuilder} into which to print
+     * @param sb    a {@link StringBuilder} into which to print
      */
     protected <T extends AstNode> void printList(List<T> items,
                                                  StringBuilder sb) {
@@ -452,7 +456,7 @@ public abstract class AstNode extends Node implements Comparable<AstNode> {
         int count = 0;
         for (AstNode item : items) {
             sb.append(item.toSource(0));
-            if (count++ < max-1) {
+            if (count++ < max - 1) {
                 sb.append(", ");
             } else if (item instanceof EmptyExpression) {
                 sb.append(",");
@@ -461,12 +465,17 @@ public abstract class AstNode extends Node implements Comparable<AstNode> {
     }
 
     /**
-     * @see Kit#codeBug
+     * Returns the innermost enclosing function, or {@code null} if not in a
+     * function.  Begins the search with this node's parent.
+     *
+     * @return the {@link FunctionNode} enclosing this node, else {@code null}
      */
-    public static RuntimeException codeBug()
-        throws RuntimeException
-    {
-        throw Kit.codeBug();
+    public FunctionNode getEnclosingFunction() {
+        AstNode parent = this.getParent();
+        while (parent != null && !(parent instanceof FunctionNode)) {
+            parent = parent.getParent();
+        }
+        return (FunctionNode) parent;
     }
 
     // TODO(stevey):  think of a way to have polymorphic toString
@@ -482,19 +491,6 @@ public abstract class AstNode extends Node implements Comparable<AstNode> {
 //     }
 
     /**
-     * Returns the innermost enclosing function, or {@code null} if not in a
-     * function.  Begins the search with this node's parent.
-     * @return the {@link FunctionNode} enclosing this node, else {@code null}
-     */
-    public FunctionNode getEnclosingFunction() {
-        AstNode parent = this.getParent();
-        while (parent != null && !(parent instanceof FunctionNode)) {
-            parent = parent.getParent();
-        }
-        return (FunctionNode)parent;
-    }
-
-    /**
      * Returns the innermost enclosing {@link Scope} node, or {@code null}
      * if we're not nested in a scope.  Begins the search with this node's parent.
      * Note that this is not the same as the defining scope for a {@link Name}.
@@ -506,7 +502,7 @@ public abstract class AstNode extends Node implements Comparable<AstNode> {
         while (parent != null && !(parent instanceof Scope)) {
             parent = parent.getParent();
         }
-        return (Scope)parent;
+        return (Scope) parent;
     }
 
     /**
@@ -514,6 +510,7 @@ public abstract class AstNode extends Node implements Comparable<AstNode> {
      * This makes it easy to sort Comment and Error nodes into a set of
      * other AST nodes:  just put them all into a {@link java.util.SortedSet},
      * for instance.
+     *
      * @param other another node
      * @return -1 if this node's start position is less than {@code other}'s
      * start position.  If tied, -1 if this node's length is less than
@@ -536,47 +533,17 @@ public abstract class AstNode extends Node implements Comparable<AstNode> {
     /**
      * Returns the depth of this node.  The root is depth 0, its
      * children are depth 1, and so on.
+     *
      * @return the node depth in the tree
      */
     public int depth() {
         return parent == null ? 0 : 1 + parent.depth();
     }
 
-    protected static class DebugPrintVisitor implements NodeVisitor {
-        private StringBuilder buffer;
-        private static final int DEBUG_INDENT = 2;
-        public DebugPrintVisitor(StringBuilder buf) {
-            buffer = buf;
-        }
-        public String toString() {
-            return buffer.toString();
-        }
-        private String makeIndent(int depth) {
-            StringBuilder sb = new StringBuilder(DEBUG_INDENT * depth);
-            for (int i = 0; i < (DEBUG_INDENT * depth); i++) {
-                sb.append(" ");
-            }
-            return sb.toString();
-        }
-        public boolean visit(AstNode node) {
-            int tt = node.getType();
-            String name = Token.typeToName(tt);
-            buffer.append(node.getAbsolutePosition()).append("\t");
-            buffer.append(makeIndent(node.depth()));
-            buffer.append(name).append(" ");
-            buffer.append(node.getPosition()).append(" ");
-            buffer.append(node.getLength());
-            if (tt == Token.NAME) {
-                buffer.append(" ").append(((Name)node).getIdentifier());
-            }
-            buffer.append("\n");
-            return true;  // process kids
-        }
-    }
-
     /**
      * Return the line number recorded for this node.
      * If no line number was recorded, searches the parent chain.
+     *
      * @return the nearest line number, or -1 if none was found
      */
     @Override
@@ -591,6 +558,7 @@ public abstract class AstNode extends Node implements Comparable<AstNode> {
     /**
      * Returns a debugging representation of the parse tree
      * starting at this node.
+     *
      * @return a very verbose indented printout of the tree.
      * The format of each line is:  abs-pos  name position length [identifier]
      */
@@ -598,5 +566,54 @@ public abstract class AstNode extends Node implements Comparable<AstNode> {
         DebugPrintVisitor dpv = new DebugPrintVisitor(new StringBuilder(1000));
         visit(dpv);
         return dpv.toString();
+    }
+
+    public static class PositionComparator implements Comparator<AstNode>, Serializable {
+        private static final long serialVersionUID = 1L;
+
+        /**
+         * Sorts nodes by (relative) start position.  The start positions are
+         * relative to their parent, so this comparator is only meaningful for
+         * comparing siblings.
+         */
+        public int compare(AstNode n1, AstNode n2) {
+            return n1.position - n2.position;
+        }
+    }
+
+    protected static class DebugPrintVisitor implements NodeVisitor {
+        private static final int DEBUG_INDENT = 2;
+        private final StringBuilder buffer;
+
+        public DebugPrintVisitor(StringBuilder buf) {
+            buffer = buf;
+        }
+
+        public String toString() {
+            return buffer.toString();
+        }
+
+        private String makeIndent(int depth) {
+            StringBuilder sb = new StringBuilder(DEBUG_INDENT * depth);
+            for (int i = 0; i < (DEBUG_INDENT * depth); i++) {
+                sb.append(" ");
+            }
+            return sb.toString();
+        }
+
+        public boolean visit(AstNode node) {
+            int tt = node.getType();
+            String name = Token.typeToName(tt);
+            buffer.append(node.getAbsolutePosition()).append("\t");
+            buffer.append(makeIndent(node.depth()));
+            buffer.append(name).append(" ");
+            buffer.append(node.getPosition()).append(" ");
+            buffer.append(node.getLength());
+            if (tt == Token.NAME) {
+                buffer.append(" ").append(((Name) node).getIdentifier());
+            }
+            buffer.append("\n");
+            return true;  // process kids
+        }
     }
 }

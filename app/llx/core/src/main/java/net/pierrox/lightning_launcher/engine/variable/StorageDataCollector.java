@@ -21,34 +21,8 @@ import java.io.File;
     private static final String VAR_INT_TOTAL_H = "int_total_h";
     private static final String VAR_INT_FREE_H = "int_free_h";
 
-    private Context mContext;
-
-    public StorageDataCollector(Context context, Handler handler, VariableManager vm) {
-        super(10000, handler, vm);
-        mContext = context;
-
-        mSetVariablesRunnable.run();
-    }
-
-    @Override
-    protected void collectData() {
-        mHandler.post(mSetVariablesRunnable);
-    }
-
-    public BuiltinVariable[] getBuiltinVariables(Resources resources) {
-        return new BuiltinVariable[] {
-                new BuiltinVariable(VAR_EXT_TOTAL_H, resources.getString(R.string.bv_eth)),
-                new BuiltinVariable(VAR_EXT_FREE_H, resources.getString(R.string.bv_efh)),
-                new BuiltinVariable(VAR_INT_TOTAL_H, resources.getString(R.string.bv_ith)),
-                new BuiltinVariable(VAR_INT_FREE_H, resources.getString(R.string.bv_ifh)),
-                new BuiltinVariable(VAR_EXT_TOTAL, resources.getString(R.string.bv_et)),
-                new BuiltinVariable(VAR_EXT_FREE, resources.getString(R.string.bv_ef)),
-                new BuiltinVariable(VAR_INT_TOTAL, resources.getString(R.string.bv_it)),
-                new BuiltinVariable(VAR_INT_FREE, resources.getString(R.string.bv_if)),
-        };
-    }
-
-    private Runnable mSetVariablesRunnable = new Runnable() {
+    private final Context mContext;
+    private final Runnable mSetVariablesRunnable = new Runnable() {
         @Override
         public void run() {
             long int_free;
@@ -68,9 +42,9 @@ import java.io.File;
                 block_size = stat.getBlockSize();
                 total_blocks = stat.getBlockCount();
                 available_blocks = stat.getAvailableBlocks();
-                int_free = available_blocks*block_size;
-                int_total = total_blocks*block_size;
-            } catch(IllegalArgumentException e) {
+                int_free = available_blocks * block_size;
+                int_total = total_blocks * block_size;
+            } catch (IllegalArgumentException e) {
                 int_free = 0;
                 int_total = 0;
             }
@@ -83,7 +57,7 @@ import java.io.File;
                 available_blocks = stat.getAvailableBlocks();
                 ext_free = available_blocks * block_size;
                 ext_total = total_blocks * block_size;
-            } catch(IllegalArgumentException e) {
+            } catch (IllegalArgumentException e) {
                 ext_free = 0;
                 ext_total = 0;
             }
@@ -100,4 +74,29 @@ import java.io.File;
             mVariableManager.commit();
         }
     };
+
+    public StorageDataCollector(Context context, Handler handler, VariableManager vm) {
+        super(10000, handler, vm);
+        mContext = context;
+
+        mSetVariablesRunnable.run();
+    }
+
+    @Override
+    protected void collectData() {
+        mHandler.post(mSetVariablesRunnable);
+    }
+
+    public BuiltinVariable[] getBuiltinVariables(Resources resources) {
+        return new BuiltinVariable[]{
+                new BuiltinVariable(VAR_EXT_TOTAL_H, resources.getString(R.string.bv_eth)),
+                new BuiltinVariable(VAR_EXT_FREE_H, resources.getString(R.string.bv_efh)),
+                new BuiltinVariable(VAR_INT_TOTAL_H, resources.getString(R.string.bv_ith)),
+                new BuiltinVariable(VAR_INT_FREE_H, resources.getString(R.string.bv_ifh)),
+                new BuiltinVariable(VAR_EXT_TOTAL, resources.getString(R.string.bv_et)),
+                new BuiltinVariable(VAR_EXT_FREE, resources.getString(R.string.bv_ef)),
+                new BuiltinVariable(VAR_INT_TOTAL, resources.getString(R.string.bv_it)),
+                new BuiltinVariable(VAR_INT_FREE, resources.getString(R.string.bv_if)),
+        };
+    }
 }

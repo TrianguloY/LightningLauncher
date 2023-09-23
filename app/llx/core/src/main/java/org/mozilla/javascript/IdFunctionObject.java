@@ -8,13 +8,19 @@
 
 package org.mozilla.javascript;
 
-public class IdFunctionObject extends BaseFunction
-{
+import java.util.Objects;
+
+public class IdFunctionObject extends BaseFunction {
 
     static final long serialVersionUID = -5332312783643935019L;
+    private final IdFunctionCall idcall;
+    private final Object tag;
+    private final int methodId;
+    private final int arity;
+    private boolean useCallAsConstructor;
+    private String functionName;
 
-    public IdFunctionObject(IdFunctionCall idcall, Object tag, int id, int arity)
-    {
+    public IdFunctionObject(IdFunctionCall idcall, Object tag, int id, int arity) {
         if (arity < 0)
             throw new IllegalArgumentException();
 
@@ -26,8 +32,7 @@ public class IdFunctionObject extends BaseFunction
     }
 
     public IdFunctionObject(IdFunctionCall idcall, Object tag, int id,
-                            String name, int arity, Scriptable scope)
-    {
+                            String name, int arity, Scriptable scope) {
         super(scope, null);
 
         if (arity < 0)
@@ -42,44 +47,37 @@ public class IdFunctionObject extends BaseFunction
         this.functionName = name;
     }
 
-    public void initFunction(String name, Scriptable scope)
-    {
+    public void initFunction(String name, Scriptable scope) {
         if (name == null) throw new IllegalArgumentException();
         if (scope == null) throw new IllegalArgumentException();
         this.functionName = name;
         setParentScope(scope);
     }
 
-    public final boolean hasTag(Object tag)
-    {
-        return tag == null ? this.tag == null : tag.equals(this.tag);
+    public final boolean hasTag(Object tag) {
+        return Objects.equals(tag, this.tag);
     }
 
-    public final int methodId()
-    {
+    public final int methodId() {
         return methodId;
     }
 
-    public final void markAsConstructor(Scriptable prototypeProperty)
-    {
+    public final void markAsConstructor(Scriptable prototypeProperty) {
         useCallAsConstructor = true;
         setImmunePrototypeProperty(prototypeProperty);
     }
 
-    public final void addAsProperty(Scriptable target)
-    {
+    public final void addAsProperty(Scriptable target) {
         ScriptableObject.defineProperty(target, functionName, this,
-                                        ScriptableObject.DONTENUM);
+                ScriptableObject.DONTENUM);
     }
 
-    public void exportAsScopeProperty()
-    {
+    public void exportAsScopeProperty() {
         addAsProperty(getParentScope());
     }
 
     @Override
-    public Scriptable getPrototype()
-    {
+    public Scriptable getPrototype() {
         // Lazy initialization of prototype: for native functions this
         // may not be called at all
         Scriptable proto = super.getPrototype();
@@ -92,14 +90,12 @@ public class IdFunctionObject extends BaseFunction
 
     @Override
     public Object call(Context cx, Scriptable scope, Scriptable thisObj,
-                       Object[] args)
-    {
+                       Object[] args) {
         return idcall.execIdCall(this, cx, scope, thisObj, args);
     }
 
     @Override
-    public Scriptable createObject(Context cx, Scriptable scope)
-    {
+    public Scriptable createObject(Context cx, Scriptable scope) {
         if (useCallAsConstructor) {
             return null;
         }
@@ -111,8 +107,7 @@ public class IdFunctionObject extends BaseFunction
     }
 
     @Override
-    String decompile(int indent, int flags)
-    {
+    String decompile(int indent, int flags) {
         StringBuffer sb = new StringBuffer();
         boolean justbody = (0 != (flags & Decompiler.ONLY_BODY_FLAG));
         if (!justbody) {
@@ -122,7 +117,7 @@ public class IdFunctionObject extends BaseFunction
         }
         sb.append("[native code for ");
         if (idcall instanceof Scriptable) {
-            Scriptable sobj = (Scriptable)idcall;
+            Scriptable sobj = (Scriptable) idcall;
             sb.append(sobj.getClassName());
             sb.append('.');
         }
@@ -134,31 +129,23 @@ public class IdFunctionObject extends BaseFunction
     }
 
     @Override
-    public int getArity()
-    {
+    public int getArity() {
         return arity;
     }
 
     @Override
-    public int getLength() { return getArity(); }
+    public int getLength() {
+        return getArity();
+    }
 
     @Override
-    public String getFunctionName()
-    {
+    public String getFunctionName() {
         return (functionName == null) ? "" : functionName;
     }
 
-    public final RuntimeException unknown()
-    {
+    public final RuntimeException unknown() {
         // It is program error to call id-like methods for unknown function
         return new IllegalArgumentException(
-            "BAD FUNCTION ID="+methodId+" MASTER="+idcall);
+                "BAD FUNCTION ID=" + methodId + " MASTER=" + idcall);
     }
-
-    private final IdFunctionCall idcall;
-    private final Object tag;
-    private final int methodId;
-    private int arity;
-    private boolean useCallAsConstructor;
-    private String functionName;
 }

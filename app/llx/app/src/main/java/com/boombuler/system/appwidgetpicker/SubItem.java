@@ -20,35 +20,38 @@ import android.content.ComponentName;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
-public class SubItem {	
-		private String fName;
-		private Drawable fImage;
-		public Bundle fExtra = null; 
-		public ComponentName fProvider = null;
-		
-		public SubItem(String name, Drawable image) {
-			fName = name;
-			fImage = image;
-		}
-		
-		public void setExtra(Bundle aValue) {
-			fExtra = aValue;			
-		}
-		public Bundle getExtra() {
-			return fExtra;
-		}
-		
-		public void setProvider(ComponentName aValue) {
-			fProvider = aValue;
-		}
-		public ComponentName getProvider() {
-			return fProvider;
-		}
-		
-		public String getName() {
-			return fName;
-		}
-		public Drawable getImage() {
-			return fImage;
-		}		
+public class SubItem {
+    private final String fName;
+    private final Drawable fImage;
+    public Bundle fExtra = null;
+    public ComponentName fProvider = null;
+
+    public SubItem(String name, Drawable image) {
+        fName = name;
+        fImage = image;
+    }
+
+    public Bundle getExtra() {
+        return fExtra;
+    }
+
+    public void setExtra(Bundle aValue) {
+        fExtra = aValue;
+    }
+
+    public ComponentName getProvider() {
+        return fProvider;
+    }
+
+    public void setProvider(ComponentName aValue) {
+        fProvider = aValue;
+    }
+
+    public String getName() {
+        return fName;
+    }
+
+    public Drawable getImage() {
+        return fImage;
+    }
 }

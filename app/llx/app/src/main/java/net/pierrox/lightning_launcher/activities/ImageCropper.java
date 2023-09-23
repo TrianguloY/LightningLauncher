@@ -37,7 +37,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -59,6 +58,12 @@ public class ImageCropper extends ResourceWrapperActivity implements View.OnClic
     private TextView mSelectionText;
     private CropperView mCropperView;
 
+    public static void startActivity(Activity from, File image, int requestCode) {
+        final Intent intent = new Intent(from, ImageCropper.class);
+        intent.putExtra(INTENT_EXTRA_IMAGE, image.getAbsolutePath());
+        from.startActivityForResult(intent, requestCode);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         Utils.setTheme(this, Utils.APP_THEME_NO_ACTION_BAR);
@@ -66,14 +71,14 @@ public class ImageCropper extends ResourceWrapperActivity implements View.OnClic
 
         setContentView(R.layout.image_cropper);
 
-        mSelectionText = (TextView) findViewById(R.id.sr);
+        mSelectionText = findViewById(R.id.sr);
 
-        mCropperView = (CropperView) findViewById(R.id.cv);
+        mCropperView = findViewById(R.id.cv);
         Bitmap bitmap;
         Intent intent = getIntent();
         String sourcePath = intent.getStringExtra(INTENT_EXTRA_IMAGE);
         mSourceFile = new File(sourcePath);
-        if(intent.getBooleanExtra(INTENT_EXTRA_FULL_SIZE, false)) {
+        if (intent.getBooleanExtra(INTENT_EXTRA_FULL_SIZE, false)) {
             bitmap = Utils.loadBitmap(mSourceFile, 0, 0, 0);
         } else {
             bitmap = Utils.loadScreenSizedBitmap(getWindowManager(), sourcePath);
@@ -87,16 +92,16 @@ public class ImageCropper extends ResourceWrapperActivity implements View.OnClic
 
     @Override
     public void onClick(View v) {
-        switch(v.getId()) {
+        switch (v.getId()) {
             case R.id.ok:
                 final Rect r = mCropperView.getSelection();
-                final Bitmap original_image = ((BitmapDrawable)mCropperView.getDrawable()).getBitmap();
+                final Bitmap original_image = ((BitmapDrawable) mCropperView.getDrawable()).getBitmap();
                 final File destinationFile = Utils.getTmpImageFile();
 
-                if(r.left == 0 && r.top == 0 && r.width() == original_image.getWidth() && r.height() == original_image.getHeight()) {
+                if (r.left == 0 && r.top == 0 && r.width() == original_image.getWidth() && r.height() == original_image.getHeight()) {
                     boolean success;
                     // full image size: no cropping
-                    if(mSourceFile.compareTo(destinationFile) == 0) {
+                    if (mSourceFile.compareTo(destinationFile) == 0) {
                         // same file, nothing to do
                         success = true;
                     } else {
@@ -159,7 +164,7 @@ public class ImageCropper extends ResourceWrapperActivity implements View.OnClic
 
     private void done(boolean success) {
         setResult(success ? RESULT_OK : RESULT_CANCELED);
-        if(!success) {
+        if (!success) {
             Toast.makeText(this, R.string.tr_eu, Toast.LENGTH_SHORT).show();
         }
         finish();
@@ -167,7 +172,7 @@ public class ImageCropper extends ResourceWrapperActivity implements View.OnClic
 
     @Override
     public void onCropperViewSelectionChanged(Rect selection) {
-        mSelectionText.setText(selection.toShortString()+" ("+selection.width()+"px x "+selection.height()+"px)");
+        mSelectionText.setText(selection.toShortString() + " (" + selection.width() + "px x " + selection.height() + "px)");
     }
 
     @Override
@@ -178,18 +183,18 @@ public class ImageCropper extends ResourceWrapperActivity implements View.OnClic
         View content = getLayoutInflater().inflate(R.layout.dialog_rect, null);
         builder.setTitle(getString(R.string.rect));
         builder.setView(content);
-        ((TextView)content.findViewById(R.id.rect_l)).setText(getString(R.string.left));
-        ((TextView)content.findViewById(R.id.rect_t)).setText(getString(R.string.top));
-        ((TextView)content.findViewById(R.id.rect_r)).setText(getString(R.string.right));
-        ((TextView)content.findViewById(R.id.rect_b)).setText(getString(R.string.bottom));
-        ((TextView)content.findViewById(R.id.rect_w)).setText(getString(R.string.gb_w).toLowerCase());
-        ((TextView)content.findViewById(R.id.rect_h)).setText(getString(R.string.gb_h).toLowerCase());
-        final EditText el = (EditText)content.findViewById(R.id.rect_el);
-        final EditText et = (EditText)content.findViewById(R.id.rect_et);
-        final EditText er = (EditText)content.findViewById(R.id.rect_er);
-        final EditText eb = (EditText)content.findViewById(R.id.rect_eb);
-        final EditText ew = (EditText)content.findViewById(R.id.rect_ew);
-        final EditText eh = (EditText)content.findViewById(R.id.rect_eh);
+        ((TextView) content.findViewById(R.id.rect_l)).setText(getString(R.string.left));
+        ((TextView) content.findViewById(R.id.rect_t)).setText(getString(R.string.top));
+        ((TextView) content.findViewById(R.id.rect_r)).setText(getString(R.string.right));
+        ((TextView) content.findViewById(R.id.rect_b)).setText(getString(R.string.bottom));
+        ((TextView) content.findViewById(R.id.rect_w)).setText(getString(R.string.gb_w).toLowerCase());
+        ((TextView) content.findViewById(R.id.rect_h)).setText(getString(R.string.gb_h).toLowerCase());
+        final EditText el = content.findViewById(R.id.rect_el);
+        final EditText et = content.findViewById(R.id.rect_et);
+        final EditText er = content.findViewById(R.id.rect_er);
+        final EditText eb = content.findViewById(R.id.rect_eb);
+        final EditText ew = content.findViewById(R.id.rect_ew);
+        final EditText eh = content.findViewById(R.id.rect_eh);
         el.setText(String.valueOf(selection.left));
         et.setText(String.valueOf(selection.top));
         er.setText(String.valueOf(selection.right));
@@ -213,7 +218,7 @@ public class ImageCropper extends ResourceWrapperActivity implements View.OnClic
                     int r = Integer.parseInt(er.getText().toString());
                     int w = Integer.parseInt(ew.getText().toString());
                     int new_w = r - l;
-                    if(new_w != w) {
+                    if (new_w != w) {
                         ew.setText(String.valueOf(new_w));
                     }
                 } catch (NumberFormatException e) {
@@ -238,7 +243,7 @@ public class ImageCropper extends ResourceWrapperActivity implements View.OnClic
                     int b = Integer.parseInt(eb.getText().toString());
                     int h = Integer.parseInt(eh.getText().toString());
                     int new_h = b - t;
-                    if(new_h != h) {
+                    if (new_h != h) {
                         eh.setText(String.valueOf(new_h));
                     }
                 } catch (NumberFormatException e) {
@@ -263,7 +268,7 @@ public class ImageCropper extends ResourceWrapperActivity implements View.OnClic
                     int r = Integer.parseInt(er.getText().toString());
                     int w = Integer.parseInt(ew.getText().toString());
                     int new_r = l + w;
-                    if(new_r != r) {
+                    if (new_r != r) {
                         er.setText(String.valueOf(new_r));
                     }
                 } catch (NumberFormatException e) {
@@ -288,7 +293,7 @@ public class ImageCropper extends ResourceWrapperActivity implements View.OnClic
                     int h = Integer.parseInt(eh.getText().toString());
                     int b = Integer.parseInt(eb.getText().toString());
                     int new_b = t + h;
-                    if(new_b != b) {
+                    if (new_b != b) {
                         eb.setText(String.valueOf(new_b));
                     }
                 } catch (NumberFormatException e) {
@@ -314,18 +319,12 @@ public class ImageCropper extends ResourceWrapperActivity implements View.OnClic
                     int b = Integer.parseInt(eb.getText().toString());
                     selection.set(l, t, r, b);
                     mCropperView.setSelection(selection);
-                } catch(NumberFormatException e) {
+                } catch (NumberFormatException e) {
 
                 }
             }
         });
         builder.setNegativeButton(android.R.string.cancel, null);
         builder.create().show();
-    }
-
-    public static void startActivity(Activity from, File image, int requestCode) {
-        final Intent intent = new Intent(from, ImageCropper.class);
-        intent.putExtra(INTENT_EXTRA_IMAGE, image.getAbsolutePath());
-        from.startActivityForResult(intent, requestCode);
     }
 }

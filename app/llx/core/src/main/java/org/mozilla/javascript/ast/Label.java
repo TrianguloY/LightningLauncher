@@ -48,8 +48,9 @@ public class Label extends Jump {
 
     /**
      * Sets the label text
+     *
      * @throws IllegalArgumentException if name is {@code null} or the
-     * empty string.
+     *                                  empty string.
      */
     public void setName(String name) {
         name = name == null ? null : name.trim();
@@ -60,11 +61,10 @@ public class Label extends Jump {
 
     @Override
     public String toSource(int depth) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(makeIndent(depth));
-        sb.append(name);
-        sb.append(":\n");
-        return sb.toString();
+        String sb = makeIndent(depth) +
+                name +
+                ":\n";
+        return sb;
     }
 
     /**

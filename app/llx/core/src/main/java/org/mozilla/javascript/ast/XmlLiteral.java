@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class XmlLiteral extends AstNode {
 
-    private List<XmlFragment> fragments = new ArrayList<XmlFragment>();
+    private final List<XmlFragment> fragments = new ArrayList<XmlFragment>();
 
     {
         type = Token.XML;
@@ -47,6 +47,7 @@ public class XmlLiteral extends AstNode {
     /**
      * Sets fragment list, removing any existing fragments first.
      * Sets the parent pointer for each fragment in the list to this node.
+     *
      * @param fragments fragment list.  Replaces any existing fragments.
      * @throws IllegalArgumentException} if {@code fragments} is {@code null}
      */
@@ -59,6 +60,7 @@ public class XmlLiteral extends AstNode {
 
     /**
      * Adds a fragment to the fragment list.  Sets its parent to this node.
+     *
      * @throws IllegalArgumentException} if {@code fragment} is {@code null}
      */
     public void addFragment(XmlFragment fragment) {

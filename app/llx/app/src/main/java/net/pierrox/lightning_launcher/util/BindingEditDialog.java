@@ -38,6 +38,10 @@ import android.widget.ExpandableListView;
 import android.widget.SimpleExpandableListAdapter;
 import android.widget.TextView;
 
+import net.pierrox.android.lsvg.SvgDrawable;
+import net.pierrox.android.lsvg.SvgElement;
+import net.pierrox.android.lsvg.SvgGroup;
+import net.pierrox.android.lsvg.SvgPath;
 import net.pierrox.lightning_launcher.LLApp;
 import net.pierrox.lightning_launcher.data.Item;
 import net.pierrox.lightning_launcher.engine.LightningEngine;
@@ -50,14 +54,9 @@ import net.pierrox.lightning_launcher.views.IconView;
 import net.pierrox.lightning_launcher.views.SharedAsyncGraphicsDrawable;
 import net.pierrox.lightning_launcher.views.item.ItemView;
 import net.pierrox.lightning_launcher.views.item.ShortcutView;
-import net.pierrox.android.lsvg.SvgDrawable;
-import net.pierrox.android.lsvg.SvgElement;
-import net.pierrox.android.lsvg.SvgGroup;
-import net.pierrox.android.lsvg.SvgPath;
 import net.pierrox.lightning_launcher_extreme.R;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -65,19 +64,17 @@ import java.util.List;
 import java.util.Map;
 
 public class BindingEditDialog extends AlertDialog implements DialogInterface.OnClickListener, View.OnClickListener {
-    public interface OnBindingEditDialogListener {
-        public void onBindingEdited(Binding binding, boolean open_in_script_editor);
-    }
-
-    private Binding mInitValue;
-    private Binding[] mOtherBindings;
+    private static final String ROOT_KEY = "r";
+    private static final String CHILD_KEY = "c";
+    private final Binding mInitValue;
+    private final Binding[] mOtherBindings;
+    private final OnBindingEditDialogListener mListener;
+    private final ArrayList<Pair<String, ArrayList<Property>>> mProperties;
     private Property mSelectedProperty;
     private Button mTargetButton;
     private EditText mFormulaEditText;
     private Button mEditButton;
     private Button mOkButton;
-    private OnBindingEditDialogListener mListener;
-    private ArrayList<Pair<String,ArrayList<Property>>> mProperties;
 
     public BindingEditDialog(Context context, Binding init_value, ItemView itemView, OnBindingEditDialogListener listener) {
         super(context);
@@ -89,15 +86,15 @@ public class BindingEditDialog extends AlertDialog implements DialogInterface.On
 
         // build the list of available properties minus the one already used
         Class<? extends Item> itemClass = item.getClass();
-        List<Pair<String, Property[]>> all_properties = Arrays.asList(Property.getForItemClass(itemClass));
+        Pair<String, Property[]>[] all_properties = Property.getForItemClass(itemClass);
 
         mProperties = new ArrayList<>();
-        for(Pair<String,Property[]> pair_from : all_properties) {
+        for (Pair<String, Property[]> pair_from : all_properties) {
             ArrayList<Property> available_properties = new ArrayList<>();
-            Pair<String,ArrayList<Property>> pair_to = new Pair<>(pair_from.first, available_properties);
+            Pair<String, ArrayList<Property>> pair_to = new Pair<>(pair_from.first, available_properties);
 
-            for(Property p : pair_from.second) {
-                if(!isPropertyUsed(p.getName())) {
+            for (Property p : pair_from.second) {
+                if (!isPropertyUsed(p.getName())) {
                     available_properties.add(p);
                 }
             }
@@ -105,11 +102,11 @@ public class BindingEditDialog extends AlertDialog implements DialogInterface.On
             mProperties.add(pair_to);
         }
 
-        if(itemView.getClass() == ShortcutView.class) {
+        if (itemView.getClass() == ShortcutView.class) {
             IconLabelView il = ((ShortcutView) itemView).getIconLabelView();
-            if(il != null) {
+            if (il != null) {
                 IconView iv = il.getIconView();
-                if(iv != null) {
+                if (iv != null) {
                     addSvgProperties(R.string.svg_icon, "svg/icon/", mProperties, iv.getSharedAsyncGraphicsDrawable());
                 }
             }
@@ -132,13 +129,13 @@ public class BindingEditDialog extends AlertDialog implements DialogInterface.On
     }
 
     private void addSvgProperties(int nameRes, String prefix, List<Pair<String, ArrayList<Property>>> all_properties, Drawable drawable) {
-        if(!(drawable instanceof SharedAsyncGraphicsDrawable)) {
+        if (!(drawable instanceof SharedAsyncGraphicsDrawable)) {
             return;
         }
 
         SharedAsyncGraphicsDrawable sd = (SharedAsyncGraphicsDrawable) drawable;
 
-        if(sd.getType() != SharedAsyncGraphicsDrawable.TYPE_SVG) {
+        if (sd.getType() != SharedAsyncGraphicsDrawable.TYPE_SVG) {
             return;
         }
 
@@ -146,7 +143,7 @@ public class BindingEditDialog extends AlertDialog implements DialogInterface.On
 
         String name = getContext().getString(nameRes);
         ArrayList<Property> properties = new ArrayList<>();
-        Pair<String,ArrayList<Property>> pair = new Pair<>(name, properties);
+        Pair<String, ArrayList<Property>> pair = new Pair<>(name, properties);
 
         addSvgPropertiesForElement(prefix, svgDrawable.getSvgRoot(), properties);
 
@@ -157,27 +154,27 @@ public class BindingEditDialog extends AlertDialog implements DialogInterface.On
             }
         });
 
-        if(properties.size() > 0) {
+        if (properties.size() > 0) {
             all_properties.add(pair);
         }
     }
 
     private void addSvgPropertiesForElement(String prefix, SvgElement element, ArrayList<Property> properties) {
         String id = element.getId();
-        if(element instanceof SvgGroup) {
-            for(SvgElement child : ((SvgGroup)element).getChildren()) {
+        if (element instanceof SvgGroup) {
+            for (SvgElement child : ((SvgGroup) element).getChildren()) {
                 addSvgPropertiesForElement(prefix, child, properties);
             }
         }
 
-        if(id != null) {
+        if (id != null) {
             Context context = getContext();
-            if(element instanceof SvgPath) {
-                properties.add(new Property(context.getString(R.string.svgp_path, id), prefix+id+"/path", Property.TYPE_STRING));
-                properties.add(new Property(context.getString(R.string.svgp_style, id), prefix+id+"/style", Property.TYPE_STRING));
-                properties.add(new Property(context.getString(R.string.svgp_transform, id), prefix+id+"/transform", Property.TYPE_STRING));
-            } else if(element instanceof SvgGroup) {
-                properties.add(new Property(context.getString(R.string.svgp_transform, id), prefix+id+"/transform", Property.TYPE_STRING));
+            if (element instanceof SvgPath) {
+                properties.add(new Property(context.getString(R.string.svgp_path, id), prefix + id + "/path", Property.TYPE_STRING));
+                properties.add(new Property(context.getString(R.string.svgp_style, id), prefix + id + "/style", Property.TYPE_STRING));
+                properties.add(new Property(context.getString(R.string.svgp_transform, id), prefix + id + "/transform", Property.TYPE_STRING));
+            } else if (element instanceof SvgGroup) {
+                properties.add(new Property(context.getString(R.string.svgp_transform, id), prefix + id + "/transform", Property.TYPE_STRING));
             }
         }
     }
@@ -186,26 +183,26 @@ public class BindingEditDialog extends AlertDialog implements DialogInterface.On
     protected void onCreate(Bundle savedInstanceState) {
         View view = getLayoutInflater().inflate(R.layout.ll_pref_binding_dialog, null);
 
-        ((TextView)view.findViewById(R.id.bd_tt)).setText(R.string.bd_p);
-        ((TextView)view.findViewById(R.id.bd_tf)).setText(R.string.bd_v);
+        ((TextView) view.findViewById(R.id.bd_tt)).setText(R.string.bd_p);
+        ((TextView) view.findViewById(R.id.bd_tf)).setText(R.string.bd_v);
 
-        mTargetButton = (Button) view.findViewById(R.id.bd_t);
+        mTargetButton = view.findViewById(R.id.bd_t);
         mSelectedProperty = mInitValue == null ? null : Property.getByName(mInitValue.target);
         mTargetButton.setText(mSelectedProperty == null ? getContext().getString(R.string.bd_s) : mSelectedProperty.getLabel());
         mTargetButton.setEnabled(mInitValue == null);
         mTargetButton.setOnClickListener(this);
 
-        Button builtin = (Button) view.findViewById(R.id.bd_fb);
+        Button builtin = view.findViewById(R.id.bd_fb);
         builtin.setTypeface(LLApp.get().getIconsTypeface());
         builtin.setOnClickListener(this);
 
-        mEditButton = (Button) view.findViewById(R.id.bd_fe);
+        mEditButton = view.findViewById(R.id.bd_fe);
         mEditButton.setTypeface(LLApp.get().getIconsTypeface());
         mEditButton.setOnClickListener(this);
         mEditButton.setEnabled(mInitValue != null);
 
-        mFormulaEditText = (EditText) view.findViewById(R.id.bd_f);
-        if(mInitValue != null) {
+        mFormulaEditText = view.findViewById(R.id.bd_f);
+        if (mInitValue != null) {
             mFormulaEditText.setText(mInitValue.formula);
         }
 
@@ -248,14 +245,15 @@ public class BindingEditDialog extends AlertDialog implements DialogInterface.On
     }
 
     private void save(boolean open_in_script_editor) {
-        String target =mSelectedProperty.getName();
+        String target = mSelectedProperty.getName();
         String formula = mFormulaEditText.getText().toString();
-        Binding binding = new Binding(target, formula, mInitValue==null ? true : mInitValue.enabled);
+        Binding binding = new Binding(target, formula, mInitValue == null || mInitValue.enabled);
         mListener.onBindingEdited(binding, open_in_script_editor);
     }
 
-    private static final String ROOT_KEY = "r";
-    private static final String CHILD_KEY = "c";
+    public interface OnBindingEditDialogListener {
+        void onBindingEdited(Binding binding, boolean open_in_script_editor);
+    }
 
     private class PropertySelectionDialog extends Dialog implements ExpandableListView.OnChildClickListener {
 
@@ -273,13 +271,13 @@ public class BindingEditDialog extends AlertDialog implements DialogInterface.On
             List<Map<String, String>> groupData = new ArrayList<>();
             List<List<Map<String, String>>> childData = new ArrayList<>();
 
-            for(Pair<String,ArrayList<Property>> category : mProperties) {
+            for (Pair<String, ArrayList<Property>> category : mProperties) {
                 HashMap<String, String> value = new HashMap<>();
                 value.put(ROOT_KEY, category.first);
                 groupData.add(value);
 
                 List<Map<String, String>> child_values = new ArrayList<>();
-                for(Property p : category.second) {
+                for (Property p : category.second) {
                     HashMap<String, String> child_value = new HashMap<>();
                     child_value.put(CHILD_KEY, p.getLabel());
                     child_values.add(child_value);
@@ -292,13 +290,13 @@ public class BindingEditDialog extends AlertDialog implements DialogInterface.On
 
                     groupData,
                     android.R.layout.simple_expandable_list_item_1,
-                    new String[] { ROOT_KEY },
-                    new int[] { android.R.id.text1 },
+                    new String[]{ROOT_KEY},
+                    new int[]{android.R.id.text1},
 
                     childData,
                     android.R.layout.simple_expandable_list_item_1,
-                    new String[] { CHILD_KEY },
-                    new int[] { android.R.id.text1 }
+                    new String[]{CHILD_KEY},
+                    new int[]{android.R.id.text1}
 
             );
             list.setAdapter(adapter);
@@ -319,7 +317,7 @@ public class BindingEditDialog extends AlertDialog implements DialogInterface.On
 
     private class VariableSelectionDialog extends Dialog implements ExpandableListView.OnChildClickListener {
         private SimpleExpandableListAdapter mAdapter;
-        private Pair<String,BuiltinVariable[]>[] mBuiltinVariables;
+        private Pair<String, BuiltinVariable[]>[] mBuiltinVariables;
         private ArrayList<Variable> mUserVariables;
 
         public VariableSelectionDialog(Context context) {
@@ -343,13 +341,13 @@ public class BindingEditDialog extends AlertDialog implements DialogInterface.On
             List<Map<String, String>> groupData = new ArrayList<>();
             List<List<Map<String, String>>> childData = new ArrayList<>();
 
-            for(Pair<String,BuiltinVariable[]> category : mBuiltinVariables) {
+            for (Pair<String, BuiltinVariable[]> category : mBuiltinVariables) {
                 HashMap<String, String> value = new HashMap<>();
                 value.put(ROOT_KEY, category.first);
                 groupData.add(value);
 
                 List<Map<String, String>> child_values = new ArrayList<>();
-                for(BuiltinVariable bv : category.second) {
+                for (BuiltinVariable bv : category.second) {
                     HashMap<String, String> child_value = new HashMap<>();
                     child_value.put(CHILD_KEY, bv.label);
                     child_values.add(child_value);
@@ -362,7 +360,7 @@ public class BindingEditDialog extends AlertDialog implements DialogInterface.On
             groupData.add(value);
 
             List<Map<String, String>> child_values = new ArrayList<>();
-            for(Variable v : mUserVariables) {
+            for (Variable v : mUserVariables) {
                 HashMap<String, String> child_value = new HashMap<>();
                 child_value.put(CHILD_KEY, v.name);
                 child_values.add(child_value);
@@ -370,19 +368,18 @@ public class BindingEditDialog extends AlertDialog implements DialogInterface.On
             childData.add(child_values);
 
 
-
             mAdapter = new SimpleExpandableListAdapter(
                     getContext(),
 
                     groupData,
                     android.R.layout.simple_expandable_list_item_1,
-                    new String[] { ROOT_KEY },
-                    new int[] { android.R.id.text1 },
+                    new String[]{ROOT_KEY},
+                    new int[]{android.R.id.text1},
 
                     childData,
                     android.R.layout.simple_expandable_list_item_1,
-                    new String[] { CHILD_KEY },
-                    new int[] { android.R.id.text1 }
+                    new String[]{CHILD_KEY},
+                    new int[]{android.R.id.text1}
 
             );
             list.setAdapter(mAdapter);
@@ -393,14 +390,14 @@ public class BindingEditDialog extends AlertDialog implements DialogInterface.On
         @Override
         public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
             String name;
-            if(groupPosition < mBuiltinVariables.length) {
+            if (groupPosition < mBuiltinVariables.length) {
                 name = mBuiltinVariables[groupPosition].second[childPosition].name;
             } else {
                 name = mUserVariables.get(childPosition).name;
             }
             int selstart = mFormulaEditText.getSelectionStart();
             int selend = mFormulaEditText.getSelectionEnd();
-            mFormulaEditText.getText().replace(Math.min(selstart,selend), Math.max(selstart, selend), "$"+name);
+            mFormulaEditText.getText().replace(Math.min(selstart, selend), Math.max(selstart, selend), "$" + name);
             dismiss();
             return true;
         }

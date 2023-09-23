@@ -17,9 +17,9 @@ import java.util.List;
  */
 public class ArrayComprehension extends Scope {
 
+    private final List<ArrayComprehensionLoop> loops =
+            new ArrayList<ArrayComprehensionLoop>();
     private AstNode result;
-    private List<ArrayComprehensionLoop> loops =
-        new ArrayList<ArrayComprehensionLoop>();
     private AstNode filter;
     private int ifPosition = -1;
     private int lp = -1;
@@ -49,6 +49,7 @@ public class ArrayComprehension extends Scope {
 
     /**
      * Sets result expression, and sets its parent to this node.
+     *
      * @throws IllegalArgumentException if result is {@code null}
      */
     public void setResult(AstNode result) {
@@ -66,6 +67,7 @@ public class ArrayComprehension extends Scope {
 
     /**
      * Sets loop list
+     *
      * @throws IllegalArgumentException if loops is {@code null}
      */
     public void setLoops(List<ArrayComprehensionLoop> loops) {
@@ -78,6 +80,7 @@ public class ArrayComprehension extends Scope {
 
     /**
      * Adds a child loop node, and sets its parent to this node.
+     *
      * @throws IllegalArgumentException if acl is {@code null}
      */
     public void addLoop(ArrayComprehensionLoop acl) {

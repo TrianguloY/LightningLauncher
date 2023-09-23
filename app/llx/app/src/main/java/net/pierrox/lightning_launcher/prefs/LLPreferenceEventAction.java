@@ -31,7 +31,7 @@ import net.pierrox.lightning_launcher.data.EventAction;
 
 public class LLPreferenceEventAction extends LLPreference {
 
-    private ActionsDescription mActions;
+    private final ActionsDescription mActions;
 
     public LLPreferenceEventAction(Context context, int id, int title, EventAction value, EventAction defaultValue, ActionsDescription actions) {
         super(id, context.getString(title), actions.getActionName(value.action), value, defaultValue);
@@ -51,14 +51,14 @@ public class LLPreferenceEventAction extends LLPreference {
         return (EventAction) mValue;
     }
 
-    @Override
-    public void setValue(Object value, Object defaultValue) {
-        super.setValue(value, defaultValue);
+    public void setValue(EventAction ea) {
+        mValue = ea;
         updateLabel();
     }
 
-    public void setValue(EventAction ea) {
-        mValue = ea;
+    @Override
+    public void setValue(Object value, Object defaultValue) {
+        super.setValue(value, defaultValue);
         updateLabel();
     }
 
@@ -68,7 +68,7 @@ public class LLPreferenceEventAction extends LLPreference {
 
     private void updateLabel() {
         EventAction ea = getValue();
-        if(ea == null || mActions == null) {
+        if (ea == null || mActions == null) {
             setSummary("");
         } else {
             String more = ea.next == null ? "" : " (+)";

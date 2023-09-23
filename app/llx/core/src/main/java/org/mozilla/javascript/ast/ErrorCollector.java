@@ -21,11 +21,12 @@ import java.util.List;
  */
 public class ErrorCollector implements IdeErrorReporter {
 
-    private List<ParseProblem> errors = new ArrayList<ParseProblem>();
+    private final List<ParseProblem> errors = new ArrayList<ParseProblem>();
 
     /**
      * This is not called during AST generation.
-     * {@link #warning(String,String,int,int)} is used instead.
+     * {@link #warning(String, String, int, int)} is used instead.
+     *
      * @throws UnsupportedOperationException
      */
     public void warning(String message, String sourceName, int line,
@@ -36,21 +37,20 @@ public class ErrorCollector implements IdeErrorReporter {
     /**
      * @inheritDoc
      */
-    public void warning(String message, String sourceName, int offset, int length)
-    {
+    public void warning(String message, String sourceName, int offset, int length) {
         errors.add(new ParseProblem(ParseProblem.Type.Warning,
-                                    message, sourceName,
-                                    offset, length));
+                message, sourceName,
+                offset, length));
     }
 
     /**
      * This is not called during AST generation.
-     * {@link #warning(String,String,int,int)} is used instead.
+     * {@link #warning(String, String, int, int)} is used instead.
+     *
      * @throws UnsupportedOperationException
      */
     public void error(String message, String sourceName, int line,
-                      String lineSource, int lineOffset)
-    {
+                      String lineSource, int lineOffset) {
         throw new UnsupportedOperationException();
     }
 
@@ -58,11 +58,10 @@ public class ErrorCollector implements IdeErrorReporter {
      * @inheritDoc
      */
     public void error(String message, String sourceName,
-                      int fileOffset, int length)
-    {
+                      int fileOffset, int length) {
         errors.add(new ParseProblem(ParseProblem.Type.Error,
-                                    message, sourceName,
-                                    fileOffset, length));
+                message, sourceName,
+                fileOffset, length));
     }
 
     /**
@@ -70,8 +69,7 @@ public class ErrorCollector implements IdeErrorReporter {
      */
     public EvaluatorException runtimeError(String message, String sourceName,
                                            int line, String lineSource,
-                                           int lineOffset)
-    {
+                                           int lineOffset) {
         throw new UnsupportedOperationException();
     }
 

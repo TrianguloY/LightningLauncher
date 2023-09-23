@@ -8,18 +8,17 @@ import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
 import android.util.DisplayMetrics;
 import android.util.Pair;
 
+import net.pierrox.android.lsvg.SvgDrawable;
 import net.pierrox.lightning_launcher.script.ScriptExecutor;
 import net.pierrox.lightning_launcher.script.api.ImageScript;
 import net.pierrox.lightning_launcher.script.api.Item;
 import net.pierrox.lightning_launcher.util.AnimationDecoder;
-import net.pierrox.android.lsvg.SvgDrawable;
 
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.Scriptable;
@@ -30,24 +29,6 @@ import java.util.LinkedList;
 
 public class SharedAsyncGraphicsDrawable extends Drawable implements Drawable.Callback {
 
-    public interface GraphicsProvider {
-        Graphics provideGraphics(SharedAsyncGraphicsDrawable sbd, Object data, int max_width, int max_height);
-        boolean composeGraphics(Bitmap baseIcon, Bitmap finalIcon);
-    }
-
-    public interface SharedAsyncGraphicsDrawableListener {
-        void onSharedAsyncGraphicsDrawableInvalidated(SharedAsyncGraphicsDrawable drawable);
-        void onSharedAsyncGraphicsDrawableSizeChanged(SharedAsyncGraphicsDrawable drawable);
-    }
-
-    private static GraphicsProviderRunner sGraphicsProviderRunner;
-    private static CachedBitmapPool sCachedBitmapPool;
-
-    private final int mId;
-    private GraphicsProvider mGraphicsProvider;
-    private Object mGraphicsProviderData;
-    private boolean mLoadingGraphics;
-
     public static final int TYPE_NOT_YET_KNOWN = 0;
     public static final int TYPE_NONE = 1;
     public static final int TYPE_BITMAP = 2;
@@ -55,7 +36,13 @@ public class SharedAsyncGraphicsDrawable extends Drawable implements Drawable.Ca
     public static final int TYPE_ANIMATED_GIF = 4;
     public static final int TYPE_SCRIPT = 5;
     public static final int TYPE_SVG = 6;
-
+    private static GraphicsProviderRunner sGraphicsProviderRunner;
+    private static CachedBitmapPool sCachedBitmapPool;
+    private final int mId;
+    private final Paint mPaint;
+    private GraphicsProvider mGraphicsProvider;
+    private Object mGraphicsProviderData;
+    private boolean mLoadingGraphics;
     private int mType = TYPE_NOT_YET_KNOWN;
     private CachedBitmap mCachedBitmap;
     private MyNinePatchDrawable mNinePatchDrawable;
@@ -68,27 +55,17 @@ public class SharedAsyncGraphicsDrawable extends Drawable implements Drawable.Ca
     private int mPreviousGifIndex = -1;
     private int mGifLoop = -1;
     private boolean mPlaying;
-
     private ScriptExecutor mScriptExecutor;
     private Scriptable mScriptObject;
     private ImageScript.DrawingContext mScriptDrawingContext;
-
     private int mMaxWidthHint;
     private int mMaxHeightHint;
     private int mResumeCount;
-
-    private Paint mPaint;
     private int mIntrinsicWidth;
     private int mIntrinsicHeight;
-
     private ArrayList<SharedAsyncGraphicsDrawableListener> mListeners;
-
-    public static void setPoolSize(long size) {
-        sCachedBitmapPool = new CachedBitmapPool(size);
-    }
-
     private SharedAsyncGraphicsDrawable(boolean filter) {
-        if(sGraphicsProviderRunner == null) {
+        if (sGraphicsProviderRunner == null) {
             sGraphicsProviderRunner = new GraphicsProviderRunner();
             sGraphicsProviderRunner.start();
         }
@@ -114,11 +91,15 @@ public class SharedAsyncGraphicsDrawable extends Drawable implements Drawable.Ca
         mGraphicsProviderData = data;
     }
 
+    public static void setPoolSize(long size) {
+        sCachedBitmapPool = new CachedBitmapPool(size);
+    }
+
     public void registerListener(SharedAsyncGraphicsDrawableListener listener) {
-        if(mListeners == null) {
+        if (mListeners == null) {
             mListeners = new ArrayList<>(1);
         }
-        if(mListeners.size() == 0 && mType == TYPE_ANIMATED_GIF) {
+        if (mListeners.size() == 0 && mType == TYPE_ANIMATED_GIF) {
             configureGifHandlerRunnable();
         }
 
@@ -127,7 +108,7 @@ public class SharedAsyncGraphicsDrawable extends Drawable implements Drawable.Ca
 
     public void unregisterListener(SharedAsyncGraphicsDrawableListener listener) {
         mListeners.remove(listener);
-        if(mListeners.size() == 0 && mType == TYPE_ANIMATED_GIF) {
+        if (mListeners.size() == 0 && mType == TYPE_ANIMATED_GIF) {
             mHandler.removeCallbacks(mAnimationRunnable);
             mPlaying = true;
         }
@@ -148,7 +129,7 @@ public class SharedAsyncGraphicsDrawable extends Drawable implements Drawable.Ca
 
     public void pause() {
         mResumeCount--;
-        if(mResumeCount == 0) {
+        if (mResumeCount == 0) {
             if (mAnimationRunnable != null) {
                 mHandler.removeCallbacks(mAnimationRunnable);
                 mPlaying = false;
@@ -160,14 +141,14 @@ public class SharedAsyncGraphicsDrawable extends Drawable implements Drawable.Ca
 
     private void pauseScript() {
         Object pause = mScriptObject.get("pause", mScriptObject);
-        if(pause instanceof Function) {
+        if (pause instanceof Function) {
             mScriptExecutor.runFunction((Function) pause, new Object[]{mScriptDrawingContext}, false, true);
         }
     }
 
     public void resume() {
         mResumeCount++;
-        if(mResumeCount == 1) {
+        if (mResumeCount == 1) {
             if (mAnimationRunnable != null) {
                 mAnimationRunnable.run();
             } else if (mType == TYPE_SCRIPT) {
@@ -178,8 +159,8 @@ public class SharedAsyncGraphicsDrawable extends Drawable implements Drawable.Ca
 
     private void resumeScript() {
         Object resume = mScriptObject.get("resume", mScriptObject);
-        if(resume instanceof Function) {
-            mScriptExecutor.runFunction((Function)resume, new Object[]{mScriptDrawingContext}, false, true);
+        if (resume instanceof Function) {
+            mScriptExecutor.runFunction((Function) resume, new Object[]{mScriptDrawingContext}, false, true);
         }
     }
 
@@ -195,7 +176,7 @@ public class SharedAsyncGraphicsDrawable extends Drawable implements Drawable.Ca
             return;
         }
 
-        if(mType == TYPE_NOT_YET_KNOWN) {
+        if (mType == TYPE_NOT_YET_KNOWN) {
             if (!mLoadingGraphics) {
                 loadGraphicsSync();
             } else {
@@ -221,7 +202,7 @@ public class SharedAsyncGraphicsDrawable extends Drawable implements Drawable.Ca
 
             case TYPE_ANIMATED_GIF:
                 int i = 0;
-                if(mAnimationRunnable != null) {
+                if (mAnimationRunnable != null) {
                     long relTime = (SystemClock.uptimeMillis() - mGifStartTime) % mAnimationDecoder.getTotalDuration();
                     int delay = 0;
                     int count = mAnimationDecoder.getFrameCount();
@@ -237,7 +218,7 @@ public class SharedAsyncGraphicsDrawable extends Drawable implements Drawable.Ca
                 }
                 Bitmap baseBitmap = mAnimationDecoder.getFrame(i);
                 boolean composed;
-                if(mGraphicsProvider != null) {
+                if (mGraphicsProvider != null) {
                     mGifBitmap.eraseColor(0);
                     composed = mGraphicsProvider.composeGraphics(baseBitmap, mGifBitmap);
                 } else {
@@ -248,9 +229,9 @@ public class SharedAsyncGraphicsDrawable extends Drawable implements Drawable.Ca
 
             case TYPE_SCRIPT:
                 Object draw = mScriptObject.get("draw", mScriptObject);
-                if(draw instanceof Function) {
+                if (draw instanceof Function) {
                     mScriptDrawingContext.setDrawingInfo(canvas, bounds.width(), bounds.height());
-                    mScriptExecutor.runFunction((Function)draw, new Object[]{mScriptDrawingContext}, false, true);
+                    mScriptExecutor.runFunction((Function) draw, new Object[]{mScriptDrawingContext}, false, true);
                     mScriptDrawingContext.setDrawingInfo(null, 0, 0);
                 }
                 break;
@@ -263,7 +244,7 @@ public class SharedAsyncGraphicsDrawable extends Drawable implements Drawable.Ca
 
     @Override
     public void invalidateSelf() {
-        if(mListeners != null) {
+        if (mListeners != null) {
             for (SharedAsyncGraphicsDrawableListener listener : mListeners) {
                 listener.onSharedAsyncGraphicsDrawableInvalidated(this);
             }
@@ -294,13 +275,13 @@ public class SharedAsyncGraphicsDrawable extends Drawable implements Drawable.Ca
 
     @Override
     protected void onBoundsChange(Rect bounds) {
-        if(mNinePatchDrawable != null) {
+        if (mNinePatchDrawable != null) {
             mNinePatchDrawable.setBounds(bounds);
-        } else if(mSvgDrawable != null) {
+        } else if (mSvgDrawable != null) {
             mSvgDrawable.setBounds(bounds);
         }
-        if(mMaxWidthHint == 0) mMaxWidthHint = bounds.width();
-        if(mMaxHeightHint == 0) mMaxHeightHint = bounds.height();
+        if (mMaxWidthHint == 0) mMaxWidthHint = bounds.width();
+        if (mMaxHeightHint == 0) mMaxHeightHint = bounds.height();
     }
 
     @Override
@@ -324,15 +305,15 @@ public class SharedAsyncGraphicsDrawable extends Drawable implements Drawable.Ca
     }
 
     public void loadGraphicsAsync() {
-        if(!mLoadingGraphics && mGraphicsProvider != null) {
+        if (!mLoadingGraphics && mGraphicsProvider != null) {
             mLoadingGraphics = true;
             sGraphicsProviderRunner.processEntry(this);
         }
     }
 
     public Bitmap getBitmap() {
-        if(mType == TYPE_NOT_YET_KNOWN || mType == TYPE_BITMAP) {
-            if(mCachedBitmap != null) {
+        if (mType == TYPE_NOT_YET_KNOWN || mType == TYPE_BITMAP) {
+            if (mCachedBitmap != null) {
                 ensureBitmapReadyToDraw();
                 return mCachedBitmap.bitmap;
             } else {
@@ -342,6 +323,21 @@ public class SharedAsyncGraphicsDrawable extends Drawable implements Drawable.Ca
         }
 
         return null;
+    }
+
+    public void setBitmap(Bitmap bitmap) {
+        reset();
+
+        mGraphicsProvider = null;
+
+        setBitmapInternal(bitmap);
+
+        if (mListeners != null) {
+            for (SharedAsyncGraphicsDrawableListener listener : mListeners) {
+                listener.onSharedAsyncGraphicsDrawableSizeChanged(this);
+                listener.onSharedAsyncGraphicsDrawableInvalidated(this);
+            }
+        }
     }
 
     public NinePatch getNinePatch() {
@@ -368,7 +364,7 @@ public class SharedAsyncGraphicsDrawable extends Drawable implements Drawable.Ca
 
             case TYPE_ANIMATED_GIF:
                 int total = 0;
-                for(int i = mAnimationDecoder.getFrameCount()-1; i >= 0; i--) {
+                for (int i = mAnimationDecoder.getFrameCount() - 1; i >= 0; i--) {
                     Bitmap b = mAnimationDecoder.getFrame(i);
                     total += b.getWidth() * b.getHeight() * 4;
                 }
@@ -395,12 +391,12 @@ public class SharedAsyncGraphicsDrawable extends Drawable implements Drawable.Ca
 
     public void setGraphicsInternal(Graphics graphics) {
         reset();
-        if(graphics != null) {
+        if (graphics != null) {
             Bitmap bitmap = graphics.getBitmap();
-            if(bitmap != null) {
+            if (bitmap != null) {
                 // this is a bitmap (either a 9 patch or a normal bitmap)
                 byte[] chunk = bitmap.getNinePatchChunk();
-                if(NinePatch.isNinePatchChunk(chunk)) {
+                if (NinePatch.isNinePatchChunk(chunk)) {
                     mType = TYPE_NINE_PATCH;
                     bitmap.setDensity(DisplayMetrics.DENSITY_DEFAULT);
                     NinePatch np = new NinePatch(bitmap, chunk, null);
@@ -411,7 +407,7 @@ public class SharedAsyncGraphicsDrawable extends Drawable implements Drawable.Ca
                 } else {
                     setBitmapInternal(bitmap);
                 }
-            } else if(graphics.getSvgDrawable() != null) {
+            } else if (graphics.getSvgDrawable() != null) {
                 mType = TYPE_SVG;
                 mSvgDrawable = graphics.getSvgDrawable();
                 mSvgDrawable.setCallback(this);
@@ -421,14 +417,14 @@ public class SharedAsyncGraphicsDrawable extends Drawable implements Drawable.Ca
             } else {
                 // this is a gif (either an animated one or a static one)
                 AnimationDecoder animationDecoder = graphics.getAnimationDecoder();
-                if(animationDecoder.getFrameCount() == 1) { // if there is no listener, then there is no need to animate the gif
+                if (animationDecoder.getFrameCount() == 1) { // if there is no listener, then there is no need to animate the gif
                     setBitmapInternal(animationDecoder.getBitmap());
                 } else {
                     mType = TYPE_ANIMATED_GIF;
                     mIntrinsicWidth = graphics.getTargetWidth();
-                    if(mIntrinsicWidth == 0) mIntrinsicWidth = animationDecoder.getWidth();
+                    if (mIntrinsicWidth == 0) mIntrinsicWidth = animationDecoder.getWidth();
                     mIntrinsicHeight = graphics.getTargetHeight();
-                    if(mIntrinsicHeight == 0) mIntrinsicHeight = animationDecoder.getHeight();
+                    if (mIntrinsicHeight == 0) mIntrinsicHeight = animationDecoder.getHeight();
                     mGifBitmap = Bitmap.createBitmap(mIntrinsicWidth, mIntrinsicHeight, Bitmap.Config.ARGB_8888);
                     mAnimationDecoder = animationDecoder;
                     mGifLoop = 0;
@@ -438,22 +434,7 @@ public class SharedAsyncGraphicsDrawable extends Drawable implements Drawable.Ca
                 }
             }
         }
-        if(mListeners != null) {
-            for (SharedAsyncGraphicsDrawableListener listener : mListeners) {
-                listener.onSharedAsyncGraphicsDrawableSizeChanged(this);
-                listener.onSharedAsyncGraphicsDrawableInvalidated(this);
-            }
-        }
-    }
-
-    public void setBitmap(Bitmap bitmap) {
-        reset();
-
-        mGraphicsProvider = null;
-
-        setBitmapInternal(bitmap);
-
-        if(mListeners != null) {
+        if (mListeners != null) {
             for (SharedAsyncGraphicsDrawableListener listener : mListeners) {
                 listener.onSharedAsyncGraphicsDrawableSizeChanged(this);
                 listener.onSharedAsyncGraphicsDrawableInvalidated(this);
@@ -472,10 +453,10 @@ public class SharedAsyncGraphicsDrawable extends Drawable implements Drawable.Ca
         mScriptDrawingContext = new ImageScript.DrawingContext(this, item);
         mIntrinsicWidth = width;
         mIntrinsicHeight = height;
-        if(mResumeCount > 0) {
+        if (mResumeCount > 0) {
             resumeScript();
         }
-        if(mListeners != null) {
+        if (mListeners != null) {
             for (SharedAsyncGraphicsDrawableListener listener : mListeners) {
                 listener.onSharedAsyncGraphicsDrawableSizeChanged(this);
                 listener.onSharedAsyncGraphicsDrawableInvalidated(this);
@@ -484,19 +465,19 @@ public class SharedAsyncGraphicsDrawable extends Drawable implements Drawable.Ca
     }
 
     private void setBitmapInternal(Bitmap bitmap) {
-        if(bitmap == null) {
+        if (bitmap == null) {
             mType = TYPE_NONE;
         } else {
             mType = TYPE_BITMAP;
             mIntrinsicWidth = bitmap.getWidth();
             mIntrinsicHeight = bitmap.getHeight();
-            if(mCachedBitmap != null) {
+            if (mCachedBitmap != null) {
                 // try to update the current bitmap if it is the same size
                 Bitmap old_bitmap = mCachedBitmap.bitmap;
-                if(old_bitmap.getWidth() == bitmap.getWidth() && old_bitmap.getHeight() == bitmap.getHeight()) {
+                if (old_bitmap.getWidth() == bitmap.getWidth() && old_bitmap.getHeight() == bitmap.getHeight()) {
                     // if the id is the same, copy the bitmap content and update the native cache, otherwise update the native cache only because it will be restored later into the bitmap by ensureReadyToDraw
                     int old_id = mCachedBitmap.id;
-                    if(old_id == mId) {
+                    if (old_id == mId) {
                         old_bitmap.eraseColor(0);
                         Canvas canvas = new Canvas(old_bitmap);
                         canvas.drawBitmap(bitmap, 0, 0, null);
@@ -512,10 +493,10 @@ public class SharedAsyncGraphicsDrawable extends Drawable implements Drawable.Ca
     }
 
     private void configureGifHandlerRunnable() {
-        if(mHandler == null) {
+        if (mHandler == null) {
             mHandler = new Handler();
         }
-        if(mAnimationRunnable == null) {
+        if (mAnimationRunnable == null) {
             mAnimationRunnable = new Runnable() {
                 @Override
                 public void run() {
@@ -523,16 +504,16 @@ public class SharedAsyncGraphicsDrawable extends Drawable implements Drawable.Ca
                     int delay = 0;
                     int count = mAnimationDecoder.getFrameCount();
                     int i;
-                    for(i = 0; i < count; i++) {
+                    for (i = 0; i < count; i++) {
                         delay += mAnimationDecoder.getDelay(i);
-                        if(delay > relTime) break;
+                        if (delay > relTime) break;
                     }
-                    if(mPreviousGifIndex != -1 && i < mPreviousGifIndex) {
+                    if (mPreviousGifIndex != -1 && i < mPreviousGifIndex) {
                         mGifLoop++;
                     }
                     mPreviousGifIndex = i;
                     int maxGifLoop = mAnimationDecoder.getLoopCount();
-                    if(maxGifLoop == 0 || mGifLoop < maxGifLoop) {
+                    if (maxGifLoop == 0 || mGifLoop < maxGifLoop) {
                         mPlaying = true;
                         mHandler.postDelayed(mAnimationRunnable, delay - relTime);
                     } else {
@@ -545,7 +526,7 @@ public class SharedAsyncGraphicsDrawable extends Drawable implements Drawable.Ca
             };
         }
 
-        if(mResumeCount > 0 && mListeners != null && mListeners.size() > 0) {
+        if (mResumeCount > 0 && mListeners != null && mListeners.size() > 0) {
             mAnimationRunnable.run();
         }
     }
@@ -556,7 +537,7 @@ public class SharedAsyncGraphicsDrawable extends Drawable implements Drawable.Ca
         mNinePatchDrawable = null;
         mAnimationDecoder = null;
         mGifBitmap = null;
-        if(mAnimationRunnable != null) {
+        if (mAnimationRunnable != null) {
             mHandler.removeCallbacks(mAnimationRunnable);
             mPlaying = false;
             mAnimationRunnable = null;
@@ -564,7 +545,7 @@ public class SharedAsyncGraphicsDrawable extends Drawable implements Drawable.Ca
         }
         mIntrinsicWidth = 0;
         mIntrinsicHeight = 0;
-        if(mType == TYPE_SCRIPT) {
+        if (mType == TYPE_SCRIPT) {
             pauseScript();
             mScriptExecutor = null;
             mScriptObject = null;
@@ -572,7 +553,7 @@ public class SharedAsyncGraphicsDrawable extends Drawable implements Drawable.Ca
     }
 
     public void startAnimation() {
-        if(mAnimationRunnable != null) {
+        if (mAnimationRunnable != null) {
             mGifLoop = 0;
             mGifStartTime = SystemClock.uptimeMillis();
             mHandler.removeCallbacks(mAnimationRunnable);
@@ -581,7 +562,7 @@ public class SharedAsyncGraphicsDrawable extends Drawable implements Drawable.Ca
     }
 
     public void stopAnimation() {
-        if(mAnimationRunnable != null) {
+        if (mAnimationRunnable != null) {
             mHandler.removeCallbacks(mAnimationRunnable);
             mPlaying = false;
         }
@@ -594,8 +575,17 @@ public class SharedAsyncGraphicsDrawable extends Drawable implements Drawable.Ca
     public int getAnimationFrameCount() {
         return mType == TYPE_ANIMATED_GIF ? mAnimationDecoder.getFrameCount() : 0;
     }
+
+    public void setAnimationFrameCount(int count) {
+        if (mType != TYPE_ANIMATED_GIF || count < 0) {
+            return;
+        }
+
+        mAnimationDecoder.setFrameCount(count);
+    }
+
     public Bitmap getAnimationFrameBitmap(int index) {
-        if(mType != TYPE_ANIMATED_GIF || index < 0 || index >= mAnimationDecoder.getFrameCount()) {
+        if (mType != TYPE_ANIMATED_GIF || index < 0 || index >= mAnimationDecoder.getFrameCount()) {
             return null;
         }
 
@@ -603,7 +593,7 @@ public class SharedAsyncGraphicsDrawable extends Drawable implements Drawable.Ca
     }
 
     public int getAnimationFrameDelay(int index) {
-        if(mType != TYPE_ANIMATED_GIF || index < 0 || index >= mAnimationDecoder.getFrameCount()) {
+        if (mType != TYPE_ANIMATED_GIF || index < 0 || index >= mAnimationDecoder.getFrameCount()) {
             return 0;
         }
 
@@ -611,23 +601,15 @@ public class SharedAsyncGraphicsDrawable extends Drawable implements Drawable.Ca
     }
 
     public void setAnimationFrameDelay(int index, int delay) {
-        if(mType != TYPE_ANIMATED_GIF || index < 0 || index >= mAnimationDecoder.getFrameCount()) {
+        if (mType != TYPE_ANIMATED_GIF || index < 0 || index >= mAnimationDecoder.getFrameCount()) {
             return;
         }
 
         mAnimationDecoder.setDelay(index, delay);
     }
 
-    public void setAnimationFrameCount(int count) {
-        if(mType != TYPE_ANIMATED_GIF || count < 0) {
-            return;
-        }
-
-        mAnimationDecoder.setFrameCount(count);
-    }
-
     public int getAnimationLoopCount() {
-        if(mType != TYPE_ANIMATED_GIF) {
+        if (mType != TYPE_ANIMATED_GIF) {
             return 0;
         }
 
@@ -635,7 +617,7 @@ public class SharedAsyncGraphicsDrawable extends Drawable implements Drawable.Ca
     }
 
     public void setAnimationLoopCount(int count) {
-        if(mType == TYPE_ANIMATED_GIF) {
+        if (mType == TYPE_ANIMATED_GIF) {
             mAnimationDecoder.setLoopCount(count);
         }
     }
@@ -650,20 +632,48 @@ public class SharedAsyncGraphicsDrawable extends Drawable implements Drawable.Ca
 
     private void ensureBitmapReadyToDraw() {
         Bitmap bitmap = mCachedBitmap.bitmap;
-        if(bitmap == null) {
+        if (bitmap == null) {
             // bitmap has been freed, reload it
             mCachedBitmap = sCachedBitmapPool.getCachedBitmap(mId, null);
         } else {
-            if(mCachedBitmap.id != mId) {
+            if (mCachedBitmap.id != mId) {
                 // bitmap allocated but not the same picture
                 int id = mCachedBitmap.id;
-                if(!NativeImage.hasImage(id)) {
+                if (!NativeImage.hasImage(id)) {
                     NativeImage.nativeSetImage(id, bitmap);
                 }
                 NativeImage.nativeLoadImage(mId, bitmap);
                 mCachedBitmap.id = mId;
             }
         }
+    }
+
+    // a child drawable has been invalidated
+    @Override
+    public void invalidateDrawable(Drawable drawable) {
+        invalidateSelf();
+    }
+
+    @Override
+    public void scheduleDrawable(Drawable drawable, Runnable runnable, long l) {
+
+    }
+
+    @Override
+    public void unscheduleDrawable(Drawable drawable, Runnable runnable) {
+
+    }
+
+    public interface GraphicsProvider {
+        Graphics provideGraphics(SharedAsyncGraphicsDrawable sbd, Object data, int max_width, int max_height);
+
+        boolean composeGraphics(Bitmap baseIcon, Bitmap finalIcon);
+    }
+
+    public interface SharedAsyncGraphicsDrawableListener {
+        void onSharedAsyncGraphicsDrawableInvalidated(SharedAsyncGraphicsDrawable drawable);
+
+        void onSharedAsyncGraphicsDrawableSizeChanged(SharedAsyncGraphicsDrawable drawable);
     }
 
     private static class CachedBitmap {
@@ -678,6 +688,7 @@ public class SharedAsyncGraphicsDrawable extends Drawable implements Drawable.Ca
 
     private static class CachedBitmapRef extends WeakReference<CachedBitmap> {
         public long size;
+
         public CachedBitmapRef(CachedBitmap r, long size) {
             super(r);
             this.size = size;
@@ -686,21 +697,20 @@ public class SharedAsyncGraphicsDrawable extends Drawable implements Drawable.Ca
 
     private static class CachedBitmapPool {
 
+        private final long mMaxSize;
         private LinkedList<CachedBitmapRef> mCachedBitmaps;
-
         private long mCurrentSize;
-        private long mMaxSize;
 
         public CachedBitmapPool(long max_size) {
             mMaxSize = max_size;
             mCurrentSize = 0;
-            if(max_size != 0) {
+            if (max_size != 0) {
                 mCachedBitmaps = new LinkedList<>();
             }
         }
 
         public CachedBitmap getCachedBitmap(int id, Bitmap from) {
-            if(mMaxSize == 0) {
+            if (mMaxSize == 0) {
                 CachedBitmap cachedBitmap = new CachedBitmap(from);
                 cachedBitmap.id = id;
                 return cachedBitmap;
@@ -708,7 +718,7 @@ public class SharedAsyncGraphicsDrawable extends Drawable implements Drawable.Ca
             CachedBitmapRef cached_bitmap_ref;
             CachedBitmap cached_bitmap;
             int width, height;
-            if(from == null) {
+            if (from == null) {
                 width = NativeImage.nativeGetImageWidth(id);
                 height = NativeImage.nativeGetImageHeight(id);
             } else {
@@ -718,7 +728,7 @@ public class SharedAsyncGraphicsDrawable extends Drawable implements Drawable.Ca
             long size = getBitmapSize(width, height);
 
             // clear cached bitmaps that have been garbage collected
-            for(int l = mCachedBitmaps.size()-1; l>=0; l--) {
+            for (int l = mCachedBitmaps.size() - 1; l >= 0; l--) {
                 CachedBitmapRef ref = mCachedBitmaps.get(l);
                 CachedBitmap cb = ref.get();
                 if (cb == null) {
@@ -727,7 +737,7 @@ public class SharedAsyncGraphicsDrawable extends Drawable implements Drawable.Ca
                 }
             }
 
-            if(from != null && (mCurrentSize + size) <= mMaxSize) {
+            if (from != null && (mCurrentSize + size) <= mMaxSize) {
                 // pool is not full, create a new entry
                 cached_bitmap = new CachedBitmap(from);
                 mCachedBitmaps.add(new CachedBitmapRef(cached_bitmap, size));
@@ -739,7 +749,7 @@ public class SharedAsyncGraphicsDrawable extends Drawable implements Drawable.Ca
                 cached_bitmap = null;
 
                 // look for a matching bitmap in size
-                for(CachedBitmapRef ref : mCachedBitmaps) {
+                for (CachedBitmapRef ref : mCachedBitmaps) {
                     CachedBitmap cb = ref.get();
                     final Bitmap bitmap = cb.bitmap;
                     if (bitmap.getWidth() == width && bitmap.getHeight() == height) {
@@ -749,22 +759,22 @@ public class SharedAsyncGraphicsDrawable extends Drawable implements Drawable.Ca
                     }
                 }
 
-                if(cached_bitmap == null) {
+                if (cached_bitmap == null) {
                     // no matching bitmap found, need to free old bitmaps to make room for a new one
-                    while((mCurrentSize + size) >= mMaxSize && mCachedBitmaps.size() > 1) {
+                    while ((mCurrentSize + size) >= mMaxSize && mCachedBitmaps.size() > 1) {
                         CachedBitmapRef ref = mCachedBitmaps.removeFirst();
                         CachedBitmap cb = ref.get();
                         int removed_id = cb.id;
                         Bitmap bitmap = cb.bitmap;
                         // store the bitmap data in native memory before to free the bitmap in java memory
-                        if(!NativeImage.hasImage(removed_id)) {
+                        if (!NativeImage.hasImage(removed_id)) {
                             NativeImage.nativeSetImage(removed_id, bitmap);
                         }
                         mCurrentSize -= ref.size;
                         bitmap.recycle();
                         cb.bitmap = null;
                     }
-                    if(from == null) {
+                    if (from == null) {
                         // allocate a new bitmap and recover its data from native memory using its id
                         Bitmap out = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
                         cached_bitmap = new CachedBitmap(out);
@@ -778,7 +788,7 @@ public class SharedAsyncGraphicsDrawable extends Drawable implements Drawable.Ca
                 } else {
                     // matching bitmap found, save it to native if needed
                     Bitmap bitmap = cached_bitmap.bitmap;
-                    if(bitmap != from) {
+                    if (bitmap != from) {
                         cached_bitmap.shared = true;
                         int old_id = cached_bitmap.id;
                         if (!NativeImage.hasImage(old_id)) {
@@ -805,13 +815,12 @@ public class SharedAsyncGraphicsDrawable extends Drawable implements Drawable.Ca
         }
 
         private long getBitmapSize(int width, int height) {
-            return width * height * 4;
+            return (long) width * height * 4;
         }
     }
 
-
     private static class GraphicsProviderRunner extends Thread {
-        private Handler mHandler;
+        private final Handler mHandler;
         private final LinkedList<SharedAsyncGraphicsDrawable> mEntries;
 
         public GraphicsProviderRunner() {
@@ -863,21 +872,5 @@ public class SharedAsyncGraphicsDrawable extends Drawable implements Drawable.Ca
                 mEntries.add(entry);
             }
         }
-    }
-
-    // a child drawable has been invalidated
-    @Override
-    public void invalidateDrawable(Drawable drawable) {
-        invalidateSelf();
-    }
-
-    @Override
-    public void scheduleDrawable(Drawable drawable, Runnable runnable, long l) {
-
-    }
-
-    @Override
-    public void unscheduleDrawable(Drawable drawable, Runnable runnable) {
-
     }
 }

@@ -12,9 +12,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.PixelFormat;
-import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.util.DisplayMetrics;
@@ -114,7 +112,7 @@ public class WindowService extends Service implements LightningEngine.GlobalConf
         lightningEngine.registerGlobalConfigChangeListener(this);
         final GlobalConfig globalConfig = lightningEngine.getGlobalConfig();
         mOverlayScreen = globalConfig.overlayScreen;
-        mOverlayShowHandlePosition =globalConfig.overlayShowHandlePosition;
+        mOverlayShowHandlePosition = globalConfig.overlayShowHandlePosition;
         mOverlayShowHandleSize = globalConfig.overlayShowHandleSize;
         mOverlayShowHandleWidth = globalConfig.overlayShowHandleWidth;
         mOverlayHideHandlePosition = globalConfig.overlayHideHandlePosition;
@@ -131,7 +129,7 @@ public class WindowService extends Service implements LightningEngine.GlobalConf
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 int action = event.getAction();
                 if (keyCode == KeyEvent.KEYCODE_MENU) {
-                    if(action == KeyEvent.ACTION_UP) {
+                    if (action == KeyEvent.ACTION_UP) {
                         EventAction ea = mMainPage.config.menuKey;
                         if (ea.action == GlobalConfig.UNSET) {
                             ea = globalConfig.menuKey;
@@ -140,13 +138,13 @@ public class WindowService extends Service implements LightningEngine.GlobalConf
                     }
                     return true;
                 } else if (keyCode == KeyEvent.KEYCODE_BACK) {
-                    if(action == KeyEvent.ACTION_UP) {
+                    if (action == KeyEvent.ACTION_UP) {
                         FolderView fv = mScreen.findTopmostFolderView();
                         if (fv != null) {
                             mScreen.closeFolder(fv, true);
                         } else {
                             EventAction ea = mMainPage.config.backKey;
-                            if(ea.action == GlobalConfig.UNSET) {
+                            if (ea.action == GlobalConfig.UNSET) {
                                 hideWorkspace();
                             } else {
                                 mScreen.runAction(mMainPage.getEngine(), "K_BACK", ea);
@@ -172,12 +170,12 @@ public class WindowService extends Service implements LightningEngine.GlobalConf
         mHideHandle = mContentView.findViewById(R.id.hide_handle);
         mHideHandle.setVisibility(View.GONE);
 
-        mItemLayout=(ItemLayout) mWorkspaceView.findViewById(R.id.window_il);
+        mItemLayout = mWorkspaceView.findViewById(R.id.window_il);
         mScreen.takeItemLayoutOwnership(mItemLayout);
         mItemLayout.setHonourFocusChange(false);
 
         int windowType = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
-    
+
         mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -186,10 +184,10 @@ public class WindowService extends Service implements LightningEngine.GlobalConf
 //                        |WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
 //                        |WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
 //                        |WindowManager.LayoutParams.FLAG_LOCAL_FOCUS_MODE
-                        |WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-                        |WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
-                        |WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
-                        |0,
+                        | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                        | WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+                        | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
+                        | 0,
                 PixelFormat.TRANSLUCENT);
         lp.gravity = Gravity.LEFT | Gravity.TOP;
 //        mWindowManager.addView(mContentView, lp);
@@ -200,7 +198,7 @@ public class WindowService extends Service implements LightningEngine.GlobalConf
                 Class PolicyManager = getClass().getClassLoader().loadClass("com.android.internal.policy.PolicyManager");
                 Method m = PolicyManager.getMethod("makeNewWindow", Context.class);
                 mWindow = (Window) m.invoke(null, this);
-            } catch(ClassNotFoundException e) {
+            } catch (ClassNotFoundException e) {
                 // starting at Android 6
                 Class PhoneWindow = getClass().getClassLoader().loadClass("com.android.internal.policy.PhoneWindow");
                 mWindow = (Window) PhoneWindow.getDeclaredConstructor(Context.class).newInstance(this);
@@ -380,7 +378,7 @@ public class WindowService extends Service implements LightningEngine.GlobalConf
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if(intent != null) {
+        if (intent != null) {
             String action = intent.getAction();
             if (INTENT_ACTION_SHOW.equals(action)) {
                 showWorkspace();
@@ -394,7 +392,7 @@ public class WindowService extends Service implements LightningEngine.GlobalConf
 
     @Override
     public final Resources getResources() {
-        if(mResourcesWrapperHelper == null) {
+        if (mResourcesWrapperHelper == null) {
             mResourcesWrapperHelper = new ResourcesWrapperHelper(this, super.getResources());
         }
         return mResourcesWrapperHelper.getResources();
@@ -416,12 +414,12 @@ public class WindowService extends Service implements LightningEngine.GlobalConf
 
     @Override
     public void onGlobalConfigChanged(GlobalConfig newGlobalConfig) {
-        if(newGlobalConfig.overlayScreen != mOverlayScreen) {
+        if (newGlobalConfig.overlayScreen != mOverlayScreen) {
             mOverlayScreen = newGlobalConfig.overlayScreen;
             configurePage();
         }
 
-        if(newGlobalConfig.overlayAnimation != mOverlayAnimation ||
+        if (newGlobalConfig.overlayAnimation != mOverlayAnimation ||
                 newGlobalConfig.overlayShowHandlePosition != mOverlayShowHandlePosition ||
                 newGlobalConfig.overlayShowHandleSize != mOverlayShowHandleSize ||
                 newGlobalConfig.overlayShowHandleWidth != mOverlayShowHandleWidth ||
@@ -546,8 +544,8 @@ public class WindowService extends Service implements LightningEngine.GlobalConf
         mShowHandle.setBackgroundColor(mOverlayDisplayHandles ? 0x8000a000 : 0);
         mHideHandle.setBackgroundColor(mOverlayDisplayHandles ? 0x80a00000 : 0);
 
-        WindowManager.LayoutParams lp = ((WindowManager.LayoutParams)mWindow.getDecorView().getLayoutParams());
-        lp.gravity = ((FrameLayout.LayoutParams)mShowHandle.getLayoutParams()).gravity;
+        WindowManager.LayoutParams lp = ((WindowManager.LayoutParams) mWindow.getDecorView().getLayoutParams());
+        lp.gravity = ((FrameLayout.LayoutParams) mShowHandle.getLayoutParams()).gravity;
         mWindowManager.updateViewLayout(mWindow.getDecorView(), lp);
 
 //        mWindow.setGravity(((FrameLayout.LayoutParams)mShowHandle.getLayoutParams()).gravity);
@@ -827,20 +825,28 @@ public class WindowService extends Service implements LightningEngine.GlobalConf
 
         mWorkspaceView.setTranslationX(0);
         mWorkspaceView.setTranslationY(0);
-        if(mOverlayAnimation == GlobalConfig.OverlayAnimation.SLIDE) {
+        if (mOverlayAnimation == GlobalConfig.OverlayAnimation.SLIDE) {
             boolean visible = mWorkspaceView.getVisibility() == View.VISIBLE;
             switch (mOverlayShowHandlePosition) {
                 // FIXME I don't understand why X and Y are inverted, as if not everything was rotated at this time
-                case LEFT_TOP: case LEFT_MIDDLE: case LEFT_BOTTOM:
+                case LEFT_TOP:
+                case LEFT_MIDDLE:
+                case LEFT_BOTTOM:
                     mWorkspaceView.setTranslationX(visible ? 0 : -mScreenWidth);
                     break;
-                case RIGHT_TOP: case RIGHT_MIDDLE: case RIGHT_BOTTOM:
+                case RIGHT_TOP:
+                case RIGHT_MIDDLE:
+                case RIGHT_BOTTOM:
                     mWorkspaceView.setTranslationX(visible ? 0 : mScreenWidth);
                     break;
-                case TOP_LEFT: case TOP_CENTER: case TOP_RIGHT:
+                case TOP_LEFT:
+                case TOP_CENTER:
+                case TOP_RIGHT:
                     mWorkspaceView.setTranslationY(visible ? 0 : -mScreenHeight);
                     break;
-                case BOTTOM_LEFT: case BOTTOM_CENTER: case BOTTOM_RIGHT:
+                case BOTTOM_LEFT:
+                case BOTTOM_CENTER:
+                case BOTTOM_RIGHT:
                     mWorkspaceView.setTranslationY(visible ? 0 : mScreenHeight);
                     break;
             }
@@ -849,42 +855,58 @@ public class WindowService extends Service implements LightningEngine.GlobalConf
 
     private ViewPropertyAnimator createDrawerAnimation(GlobalConfig.OverlayHandlePosition from, boolean show, long duration) {
         ViewPropertyAnimator animator = mWorkspaceView.animate();
-        if(show) {
-            if(mOverlayAnimation == GlobalConfig.OverlayAnimation.FADE) {
+        if (show) {
+            if (mOverlayAnimation == GlobalConfig.OverlayAnimation.FADE) {
                 animator.alpha(1);
             } else {
                 switch (from) {
-                    case LEFT_TOP: case LEFT_MIDDLE: case LEFT_BOTTOM:
-                    case RIGHT_TOP: case RIGHT_MIDDLE: case RIGHT_BOTTOM:
+                    case LEFT_TOP:
+                    case LEFT_MIDDLE:
+                    case LEFT_BOTTOM:
+                    case RIGHT_TOP:
+                    case RIGHT_MIDDLE:
+                    case RIGHT_BOTTOM:
                         animator.translationX(0);
                         break;
 
-                    case TOP_LEFT: case TOP_CENTER: case TOP_RIGHT:
-                    case BOTTOM_LEFT: case BOTTOM_CENTER: case BOTTOM_RIGHT:
+                    case TOP_LEFT:
+                    case TOP_CENTER:
+                    case TOP_RIGHT:
+                    case BOTTOM_LEFT:
+                    case BOTTOM_CENTER:
+                    case BOTTOM_RIGHT:
                         animator.translationY(0);
                         break;
                 }
             }
         } else {
-            if(mOverlayAnimation == GlobalConfig.OverlayAnimation.FADE) {
+            if (mOverlayAnimation == GlobalConfig.OverlayAnimation.FADE) {
                 animator.alpha(0);
             } else {
                 boolean is_show_handle = from == mOverlayShowHandlePosition;
                 switch (from) {
-                    case LEFT_TOP: case LEFT_MIDDLE: case LEFT_BOTTOM:
-                        animator.translationX(is_show_handle ? -mScreenWidth-1 : mScreenWidth+1);
+                    case LEFT_TOP:
+                    case LEFT_MIDDLE:
+                    case LEFT_BOTTOM:
+                        animator.translationX(is_show_handle ? -mScreenWidth - 1 : mScreenWidth + 1);
                         break;
 
-                    case RIGHT_TOP: case RIGHT_MIDDLE: case RIGHT_BOTTOM:
-                        animator.translationX(is_show_handle ? mScreenWidth+1 : -mScreenWidth-1);
+                    case RIGHT_TOP:
+                    case RIGHT_MIDDLE:
+                    case RIGHT_BOTTOM:
+                        animator.translationX(is_show_handle ? mScreenWidth + 1 : -mScreenWidth - 1);
                         break;
 
-                    case TOP_LEFT: case TOP_CENTER: case TOP_RIGHT:
-                        animator.translationY(is_show_handle ? -mScreenHeight-1 : mScreenHeight+1);
+                    case TOP_LEFT:
+                    case TOP_CENTER:
+                    case TOP_RIGHT:
+                        animator.translationY(is_show_handle ? -mScreenHeight - 1 : mScreenHeight + 1);
                         break;
 
-                    case BOTTOM_LEFT: case BOTTOM_CENTER: case BOTTOM_RIGHT:
-                        animator.translationY(is_show_handle ? mScreenHeight+1 : -mScreenHeight-1);
+                    case BOTTOM_LEFT:
+                    case BOTTOM_CENTER:
+                    case BOTTOM_RIGHT:
+                        animator.translationY(is_show_handle ? mScreenHeight + 1 : -mScreenHeight - 1);
                         break;
                 }
             }
@@ -922,7 +944,7 @@ public class WindowService extends Service implements LightningEngine.GlobalConf
             public void onAnimationEnd(Animator animator) {
                 mWorkspaceView.setTranslationX(0);
 
-                WindowManager.LayoutParams lp = ((WindowManager.LayoutParams)mWindow.getDecorView().getLayoutParams());
+                WindowManager.LayoutParams lp = ((WindowManager.LayoutParams) mWindow.getDecorView().getLayoutParams());
                 lp.flags = 0;
                 mWindowManager.updateViewLayout(mWindow.getDecorView(), lp);
 
@@ -955,7 +977,7 @@ public class WindowService extends Service implements LightningEngine.GlobalConf
                 mShowHandle.setVisibility(View.VISIBLE);
                 mHideHandle.setVisibility(View.GONE);
 
-                WindowManager.LayoutParams lp = ((WindowManager.LayoutParams)mWindow.getDecorView().getLayoutParams());
+                WindowManager.LayoutParams lp = ((WindowManager.LayoutParams) mWindow.getDecorView().getLayoutParams());
                 lp.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
                 mWindowManager.updateViewLayout(mWindow.getDecorView(), lp);
 
@@ -975,14 +997,14 @@ public class WindowService extends Service implements LightningEngine.GlobalConf
     }
 
     protected void showWorkspace() {
-        if(!mIsShown) {
+        if (!mIsShown) {
             overlayIsShown();
             showWorkspace(mOverlayShowHandlePosition, true, OPEN_CLOSE_ANIMATION_DURATION);
         }
     }
 
     protected void hideWorkspace() {
-        if(mIsShown) {
+        if (mIsShown) {
             overlayIsHidden();
             hideWorkspace(mOverlayHideHandlePosition, true, OPEN_CLOSE_ANIMATION_DURATION);
         }
@@ -1005,7 +1027,7 @@ public class WindowService extends Service implements LightningEngine.GlobalConf
 
         @Override
         public ItemLayout loadRootItemLayout(int page, boolean reset_navigation_history, boolean displayImmediately, boolean animate) {
-            if(mItemLayout.getPage().id == page) {
+            if (mItemLayout.getPage().id == page) {
                 return mItemLayout;
             } else {
                 return loadRootItemLayoutOffscreen(page, reset_navigation_history, displayImmediately, animate);
@@ -1020,7 +1042,7 @@ public class WindowService extends Service implements LightningEngine.GlobalConf
         @Override
         protected void launchIntent(Intent intent, ItemView itemView) {
             super.launchIntent(intent, itemView);
-            if(LLApp.get().getAppEngine().getGlobalConfig().overlayLaunchHide) {
+            if (LLApp.get().getAppEngine().getGlobalConfig().overlayLaunchHide) {
                 hideWorkspace();
             }
 

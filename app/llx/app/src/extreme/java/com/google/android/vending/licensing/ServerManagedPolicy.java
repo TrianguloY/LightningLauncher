@@ -16,16 +16,16 @@
 
 package com.google.android.vending.licensing;
 
+import android.content.Context;
+
+import com.google.android.vending.licensing.util.Item;
+import com.google.android.vending.licensing.util.URLUtils;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import android.content.Context;
-
-import com.google.android.vending.licensing.util.Item;
-import com.google.android.vending.licensing.util.URLUtils;
 
 /**
  * Default policy. All policy decisions are based off of response data received
@@ -54,14 +54,13 @@ public class ServerManagedPolicy implements Policy {
     private static final String DEFAULT_RETRY_COUNT = "5";
 
     private static final long MILLIS_PER_MINUTE = 60 * 1000;
-
+    private final JSONDataObfuscator mPreferences;
     private long mValidityTimestamp;
     private long mRetryUntil;
     private long mMaxRetries;
     private long mRetryCount;
     private long mLastResponseTime = 0;
     private int mLastResponse;
-    private JSONDataObfuscator mPreferences;
 
     public ServerManagedPolicy(Context context) {
         // Import old values
@@ -86,7 +85,7 @@ public class ServerManagedPolicy implements Policy {
      * </ul>
      *
      * @param response the result from validating the server response
-     * @param rawData the raw server response data
+     * @param rawData  the raw server response data
      */
     public void processServerResponse(int response, ResponseData rawData) {
 
@@ -128,6 +127,10 @@ public class ServerManagedPolicy implements Policy {
         mPreferences.putString(PREF_LAST_RESPONSE, Integer.toString(l));
     }
 
+    public long getRetryCount() {
+        return mRetryCount;
+    }
+
     /**
      * Set the current retry count and add to preferences. You must manually
      * call PreferenceObfuscator.commit() to commit these changes to disk.
@@ -139,8 +142,8 @@ public class ServerManagedPolicy implements Policy {
         mPreferences.putString(PREF_RETRY_COUNT, Long.toString(c));
     }
 
-    public long getRetryCount() {
-        return mRetryCount;
+    public long getValidityTimestamp() {
+        return mValidityTimestamp;
     }
 
     /**
@@ -165,8 +168,8 @@ public class ServerManagedPolicy implements Policy {
         mPreferences.putString(PREF_VALIDITY_TIMESTAMP, validityTimestamp);
     }
 
-    public long getValidityTimestamp() {
-        return mValidityTimestamp;
+    public long getRetryUntil() {
+        return mRetryUntil;
     }
 
     /**
@@ -184,15 +187,15 @@ public class ServerManagedPolicy implements Policy {
             // No response or not parsable, expire immediately
 //            Log.w(TAG, "License retry timestamp (GT) missing, grace period disabled");
             retryUntil = "0";
-            lRetryUntil = 0l;
+            lRetryUntil = 0L;
         }
 
         mRetryUntil = lRetryUntil;
         mPreferences.putString(PREF_RETRY_UNTIL, retryUntil);
     }
 
-    public long getRetryUntil() {
-      return mRetryUntil;
+    public long getMaxRetries() {
+        return mMaxRetries;
     }
 
     /**
@@ -210,20 +213,16 @@ public class ServerManagedPolicy implements Policy {
             // No response or not parsable, expire immediately
 //            Log.w(TAG, "Licence retry count (GR) missing, grace period disabled");
             maxRetries = "0";
-            lMaxRetries = 0l;
+            lMaxRetries = 0L;
         }
 
         mMaxRetries = lMaxRetries;
         mPreferences.putString(PREF_MAX_RETRIES, maxRetries);
     }
 
-    public long getMaxRetries() {
-        return mMaxRetries;
-    }
-
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * This implementation allows access if either:<br>
      * <ol>
      * <li>a LICENSED response was received within the validity period
@@ -235,19 +234,14 @@ public class ServerManagedPolicy implements Policy {
         long ts = System.currentTimeMillis();
         if (mLastResponse == Policy.LICENSED) {
             // Check if the LICENSED response occurred within the validity timeout.
-            if (ts <= mValidityTimestamp) {
-                // Cached LICENSED response is still valid.
-                return true;
-            }
+            // Cached LICENSED response is still valid.
+            return ts <= mValidityTimestamp;
         } else if (mLastResponse == Policy.RETRY &&
-                   ts < mLastResponseTime + MILLIS_PER_MINUTE) {
+                ts < mLastResponseTime + MILLIS_PER_MINUTE) {
             // Only allow access if we are within the retry period or we haven't used up our
             // max retries.
             return (ts <= mRetryUntil || mRetryCount <= mMaxRetries);
-        } else if(mLastResponse == Policy.NO_SERVICE) {
-            return true;
-        }
-        return false;
+        } else return mLastResponse == Policy.NO_SERVICE;
     }
 
     private Map<String, String> decodeExtras(String extras) {
