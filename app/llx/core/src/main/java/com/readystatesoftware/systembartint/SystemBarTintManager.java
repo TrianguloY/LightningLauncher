@@ -381,6 +381,7 @@ private static int sSafeInsetWidth = 0;
 
             WindowInsets windowInsets = window.getDecorView().getRootWindowInsets();
             if (windowInsets != null) {
+                // Cutout fix for Android P
                 if (Build.VERSION.SDK_INT >= 28) {
                     DisplayCutout cutout = windowInsets.getDisplayCutout();
                     if (cutout != null) {
