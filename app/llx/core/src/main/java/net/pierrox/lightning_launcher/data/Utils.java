@@ -111,8 +111,7 @@ public class Utils {
     public static final int LAYOUT_MODE_FREQUENTLY_USED = 2;
     public static final int LAYOUT_MODE_RECENT_APPS = 3;
     public static final int LAYOUT_MODE_RECENTLY_UPDATED = 4;
-    public static final int LAYOUT_MODE_RUNNING = 5;
-    public static final int LAYOUT_MODE_LAST = LAYOUT_MODE_RUNNING;
+    public static final int LAYOUT_MODE_LAST = LAYOUT_MODE_RECENTLY_UPDATED;
 
     public static final Collator sItemNameCollator = Collator.getInstance(Locale.getDefault());
     public static final Comparator<Item> sItemComparatorByNameAsc = new Comparator<Item>() {

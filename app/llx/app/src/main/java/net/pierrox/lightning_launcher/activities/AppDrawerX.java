@@ -643,69 +643,6 @@ public class AppDrawerX extends Dashboard implements EditTextIme.OnEditTextImeLi
                 addAppsFromPage(mDrawerPage, items, mAllDrawerPageIDs);
                 Collections.sort(items, Utils.sItemComparatorByLastUpdateTime);
                 break;
-
-            case Utils.LAYOUT_MODE_RUNNING:
-                all_items = new ArrayList<Item>();
-                items = new ArrayList<Item>();
-                addAppsFromPage(mDrawerPage, all_items, mAllDrawerPageIDs);
-                am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-//			pm = getPackageManager();
-                List<ActivityManager.RunningAppProcessInfo> running = am.getRunningAppProcesses();
-                for (ActivityManager.RunningAppProcessInfo info : running) {
-
-//				if(info.importance==ActivityManager.RunningAppProcessInfo.IMPORTANCE_EMPTY) continue;
-//				if(info.importance==ActivityManager.RunningAppProcessInfo.IMPORTANCE_SERVICE) continue;
-//				if(info.importance==ActivityManager.RunningAppProcessInfo.IMPORTANCE_BACKGROUND) continue;
-                    for (String pkg : info.pkgList) {
-                        Item i = findItemByComponent(all_items, pkg, null);
-                        if (i != null && findItemByComponent(items, pkg, null) == null) {
-                            items.add(i);
-                        }
-
-//					try {
-//						ApplicationInfo ai = pm.getApplicationInfo(pkg, 0);
-//						Bitmap icon = ((BitmapDrawable)pm.getApplicationIcon(ai)).getBitmap();
-//						String label = pm.getApplicationLabel(ai).toString();
-//						Item i = findItemByComponent(items, pkg);
-//						if(i==null) {
-//							Shortcut s = new Shortcut();
-//							Intent intent = new Intent();
-//							intent.setComponent(new ComponentName(pkg, ""));
-//							s.init(this, Utils.findFreeItemId(items, Utils.APP_DRAWER_PAGE), new Rect(), null, label, intent, mPageConfig);
-//							s.buildView(this, icon_dir, icon);
-//							items.add(s);
-//						}
-//					} catch (Exception e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-
-//					Log.i("XXX", info+" "+pkg);
-//					Item i = findItemByComponent(all_items, pkg);
-//					if(i == null) {
-//						// TODO add dummy item ?
-//					} else {
-//						items.add(i);
-//					}
-                    }
-                }
-//			List<ActivityManager.RunningTaskInfo> running = am.getRunningTasks(100);
-//			for(ActivityManager.RunningTaskInfo info : running) {
-//				Item i = findItemByComponent(all_items, info.baseActivity.getPackageName());
-//				if(i == null) {
-//					// TODO add dummy item ?
-//				} else {
-//					items.add(i);
-//				}
-//			}
-                for (Item i : all_items) {
-                    if (!(i instanceof Shortcut)) {
-                        items.add(i);
-                    }
-                }
-
-                Collections.sort(items, Utils.sItemComparatorByNameAsc);
-                break;
         }
 
 
@@ -753,11 +690,6 @@ public class AppDrawerX extends Dashboard implements EditTextIme.OnEditTextImeLi
             case Utils.LAYOUT_MODE_RECENTLY_UPDATED:
                 icon_text = "T";
                 label_res_id = R.string.mi_mode_recently_updated;
-                break;
-
-            case Utils.LAYOUT_MODE_RUNNING:
-                icon_text = "S";
-                label_res_id = R.string.mi_mode_running;
                 break;
         }
         mModeIcon.setText(icon_text);
@@ -1190,8 +1122,6 @@ public class AppDrawerX extends Dashboard implements EditTextIme.OnEditTextImeLi
                 addBubbleItem(R.id.mi_mode_recent_apps, R.string.mi_mode_recent_apps);
             if (hasMode(Utils.LAYOUT_MODE_RECENTLY_UPDATED))
                 addBubbleItem(R.id.mi_mode_recently_updated, R.string.mi_mode_recently_updated);
-            if (hasMode(Utils.LAYOUT_MODE_RUNNING))
-                addBubbleItem(R.id.mi_mode_running, R.string.mi_mode_running);
         } else {
             super.configureBubbleForContainer(mode, il);
         }
@@ -1337,7 +1267,7 @@ public class AppDrawerX extends Dashboard implements EditTextIme.OnEditTextImeLi
                 break;
 
             case R.id.mi_es_refresh:
-                if (mLayoutMode == Utils.LAYOUT_MODE_RECENT_APPS || mLayoutMode == Utils.LAYOUT_MODE_RUNNING) {
+                if (mLayoutMode == Utils.LAYOUT_MODE_RECENT_APPS) {
                     setLayoutMode(mLayoutMode, true);
                 } else {
                     refreshAppDrawerItems(true);
@@ -1377,11 +1307,6 @@ public class AppDrawerX extends Dashboard implements EditTextIme.OnEditTextImeLi
                 setLayoutModeAnimated(Utils.LAYOUT_MODE_RECENTLY_UPDATED);
                 break;
 
-            case R.id.mi_mode_running:
-                if (mEditMode) leaveEditMode();
-                setLayoutModeAnimated(Utils.LAYOUT_MODE_RUNNING);
-                break;
-
             case R.id.mi_hide_unhide:
                 ArrayList<ItemView> itemViews = getActionItemViews();
                 mUndoStack.storeGroupStart();
@@ -1416,15 +1341,7 @@ public class AppDrawerX extends Dashboard implements EditTextIme.OnEditTextImeLi
                 if (LLApp.get().isFreeVersion()) {
                     LLApp.get().showFeatureLockedDialog(this);
                 } else {
-                    // use super class behavior but in addition, trigger a refresh if in running view
-                    mHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (mLayoutMode == Utils.LAYOUT_MODE_RUNNING) {
-                                setLayoutMode(Utils.LAYOUT_MODE_RUNNING, true);
-                            }
-                        }
-                    }, 2000);
+                    // use super class behavior
                     super.onClick(v);
                 }
                 break;
