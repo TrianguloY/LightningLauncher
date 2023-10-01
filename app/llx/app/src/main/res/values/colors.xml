@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="bubble_item_bg_normal">#ffe6e6e6</color>
+    <color name="bubble_item_bg_pressed">#ffc0c0c0</color>
+    <color name="color_text">?android:attr/colorForeground</color>
+    <color name="color_text_pressed">?android:attr/colorPressedHighlight</color>
+    <color name="color_text_disabled">?android:attr/textColorPrimary</color>
+    <color name="eb_btn_pressed">#fff</color>
+    <color name="eb_btn_activated">#dfff</color>
+    <color name="eb_bar_bg">#8fff</color>
+</resources>

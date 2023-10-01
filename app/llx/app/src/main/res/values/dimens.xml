@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="eb_bar_size">38dp</dimen>
+    <dimen name="eb_text_size">20dp</dimen>
+    <dimen name="icon_text_size">24dp</dimen>
+    <dimen name="large_icon_text_size">24dp</dimen>
+    <dimen name="max_box_editor_width">400dp</dimen>
+    <dimen name="ab_height">48dp</dimen>
+    <dimen name="pref_height">40dp</dimen>
+    <dimen name="pref_size_category">12dp</dimen>
+    <dimen name="pref_size_title">15dp</dimen>
+    <dimen name="pref_size_summary">11dp</dimen>
+    <dimen name="hierarchy_indent">20dp</dimen>
+
+    <dimen name="add_item_margin">4dp</dimen>
+    <dimen name="list_item_icon_size">48dp</dimen>
+
+    <dimen name="pref_padding">0dp</dimen>
+    <dimen name="bubble_arrow_shift">10px</dimen>
+</resources>
