@@ -32,7 +32,6 @@
     <item type="id" name="mi_mode_recent_apps" />
     <item type="id" name="mi_mode_recently_updated" />
     <item type="id" name="mi_mode_frequently_used" />
-    <item type="id" name="mi_mode_running" />
     <item type="id" name="mi_es_add_folder" />
     <item type="id" name="mi_es_add_pi" />
     <item type="id" name="mi_es_edit_layout" />

@@ -5,7 +5,27 @@
 <string name="pack_name_short">Hrvatski jezik</string>
 <string name="tranlator_name">Nikola Krišto</string>
 
-<string name="description">Lightning Launcher je brz, lagan i vrlo prilagodljiv Android pokretač (također poznat kao "zamjena za početni zaslon", ili "shell".\n\nLightning je pokretač izbora za ljude koji žele glatkoću i svjetlosnu brzinu rada.\n\nZa razliku od većine tradicionalnih pokretača, Lightning Vam omogućuje da postavite stavke zaslona bilo gdje na njega, ne samo lijevo i desno, već i iznad i ispod početnog. Zamislite početni zaslon kao beskonačno platno koje se širi vertikalno kao i horizontalno i shvatit ćete o čemu se radi.\n\nTo znači: imat ćete stranica početnog zaslona koliko želite, više prostora za vaše aplikacije te bržu navigaciju.\n\nLightening ima neke zanimljive značajke kao što su stavljanje widgeta u mape (čak i u druge mape za hijerarhijsku navigaciju) ili slobodno kretanje, povećavanje, smanjivanje i rotiranje bilo koje stavke (za tu značajku molimo uključite "slobodan način").\n\nOh, jesmo li spomenuli da LL štedi vašu memoriju, ostavljajući više RAMa za vaše aplikacije?\n\nSa svojim širokim spektrom opcija, LL je jedan od najprilagodljivijih pokretača, iako ga nije tako lako konfigurirati, još! Složimo se, LL je uz sve svoje mogućnosti na dobrom putu. Nije li tako mala cijena prihvatljiva za sve uzbudljive mogućnosti koje ćete uz njega dobiti ;-)\n\nSvi komentari, prijedlozi i prijave bugova su dobrodošli. Molimo, svoja pitanja šaljite e-mailom (Pierre Hébert) na adresu pierrox@pierrox.net, ili posjetite facebook stranicu http://www.facebook.com/LightningLauncher da biste naučili više o onom na čemu trenutno radim, ili da biste zatražili neku dodatnu mogućnost, ili jednostavno ako imate bilo kakav upit.\n\n\Uživajte!\n\Dozvole:\n- PROŠIRENJE_TRAKE_STATUSA: kao što samo ime kaže, koristi se za opciju "Pokaži traku statusa"\n- SAVJETI_POZADINE: koristi se za mijenjanje dimenzija slike pozadine\n- ostale dozvole nisu potrebne!</string>
+<string name="description">Lightning Launcher je brz, lagan i vrlo prilagodljiv Android pokretač (također poznat kao "zamjena za početni zaslon", ili "shell".
+\n
+\nLightning je pokretač izbora za ljude koji žele glatkoću i svjetlosnu brzinu rada.
+\n
+\nZa razliku od većine tradicionalnih pokretača, Lightning Vam omogućuje da postavite stavke zaslona bilo gdje na njega, ne samo lijevo i desno, već i iznad i ispod početnog. Zamislite početni zaslon kao beskonačno platno koje se širi vertikalno kao i horizontalno i shvatit ćete o čemu se radi.
+\n
+\nTo znači: imat ćete stranica početnog zaslona koliko želite, više prostora za vaše aplikacije te bržu navigaciju.
+\n
+\nLightening ima neke zanimljive značajke kao što su stavljanje widgeta u mape (čak i u druge mape za hijerarhijsku navigaciju) ili slobodno kretanje, povećavanje, smanjivanje i rotiranje bilo koje stavke (za tu značajku molimo uključite "slobodan način").
+\n
+\nOh, jesmo li spomenuli da LL štedi vašu memoriju, ostavljajući više RAMa za vaše aplikacije?
+\n
+\nSa svojim širokim spektrom opcija, LL je jedan od najprilagodljivijih pokretača, iako ga nije tako lako konfigurirati, još! Složimo se, LL je uz sve svoje mogućnosti na dobrom putu. Nije li tako mala cijena prihvatljiva za sve uzbudljive mogućnosti koje ćete uz njega dobiti ;-)
+\n
+\nSvi komentari, prijedlozi i prijave bugova su dobrodošli. Molimo, svoja pitanja šaljite e-mailom (Pierre Hébert) na adresu pierrox@pierrox.net, ili posjetite facebook stranicu http://www.facebook.com/LightningLauncher da biste naučili više o onom na čemu trenutno radim, ili da biste zatražili neku dodatnu mogućnost, ili jednostavno ako imate bilo kakav upit.
+\n
+\n\Uživajte!
+\n\Dozvole:
+\n- PROŠIRENJE_TRAKE_STATUSA: kao što samo ime kaže, koristi se za opciju "Pokaži traku statusa"
+\n- SAVJETI_POZADINE: koristi se za mijenjanje dimenzija slike pozadine
+\n- ostale dozvole nisu potrebne!</string>
 
 
 <string name="start_activity_error">Nije moguće pokrenuti ovu aplikaciju</string>
@@ -45,14 +65,22 @@
 <string name="mi_move_out_of_folder">Izvadi iz mape</string>
 <string name="mi_zorder">Premjesti naprijed/natrag</string>
 <string name="first_use_title">Dobrodošli!</string>
-<string name="first_use_message">Lightning Launcher je lagana, brza i prilagodljiva zamjena za klasičan Android početni zaslon.\n\nLL će sada pripremiti listu aplikacija za ubuduće.\n\nNe propustite video upute da biste naučili više\n\nUživajte!</string>
+<string name="first_use_message">Lightning Launcher je lagana, brza i prilagodljiva zamjena za klasičan Android početni zaslon.
+\n
+\nLL će sada pripremiti listu aplikacija za ubuduće.
+\n
+\nNe propustite video upute da biste naučili više
+\n
+\nUživajte!</string>
 <string name="all_apps">Sve aplikacije</string>
 <string name="menu_refresh">Osvježi</string>
 <string name="menu_zoom">Zumiranje</string>
 <string name="menu_see_only_visible">Samo vidljive</string>
 <string name="menu_see_only_hidden">Samo skrivene</string>
 <string name="menu_see_all">Sve aplikacije</string>
-<string name="empty_folder">dugo zadrži za\ndodaj stavku\nizbornik za više</string>
+<string name="empty_folder">dugo zadrži za
+\ndodaj stavku
+\nizbornik za više</string>
 <string name="file_picker_activity_up">Gore</string>
 
 <string name="copy_style_toast">Dodirnite stavku da biste kopirali njezin stil</string>
@@ -399,8 +427,10 @@
 <item>Fokusirano</item>
 </string-array>
 
-<string name="il_preview">Desktop Pregled \n(Može se razlikovati od pravog desktopa)</string>
-<string name="preview_toast">Način pregleda \nsve akcije su onemogućene</string>
+<string name="il_preview">Desktop Pregled 
+\n(Može se razlikovati od pravog desktopa)</string>
+<string name="preview_toast">Način pregleda 
+\nsve akcije su onemogućene</string>
 <string name="pick_a_font">Odaberi TTF file…</string>
 <string name="system_font">Sistem font</string>
 <string name="left">lijevo</string>
@@ -437,7 +467,8 @@
 <string name="no_backup_archive">Nema arhiva za vraćanje</string>
 <string name="backup_in_progress">Arhiviranje u tijeku…</string>
 <string name="restore_in_progress">Vraćanje u tijeku…</string>
-<string name="backup_done">Arhiva spremljena u:\n%s</string>
+<string name="backup_done">Arhiva spremljena u:
+\n%s</string>
 <string name="backup_error">Backup pogreška, provjerite da postoji dovoljno prostora za pohranu na SD kartici</string>
 <string name="restore_error">Pogreška u vraćanju, molimo vas da provjerite da backup arhiva vrijedi i može se pročitati</string>
 
@@ -498,7 +529,6 @@
 <string name="mi_mode_recent_apps">Nedavno pokrenuto</string>
 <string name="mi_mode_recently_updated">Nedavno ažurirano</string>
 <string name="mi_mode_frequently_used">Često korištene</string>
-<string name="mi_mode_running">Pokrenute</string>
 <string name="mi_es_add_folder">Dodaj mapu</string>
 <string name="mi_es_edit_layout">Uredi izgled</string>
 <string name="mi_es_show_hidden">Orikaži sakrivene</string>
@@ -508,10 +538,17 @@
 <string name="mi_es_folder_settings">Postavke mape</string>
 <string name="mi_uninstall">Deinstaliraj</string>
 <string name="my_drawer_title">My Drawer</string>
-<string name="my_drawer_message">"Moja ladica" pogled vam omogućuje da u potpunosti prilagodite svoju app ladicu. \n\nU ovom modu predmeti se mogu slobodno pomicati na velikom platnu i mape se mogu koristiti za organiziranje aplikacija. \n\nPokušajte smanjivanje i odaberite "Uredi izgled": otkrit ćete da se aplikacije mogu staviti na lijevo, desno, na vrhu i dnu stranice štoviše, omogućujući vam da upravljate aplikacijama na vaš osobni način.</string>
-<string name="empty_folder_x">Prazna mapa\npovucite i ispustite stavke na ikonu mape za popunjavanje</string>
+<string name="my_drawer_message">"Moja ladica" pogled vam omogućuje da u potpunosti prilagodite svoju app ladicu. 
+\n
+\nU ovom modu predmeti se mogu slobodno pomicati na velikom platnu i mape se mogu koristiti za organiziranje aplikacija. 
+\n
+\nPokušajte smanjivanje i odaberite "Uredi izgled": otkrit ćete da se aplikacije mogu staviti na lijevo, desno, na vrhu i dnu stranice štoviše, omogućujući vam da upravljate aplikacijama na vaš osobni način.</string>
+<string name="empty_folder_x">Prazna mapa
+\npovucite i ispustite stavke na ikonu mape za popunjavanje</string>
 <string name="ll_import_title">Uvoz LL postavljanja</string>
-<string name="ll_import_message">Otkrivena je instalacija Lightning Launcher.\n\nSvi podaci će se sada uvesti. Kad je to učinjeno možete sigurno deinstalirati Lightning Launcher i koristiti Lightning Launcher eXtreme.</string>
+<string name="ll_import_message">Otkrivena je instalacija Lightning Launcher.
+\n
+\nSvi podaci će se sada uvesti. Kad je to učinjeno možete sigurno deinstalirati Lightning Launcher i koristiti Lightning Launcher eXtreme.</string>
 <string name="init_ok">Spremno!</string>
 <string name="init_ko">Nešto je pošlo po zlu tijekom kopiranja datoteka!</string>
 <string name="auto_exit_t">Auto exit</string>
@@ -630,7 +667,8 @@
 <string name="tmpl_warn_llx">- ovaj template je dizajniran s Lightning Launcher Extreme, to može koristiti neke značajke koje nisu dostupne u ovoj verziji.</string>
 <string name="tmpl_warn_screen">- ovaj template nije točno odgovarajući za karakteristike zaslona. Neki elementi ne mogu biti točno prikazani.</string>
 <string name="tmpl_warn_widget">- vaš uređaj nije u mogućnosti vratiti widgete automatski, morat ćete ih ručno ponovno postaviti.</string>
-<string name="widget_e">Nije moguće učitati ovaj widget\nDodirni za instaliranje ili odaberi novi</string>
+<string name="widget_e">Nije moguće učitati ovaj widget
+\nDodirni za instaliranje ili odaberi novi</string>
 <string name="tmpl_s_p">Odaberi desktope za izvoz</string>
 <string name="an_ctf">Zatvori najvišu mapu</string>
 <string name="an_caf">Zatvori sve mape</string>

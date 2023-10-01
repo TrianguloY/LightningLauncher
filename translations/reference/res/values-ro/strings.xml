@@ -46,14 +46,22 @@
 <string name="mi_move_out_of_folder">Mută din dosar</string>
 <string name="mi_zorder">Mută înainte/înapoi</string>
 <string name="first_use_title">Bun venit!</string>
-<string name="first_use_message">Lightning Launcher este un inlocuitor al ecranului de start standard din Android. Avantajele sale sunt viteza, consumul extrem de redus de resurse si numeroasele optiuni de personalizare.\n\nLL va compune acum lista de aplicaţii disponibile printr-o singură operaţie.\n\nNu\ rataţi tutorialele video pentru mai multe informaţii.\n\nSperăm să vă facă plăcere!</string>
+<string name="first_use_message">Lightning Launcher este un inlocuitor al ecranului de start standard din Android. Avantajele sale sunt viteza, consumul extrem de redus de resurse si numeroasele optiuni de personalizare.
+\n
+\nLL va compune acum lista de aplicaţii disponibile printr-o singură operaţie.
+\n
+\nNu\ rataţi tutorialele video pentru mai multe informaţii.
+\n
+\nSperăm să vă facă plăcere!</string>
 <string name="all_apps">Toate aplicaţiile</string>
 <string name="menu_refresh">Reîmprospătează lista</string>
 <string name="menu_zoom">Mărește</string>
 <string name="menu_see_only_visible">Vizualizează doar aplicaţiile vizibile</string>
 <string name="menu_see_only_hidden">Vizualizează doar aplicaţiile ascunse</string>
 <string name="menu_see_all">Toate aplicaţiile</string>
-<string name="empty_folder">Ţineţi apăsat pentru \na adăuga elemente \nMeniu pentru mai multe opţiuni</string>
+<string name="empty_folder">Ţineţi apăsat pentru 
+\na adăuga elemente 
+\nMeniu pentru mai multe opţiuni</string>
 <string name="file_picker_activity_up">În sus</string>
 
 <string name="copy_style_toast">Tap on an item to copy its style</string>
@@ -364,7 +372,8 @@
 <item>Jos</item>
 </string-array>
 
-<string name="b_hint">Atingeti una sau mai multe zone\napoi alegeti una din actiuni</string>
+<string name="b_hint">Atingeti una sau mai multe zone
+\napoi alegeti una din actiuni</string>
 <string name="b_size">Stabileste dimensiunea selectiei</string>
 <string name="b_color_normal">Culoarea normala</string>
 <string name="b_color_selected">Culoarea la selectie</string>
@@ -383,8 +392,10 @@
 <item>Focus</item>
 </string-array>
 
-<string name="il_preview">Previzualizare ecran\n(poate fi diferit de aspectul final)</string>
-<string name="preview_toast">Mod previzualizare\ntoate actiunile sunt dezactivate</string>
+<string name="il_preview">Previzualizare ecran
+\n(poate fi diferit de aspectul final)</string>
+<string name="preview_toast">Mod previzualizare
+\ntoate actiunile sunt dezactivate</string>
 <string name="pick_a_font">Alege un fisier TFF…</string>
 <string name="system_font">Font system</string>
 <string name="left">stanga</string>
@@ -408,11 +419,13 @@
 <string name="other_apps">Alte aplicatii</string>
 <string name="tut_intro">Introducere</string>
 <string name="tut_basic_editing">Primii pasi</string>
-<string name="tut_custo">Personalizare\nobiecte</string>
+<string name="tut_custo">Personalizare
+\nobiecte</string>
 <string name="tut_free_mode">Mod liber</string>
 <string name="tut_lock">Blocare ecran</string>
 <string name="tut_pin">Ancorare/fixare obiecte</string>
-<string name="tut_scroll">Ecrane si\nnavigatie</string>
+<string name="tut_scroll">Ecrane si
+\nnavigatie</string>
 <string name="dialog_color_picker">Paletă de culori</string>
 
 <string name="shortcut_settings">Setări Lightning Launcher </string>
@@ -483,7 +496,6 @@
 <string name="mi_mode_recent_apps">Recently launched</string>
 <string name="mi_mode_recently_updated">Recently Updated</string>
 <string name="mi_mode_frequently_used">Frequently Used</string>
-<string name="mi_mode_running">Running</string>
 <string name="mi_es_add_folder">Add folder</string>
 <string name="mi_es_edit_layout">Edit layout</string>
 <string name="mi_es_show_hidden">Show hidden</string>

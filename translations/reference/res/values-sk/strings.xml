@@ -5,7 +5,32 @@
 <string name="pack_name_short">Slovenčina</string>
 <string name="tranlator_name">1sefko (Pa3cius Zelenák)</string>
 
-<string name="description">Lightning Launcher („LL“) je rýchly, ľahký a extrémne prispôsobiteľný spúšťač prostredia domácej obrazovky. Možnosti nastavenia sú nekonečné.\n\nHlavné vlastnosti:\n• Nastaviť rozdielne rozloženie plochy a veľkosť mriežky ako na výšku, tak na šírku\n• Posúvať plochy na všetky smery od domácej obrazovky, alebo si nastaviť svoje smery rolovania\n• Schopnosť umiestniť položky na plochu tak, aby sa nikdy nepohybovali \n• Neobmedzené nastavenie vzhľadu ikon, zložiek, písma, zarovnania, farieb, veľkosti, pozadia... \n• Umiestniť ikony a widgety kamkoľvek a akokoľvek na plochu\n• Prispôsobiť ikony hromadne, alebo každú zvlášť použitím balíkov ikon, alebo ikon z galérie\n• 22 rôznych gest s 29 rôznymi akciami (ktoré môžu byť spustené odkazom)\n• Priradiť gestá ku každej položke (napr. Chrome sa spustí kliknutím na ikonu, ale gestom potiahnutia hore sa spustí Dolphin Browser)\n• Zastavovacie body: povedzte Lightningu, kde sa má rolovanie plochy zastaviť\n• Každá položka (ikona, zložka, widget, odkaz...) môže byť samostatne nastavená, otočená, zväčšená, zmenšená, zlepšená jej čitateľnosť...\n• Zložky môžu okrem ikon obsahovať aj ďalšie zložky a widgety, pričom každú zložku je možné samostatne prispôsobiť a vizuálne upraviť\n• Uložiť svoje vytvorené plochy ako plnú zálohu, alebo ako šablónu a obnovenie zo zálohy  \n• Export nastavení ako APK\n\nLightning Launcher je vytvorený s dôrazom na rýchlosť a s cieľom ušetriť čo najviac RAM. Jeho sila je obsiahnutá vo veľmi malom a maximálne efektívnom balíčku.\n\nVšetky pripomienky, návrhy a hlásenia chýb sú vítané. Prosím, napíš mi svoje otázky, návrhy a hlásenia chýb na: pierrox@pierrox.net. Navštív stránky komunity na G+ a na Facebooku: http://www.facebook.com/LightningLauncher, kde sa dozvieš, na čom v súčasnej dobe pracujem, kde môžeš požiadať o nejakú funkciu, alebo sa jednoducho na niečo opýtať.\nUži si ho!\n\nOprávnenia:\n- EXPAND_STATUS_BAR: ako napovedá samotný názov, slúži k akcii "Ukáž status bar".\n- SET_WALLPAPER_HINTS: slúži na nastavenie rozmerov tapety.\n- nie sú potrebné žiadne ďalšie oprávnenia!</string>
+<string name="description">Lightning Launcher („LL“) je rýchly, ľahký a extrémne prispôsobiteľný spúšťač prostredia domácej obrazovky. Možnosti nastavenia sú nekonečné.
+\n
+\nHlavné vlastnosti:
+\n• Nastaviť rozdielne rozloženie plochy a veľkosť mriežky ako na výšku, tak na šírku
+\n• Posúvať plochy na všetky smery od domácej obrazovky, alebo si nastaviť svoje smery rolovania
+\n• Schopnosť umiestniť položky na plochu tak, aby sa nikdy nepohybovali 
+\n• Neobmedzené nastavenie vzhľadu ikon, zložiek, písma, zarovnania, farieb, veľkosti, pozadia... 
+\n• Umiestniť ikony a widgety kamkoľvek a akokoľvek na plochu
+\n• Prispôsobiť ikony hromadne, alebo každú zvlášť použitím balíkov ikon, alebo ikon z galérie
+\n• 22 rôznych gest s 29 rôznymi akciami (ktoré môžu byť spustené odkazom)
+\n• Priradiť gestá ku každej položke (napr. Chrome sa spustí kliknutím na ikonu, ale gestom potiahnutia hore sa spustí Dolphin Browser)
+\n• Zastavovacie body: povedzte Lightningu, kde sa má rolovanie plochy zastaviť
+\n• Každá položka (ikona, zložka, widget, odkaz...) môže byť samostatne nastavená, otočená, zväčšená, zmenšená, zlepšená jej čitateľnosť...
+\n• Zložky môžu okrem ikon obsahovať aj ďalšie zložky a widgety, pričom každú zložku je možné samostatne prispôsobiť a vizuálne upraviť
+\n• Uložiť svoje vytvorené plochy ako plnú zálohu, alebo ako šablónu a obnovenie zo zálohy  
+\n• Export nastavení ako APK
+\n
+\nLightning Launcher je vytvorený s dôrazom na rýchlosť a s cieľom ušetriť čo najviac RAM. Jeho sila je obsiahnutá vo veľmi malom a maximálne efektívnom balíčku.
+\n
+\nVšetky pripomienky, návrhy a hlásenia chýb sú vítané. Prosím, napíš mi svoje otázky, návrhy a hlásenia chýb na: pierrox@pierrox.net. Navštív stránky komunity na G+ a na Facebooku: http://www.facebook.com/LightningLauncher, kde sa dozvieš, na čom v súčasnej dobe pracujem, kde môžeš požiadať o nejakú funkciu, alebo sa jednoducho na niečo opýtať.
+\nUži si ho!
+\n
+\nOprávnenia:
+\n- EXPAND_STATUS_BAR: ako napovedá samotný názov, slúži k akcii "Ukáž status bar".
+\n- SET_WALLPAPER_HINTS: slúži na nastavenie rozmerov tapety.
+\n- nie sú potrebné žiadne ďalšie oprávnenia!</string>
 
 
 <string name="start_activity_error">Aplikácia sa nedá spustiť</string>
@@ -43,14 +68,25 @@
 <string name="mi_widget_options">Nastavenia widgetu</string>
 <string name="mi_move_out_of_folder">Presunúť von zo zložky</string>
 <string name="first_use_title">Vitaj!</string>
-<string name="first_use_message">Lightning Launcher („LL“) je odľahčená, rýchla a prispôsobiteľná náhrada domovskej obrazovky pre Android.\n\nLL teraz beží v normálnom režime čo znamená, že niektoré pokročilé možnosti sú skryté. Prepnutím do "Expert režimu" (nájdeš ho vo všeobecných nastaveniach) získaš prístup ku všetkým funkciám a možnostiam LL.\n\nLL si teraz pripraví zoznam aplikácií - táto akcia je jednorázová.\n\nNezabudni si spustiť výukové videá, aby si sa zoznámil s možnosťami LL.\n\nUži si to!</string>
+<string name="first_use_message">Lightning Launcher („LL“) je odľahčená, rýchla a prispôsobiteľná náhrada domovskej obrazovky pre Android.
+\n
+\nLL teraz beží v normálnom režime čo znamená, že niektoré pokročilé možnosti sú skryté. Prepnutím do "Expert režimu" (nájdeš ho vo všeobecných nastaveniach) získaš prístup ku všetkým funkciám a možnostiam LL.
+\n
+\nLL si teraz pripraví zoznam aplikácií - táto akcia je jednorázová.
+\n
+\nNezabudni si spustiť výukové videá, aby si sa zoznámil s možnosťami LL.
+\n
+\nUži si to!</string>
 <string name="all_apps">Všetky aplikácie</string>
 <string name="menu_refresh">Obnoviť</string>
 <string name="menu_zoom">Zväčšiť</string>
 <string name="menu_see_only_visible">Len viditeľné aplikácie</string>
 <string name="menu_see_only_hidden">Len skryté aplikácie</string>
 <string name="menu_see_all">Všetky aplikácie</string>
-<string name="empty_folder">Dlhé pridržanie prstu na zložke \nzobrazí viac možností nastavenia\n\n</string>
+<string name="empty_folder">Dlhé pridržanie prstu na zložke 
+\nzobrazí viac možností nastavenia
+\n
+\n</string>
 <string name="file_picker_activity_up">Hore</string>
 
 <string name="settings">Nastavenia Lightningu</string>
@@ -361,7 +397,8 @@
 <item>Vlastné zarovnanie</item>
 </string-array>
 
-<string name="b_hint">Vyber jednu, alebo viac oblastí,\npotom vyber akciu nižšie</string>
+<string name="b_hint">Vyber jednu, alebo viac oblastí,
+\npotom vyber akciu nižšie</string>
 <string name="b_size">Veľkosť zvolených oblastí</string>
 <string name="b_color_normal">Základná farba</string>
 <string name="b_color_selected">Farba výberu</string>
@@ -380,8 +417,10 @@
 <item>Zvýraznené</item>
 </string-array>
 
-<string name="il_preview">Náhľad obrazovky\n(Môže sa líšiť od skutočnej plochy)</string>
-<string name="preview_toast">Režim náhľadu\nVšetky akcie sú zakázané</string>
+<string name="il_preview">Náhľad obrazovky
+\n(Môže sa líšiť od skutočnej plochy)</string>
+<string name="preview_toast">Režim náhľadu
+\nVšetky akcie sú zakázané</string>
 <string name="pick_a_font">Vybrať súbor .TTF, alebo .OTF</string>
 <string name="system_font">Systémové písmo</string>
 <string name="left">vľavo</string>
@@ -416,11 +455,13 @@
 <string name="no_backup_archive">Záloha na obnovu sa nenašla</string>
 <string name="backup_in_progress">Vytvoriť zálohu...</string>
 <string name="restore_in_progress">Obnoviť zo zálohy...</string>
-<string name="backup_done">Záloha uložená do:\n%s</string>
+<string name="backup_done">Záloha uložená do:
+\n%s</string>
 <string name="backup_error">Chyba pri zálohovaní, prosím skontroluj, či je dostatok úložného priestoru v pamäti zariadenia</string>
 <string name="restore_error">Chyba pri obnove dát zo zálohy, prosím skontroluj, či je súbor platný a či je možné ho prečítať</string>
 
-<string name="confirm_delete">Naozaj chceš zmazať?\nTáto akcia je nevratná.</string>
+<string name="confirm_delete">Naozaj chceš zmazať?
+\nTáto akcia je nevratná.</string>
 
 
 <!-- added: 90 -->
@@ -478,17 +519,24 @@
 <string name="mi_mode_recent_apps">Nedávno spustené</string>
 <string name="mi_mode_recently_updated">Nedávno aktualizované</string>
 <string name="mi_mode_frequently_used">Často používané</string>
-<string name="mi_mode_running">Práve bežiace</string>
 <string name="mi_es_edit_layout">Upraviť rozloženie</string>
 <string name="mi_es_refresh">Obnoviť</string>
 <string name="mi_es_settings">Nastavenie LL...</string>
 <string name="mi_es_folder_settings">Nastavenie zložky</string>
 <string name="mi_uninstall">Odinštalovať aplikáciu</string>
 <string name="my_drawer_title">Môj zoznam</string>
-<string name="my_drawer_message">Zobrazenie „Môj zoznam“ ti umožní úplne prispôsobiť tvoj zoznam aplikácií.\n\nV tomto režime môžeš s položkami voľne pohybovať na veľkej ploche. Taktiež si môžeš vytvoriť zložky pre lepšiu organizáciu aplikácií.\n\nSkús si oddialiť plochu na celý rozsah a následne zvoliť „Upraviť rozloženie“. Zistíš, že ikony aplikácií môžeš presunúť viac do strán (vľavo, vpravo, hore, dole) a vytvoriť si tak svoje vlastné rozloženie. </string>
-<string name="empty_folder_x">Prázdna zložka\nPre pridanie do zložky dlho pridrž prst na položke, pretiahni ju na zložku, chvíľu počkaj kým sa sfarbí \nna modro a potom ju pusti.</string>
+<string name="my_drawer_message">Zobrazenie „Môj zoznam“ ti umožní úplne prispôsobiť tvoj zoznam aplikácií.
+\n
+\nV tomto režime môžeš s položkami voľne pohybovať na veľkej ploche. Taktiež si môžeš vytvoriť zložky pre lepšiu organizáciu aplikácií.
+\n
+\nSkús si oddialiť plochu na celý rozsah a následne zvoliť „Upraviť rozloženie“. Zistíš, že ikony aplikácií môžeš presunúť viac do strán (vľavo, vpravo, hore, dole) a vytvoriť si tak svoje vlastné rozloženie. </string>
+<string name="empty_folder_x">Prázdna zložka
+\nPre pridanie do zložky dlho pridrž prst na položke, pretiahni ju na zložku, chvíľu počkaj kým sa sfarbí 
+\nna modro a potom ju pusti.</string>
 <string name="ll_import_title">Importovanie LL nastavení</string>
-<string name="ll_import_message">Bol zistený nainštalovaný bezplatný Lightning Launcher.\n\nVšetky dáta a nastavenia z bezplatnej verzie budú teraz naimportované. Až sa import dokončí, môžeš bezpečne odinštalovať bezplatnú verziu Lightning Launcher a ďalej používať len Lightning Launcher eXtreme.</string>
+<string name="ll_import_message">Bol zistený nainštalovaný bezplatný Lightning Launcher.
+\n
+\nVšetky dáta a nastavenia z bezplatnej verzie budú teraz naimportované. Až sa import dokončí, môžeš bezpečne odinštalovať bezplatnú verziu Lightning Launcher a ďalej používať len Lightning Launcher eXtreme.</string>
 <string name="init_ok">Pripravený!</string>
 <string name="init_ko">Pri kopírovaní súborov sa vyskytla chyba!</string>
 <string name="auto_exit_t">Automatické zatvorenie</string>
@@ -604,7 +652,8 @@
 <string name="tmpl_warn_llx">• Táto šablóna bola navrhnutá pre LL eXtreme. Môže využívať niektoré funkcie, ktoré nie sú v tejto verzii dostupné.</string>
 <string name="tmpl_warn_screen">• Táto šablóna nezodpovedá presne vlastnostiam tvojej obrazovky. Niektoré prvky sa nemusia zobrazovať správne.</string>
 <string name="tmpl_warn_widget">• Tvoje zariadenie nemôže automaticky obnoviť widgety. Budeš ich musieť znovu vytvoriť ručne.</string>
-<string name="widget_e">Widget sa nedá nájsť :(\nKliknutím môžeš vybrať iný</string>
+<string name="widget_e">Widget sa nedá nájsť :(
+\nKliknutím môžeš vybrať iný</string>
 <string name="tmpl_s_p">Vyber plochu na export</string>
 <string name="an_ctf">Zatvoriť vrchnú zložku</string>
 <string name="an_caf">Zatvoriť všetky zložky</string>
@@ -820,11 +869,30 @@
 <string name="rs_t">Spúšťanie skriptov</string>
 <string name="rs_s">Povoliť spúšťanie skriptov</string>
 <string name="rs_w">POZOR! Spúšťanie skriptov je momentálne zakázané vo všeobecných nastaveniach</string>
-<string name="h_ad">Tu sa nachádzajú tvoje nainštalované aplikácie.\nMôžeš ich spúšťať priamo zo zoznamu aplikácií, alebo si môžeš na ploche vytvoriť ich zástupcov (pridržaním prstu na zvolenej ikone sa zobrazí vyskakovacie okno, kde vyber „Pridať na plochu“). \n\nPre ďalšie informácie klikni sem.</string>
-<string name="h_f">Práve si pridal zložku. Zložky môžu obsahovať aplikácie, widgety, panely, prípadne aj ďalšie zložky. Ak máš povolený "Expert režim", môžeš do zložky pridať aj zastavovací bod(y).\n\nPretiahni nejakú položku z plochy na zložku, chvíľu počkaj kým sa sfarbí na modro a potom pusti prst z obrazovky. Teraz je zvolená položka umiestnená vo vnútri zložky.\n\nPre ďalšie informácie klikni sem.</string>
-<string name="h_p">Práve si pridal panel. Panely sa chovajú podobne, ako zložky. V podstate je panel nová plocha umiestnená na stránke plochy.\n\nPretiahni nejakú položku z plochy na panel, chvíľu počkaj kým sa sfarbí na modro a potom pusti prst z obrazovky. Teraz je zvolená položka umiestnená vo vnútri panelu. Tiež môžeš vkladať položky priamo do panelu (podrž prst na paneli, zobrazí sa nové vyskakovacie okno, kde vyber „Pridať položku...“). Pomocou panelu môžeš vytvoriť napríklad „dokovaciu lištu“.\n\nPre ďalšie informácie o paneloch klikni sem.</string>
+<string name="h_ad">Tu sa nachádzajú tvoje nainštalované aplikácie.
+\nMôžeš ich spúšťať priamo zo zoznamu aplikácií, alebo si môžeš na ploche vytvoriť ich zástupcov (pridržaním prstu na zvolenej ikone sa zobrazí vyskakovacie okno, kde vyber „Pridať na plochu“). 
+\n
+\nPre ďalšie informácie klikni sem.</string>
+<string name="h_f">Práve si pridal zložku. Zložky môžu obsahovať aplikácie, widgety, panely, prípadne aj ďalšie zložky. Ak máš povolený "Expert režim", môžeš do zložky pridať aj zastavovací bod(y).
+\n
+\nPretiahni nejakú položku z plochy na zložku, chvíľu počkaj kým sa sfarbí na modro a potom pusti prst z obrazovky. Teraz je zvolená položka umiestnená vo vnútri zložky.
+\n
+\nPre ďalšie informácie klikni sem.</string>
+<string name="h_p">Práve si pridal panel. Panely sa chovajú podobne, ako zložky. V podstate je panel nová plocha umiestnená na stránke plochy.
+\n
+\nPretiahni nejakú položku z plochy na panel, chvíľu počkaj kým sa sfarbí na modro a potom pusti prst z obrazovky. Teraz je zvolená položka umiestnená vo vnútri panelu. Tiež môžeš vkladať položky priamo do panelu (podrž prst na paneli, zobrazí sa nové vyskakovacie okno, kde vyber „Pridať položku...“). Pomocou panelu môžeš vytvoriť napríklad „dokovaciu lištu“.
+\n
+\nPre ďalšie informácie o paneloch klikni sem.</string>
 <string name="h_t">Tip</string>
-<string name="h_k">Toto je tvoja plocha. Podrž prst na voľnom mieste plochy, zobrazí sa nové vyskakovacie okno, kde môžeš zvoliť napríklad: pridať položku (aplikácie, skratky, widgety, zložky, atď.), upraviť rozloženie plochy, prejsť do nastavení a možností LL, alebo Androida...\n\nV LLX môžeš mať až 100 plôch a každá plocha môže mať nekonečne veľa obrazoviek (stránok). Na ďalšiu, alebo predchádzajúcu plochu sa dostaneš gestom: potiahnutím dvoch prstov doľava, alebo doprava.\n\nStránky plochy vytvoríš tak, že pretiahneš nejakú položku mimo viditeľnú plochu cez hranicu obrazovky smerom vľavo, vpravo, alebo dokonca aj hore či dole.\n\nPokiaľ nechceš, aby sa vybraná položka hýbala mimo viditeľnú obrazovku, podrž prst na zvolenej položke, vyber „Pozícia položky...“ a zvoľ „Prichytiť“. Pridaním panelu na plochu môžeš vytvoriť napríklad „dok“.\n\nPre ďalšie informácie o pojmoch použitých v LL klikni sem.</string>
+<string name="h_k">Toto je tvoja plocha. Podrž prst na voľnom mieste plochy, zobrazí sa nové vyskakovacie okno, kde môžeš zvoliť napríklad: pridať položku (aplikácie, skratky, widgety, zložky, atď.), upraviť rozloženie plochy, prejsť do nastavení a možností LL, alebo Androida...
+\n
+\nV LLX môžeš mať až 100 plôch a každá plocha môže mať nekonečne veľa obrazoviek (stránok). Na ďalšiu, alebo predchádzajúcu plochu sa dostaneš gestom: potiahnutím dvoch prstov doľava, alebo doprava.
+\n
+\nStránky plochy vytvoríš tak, že pretiahneš nejakú položku mimo viditeľnú plochu cez hranicu obrazovky smerom vľavo, vpravo, alebo dokonca aj hore či dole.
+\n
+\nPokiaľ nechceš, aby sa vybraná položka hýbala mimo viditeľnú obrazovku, podrž prst na zvolenej položke, vyber „Pozícia položky...“ a zvoľ „Prichytiť“. Pridaním panelu na plochu môžeš vytvoriť napríklad „dok“.
+\n
+\nPre ďalšie informácie o pojmoch použitých v LL klikni sem.</string>
 <string name="tut_concepts">Najskôr čítaj!</string>
 <string name="tut_wiki">LL Wiki</string>
 
@@ -955,7 +1023,8 @@
 <string name="sc_w">Zalamovanie slov</string>
 <string name="wrapx_t">Nekonečný posun v ose X</string>
 <string name="wrapy_t">Nekonečný posun v ose Y</string>
-<string name="h_w">Nekonečný posun je v editačnom režime automaticky vypnutý, inak by prázdne stránky neboli prístupné. Môže sa zdať, že niektoré položky pri vstupe do editačného režimu zmizli. V skutočnosti sú však umiestnené na svojej pôvodnej pozícii namiesto toho, aby boli „zalomené“.\nFunkcia nekonečný posun bude po opustení editačného režimu znovu aktivovaná.</string>
+<string name="h_w">Nekonečný posun je v editačnom režime automaticky vypnutý, inak by prázdne stránky neboli prístupné. Môže sa zdať, že niektoré položky pri vstupe do editačného režimu zmizli. V skutočnosti sú však umiestnené na svojej pôvodnej pozícii namiesto toho, aby boli „zalomené“.
+\nFunkcia nekonečný posun bude po opustení editačného režimu znovu aktivovaná.</string>
 <string name="ad_bc">Vybrané:</string>
 <string name="an_wt">Klik na tapetu pozadia</string>
 <string name="an_wst">Druhý klik na tapetu pozadia</string>
@@ -963,8 +1032,12 @@
 <string name="ds_uc">Užívateľská komunita LL</string>
 <string name="ds_tt">Tipy a triky</string>
 <string name="ds_br">Záloha a obnova</string>
-<string name="ds_hn">Tip: Pre vytvorenie novej stránky stačí prstom pridržať akúkoľvek položku a pretiahnuť ju cez hranicu plochy. Novú stránku je možné vytvoriť všetkými smermi (vpravo, vľavo, hore, dole, šikmo).\n\n(tento tip môžeš bezpečne odstrániť)</string>
-<string name="ds_um">Tip: Potiahnutím jedného, alebo dvoch prstov nahor sa zobrazí užívateľské menu (je možné ho prispôsobiť). Dlhé pridržanie prstu kdekoľvek na displeji zobrazí kontextové menu.\n\n(tento tip môžeš bezpečne odstrániť)</string>
+<string name="ds_hn">Tip: Pre vytvorenie novej stránky stačí prstom pridržať akúkoľvek položku a pretiahnuť ju cez hranicu plochy. Novú stránku je možné vytvoriť všetkými smermi (vpravo, vľavo, hore, dole, šikmo).
+\n
+\n(tento tip môžeš bezpečne odstrániť)</string>
+<string name="ds_um">Tip: Potiahnutím jedného, alebo dvoch prstov nahor sa zobrazí užívateľské menu (je možné ho prispôsobiť). Dlhé pridržanie prstu kdekoľvek na displeji zobrazí kontextové menu.
+\n
+\n(tento tip môžeš bezpečne odstrániť)</string>
 <string name="ds_z">Celá plocha</string>
 <string name="sc_import">Import...</string>
 <string name="sc_si_t">Aplikácia Script Importer nie je nainštalovaná</string>
@@ -975,7 +1048,19 @@
 
 <!-- added 224 -->
 <string name="tr_fl_t">Pre použitie tejto funkcie prosím odomkni Lightning</string>
-<string name="tr_fl_m">Odomknutím plnej verzie Lightningu získaš tieto funkcie a možnosti:\n\n-Pokročilý zoznam aplikácií (zložky, lišta akcií, kategórie zobrazení)\n-Konfiguráciu plôch (pridať, odstrániť a meniť plochy)\n-Možnosť zvoliť tapetu pozadia pre každú plochu zvlášť\n-Zobrazenie neprečítaných oznámení  (počet zmeškaných hovorov, neprečítaných sms a emailov...), dynamický text, ukazovateľ stránok\n-Prispôsobiteľný zámok obrazovky (Lock Screen) z akejkoľvek plochy\n-Integrovaný App killer (ukončovač aplikácií)\n-Samozrejme aj ďalšie nové, v budúcnosti vyvinuté a vytvorené funkcie\n\nAk si už v minulosti Lightning zakúpil, prosím klikni na „OK“, čím ho re-aktivuješ na plnú verziu. \n\n</string>
+<string name="tr_fl_m">Odomknutím plnej verzie Lightningu získaš tieto funkcie a možnosti:
+\n
+\n-Pokročilý zoznam aplikácií (zložky, lišta akcií, kategórie zobrazení)
+\n-Konfiguráciu plôch (pridať, odstrániť a meniť plochy)
+\n-Možnosť zvoliť tapetu pozadia pre každú plochu zvlášť
+\n-Zobrazenie neprečítaných oznámení  (počet zmeškaných hovorov, neprečítaných sms a emailov...), dynamický text, ukazovateľ stránok
+\n-Prispôsobiteľný zámok obrazovky (Lock Screen) z akejkoľvek plochy
+\n-Integrovaný App killer (ukončovač aplikácií)
+\n-Samozrejme aj ďalšie nové, v budúcnosti vyvinuté a vytvorené funkcie
+\n
+\nAk si už v minulosti Lightning zakúpil, prosím klikni na „OK“, čím ho re-aktivuješ na plnú verziu. 
+\n
+\n</string>
 <string name="tr_pw">Prosím čakaj...</string>
 <string name="tr_ty">Ďakujem za finančnú podporu vývoja Lightningu!</string>
 <string name="tr_eu">Prepáč, došlo k chybe...</string>
@@ -983,10 +1068,21 @@
 <string name="tr_br_s">Táto funkcia nie je k dispozícii v skúšobnej verzii</string>
 <string name="tr_rs_t">Zakúpiť licenčný kľúč</string>
 <string name="tr_rs_s">Odomknutím spoznáš plnú silu LL</string>
-<string name="tr_w">Ďakujem za vyskúšanie Lightningu!\n\nAplikácia pobeží v skúšobnom režime 7 dní. Počas tejto doby budú všetky funkcie dostupné bez obmedzenia. Po uplynutí skúšobnej doby bude aplikácia aj naďalej použiteľná, avšak už nebude možné meniť jej niektoré nastavenia.\n\nAk sa ti táto aplikácia zapáči a chceš podporiť jej vývoj, zakúp si licenčný kľúč, ktorý opäť sprístupní všetky funkcie.\n\nĎakujem!  </string>
+<string name="tr_w">Ďakujem za vyskúšanie Lightningu!
+\n
+\nAplikácia pobeží v skúšobnom režime 7 dní. Počas tejto doby budú všetky funkcie dostupné bez obmedzenia. Po uplynutí skúšobnej doby bude aplikácia aj naďalej použiteľná, avšak už nebude možné meniť jej niektoré nastavenia.
+\n
+\nAk sa ti táto aplikácia zapáči a chceš podporiť jej vývoj, zakúp si licenčný kľúč, ktorý opäť sprístupní všetky funkcie.
+\n
+\nĎakujem!  </string>
 <string name="tr_l">%d dní do skončenia skúšobnej verzie</string>
-<string name="tr_rm">Lightning potrebuje tvoju spätnú väzbu!\n\nNájdeš si prosím pár sekúnd na ohodnotenie tejto aplikácie v Obchode Play?</string>
-<string name="ds_hls">Tip: Toto je ukážka zámku obrazovky (Lock Screenu), ktorý si môžeš prispôsobiť akokoľvek.\nPridaj si na ňu aplikácie, alebo widgety a potom ju aktivuj v nastaveniach zámku obrazovky (klikni sem)\n\n(tento tip môžeš bezpečne odstrániť)</string>
+<string name="tr_rm">Lightning potrebuje tvoju spätnú väzbu!
+\n
+\nNájdeš si prosím pár sekúnd na ohodnotenie tejto aplikácie v Obchode Play?</string>
+<string name="ds_hls">Tip: Toto je ukážka zámku obrazovky (Lock Screenu), ktorý si môžeš prispôsobiť akokoľvek.
+\nPridaj si na ňu aplikácie, alebo widgety a potom ju aktivuj v nastaveniach zámku obrazovky (klikni sem)
+\n
+\n(tento tip môžeš bezpečne odstrániť)</string>
 <string name="ic">Orezávač obrázkov</string>
 <string name="bg_st">Pozícia</string>
 <string-array name="bg_st_e">
@@ -1056,7 +1152,8 @@
 <string name="sm_cn">Kopírovať z</string>
 <string name="sm_an">Nová plocha</string>
 <string name="ip_e">Žiadne ikony nie sú k zobrazeniu</string>
-<string name="cv_dfl">Vlastné zobrazenie nie je k dispozícii.\nKliknutím to skús znova.</string>
+<string name="cv_dfl">Vlastné zobrazenie nie je k dispozícii.
+\nKliknutím to skús znova.</string>
 <string name="ad_mdh">Pre prispôsobenie prepnuté do zobrazenia „Môj zoznam“</string>
 <string name="tab_bind">Väzby</string>
 <string name="bd_a">Pridať väzbu...</string>
@@ -1166,7 +1263,8 @@
 <item>Slide right</item>
 <item>Scale from center</item>
 </string-array>
-<string name="lh">Nastaviť vlastný názov\n(môžeš použiť aj základné HTML tagy)</string>
+<string name="lh">Nastaviť vlastný názov
+\n(môžeš použiť aj základné HTML tagy)</string>
 <string name="hs_ed">Upraviť...</string>
 <string name="an_ohs">Otvoriť „Postupnosť položiek“</string>
 <string name="ov_pt">Nastavenie</string>
@@ -1228,11 +1326,17 @@
 <string name="iab_y_key">Áno (kľúčom)</string>
 <string name="iab_y_app">Áno (aplikáciou)</string>
 <string name="iab_ul_lwp_t">Zatiaľ nie je povolená</string>
-<string name="iab_ul_lwp_m">Lightning živá tapeta zatiaľ nie je povolená.\n\nFinančne prispej vývojárovi, pomôžeš tak pri vytváraní LL, najlepšieho spúšťača všetkých čias...\n\n</string>
+<string name="iab_ul_lwp_m">Lightning živá tapeta zatiaľ nie je povolená.
+\n
+\nFinančne prispej vývojárovi, pomôžeš tak pri vytváraní LL, najlepšieho spúšťača všetkých čias...
+\n
+\n</string>
 <string name="an_i_as">Show app shortcuts</string>
 <string name="as_no_s">No app shortcut for this item</string>
 <string name="as_no_hp_t">No app shortcut permission</string>
-<string name="as_no_hp_m">In order to access app shortcuts, Lightning Launcher needs to be the default launcher, otherwise it has no app shortcut permission.\n\nNote: you may see this message twice before you can select \'Always\' in the launcher selection box.</string>
+<string name="as_no_hp_m">In order to access app shortcuts, Lightning Launcher needs to be the default launcher, otherwise it has no app shortcut permission.
+\n
+\nNote: you may see this message twice before you can select \'Always\' in the launcher selection box.</string>
 <string name="as_nf">Shortcut disabled</string>
 <string name="sp_none">Zakázať skript</string>
 <string name="widget_count">(%d widgetov)</string>
@@ -1365,7 +1469,14 @@
 <string name="hide_statusbar_s">Zobrazí sa po stlačení MENU</string>
 <string name="mph"></string>
 <string name="tr_ut">Informácie o Lightningu</string>
-<string name="tr_um">Chcel by som ti poďakovať za dlhodobé používanie môjho bezplatného Lightning Launcheru.\n\nBezplatná verzia bola nahradená skúšobnou verziou. Aj naďalej môžeš zadarmo využívať všetky existujúce funkcie,\nktoré boli implementované v predchádzajúcich bezplatných verziách (až do v10.0.3).\n\nAk sa ti môj launcher páči, porozmýšľaj nad nákupom licenčného kľúča, ktorý ti umožní používať všetky dostupné funkcie plnej verzie, vrátane novo vyvíjaných vymožeností. Aktuálne za zvýhodnenú vernostnú cenu!\n\nĎakujem! Pierre Hébert, autor aplikácie  </string>
+<string name="tr_um">Chcel by som ti poďakovať za dlhodobé používanie môjho bezplatného Lightning Launcheru.
+\n
+\nBezplatná verzia bola nahradená skúšobnou verziou. Aj naďalej môžeš zadarmo využívať všetky existujúce funkcie,
+\nktoré boli implementované v predchádzajúcich bezplatných verziách (až do v10.0.3).
+\n
+\nAk sa ti môj launcher páči, porozmýšľaj nad nákupom licenčného kľúča, ktorý ti umožní používať všetky dostupné funkcie plnej verzie, vrátane novo vyvíjaných vymožeností. Aktuálne za zvýhodnenú vernostnú cenu!
+\n
+\nĎakujem! Pierre Hébert, autor aplikácie  </string>
 <string name="ip_bic">Poškodený balík ikon</string>
 
 

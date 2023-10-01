@@ -436,7 +436,8 @@
 <string name="no_backup_archive">没有可以恢复的备份</string>
 <string name="backup_in_progress">正在备份中…</string>
 <string name="restore_in_progress">正在还原中…</string>
-<string name="backup_done">备份保存到:\n%s</string>
+<string name="backup_done">备份保存到:
+\n%s</string>
 <string name="backup_error">备份错误，请检查是否有对SD卡足够的存储空间</string>
 <string name="restore_error">恢复错误，请检查备份存档是否有效，可以读取</string>
 
@@ -497,7 +498,6 @@
 <string name="mi_mode_recent_apps">最近运行</string>
 <string name="mi_mode_recently_updated">最近更新</string>
 <string name="mi_mode_frequently_used">最常使用</string>
-<string name="mi_mode_running">正在运行</string>
 <string name="mi_es_add_folder">添加文件夹</string>
 <string name="mi_es_edit_layout">编辑布局</string>
 <string name="mi_es_show_hidden">显示隐藏</string>
@@ -507,10 +507,15 @@
 <string name="mi_es_folder_settings">设置文件夹</string>
 <string name="mi_uninstall">卸载</string>
 <string name="my_drawer_title">我的程序集</string>
-<string name="my_drawer_message">我的程序集中可以任意摆放应用，The "My Drawer" view lets you fully customize your app drawer.\nIn this mode items can be freely moved on a large canvas and folder can be used to organize apps.\nTry to zoom out and select "Edit layout" : you will discover that apps can be put on left, right, top and bottom pages too, letting you manage apps in your very own way.</string>
-<string name="empty_folder_x">empty folder\ndrag&amp;drop items over the folder icon\nto populate it</string>
+<string name="my_drawer_message">我的程序集中可以任意摆放应用，The "My Drawer" view lets you fully customize your app drawer.
+\nIn this mode items can be freely moved on a large canvas and folder can be used to organize apps.
+\nTry to zoom out and select "Edit layout" : you will discover that apps can be put on left, right, top and bottom pages too, letting you manage apps in your very own way.</string>
+<string name="empty_folder_x">empty folder
+\ndrag&amp;drop items over the folder icon
+\nto populate it</string>
 <string name="ll_import_title">Importing LL setup</string>
-<string name="ll_import_message">An installation of Lightning Launcher has been detected.\nAll data will now be imported. When this is done you can safely uninstall Lightning Launcher and use Lightning Launcher eXtreme instead.</string>
+<string name="ll_import_message">An installation of Lightning Launcher has been detected.
+\nAll data will now be imported. When this is done you can safely uninstall Lightning Launcher and use Lightning Launcher eXtreme instead.</string>
 <string name="init_ok">Ready!</string>
 <string name="init_ko">Something went wrong during file copy!</string>
 <string name="auto_exit_t">自动退出</string>
@@ -626,7 +631,8 @@
 <string name="tmpl_warn_llx">- this template has been designed with Lightning Launcher eXtreme, it may use some features not available in this version.</string>
 <string name="tmpl_warn_screen">- this template does not exactly match your screen characteristics. Some elements may not be displayed correctly.</string>
 <string name="tmpl_warn_widget">- your device is not able to restore widgets automatically, you will need to manually recreate them.</string>
-<string name="widget_e">Could not load this widget\nTap to install or pick a new one</string>
+<string name="widget_e">Could not load this widget
+\nTap to install or pick a new one</string>
 <string name="tmpl_s_p">Select desktops to export</string>
 <string name="an_ctf">Close topmost folder</string>
 <string name="an_caf">Close all folders</string>
@@ -847,11 +853,25 @@
 <string name="rs_t">Run scripts</string>
 <string name="rs_s">Allow scripts execution</string>
 <string name="rs_w">Warning: script execution is currently disabled in general settings</string>
-<string name="h_ad">Your apps are here.\nYou can launch apps from there and start adding apps to the desktop: long press on some app and select \"Add to launcher\".\n\nTap to learn more.</string>
-<string name="h_f">You just added a folder. Folders can contain apps, widgets or even other folders.\n\nDrag some item over it, wait a bit for the move to be confirmed (at the end of the animation), then drop the object: it will be moved inside the folder.\n\nTap to learn more on folders.</string>
-<string name="h_p">Your first panel is here.\nPanels behave a bit like folders: drag item over it, wait a bit for the move to be confirmed (end of the animation), then drop the object.\n\nTap to learn more on panels.</string>
+<string name="h_ad">Your apps are here.
+\nYou can launch apps from there and start adding apps to the desktop: long press on some app and select \"Add to launcher\".
+\n
+\nTap to learn more.</string>
+<string name="h_f">You just added a folder. Folders can contain apps, widgets or even other folders.
+\n
+\nDrag some item over it, wait a bit for the move to be confirmed (at the end of the animation), then drop the object: it will be moved inside the folder.
+\n
+\nTap to learn more on folders.</string>
+<string name="h_p">Your first panel is here.
+\nPanels behave a bit like folders: drag item over it, wait a bit for the move to be confirmed (end of the animation), then drop the object.
+\n
+\nTap to learn more on panels.</string>
 <string name="h_t">Hint</string>
-<string name="h_k">This is your desktop. Long tap to add objects (apps, widgets, folders, more) and access settings.\n\nPages are created as soon as you drag objects over them: to the left and right sides, but also to the top and bottom sides.\n\nTap to learn more on LL concepts.</string>
+<string name="h_k">This is your desktop. Long tap to add objects (apps, widgets, folders, more) and access settings.
+\n
+\nPages are created as soon as you drag objects over them: to the left and right sides, but also to the top and bottom sides.
+\n
+\nTap to learn more on LL concepts.</string>
 <string name="tut_concepts">Concepts</string>
 <string name="tut_wiki">Wiki</string>
 
@@ -985,7 +1005,8 @@
 <string name="sc_w">Word wrap</string>
 <string name="wrapx_t">Seamless mode X</string>
 <string name="wrapy_t">Seamless mode X</string>
-<string name="h_w">The seamless mode is automatically disabled in edit mode, otherwise empty pages wouldn\'t be reachable. Be aware that some items may then suddenly disappear when entering edit mode: they are just displayed at their original position in the desktop instead of being "wrapped".\nSeamless mode is enabled again when exiting edit mode.</string>
+<string name="h_w">The seamless mode is automatically disabled in edit mode, otherwise empty pages wouldn\'t be reachable. Be aware that some items may then suddenly disappear when entering edit mode: they are just displayed at their original position in the desktop instead of being "wrapped".
+\nSeamless mode is enabled again when exiting edit mode.</string>
 <string name="ad_bc">Selected:</string>
 <string name="an_wt">Wallpaper tap</string>
 <string name="an_wst">Wallpaper secondary tap</string>
@@ -993,8 +1014,13 @@
 <string name="ds_uc">User community</string>
 <string name="ds_tt">Tips &amp; tricks</string>
 <string name="ds_br">Backup &amp; Restore</string>
-<string name="ds_hn">Hint: in order to create a new page, simply add or drag some item on it.\nThis works for pages above and below too, try it!\n\n(you can safely delete this hint)</string>
-<string name="ds_um">Hint: use one or two fingers swipe up to reveal the user menu (you can customize it), long tap somewhere to display a contextual menu.\n\n(you can safely delete this hint)</string>
+<string name="ds_hn">Hint: in order to create a new page, simply add or drag some item on it.
+\nThis works for pages above and below too, try it!
+\n
+\n(you can safely delete this hint)</string>
+<string name="ds_um">Hint: use one or two fingers swipe up to reveal the user menu (you can customize it), long tap somewhere to display a contextual menu.
+\n
+\n(you can safely delete this hint)</string>
 <string name="ds_z">Zoom</string>
 <string name="sc_import">Import…</string>
 <string name="sc_si_t">The Script Importer is not installed</string>

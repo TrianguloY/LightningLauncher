@@ -5,7 +5,26 @@
 <string name="pack_name_short">Deutsch</string>
 <string name="tranlator_name">Tom Wildzeiss, Lukas Morawietz und Peter Herrmann</string>
 
-<string name="description">Der Lightning Launcher ist ein schneller, kompakter und zudem äußerst anpassbarer Launcher. (Launcher = Sichtbare Benutzeroberfläche des Androidsystems)\n\nLightning Launcher ist die erste Wahl für Leute, die einen super flüssigen, speicherschonenden, komplett anpassbaren Homescreen Ersatz suchen.\n\nAnders als bei anderen Launcher lassen sich hier Apps und Widgets überall auf dem Desktop platzieren. Nicht nur auf der rechten oder linken Seite, sondern auch über und unterhalb des Homescreens. Stell dir eine in horizontale und vertikale Richtung unlimitierte Leinwand anstelle eines Streifens vor und du wirst eine Vorstellung davon bekommen, was mit Lightning möglich ist.\n\nDas bedeutet: So viele Seiten wie du benötigst, mehr Platz für deine einzelnen Apps und eine schnellere Navigation.\n\nZudem hat Lightning einige interessante Features wie zum Beispiel die Möglichkeit Widgets in Ordner zu packen (oder sogar eine Ordnerhierarchie mit Unterordnern), oder das komplett freie Bewegen, skalieren oder rotieren jedes einzelnen Items auf dem Desktop. (Bemerkung: wechsel in den freien Modus, um rotieren/skalieren freizuschalten)\n\nOh, und habe ich erwähnt das LL wenig Speicher verbraucht und so mehr Speicher für deine Apps zur Verfügung stehen?\n\nMit seinen weitreichenden Einstellungsmöglichkeiten ist LL einer der "Anpassungs-Champions" unter den Launchern, wenn auch vielleicht noch nicht der am leichtesten konfigurierbare. Sicher, wie die bei den meisten hoch wirkungsvollen Programmen muss man sich zunächst einarbeiten. Aber ist das nicht ein kleiner Preis, um den aufregendsten und einzigartigsten Homescreen zu bekommen? ;-)\n\nAlle Kommentar, Vorschläge und Fehlerberichte sind willkommen. Bitte schicke mir (Pierre Hébert) eine E-Mail an pierrox@pierrox.net mit deinen Fragen und Fehlerberichten, oder besuche die Facebook Seite (http://www.facebook.com/LightningLauncher), um mehr daüber zu erfahren woran ich im Moment arbeite, um neue Dinge vorzuschlagen, oder um einfach eine Frage zu stellen.\n\Genieße die Vielfalt, die dir der Lightning Launcher bringen wird!\n\Berechtigungen:\n-STATUSLEISTE EIN-/AUSBLENDEN: wie der name es schon vermuten lässt wird diese Berechtigung benötigt, um die Statusleiste anzeigen zu können.\n-HINTERGRUND FESTLEGEN: wird benutzt um die Wallpaperdimensionen festlegen zu können.\n-Keine weiteren Berechtigungen werden benötigt.</string>
+<string name="description">Der Lightning Launcher ist ein schneller, kompakter und zudem äußerst anpassbarer Launcher. (Launcher = Sichtbare Benutzeroberfläche des Androidsystems)
+\n
+\nLightning Launcher ist die erste Wahl für Leute, die einen super flüssigen, speicherschonenden, komplett anpassbaren Homescreen Ersatz suchen.
+\n
+\nAnders als bei anderen Launcher lassen sich hier Apps und Widgets überall auf dem Desktop platzieren. Nicht nur auf der rechten oder linken Seite, sondern auch über und unterhalb des Homescreens. Stell dir eine in horizontale und vertikale Richtung unlimitierte Leinwand anstelle eines Streifens vor und du wirst eine Vorstellung davon bekommen, was mit Lightning möglich ist.
+\n
+\nDas bedeutet: So viele Seiten wie du benötigst, mehr Platz für deine einzelnen Apps und eine schnellere Navigation.
+\n
+\nZudem hat Lightning einige interessante Features wie zum Beispiel die Möglichkeit Widgets in Ordner zu packen (oder sogar eine Ordnerhierarchie mit Unterordnern), oder das komplett freie Bewegen, skalieren oder rotieren jedes einzelnen Items auf dem Desktop. (Bemerkung: wechsel in den freien Modus, um rotieren/skalieren freizuschalten)
+\n
+\nOh, und habe ich erwähnt das LL wenig Speicher verbraucht und so mehr Speicher für deine Apps zur Verfügung stehen?
+\n
+\nMit seinen weitreichenden Einstellungsmöglichkeiten ist LL einer der "Anpassungs-Champions" unter den Launchern, wenn auch vielleicht noch nicht der am leichtesten konfigurierbare. Sicher, wie die bei den meisten hoch wirkungsvollen Programmen muss man sich zunächst einarbeiten. Aber ist das nicht ein kleiner Preis, um den aufregendsten und einzigartigsten Homescreen zu bekommen? ;-)
+\n
+\nAlle Kommentar, Vorschläge und Fehlerberichte sind willkommen. Bitte schicke mir (Pierre Hébert) eine E-Mail an pierrox@pierrox.net mit deinen Fragen und Fehlerberichten, oder besuche die Facebook Seite (http://www.facebook.com/LightningLauncher), um mehr daüber zu erfahren woran ich im Moment arbeite, um neue Dinge vorzuschlagen, oder um einfach eine Frage zu stellen.
+\n\Genieße die Vielfalt, die dir der Lightning Launcher bringen wird!
+\n\Berechtigungen:
+\n-STATUSLEISTE EIN-/AUSBLENDEN: wie der name es schon vermuten lässt wird diese Berechtigung benötigt, um die Statusleiste anzeigen zu können.
+\n-HINTERGRUND FESTLEGEN: wird benutzt um die Wallpaperdimensionen festlegen zu können.
+\n-Keine weiteren Berechtigungen werden benötigt.</string>
 
 
 <string name="start_activity_error">Fehler beim Starten dieser App</string>
@@ -43,14 +62,22 @@
 <string name="mi_widget_options">Widgetoptionen</string>
 <string name="mi_move_out_of_folder">Aus Ordner herausbewegen</string>
 <string name="first_use_title">Willkommen!</string>
-<string name="first_use_message">Lightning Launcher ist ein schlanker, schneller und anpassbarer Ersatz für den Android-Homescreen.\n\nSie sind im Moment im normalen Modus, das heißt einige erweiterte Einstellungen sind versteckt. Aktivieren Sie den Expertenmodus um alle Einstellungen und Möglichkeiten freizuschalten (Allgemeine Einstellungen).\n \nLL lädt nun einmalig ihre Apps.\n\nViel Spaß!</string>
+<string name="first_use_message">Lightning Launcher ist ein schlanker, schneller und anpassbarer Ersatz für den Android-Homescreen.
+\n
+\nSie sind im Moment im normalen Modus, das heißt einige erweiterte Einstellungen sind versteckt. Aktivieren Sie den Expertenmodus um alle Einstellungen und Möglichkeiten freizuschalten (Allgemeine Einstellungen).
+\n 
+\nLL lädt nun einmalig ihre Apps.
+\n
+\nViel Spaß!</string>
 <string name="all_apps">Alle Apps</string>
 <string name="menu_refresh">Neu laden </string>
 <string name="menu_zoom">Zoom</string>
 <string name="menu_see_only_visible">Nur sichtbare</string>
 <string name="menu_see_only_hidden">Nur versteckte</string>
 <string name="menu_see_all">Alle Apps</string>
-<string name="empty_folder">Lange drücken um\nElemente hinzuzufügen oder Einstellungen zu ändern.\nFür weitere Optionen bearbeiten Sie das Ordnerelement.</string>
+<string name="empty_folder">Lange drücken um
+\nElemente hinzuzufügen oder Einstellungen zu ändern.
+\nFür weitere Optionen bearbeiten Sie das Ordnerelement.</string>
 <string name="file_picker_activity_up">Nach oben</string>
 
 <string name="settings">Alle Einstellungen</string>
@@ -167,7 +194,8 @@
 <string name="select_launcher_title">Standard-Launcher auswählen</string>
 <string name="extras">Extras</string>
 <string name="permission_denied">Starten dieser Verknüpfung nicht erlaut. Für Direktwahl-Verknüpfungen installiere das entsprechende Plugin</string>
-<string name="appearance">Aussehen\nFür Vorschau nach links wischen</string>
+<string name="appearance">Aussehen
+\nFür Vorschau nach links wischen</string>
 <string name="background_t">Hintergrund</string>
 <string name="background_s">Hintergrundbild, Farbton, Scroll-Effekte</string>
 <string name="grid_t">Gitterlinien</string>
@@ -361,7 +389,8 @@
 <item>Benutzerdefiniert</item>
 </string-array>
 
-<string name="b_hint">Wählen Sie eine oder mehrere Flächen aus,\ndann können Sie unten Farbe und Größe ändern</string>
+<string name="b_hint">Wählen Sie eine oder mehrere Flächen aus,
+\ndann können Sie unten Farbe und Größe ändern</string>
 <string name="b_size">Größe gewählter Flächen</string>
 <string name="b_color_normal">Farbe normal</string>
 <string name="b_color_selected">Farbe ausgewählt</string>
@@ -380,8 +409,10 @@
 <item>Fokussiert</item>
 </string-array>
 
-<string name="il_preview">Vorschau\n(kann von der tatsächlichen Ansicht abweichen)</string>
-<string name="preview_toast">Vorschau-Modus\nSie können hier nichts tun.</string>
+<string name="il_preview">Vorschau
+\n(kann von der tatsächlichen Ansicht abweichen)</string>
+<string name="preview_toast">Vorschau-Modus
+\nSie können hier nichts tun.</string>
 <string name="pick_a_font">Wählen Sie eine TTF- oder OTF-Datei…</string>
 <string name="system_font">System-Schrift</string>
 <string name="left">Links</string>
@@ -416,11 +447,13 @@
 <string name="no_backup_archive">Noch keine Sicherung vorhanden</string>
 <string name="backup_in_progress">Sicherung läuft...</string>
 <string name="restore_in_progress">Wiederherstellung läuft...</string>
-<string name="backup_done">Sicherung gespeichert in:\n%s</string>
+<string name="backup_done">Sicherung gespeichert in:
+\n%s</string>
 <string name="backup_error">Sicherung fehlgeschlagen. Bitte überprüfen Sie, ob genügend Speicherplatz zur Verfügung steht.</string>
 <string name="restore_error">Wiederherstellung fehlgeschlagen. Bitte überprüfen Sie, ob das Sicherungs-Archiv unbeschädigt ist und gelesen werden kann.</string>
 
-<string name="confirm_delete">Möchten Sie diesen Desktop wirklich löschen?\nDies kann nicht rückgängig gemacht werden.</string>
+<string name="confirm_delete">Möchten Sie diesen Desktop wirklich löschen?
+\nDies kann nicht rückgängig gemacht werden.</string>
 
 
 <!-- added: 90 -->
@@ -478,17 +511,23 @@
 <string name="mi_mode_recent_apps">Zuletzt gestartet</string>
 <string name="mi_mode_recently_updated">Letzte Updates</string>
 <string name="mi_mode_frequently_used">Häufig verwendet</string>
-<string name="mi_mode_running">Läuft gerade</string>
 <string name="mi_es_edit_layout">Layout bearbeiten</string>
 <string name="mi_es_refresh">Aktualisieren</string>
 <string name="mi_es_settings">Einstellungen...</string>
 <string name="mi_es_folder_settings">Ordner Einstellungen</string>
 <string name="mi_uninstall">Deinstallieren</string>
 <string name="my_drawer_title">Mein Drawer</string>
-<string name="my_drawer_message">Die "Mein Drawer"-Anzeige ermöglicht es den App-Drawer anzupassen.\n\nIn diesem Modus können Elemente frei verschoben werden und in Ordnern organisiert werden.\n\nProbieren sie "Layout editieren" aus: Apps können auf Bildschirmseiten links, rechts, oben und unten verschoben werden. So können Sie Apps individuell verwalten.</string>
-<string name="empty_folder_x">Leerer Ordner\nZiehe Elemente auf das Ordner-Icon um diesen zu füllen</string>
+<string name="my_drawer_message">Die "Mein Drawer"-Anzeige ermöglicht es den App-Drawer anzupassen.
+\n
+\nIn diesem Modus können Elemente frei verschoben werden und in Ordnern organisiert werden.
+\n
+\nProbieren sie "Layout editieren" aus: Apps können auf Bildschirmseiten links, rechts, oben und unten verschoben werden. So können Sie Apps individuell verwalten.</string>
+<string name="empty_folder_x">Leerer Ordner
+\nZiehe Elemente auf das Ordner-Icon um diesen zu füllen</string>
 <string name="ll_import_title">Importiere LL Setup</string>
-<string name="ll_import_message">Eine Installation von Lightning Launcher wurde gefunden.\n\nAlle Daten werden importiert. Nach Abschluss des Vorgangs können Sie Lightning Launcher deinstallieren und stattdessen Lightning Launcher eXtreme nutzen.</string>
+<string name="ll_import_message">Eine Installation von Lightning Launcher wurde gefunden.
+\n
+\nAlle Daten werden importiert. Nach Abschluss des Vorgangs können Sie Lightning Launcher deinstallieren und stattdessen Lightning Launcher eXtreme nutzen.</string>
 <string name="init_ok">Fertig!</string>
 <string name="init_ko">Etwas ist beim Kopiervorgang falsch gelaufen!</string>
 <string name="auto_exit_t">Auto-Verlassen</string>
@@ -604,7 +643,8 @@
 <string name="tmpl_warn_llx">- diese Vorlage wurde für Lightning Launcher eXtreme gemacht, sie könnte Funktionen verwenden, welche in Lightning Launcher nicht verfügbar sind.</string>
 <string name="tmpl_warn_screen">- diese Vorlage entspricht nicht Ihren Bildschirmeigenschaften. Einige Elemente könnten fehlerhaft angezeigt werden.</string>
 <string name="tmpl_warn_widget">- Ihr Gerät kann Widgets nicht automatisch wiederherstellen, Sie müssen sie einzeln wieder neu anlegen.</string>
-<string name="widget_e">Widget konnte nicht geladen werden.\nTippen Sie, um ein anderes auszuwählen</string>
+<string name="widget_e">Widget konnte nicht geladen werden.
+\nTippen Sie, um ein anderes auszuwählen</string>
 <string name="tmpl_s_p">Zu exportierenden Desktop auswählen</string>
 <string name="an_ctf">Obersten Ordner schließen</string>
 <string name="an_caf">Alle Ordner schließen</string>
@@ -820,11 +860,26 @@
 <string name="rs_t">Scripte ausführen</string>
 <string name="rs_s">Script-Ausführung erlauben</string>
 <string name="rs_w">Warnung: Script-Ausführung ist derzeit in den allgemeinen Einstellungen deaktiviert</string>
-<string name="h_ad">Hier sind ihre Apps.\nSie können hier ihre Apps starten oder zum Desktop hinzufügen (lang drücken: "Zum Launcher hinzufügen")\n\nTippen für mehr Informationen.</string>
-<string name="h_f">Sie haben ihren ersten Ordner hinzugefügt. Ordner können alle Elementtypen enthalten.\n\nZiehen Sie ein Element über den Ordner, warten Sie kurz bis die Bewegung bestätigt wird (am Ende der Animation), lassen Sie dann das Element los: Es wird in den Ordner verschoben.\n\nTippen für mehr Informationen.</string>
-<string name="h_p">Da ist ihr erstes Panel!\nPanels sind ein bisschen wie Ordner:\nZiehen Sie ein Element über das Panel, warten Sie kurz bis die Bewegung bestätigt wird (am Ende der Animation), lassen Sie dann das Element los: Es wird in das Panel verschoben.\n\nTippen für mehr Informationen.</string>
+<string name="h_ad">Hier sind ihre Apps.
+\nSie können hier ihre Apps starten oder zum Desktop hinzufügen (lang drücken: "Zum Launcher hinzufügen")
+\n
+\nTippen für mehr Informationen.</string>
+<string name="h_f">Sie haben ihren ersten Ordner hinzugefügt. Ordner können alle Elementtypen enthalten.
+\n
+\nZiehen Sie ein Element über den Ordner, warten Sie kurz bis die Bewegung bestätigt wird (am Ende der Animation), lassen Sie dann das Element los: Es wird in den Ordner verschoben.
+\n
+\nTippen für mehr Informationen.</string>
+<string name="h_p">Da ist ihr erstes Panel!
+\nPanels sind ein bisschen wie Ordner:
+\nZiehen Sie ein Element über das Panel, warten Sie kurz bis die Bewegung bestätigt wird (am Ende der Animation), lassen Sie dann das Element los: Es wird in das Panel verschoben.
+\n
+\nTippen für mehr Informationen.</string>
 <string name="h_t">Hinweis</string>
-<string name="h_k">Dies ist ihr Desktop. Lange drücken für das Menü.\n\nSeiten werden erzeugt sobald Sie Elemente dorthin bewegen, und das in alle vier Richtungen\n\nTippen für mehr Informationen.</string>
+<string name="h_k">Dies ist ihr Desktop. Lange drücken für das Menü.
+\n
+\nSeiten werden erzeugt sobald Sie Elemente dorthin bewegen, und das in alle vier Richtungen
+\n
+\nTippen für mehr Informationen.</string>
 <string name="tut_concepts">Zuerst lesen!</string>
 <string name="tut_wiki">Wiki</string>
 
@@ -962,8 +1017,13 @@
 <string name="ds_uc">Nutzer Community</string>
 <string name="ds_tt">Tips &amp; Tricks</string>
 <string name="ds_br">Sichern &amp; Wiederherstellen</string>
-<string name="ds_hn">Hinweis: Um eine neue Seite zu erzeugen, ziehen Sie einfach ein Element dorthin.\nDas funtioniert auch für Seiten oben und unten. Probieren Sie es aus!\n\n(Sie können diesen Hinweis gefahrlos löschen)</string>
-<string name="ds_um">Hinweis: Streichen Sie mit einem oder zwei Fingern nach oben um das persönliche Menü anzuzeigen (Sie können es bearbeiten). Drücken Sie lange auf eine Stelle um das Kontextmenü anzuzeigen.\n\n(Sie können diesen Hinweis gefahrlos löschen)</string>
+<string name="ds_hn">Hinweis: Um eine neue Seite zu erzeugen, ziehen Sie einfach ein Element dorthin.
+\nDas funtioniert auch für Seiten oben und unten. Probieren Sie es aus!
+\n
+\n(Sie können diesen Hinweis gefahrlos löschen)</string>
+<string name="ds_um">Hinweis: Streichen Sie mit einem oder zwei Fingern nach oben um das persönliche Menü anzuzeigen (Sie können es bearbeiten). Drücken Sie lange auf eine Stelle um das Kontextmenü anzuzeigen.
+\n
+\n(Sie können diesen Hinweis gefahrlos löschen)</string>
 <string name="ds_z">Zoom</string>
 <string name="sc_import">Importieren...</string>
 <string name="sc_si_t">Der Scriptimporter ist nicht installiert</string>
@@ -974,7 +1034,16 @@
 
 <!-- added 224 -->
 <string name="tr_fl_t">Sie müssen Lightning kaufen um diese Funktion zu nutzen</string>
-<string name="tr_fl_m">Upgraden Sie zur Vollversion um mehr Funktionen zu erhalten:\n\n- Verbesserter Appdrawer\n- Desktops hinzufügen, verschieben und löschen\n- Hintergrund für jeden Desktop getrennt setzen\n- Zähler für ungelesene SMS, Mails, usw. und andere dynamische Desktopelemente\n- Anpassbarer Lockscreen\n- Integrierter Appkiller\n\nWenn Sie Lightning bereits gekauft haben, drücken Sie "OK" um diese Version zu reaktivieren.</string>
+<string name="tr_fl_m">Upgraden Sie zur Vollversion um mehr Funktionen zu erhalten:
+\n
+\n- Verbesserter Appdrawer
+\n- Desktops hinzufügen, verschieben und löschen
+\n- Hintergrund für jeden Desktop getrennt setzen
+\n- Zähler für ungelesene SMS, Mails, usw. und andere dynamische Desktopelemente
+\n- Anpassbarer Lockscreen
+\n- Integrierter Appkiller
+\n
+\nWenn Sie Lightning bereits gekauft haben, drücken Sie "OK" um diese Version zu reaktivieren.</string>
 <string name="tr_pw">Bitte warten...</string>
 <string name="tr_ty">Vielen Dank dass Sie Lightning unterstützen!</string>
 <string name="tr_eu">Entschuldigung, ein Fehler ist aufgetreten...</string>
@@ -982,9 +1051,17 @@
 <string name="tr_br_s">Diese Funktion ist in der Probeversion nicht verfügbar</string>
 <string name="tr_rs_t">Vollversion kaufen</string>
 <string name="tr_rs_s">Upgraden um die volle Funktionalität zu erhalten</string>
-<string name="tr_w">Danke dass Sie Lightning ausprobieren!\n\nDie App läuft nun für 7 Tage im Probemodus: Alle Funktionen können benutzt werden. Nach dieser Zeit können Sie die App weiter benutzen, aber nichts mehr bearbeiten.\n\nWenn ihnen diese App gefällt, denken Sie bitte darüber nach die Vollversion zu kaufen.\n\nDanke!</string>
+<string name="tr_w">Danke dass Sie Lightning ausprobieren!
+\n
+\nDie App läuft nun für 7 Tage im Probemodus: Alle Funktionen können benutzt werden. Nach dieser Zeit können Sie die App weiter benutzen, aber nichts mehr bearbeiten.
+\n
+\nWenn ihnen diese App gefällt, denken Sie bitte darüber nach die Vollversion zu kaufen.
+\n
+\nDanke!</string>
 <string name="tr_l">%d Tage der Probezeit übrig</string>
-<string name="tr_rm">Lightning braucht Ihre Rückmeldung!\n\nMöchten Sie sich ein paar Sekunden Zeit nehmen um die App im Play store zu bewerten?</string>
+<string name="tr_rm">Lightning braucht Ihre Rückmeldung!
+\n
+\nMöchten Sie sich ein paar Sekunden Zeit nehmen um die App im Play store zu bewerten?</string>
 <string name="ds_hls">Dies ist ein Beispiel für einen Lockscreen. Sie können es bearbeiten wie Sie wollen. Um den Lockscreen zu aktivieren, gehen Sie in die Einstellungen.</string>
 <string name="ic">Bildzuschneider</string>
 <string name="bg_st">Position</string>
@@ -1055,7 +1132,8 @@
 <string name="sm_cn">Kopie von</string>
 <string name="sm_an">Neuer Desktop</string>
 <string name="ip_e">Kein Icon gefunden</string>
-<string name="cv_dfl">Kein benutzerdefinierter Inhalt.\nAntippen um erneut zu laden.</string>
+<string name="cv_dfl">Kein benutzerdefinierter Inhalt.
+\nAntippen um erneut zu laden.</string>
 <string name="ad_mdh">Wechsle zu \'Mein Drawer\' für Bearbeitung</string>
 <string name="tab_bind">Verbindungen</string>
 <string name="bd_a">Verbindung hinzufügen</string>
@@ -1165,7 +1243,8 @@
 <item>Slide right</item>
 <item>Scale from center</item>
 </string-array>
-<string name="lh">Setze eigene Beschriftung\n(einfaches HTML erlaubt)</string>
+<string name="lh">Setze eigene Beschriftung
+\n(einfaches HTML erlaubt)</string>
 <string name="hs_ed">Bearbeiten...</string>
 <string name="an_ohs">Hierarchieansicht öffnen</string>
 <string name="ov_pt">Setup</string>
@@ -1217,7 +1296,8 @@
 <string name="nfh">Hier gibt es nichts anzuzeigen</string>
 <string name="sc_path">Aktueller Pfad</string>
 <string name="lwp">Lightning Live Wallpaper</string>
-<string name="sd">Bitte wähle einen Desktop\nfür das Live Wallpaper.</string>
+<string name="sd">Bitte wähle einen Desktop
+\nfür das Live Wallpaper.</string>
 <string name="ad_b">Eingebaut</string>
 <string name="ad_p">Plugins</string>
 <string name="ev_m">Menü</string>
@@ -1227,11 +1307,15 @@
 <string name="iab_y_key">Ja (Taste)</string>
 <string name="iab_y_app">Ja (in-App)</string>
 <string name="iab_ul_lwp_t">Noch nicht aktiviert</string>
-<string name="iab_ul_lwp_m">Das Lightning Live Wallpaper ist noch nicht aktiviert\n\nUnterstütze den Entwickler und helfe Lightning zum besten Launcher zu machen!</string>
+<string name="iab_ul_lwp_m">Das Lightning Live Wallpaper ist noch nicht aktiviert
+\n
+\nUnterstütze den Entwickler und helfe Lightning zum besten Launcher zu machen!</string>
 <string name="an_i_as">App-Verknüpfungen anzeigen</string>
 <string name="as_no_s">Keine App-Verknüpfung für dieses Element</string>
 <string name="as_no_hp_t">Keine App-Verknüpfungsberechtigung</string>
-<string name="as_no_hp_m">Um auf App-Verknüpfungen zugreifen zu können, muss Lightning Launcher der standard Launcher sein, sonst hat er keine App-Verknüpfungsberechtigung.\n\nHinweis: Sie können diese Meldung zweimal sehen, bevor Sie \'Immer\' im Auswahlmenü des Launers auswählen können.</string>
+<string name="as_no_hp_m">Um auf App-Verknüpfungen zugreifen zu können, muss Lightning Launcher der standard Launcher sein, sonst hat er keine App-Verknüpfungsberechtigung.
+\n
+\nHinweis: Sie können diese Meldung zweimal sehen, bevor Sie \'Immer\' im Auswahlmenü des Launers auswählen können.</string>
 <string name="as_nf">Verknüpfung deaktiviert</string>
 <string name="widget_count">(%d Widgets)</string>
 <string name="eas_done">Erledigt</string>
@@ -1376,7 +1460,13 @@
 <string name="hide_statusbar_s">Drücken Sie die Menü-Taste, um die Leiste anzuzeigen</string>
 <string name="mph">Wichtige Information,\n\nLightning braucht Berechtigungen um bestimmte Aufgaben zu erfüllen:\n•"Speicher": Backup und Wiederherstellung, Eigene Zeichensätze, Bilder oder Icons importieren, Scripts mit externen Apps bearbeiten\n•"SMS": Anzahl ungelesener SMS anzeigen\n•"Telefon": Direktwahlverknüpfungen, Anzahl verpasster Anrufe anzeigen\n•"Accounts": Anzahl ungelesener GMails anzeigen\n\nWeitere Berechtigungen werden benötigt um das Hintergrundbild zu ändern, andere Apps zu beenden, den Sperrbildschirm zu benutzen oder Scripts auszuführen.\n\nBerechigungen können bearbeitet werden, indem man Alle Apps lang drückt, dann App Info und Berechtigungen auswählt.\nLighting sollte auch ohne Berechtigungen normal laufen, allerding sind dann eine Funktionen nicht verfügbar.\n\nGeht trotzdem etwas schief, denken Sie an die Berechtigungen, oder posten Sie in der G+ Community.\n\nVielen Dank für ihr Verständnis!</string>
 <string name="tr_ut">Über Lightning</string>
-<string name="tr_um">Sie sind ein Langzeitnutzer der kostenlosen Version von Lightning, Danke dafür.\n\nObwohl diese Version mit einer Probeversion ersetzt wurde, können Sie immer noch alles kostenlos nutzen was vor dem Update da war und einige neue Funktionen.\n\nWenn ihnen diese App gefällt, denken Sie bitte darüber nach die Vollversion zu kaufen.\n\nDanke!</string>
+<string name="tr_um">Sie sind ein Langzeitnutzer der kostenlosen Version von Lightning, Danke dafür.
+\n
+\nObwohl diese Version mit einer Probeversion ersetzt wurde, können Sie immer noch alles kostenlos nutzen was vor dem Update da war und einige neue Funktionen.
+\n
+\nWenn ihnen diese App gefällt, denken Sie bitte darüber nach die Vollversion zu kaufen.
+\n
+\nDanke!</string>
 <string name="ip_bic">Fehlerhaftes Iconpack</string>
 <string name="sp_none">Kein Script</string>
 <string name="mi_pick_sh">Verknüpfung auswählen</string>

@@ -43,14 +43,20 @@
 <string name="mi_widget_options">Options du widget</string>
 <string name="mi_move_out_of_folder">Sortir du dossier</string>
 <string name="first_use_title">Bienvenue !</string>
-<string name="first_use_message">Lightning Launcher est un lanceur léger, rapide et personnalisable pour Android.\n\nLL prépare maintenant la liste des applis une bonne fois pour toute.\n\nN\'oubliez pas de jeter un coup d\'oeil aux tutoriaux.\nMerci !</string>
+<string name="first_use_message">Lightning Launcher est un lanceur léger, rapide et personnalisable pour Android.
+\n
+\nLL prépare maintenant la liste des applis une bonne fois pour toute.
+\n
+\nN\'oubliez pas de jeter un coup d\'oeil aux tutoriaux.
+\nMerci !</string>
 <string name="all_apps">Toutes les Applications</string>
 <string name="menu_refresh">Rafraichir</string>
 <string name="menu_zoom">Zoom</string>
 <string name="menu_see_only_visible">Seulement visible</string>
 <string name="menu_see_only_hidden">Seulement caché</string>
 <string name="menu_see_all">Toutes les applis</string>
-<string name="empty_folder">Appui long pour ajouter dans ce dossier\nPersonnalisez le dossier lui-même pour plus d\'options</string>
+<string name="empty_folder">Appui long pour ajouter dans ce dossier
+\nPersonnalisez le dossier lui-même pour plus d\'options</string>
 <string name="file_picker_activity_up">Parent</string>
 
 <string name="settings">Réglages</string>
@@ -361,7 +367,8 @@
 <item>Custom</item>
 </string-array>
 
-<string name="b_hint">Tapez sur une ou plusieurs zones\npuis utilisez une action ci-dessous</string>
+<string name="b_hint">Tapez sur une ou plusieurs zones
+\npuis utilisez une action ci-dessous</string>
 <string name="b_size">Taille des zones</string>
 <string name="b_color_normal">Couleur normale</string>
 <string name="b_color_selected">Couleur de sélection</string>
@@ -380,8 +387,10 @@
 <item>Focus</item>
 </string-array>
 
-<string name="il_preview">Prévisualisation\n(peut être inexact)</string>
-<string name="preview_toast">Prévisualisation\n(Les actions sont désactivées)</string>
+<string name="il_preview">Prévisualisation
+\n(peut être inexact)</string>
+<string name="preview_toast">Prévisualisation
+\n(Les actions sont désactivées)</string>
 <string name="pick_a_font">Choisir un fichier TTF…</string>
 <string name="system_font">Police système</string>
 <string name="left">gauche</string>
@@ -416,7 +425,8 @@
 <string name="no_backup_archive">Aucune archive de sauvegarde à restaurer</string>
 <string name="backup_in_progress">Sauvegarde en cours…</string>
 <string name="restore_in_progress">Restoration en cours…</string>
-<string name="backup_done">Sauvegarde enregistrée dans:\n%s</string>
+<string name="backup_done">Sauvegarde enregistrée dans:
+\n%s</string>
 <string name="backup_error">Erreur lors de la sauvegarde, veuillez vérifier qu\'il y a suffisamment d\'espace de stockage sur la sdcard.</string>
 <string name="restore_error">Erreur de restauration, veuillez vérifier que l\'archive de sauvegarde est valide et peut être lu. </string>
 
@@ -478,17 +488,24 @@
 <string name="mi_mode_recent_apps">Récemment lancé</string>
 <string name="mi_mode_recently_updated">Récemment téléchargées</string>
 <string name="mi_mode_frequently_used">Fréquemment utilisés </string>
-<string name="mi_mode_running">En cours</string>
 <string name="mi_es_edit_layout">Modifier la mise en page </string>
 <string name="mi_es_refresh">Rafraichir</string>
 <string name="mi_es_settings">Paramètres</string>
 <string name="mi_es_folder_settings">Paramètres du dossier</string>
 <string name="mi_uninstall">Désinstaller</string>
 <string name="my_drawer_title">Mon Tirroir d\'Applications</string>
-<string name="my_drawer_message">"Mon Tirroir d\'Applications" vous permet de visualiser entièrement et de personnaliser vos applications.\n\nDans ce mode les éléments peuvent être librement déplacés dans tous l\'espace. \n\nDes dossiers peuvent être créent et utilisés pour organiser les applications. Essayez d\'effectuer un zoom arrière et un appuis long sur un espace vide ou par l\'icon en haut à droite, sélectionnez "Modifier une mise en page" : vous découvrirez que les applications peuvent être mis à gauche, à droite, en haut et en bas de pages, vous permettant ainsi de gérer les applications comme vous le désirez. </string>
-<string name="empty_folder_x">dossier vide\ndéplacer des éléments au dessus du dossier pour le remplir.</string>
+<string name="my_drawer_message">"Mon Tirroir d\'Applications" vous permet de visualiser entièrement et de personnaliser vos applications.
+\n
+\nDans ce mode les éléments peuvent être librement déplacés dans tous l\'espace. 
+\n
+\nDes dossiers peuvent être créent et utilisés pour organiser les applications. Essayez d\'effectuer un zoom arrière et un appuis long sur un espace vide ou par l\'icon en haut à droite, sélectionnez "Modifier une mise en page" : vous découvrirez que les applications peuvent être mis à gauche, à droite, en haut et en bas de pages, vous permettant ainsi de gérer les applications comme vous le désirez. </string>
+<string name="empty_folder_x">dossier vide
+\ndéplacer des éléments au dessus du dossier pour le remplir.</string>
 <string name="ll_import_title">Importation de la configuration de LL</string>
-<string name="ll_import_message">Une installation de Lightning Launcher a été détectée.\n\nToutes les données vont maintenant être importés.\nLorsque ceci sera fait, vous pourez désinstaller en toute sécurité Lightning Launcher et utiliser Lightning Launcher eXtreme la place.</string>
+<string name="ll_import_message">Une installation de Lightning Launcher a été détectée.
+\n
+\nToutes les données vont maintenant être importés.
+\nLorsque ceci sera fait, vous pourez désinstaller en toute sécurité Lightning Launcher et utiliser Lightning Launcher eXtreme la place.</string>
 <string name="init_ok">Prêt!</string>
 <string name="init_ko">Erreur lors de la copie</string>
 <string name="auto_exit_t">Fermeture auto</string>
@@ -604,7 +621,8 @@
 <string name="tmpl_warn_llx">- ce thème a été conçu pour Lightning Launcher eXtreme, certaines fonctions du thème peuvent ne pas fonctionner</string>
 <string name="tmpl_warn_screen">- ce thème est conçu pour des caractéristiques d\'écran différentes. Certains éléments peuvent s\'afficher de manière incorrecte</string>
 <string name="tmpl_warn_widget">- votre appareil ne prend pas en charge la restauration des widgets, ils devront être recréés manuellement</string>
-<string name="widget_e">Erreur de chargement de ce widget\nTapper pour installer ou en prendre un autre</string>
+<string name="widget_e">Erreur de chargement de ce widget
+\nTapper pour installer ou en prendre un autre</string>
 <string name="tmpl_s_p">Choix des bureaux à exporter</string>
 <string name="an_ctf">Fermer le dossier en avant plan</string>
 <string name="an_caf">Fermer tous les dossiers</string>
@@ -820,11 +838,24 @@
 <string name="rs_t">Exécuter les scripts</string>
 <string name="rs_s">Permettre l\'exécution des scripts au niveau général</string>
 <string name="rs_w">Attention: l\'exécution des scripts est pour désactivée au niveau général</string>
-<string name="h_ad">Vos applis sont ici.\nVous pouvez lancez des applis depuis le tiroir et en ajouter sur le bureau celles que vous utilisez le plus souvent.\n\nAppuyez pour en savoir plus.</string>
-<string name="h_f">Vous venez d\'ajouter un dossier. Un dossier peut contenir des applis, des widgets et même d\'autres dossiers.\nGlissez et déposez des objets dessus, attendez la confirmation (fin de l\'animation) puis laisser tomber l\'objet dedans.\n\nAppuyez pour en savoir plus.</string>
-<string name="h_p">Votre panneau est ici.\nUn panneau est similaire à un dossier (glissez et déposez des objets dessus) à ceci près qu\'il est présenté directement dans le bureau.\n\nAppuyez pour en savoir plus.</string>
+<string name="h_ad">Vos applis sont ici.
+\nVous pouvez lancez des applis depuis le tiroir et en ajouter sur le bureau celles que vous utilisez le plus souvent.
+\n
+\nAppuyez pour en savoir plus.</string>
+<string name="h_f">Vous venez d\'ajouter un dossier. Un dossier peut contenir des applis, des widgets et même d\'autres dossiers.
+\nGlissez et déposez des objets dessus, attendez la confirmation (fin de l\'animation) puis laisser tomber l\'objet dedans.
+\n
+\nAppuyez pour en savoir plus.</string>
+<string name="h_p">Votre panneau est ici.
+\nUn panneau est similaire à un dossier (glissez et déposez des objets dessus) à ceci près qu\'il est présenté directement dans le bureau.
+\n
+\nAppuyez pour en savoir plus.</string>
 <string name="h_t">Astuce</string>
-<string name="h_k">Voici votre bureau. Faites un appui long pour ajouter des objets (applis, widgets, dossier, etc.), ou bien accéder à d\'autres options.\n\nLes pages sont créées au fur et à mesure que vous déplacez des objets dessus. A droite et à gauche bien sur, mais aussi en haut et en bas pour un défilement vertical, voire dans les deux sens.\n\nAppuyez pour en savoir plus.</string>
+<string name="h_k">Voici votre bureau. Faites un appui long pour ajouter des objets (applis, widgets, dossier, etc.), ou bien accéder à d\'autres options.
+\n
+\nLes pages sont créées au fur et à mesure que vous déplacez des objets dessus. A droite et à gauche bien sur, mais aussi en haut et en bas pour un défilement vertical, voire dans les deux sens.
+\n
+\nAppuyez pour en savoir plus.</string>
 <string name="tut_concepts">Concepts</string>
 <string name="tut_wiki">Wiki</string>
 
@@ -963,8 +994,13 @@
 <string name="ds_uc">Communauté d\'utilisateurs</string>
 <string name="ds_tt">Trucs &amp; astuces</string>
 <string name="ds_br">Sauvegarde &amp; Restoration</string>
-<string name="ds_hn">Astuce: pour créer une nouvelle page, glisser ou ajouter des objets dessus.\nEt ceci marche pour les page au dessus et en dessous, essayez!\n\n(vous pouvez supprimer ce message)</string>
-<string name="ds_um">Astuce: vous pouvez utilise un glisser vers le haut à un doigt ou deux doigts pour afficher le menu utilisateur (qui peut être modifié). Un appui long n\'importe ou affichera aussi un menu contextuel.\n\n(vous pouvez supprimer ce message)</string>
+<string name="ds_hn">Astuce: pour créer une nouvelle page, glisser ou ajouter des objets dessus.
+\nEt ceci marche pour les page au dessus et en dessous, essayez!
+\n
+\n(vous pouvez supprimer ce message)</string>
+<string name="ds_um">Astuce: vous pouvez utilise un glisser vers le haut à un doigt ou deux doigts pour afficher le menu utilisateur (qui peut être modifié). Un appui long n\'importe ou affichera aussi un menu contextuel.
+\n
+\n(vous pouvez supprimer ce message)</string>
 <string name="ds_z">Zoom</string>
 <string name="sc_import">Importer…</string>
 <string name="sc_si_t">L\'appli Script Importer n\'est pas installée</string>
@@ -975,7 +1011,16 @@
 
 <!-- added 224 -->
 <string name="tr_fl_t">Merci de déverrouiller Lightning pour utiliser cette fonctionnalité</string>
-<string name="tr_fl_m">Evoluez vers la version complète de Lightning pour bénéficier de toutes les fonctionnalités:\n\n- Tirroir d\'application avancé (dossiers, barre d\'action, catégories)\n- Ajoutez, réorganisez les bureaux à volonté\n- Papier peint par bureau\n- Badges (sms, gmail, appels manqués), textes dynamiques\n- Ecran de verrouillage personnalisé\n- App killer intégré\n\nSi vous avez déjà déverrouillé Lightning dans le passé, veuillez simplement cliquer sur OK pour l\'activer à nouveau.</string>
+<string name="tr_fl_m">Evoluez vers la version complète de Lightning pour bénéficier de toutes les fonctionnalités:
+\n
+\n- Tirroir d\'application avancé (dossiers, barre d\'action, catégories)
+\n- Ajoutez, réorganisez les bureaux à volonté
+\n- Papier peint par bureau
+\n- Badges (sms, gmail, appels manqués), textes dynamiques
+\n- Ecran de verrouillage personnalisé
+\n- App killer intégré
+\n
+\nSi vous avez déjà déverrouillé Lightning dans le passé, veuillez simplement cliquer sur OK pour l\'activer à nouveau.</string>
 <string name="tr_pw">Veuillez patienter…</string>
 <string name="tr_ty">Merci de supporter le développement de Lightning!</string>
 <string name="tr_eu">Désolé, une erreur a eu lieu…</string>
@@ -983,10 +1028,20 @@
 <string name="tr_br_s">Cette fonctionnalité n\'est pas disponible dans la version d\'essai</string>
 <string name="tr_rs_t">Libérez le potentiel de Lightning</string>
 <string name="tr_rs_s">Déverrouiller l\'appli pour accéder à tout son potentiel</string>
-<string name="tr_w">Merci de tester Lightning !\n\nCette appli fonctionne en mode essai pendant 7 jours. Pendant ce temps quasiment toutes les fonctionnalités sont offertes sans limite. Au delà le lanceur fonctionne toujours mais les modifications sont verrouillées.\n\nSi vous aimez cette appli et souhaitez la voir évoluer et maintenue, veuillez considerer l\'achat de la clé de déverrouillage.\n\nMerci!</string>
+<string name="tr_w">Merci de tester Lightning !
+\n
+\nCette appli fonctionne en mode essai pendant 7 jours. Pendant ce temps quasiment toutes les fonctionnalités sont offertes sans limite. Au delà le lanceur fonctionne toujours mais les modifications sont verrouillées.
+\n
+\nSi vous aimez cette appli et souhaitez la voir évoluer et maintenue, veuillez considerer l\'achat de la clé de déverrouillage.
+\n
+\nMerci!</string>
 <string name="tr_l">%d jour(s) d\'essai restant</string>
-<string name="tr_rm">Lightning a besoin de votre avis!\n\nVoulez vous prendre quelques secondes pour noter l\'appli sur le Play Store ?\n</string>
-<string name="ds_hls">Ceci est un example d\'écran de verrouillage que vous pouvez personnaliser à volonté avec des applis, des widgets, ou tout autre fonctionnalité de Lightning.\nPour activer cet écran de verrouillage, tappez ici pour accéder au panneau de réglage.</string>
+<string name="tr_rm">Lightning a besoin de votre avis!
+\n
+\nVoulez vous prendre quelques secondes pour noter l\'appli sur le Play Store ?
+\n</string>
+<string name="ds_hls">Ceci est un example d\'écran de verrouillage que vous pouvez personnaliser à volonté avec des applis, des widgets, ou tout autre fonctionnalité de Lightning.
+\nPour activer cet écran de verrouillage, tappez ici pour accéder au panneau de réglage.</string>
 <string name="ic">Découpage d\'image</string>
 <string name="bg_st">Position</string>
 <string-array name="bg_st_e">
@@ -1056,7 +1111,8 @@
 <string name="sm_cn">Copie de</string>
 <string name="sm_an">Nouveau bureau</string>
 <string name="ip_e">Aucune icône</string>
-<string name="cv_dfl">Pas de vue.\nTappez pour ré-essayer.</string>
+<string name="cv_dfl">Pas de vue.
+\nTappez pour ré-essayer.</string>
 <string name="ad_mdh">Basculement vers \'Mon Tirroir d\'Applications\' pour l\'édition</string>
 <string name="tab_bind">Bindings</string>
 <string name="bd_a">Ajout d\'un binding…</string>
@@ -1166,7 +1222,8 @@
 <item>Défilement vers la droite</item>
 <item>Zoom depuis le centre</item>
 </string-array>
-<string name="lh">Choix du libellé\n(HTML basique possible)</string>
+<string name="lh">Choix du libellé
+\n(HTML basique possible)</string>
 <string name="hs_ed">Editer…</string>
 <string name="an_ohs">Ouvrir l\'écran de hiérarchie</string>
 <string name="ov_pt">Configuration</string>
@@ -1218,7 +1275,8 @@
 <string name="nfh">Rien à afficher ici</string>
 <string name="sc_path">Chemin d\'accès</string>
 <string name="lwp">Papier peint animé Lightning</string>
-<string name="sd">Merci de choisir un bureau\npour votre papier peint</string>
+<string name="sd">Merci de choisir un bureau
+\npour votre papier peint</string>
 <string name="ad_b">Standard</string>
 <string name="ad_p">Plugins</string>
 <string name="ev_m">Menu</string>
@@ -1228,11 +1286,15 @@
 <string name="iab_y_key">Oui (clé)</string>
 <string name="iab_y_app">Oui (in-app)</string>
 <string name="iab_ul_lwp_t">Pas encore activé</string>
-<string name="iab_ul_lwp_m">Le papier peint Lightning n\'est pas encore activé.\n\nSupportez Lightning et aider l\'appli à devenir le meilleur écran d\'accueil !</string>
+<string name="iab_ul_lwp_m">Le papier peint Lightning n\'est pas encore activé.
+\n
+\nSupportez Lightning et aider l\'appli à devenir le meilleur écran d\'accueil !</string>
 <string name="an_i_as">Voir les raccourcis</string>
 <string name="as_no_s">Pas de raccourci pour cette appli</string>
 <string name="as_no_hp_t">Permission manquante</string>
-<string name="as_no_hp_m">Pour accéder aux raccourcis, Lightning Launcher doit être l\'écran d\'accueil par défaut, sinon la permission ne lui est pas accordée.\n\nNote: il est possible que ce message soit affiché deux fois avant de pouvoir choisir \'Toujours\'.</string>
+<string name="as_no_hp_m">Pour accéder aux raccourcis, Lightning Launcher doit être l\'écran d\'accueil par défaut, sinon la permission ne lui est pas accordée.
+\n
+\nNote: il est possible que ce message soit affiché deux fois avant de pouvoir choisir \'Toujours\'.</string>
 <string name="as_nf">Raccourci désactivé</string>
 <string name="sp_none">Pas de script</string>
 <string name="widget_count">(%d widgets)</string>
@@ -1365,7 +1427,13 @@
 <string name="hide_statusbar_s">Touche menu pour la montrer</string>
 <string name="mph">Important notice,\n\nLightning can benefit of permissions to achieve common tasks, for instance:\n•"Storage": create and use backups and templates, import custom fonts, import images or icons, edit scripts with an external editor\n•"SMS": display the number of unread SMSs (in Dynamic Text only)\n•"Phone": make use of direct dial shortcuts, display the number of missed phone calls (in Dynamic Text only)\n•"Accounts": display the number of unread GMails (in Dynamic Text only)\n\nAdditional permissions can also be needed to set the wallpaper, close other apps ("kill"), move an app to front (lock screen) or scripts.\n\nPermissions can be toggled by long clicking on the "All apps" icon and selecting "App Info", then "Permissions". Lightning will in most cases continue to run fine without permissions, although some features won\'t be available.\n\nShould something wrong happen, please remember the use of permissions, or post a message on the G+ community to request for support.\n\nThanks for your understanding!</string>
 <string name="tr_ut">A propos de Lightning</string>
-<string name="tr_um">You are a long time user of the free version of Lighting Launcher, thank you.\n\nAlthough this version has been replaced with a trial version, you will still benefit from all previously existing features for free, as well as most improvements made in the full app since the last update.\n\nIf you wish to support this app, please consider purchasing the unlock key at a discounted loyalty price.\n\nThanks!</string>
+<string name="tr_um">You are a long time user of the free version of Lighting Launcher, thank you.
+\n
+\nAlthough this version has been replaced with a trial version, you will still benefit from all previously existing features for free, as well as most improvements made in the full app since the last update.
+\n
+\nIf you wish to support this app, please consider purchasing the unlock key at a discounted loyalty price.
+\n
+\nThanks!</string>
 <string name="ip_bic">Pack d\'icônes incorrect</string>
 
 

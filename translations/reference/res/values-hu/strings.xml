@@ -5,7 +5,26 @@
 <string name="pack_name_short">Magyar</string>
 <string name="tranlator_name">Barta Gábor</string>
 
-<string name="description">A Lightning Launcher egy gyors, könnyű és extrém módon testreszabható launcher azaz alkalmazásindító. (más megnevezéssel "alternatív kezdőképernyő", vagy "shell").\n\nA Lightning Launcher azok számára jó választás, akik egy villámgyors, kis memóriaigényű és igény szerint testreszabható kezdőképernyőt szeretnének.\n\nA legtöbb szokványos launcherrel ellentétben a Lightning lehetővé teszi, hogy az asztalon bárhova elhelyezhess elemeket: nem csak bal vagy jobb oldalra, de felfelé és lefelé is. Gondolj az asztalra úgy, mint egy határtalan vászonra, amely vízszintes és függőleges irányban is kiterjed, kiterjeszthető.\n\nEz azt jelenti, hogy annyi lapot hozhatsz létre, amennyire csak szükséged van: több hely az alkalmazásaid számára, gyorsabb navigáció.\n\nA Lightning több érdekes funkcióval is rendelkezik, pl. a mappákba helyezhetsz widgeteket (és mappákat is többszintű navigációhoz), vagy szabadon mozgathatsz, nagyíthatsz, forgathatsz bármilyen elemet (megj.: ehhez külön engedélyezned kell a "szabad mód"-ot az asztal vagy mappa beállításai között).\n\nEmlítettem, hogy az LL kevés memóriát használ, így több RAM marad a többi alkalmazásnak?\n\nA beállítások és kapcsolók széles választékával az LL az egyik legjobban testreszabható launcher, habár a konfigurálása talán nem a legkönnyebb! Mint a legtöbb nagy tudású eszköznek, az LL-nek is meg kell tanulni a használatát. De ez kis ár azért, hogy izgalmas és egyedi kezdőképernyőd lehessen ;-)\n\nKészséggel várok minden hozzászólást, javaslatot, hibajelentést. Kérlek, hogy a kérdéseiddel és hibákkal kapcsolatban a pierrox@pierrox.net (Pierre Hébert) email címen keress fel, vagy látogasd meg a facebook oldalt a http://www.facebook.com/LightningLauncher címen. Itt megtudhatod, hogy épp min dolgozok, kérhetsz új funkciókat, vagy egyszerűen feltehetsz bármilyen kérdést az LL-lel kapcsolatban.\n\Jó szórakozást!\n\Engedélyek:\n- EXPAND_STATUS_BAR: az "Értesítési panel megjelenítése" művelethez. \n- SET_WALLPAPER_HINTS: a háttérkép méretének beállításához.\n- más engedély nem szükséges!</string>
+<string name="description">A Lightning Launcher egy gyors, könnyű és extrém módon testreszabható launcher azaz alkalmazásindító. (más megnevezéssel "alternatív kezdőképernyő", vagy "shell").
+\n
+\nA Lightning Launcher azok számára jó választás, akik egy villámgyors, kis memóriaigényű és igény szerint testreszabható kezdőképernyőt szeretnének.
+\n
+\nA legtöbb szokványos launcherrel ellentétben a Lightning lehetővé teszi, hogy az asztalon bárhova elhelyezhess elemeket: nem csak bal vagy jobb oldalra, de felfelé és lefelé is. Gondolj az asztalra úgy, mint egy határtalan vászonra, amely vízszintes és függőleges irányban is kiterjed, kiterjeszthető.
+\n
+\nEz azt jelenti, hogy annyi lapot hozhatsz létre, amennyire csak szükséged van: több hely az alkalmazásaid számára, gyorsabb navigáció.
+\n
+\nA Lightning több érdekes funkcióval is rendelkezik, pl. a mappákba helyezhetsz widgeteket (és mappákat is többszintű navigációhoz), vagy szabadon mozgathatsz, nagyíthatsz, forgathatsz bármilyen elemet (megj.: ehhez külön engedélyezned kell a "szabad mód"-ot az asztal vagy mappa beállításai között).
+\n
+\nEmlítettem, hogy az LL kevés memóriát használ, így több RAM marad a többi alkalmazásnak?
+\n
+\nA beállítások és kapcsolók széles választékával az LL az egyik legjobban testreszabható launcher, habár a konfigurálása talán nem a legkönnyebb! Mint a legtöbb nagy tudású eszköznek, az LL-nek is meg kell tanulni a használatát. De ez kis ár azért, hogy izgalmas és egyedi kezdőképernyőd lehessen ;-)
+\n
+\nKészséggel várok minden hozzászólást, javaslatot, hibajelentést. Kérlek, hogy a kérdéseiddel és hibákkal kapcsolatban a pierrox@pierrox.net (Pierre Hébert) email címen keress fel, vagy látogasd meg a facebook oldalt a http://www.facebook.com/LightningLauncher címen. Itt megtudhatod, hogy épp min dolgozok, kérhetsz új funkciókat, vagy egyszerűen feltehetsz bármilyen kérdést az LL-lel kapcsolatban.
+\n\Jó szórakozást!
+\n\Engedélyek:
+\n- EXPAND_STATUS_BAR: az "Értesítési panel megjelenítése" művelethez. 
+\n- SET_WALLPAPER_HINTS: a háttérkép méretének beállításához.
+\n- más engedély nem szükséges!</string>
 
 
 <string name="start_activity_error">Az alkalmazás nem indítható</string>
@@ -45,14 +64,22 @@
 <string name="mi_move_out_of_folder">Kiemelés a mappából</string>
 <string name="mi_zorder">Előtérbe/háttérbe mozgatás</string>
 <string name="first_use_title">Üdvözöllek!</string>
-<string name="first_use_message">A Lightning Launcher egy könnyű és gyors, nagy mértékben testreszabható alternatív kezdőképernyő Androidhoz.\n\nAz LL most előkészíti az alkalmazások listáját. Ez csak a legelső indításnál szükséges.\n\nNe hagyd ki az ismertető videókat sem, hogy többet megtudhass!\n\nJó szórakozást!</string>
+<string name="first_use_message">A Lightning Launcher egy könnyű és gyors, nagy mértékben testreszabható alternatív kezdőképernyő Androidhoz.
+\n
+\nAz LL most előkészíti az alkalmazások listáját. Ez csak a legelső indításnál szükséges.
+\n
+\nNe hagyd ki az ismertető videókat sem, hogy többet megtudhass!
+\n
+\nJó szórakozást!</string>
 <string name="all_apps">Minden alkalmazás</string>
 <string name="menu_refresh">Frissítés</string>
 <string name="menu_zoom">Nagyítás</string>
 <string name="menu_see_only_visible">Csak láthatóak</string>
 <string name="menu_see_only_hidden">Csak rejtettek</string>
 <string name="menu_see_all">Minden alkalmazás</string>
-<string name="empty_folder">elemek hozzáadásához\nhosszú érintés\nvagy menü gomb</string>
+<string name="empty_folder">elemek hozzáadásához
+\nhosszú érintés
+\nvagy menü gomb</string>
 <string name="file_picker_activity_up">Fel</string>
 
 <string name="copy_style_toast">Érints meg egy elemet a stílusának lemásolásához</string>
@@ -378,7 +405,8 @@
 <item>Egyedi</item>
 </string-array>
 
-<string name="b_hint">Válassz ki egy vagy több elemet,\nmajd válassz ki egy tulajdonságot lejjebb</string>
+<string name="b_hint">Válassz ki egy vagy több elemet,
+\nmajd válassz ki egy tulajdonságot lejjebb</string>
 <string name="b_size">Kiválasztott elemek mérete</string>
 <string name="b_color_normal">Normál szín</string>
 <string name="b_color_selected">Kiválasztási szín</string>
@@ -397,8 +425,10 @@
 <item>Fókuszált</item>
 </string-array>
 
-<string name="il_preview">Előnézet\n(különbözhet a valós asztaltól)</string>
-<string name="preview_toast">Csak előnézeti mód\nMűveletek letiltva</string>
+<string name="il_preview">Előnézet
+\n(különbözhet a valós asztaltól)</string>
+<string name="preview_toast">Csak előnézeti mód
+\nMűveletek letiltva</string>
 <string name="pick_a_font">Betűtípus fájl választása…</string>
 <string name="system_font">Rendszer betűtípus</string>
 <string name="left">bal</string>
@@ -434,7 +464,8 @@
 <string name="no_backup_archive">Még nincsen visszaállítható mentés</string>
 <string name="backup_in_progress">Mentés folyamatban…</string>
 <string name="restore_in_progress">Visszaállítás folyamatban…</string>
-<string name="backup_done">Biztonsági mentés helye:\n%s</string>
+<string name="backup_done">Biztonsági mentés helye:
+\n%s</string>
 <string name="backup_error">Mentési hiba. Kérlek, ellenőrizd, hogy rendelkezésre áll-e elegendő szabad hely.</string>
 <string name="restore_error">Visszaállítási hiba. Kérlek, ellenőrizd, hogy a biztonsági mentés érvényes és olvasható-e.</string>
 
@@ -495,7 +526,6 @@
 <string name="mi_mode_recent_apps">Mostanában használt</string>
 <string name="mi_mode_recently_updated">Mostanában frissített</string>
 <string name="mi_mode_frequently_used">Gyakran használt</string>
-<string name="mi_mode_running">Jelenleg futó</string>
 <string name="mi_es_add_folder">Mappa hozzáadása</string>
 <string name="mi_es_edit_layout">Elrendezés szerkesztése</string>
 <string name="mi_es_refresh">Frissítés</string>
@@ -503,10 +533,18 @@
 <string name="mi_es_folder_settings">Mappa beállítások</string>
 <string name="mi_uninstall">Eltávolítás</string>
 <string name="my_drawer_title">Én fiókom</string>
-<string name="my_drawer_message">Az "Én fiókom" nézet lehetővé teszi az alkalmazásfiók teljes testreszabását.\n\nEbben a módban az elemek szabadon elhelyezhetőek egy nagy vásznon, és az alkalmazások mappákba is rendezhetőek.\n\nHa kizoomolsz, és az "Elrendezés szerkesztése" pontot választod, láthatod, hogy az alkalmazások elhelyezhetőek bal és jobb oldali, felül és alul lévő lapokra is. Így a neked megfelelő módon rendezheted el őket.</string>
-<string name="empty_folder_x">üres mappa\nfogd & vidd módszerrel ejts elemeket a mappaikonra\n</string>
+<string name="my_drawer_message">Az "Én fiókom" nézet lehetővé teszi az alkalmazásfiók teljes testreszabását.
+\n
+\nEbben a módban az elemek szabadon elhelyezhetőek egy nagy vásznon, és az alkalmazások mappákba is rendezhetőek.
+\n
+\nHa kizoomolsz, és az "Elrendezés szerkesztése" pontot választod, láthatod, hogy az alkalmazások elhelyezhetőek bal és jobb oldali, felül és alul lévő lapokra is. Így a neked megfelelő módon rendezheted el őket.</string>
+<string name="empty_folder_x">üres mappa
+\nfogd & vidd módszerrel ejts elemeket a mappaikonra
+\n</string>
 <string name="ll_import_title">LL beállítások betöltése</string>
-<string name="ll_import_message">A készüléken telepítve van a Lightning Launcher.\n\nMost minden adat importálásra kerül. Ha ez kész, nyugodtan eltávolíthatod az előző Lightning Launcher telepítést, és használhatod a Lightning Launcher eXtreme-t helyette.</string>
+<string name="ll_import_message">A készüléken telepítve van a Lightning Launcher.
+\n
+\nMost minden adat importálásra kerül. Ha ez kész, nyugodtan eltávolíthatod az előző Lightning Launcher telepítést, és használhatod a Lightning Launcher eXtreme-t helyette.</string>
 <string name="init_ok">Kész!</string>
 <string name="init_ko">Valami baj történt másolás közben!</string>
 <string name="auto_exit_t">Automatikus kilépés</string>
@@ -622,7 +660,8 @@
 <string name="tmpl_warn_llx">- ezt a sablont a Lightning Launcher eXtreme-mel tervezték, tartalmazhat olyan funkciókat, amelyek nem érhetőek el ebben a verzióban.</string>
 <string name="tmpl_warn_screen">- ez a sablon nem passzol teljesen a képernyődhöz. Néhány elem lehet, hogy nem fog helyesen megjelenni.</string>
 <string name="tmpl_warn_widget">- a rendszer nem képes widgetek automatikus visszaállítására, kézzel újra el kell helyezned majd ezeket.</string>
-<string name="widget_e">A widget nem tölthető be\nÉrintsd meg az app telepítéséhez vagy válassz egy másikat</string>
+<string name="widget_e">A widget nem tölthető be
+\nÉrintsd meg az app telepítéséhez vagy válassz egy másikat</string>
 <string name="tmpl_s_p">Válassz asztalokat az exportáláshoz</string>
 <string name="an_ctf">Legfelső mappa bezárása</string>
 <string name="an_caf">Összes mappa bezárása</string>
@@ -843,11 +882,25 @@
 <string name="rs_t">Run scripts</string>
 <string name="rs_s">Allow scripts execution</string>
 <string name="rs_w">Warning: script execution is currently disabled in general settings</string>
-<string name="h_ad">Your apps are here.\nYou can launch apps from there and start adding apps to the desktop: long press on some app and select \"Add to launcher\".\n\nTap to learn more.</string>
-<string name="h_f">You just added a folder. Folders can contain apps, widgets or even other folders.\n\nDrag some item over it, wait a bit for the move to be confirmed (at the end of the animation), then drop the object: it will be moved inside the folder.\n\nTap to learn more on folders.</string>
-<string name="h_p">Your first panel is here.\nPanels behave a bit like folders: drag item over it, wait a bit for the move to be confirmed (end of the animation), then drop the object.\n\nTap to learn more on panels.</string>
+<string name="h_ad">Your apps are here.
+\nYou can launch apps from there and start adding apps to the desktop: long press on some app and select \"Add to launcher\".
+\n
+\nTap to learn more.</string>
+<string name="h_f">You just added a folder. Folders can contain apps, widgets or even other folders.
+\n
+\nDrag some item over it, wait a bit for the move to be confirmed (at the end of the animation), then drop the object: it will be moved inside the folder.
+\n
+\nTap to learn more on folders.</string>
+<string name="h_p">Your first panel is here.
+\nPanels behave a bit like folders: drag item over it, wait a bit for the move to be confirmed (end of the animation), then drop the object.
+\n
+\nTap to learn more on panels.</string>
 <string name="h_t">Hint</string>
-<string name="h_k">This is your desktop. Long tap to add objects (apps, widgets, folders, more) and access settings.\n\nPages are created as soon as you drag objects over them: to the left and right sides, but also to the top and bottom sides.\n\nTap to learn more on LL concepts.</string>
+<string name="h_k">This is your desktop. Long tap to add objects (apps, widgets, folders, more) and access settings.
+\n
+\nPages are created as soon as you drag objects over them: to the left and right sides, but also to the top and bottom sides.
+\n
+\nTap to learn more on LL concepts.</string>
 <string name="tut_concepts">Concepts</string>
 <string name="tut_wiki">Wiki</string>
 
@@ -986,7 +1039,9 @@
 <string name="ds_uc">Felhasználói közösség</string>
 <string name="ds_tt">Tippek és trükkök</string>
 <string name="ds_br">Mentés és helyreállítás</string>
-<string name="ds_hn">Tipp: új lapot egyszerűen úgy készíthetsz, hogy elemeket húzol rá. Ez érvényes a jelenlegi alatt és felett lévő lapokra is, próbáld ki!\n\n(biztonságosan eltávolíthatod ezt a tippet)</string>
+<string name="ds_hn">Tipp: új lapot egyszerűen úgy készíthetsz, hogy elemeket húzol rá. Ez érvényes a jelenlegi alatt és felett lévő lapokra is, próbáld ki!
+\n
+\n(biztonságosan eltávolíthatod ezt a tippet)</string>
 <string name="ds_um">Hint: use one or two fingers swipe up to reveal the user menu (you can customize it), long tap somewhere to display a contextual menu.\n\n(you can safely delete this hint)</string>
 <string name="ds_z">Nagyítás</string>
 <string name="sc_import">Importálás...</string>
@@ -1011,7 +1066,9 @@
 <string name="tr_ut">A Lightningról</string>
 <string name="tr_um">You are a long time user of the free version of Lighting Launcher, thank you.\n\nAlthough this version has been replaced with a trial version, you will still benefit from all previously existing features for free, as well as most improvements made in the full app since the last update.\n\nIf you wish to support this app, please consider purchasing the unlock key at a discounted loyalty price.\n\nThanks!</string>
 <string name="tr_l">% nap van hátra az időkorlátos verzió használatából</string>
-<string name="tr_rm">Kérlek értékeld az alkalmazást!\n\nSzánsz pár másodpercet az alkalmazás értékelésére a Play Áruházban?</string>
+<string name="tr_rm">Kérlek értékeld az alkalmazást!
+\n
+\nSzánsz pár másodpercet az alkalmazás értékelésére a Play Áruházban?</string>
 <string name="ds_hls">This is a sample lock screen that you can customize at will.\nAdd apps or widgets then activate it through the lock screen settings (tap here).</string>
 <string name="ic">Kép vágó</string>
 <string name="bg_st">Pozíció</string>

@@ -5,7 +5,42 @@
 <string name="pack_name_short">Português</string>
 <string name="tranlator_name">Diatosta</string>
 
-<string name="description">Lightning é um lançador incrivelmente rápido e personalizável ao limite.\nÉ leve na memória e nunca fica lento.\n\nNão está mais restrito a páginas. Agora, o seu ambiente de trabalho é um bonito trabalho de arte numa tela infinita.\nAs possibilidades são infinitas.\n\nCaracterísticas mais importantes:\n•Planos e tamanhos de tela diferentes para ambos os modos de retrato e de paisagem\n•Painéis, ambientes de trabalho deslocáveis no topo da corrente página\n•A capacidade de prender itens de maneira a não se mexerem mais\n•Preferências de caixa: personalize a imagem de fundo, as bordas e margens de qualquer item\n•Modo livre: Grelha? Que é isso? Modo livre livra-se das linhas, e permite a rotação de itens\n•Múltiplos ambientes de trabalho\n•22 gestos diferentes com 29 acções (que também podem ser usadas com atalhos)\n•Use um dos seus ambientes de trabalhos como ecrã de bloqueio! (em beta)\n•Pontos de paragem: diga ao Lightning quando parar de rolar a lista\n•Direcções personalizáveis de rolagem\n•Total controlo sobre qualquer item, incluindo:\n1. fonte do texto, sombra e cor\n2. ícones personalizados da sua galeria\n3. escolhe quão perto e de que lado o ícone está do seu rótulo\n4. definições de caixa, com suporte para .9.png como fundo (procure por isto, .9's são fixes)\n5- transparência, e direcções dos gestos para iniciar qualquer acção (ex: Puxe para cima no ícone do Chrome abre o Dolphin Browser)\n•Salve o seu ambiente de trabalho personalizado em ou um cópia completa ou como uma opção\n•Exporte o seu estilo como um .APK\n------\nO Lightning suporta transparência na barra de estado e de navegação em roms KitKat.\n------\nComo as outras ferramentas poderosas como o Tasker, o Lightning tem uma curva de aprendizagem. Mas não há outro lançador que ofereça o poder de Lightning.\n\nZap!\n\nQuaisquer comentários, sugestões e relatórios de erros são bem-vindos.\nPode mandar-me um e-mail para o endereço: pierrox@pierrox.net, como Pierre Hébert.\nSe quiser, pode juntar-se à comunidade do G+ para obter feedback de outros utilizadores, discutir recursos, responder a questões, ou entrar no grupo de beta testing.\nFicheiros de ajuda podem ser encontrados online ao pressionar longamente em qualquer definição.</string>
+<string name="description">Lightning é um lançador incrivelmente rápido e personalizável ao limite.
+\nÉ leve na memória e nunca fica lento.
+\n
+\nNão está mais restrito a páginas. Agora, o seu ambiente de trabalho é um bonito trabalho de arte numa tela infinita.
+\nAs possibilidades são infinitas.
+\n
+\nCaracterísticas mais importantes:
+\n•Planos e tamanhos de tela diferentes para ambos os modos de retrato e de paisagem
+\n•Painéis, ambientes de trabalho deslocáveis no topo da corrente página
+\n•A capacidade de prender itens de maneira a não se mexerem mais
+\n•Preferências de caixa: personalize a imagem de fundo, as bordas e margens de qualquer item
+\n•Modo livre: Grelha? Que é isso? Modo livre livra-se das linhas, e permite a rotação de itens
+\n•Múltiplos ambientes de trabalho
+\n•22 gestos diferentes com 29 acções (que também podem ser usadas com atalhos)
+\n•Use um dos seus ambientes de trabalhos como ecrã de bloqueio! (em beta)
+\n•Pontos de paragem: diga ao Lightning quando parar de rolar a lista
+\n•Direcções personalizáveis de rolagem
+\n•Total controlo sobre qualquer item, incluindo:
+\n1. fonte do texto, sombra e cor
+\n2. ícones personalizados da sua galeria
+\n3. escolhe quão perto e de que lado o ícone está do seu rótulo
+\n4. definições de caixa, com suporte para .9.png como fundo (procure por isto, .9's são fixes)
+\n5- transparência, e direcções dos gestos para iniciar qualquer acção (ex: Puxe para cima no ícone do Chrome abre o Dolphin Browser)
+\n•Salve o seu ambiente de trabalho personalizado em ou um cópia completa ou como uma opção
+\n•Exporte o seu estilo como um .APK
+\n------
+\nO Lightning suporta transparência na barra de estado e de navegação em roms KitKat.
+\n------
+\nComo as outras ferramentas poderosas como o Tasker, o Lightning tem uma curva de aprendizagem. Mas não há outro lançador que ofereça o poder de Lightning.
+\n
+\nZap!
+\n
+\nQuaisquer comentários, sugestões e relatórios de erros são bem-vindos.
+\nPode mandar-me um e-mail para o endereço: pierrox@pierrox.net, como Pierre Hébert.
+\nSe quiser, pode juntar-se à comunidade do G+ para obter feedback de outros utilizadores, discutir recursos, responder a questões, ou entrar no grupo de beta testing.
+\nFicheiros de ajuda podem ser encontrados online ao pressionar longamente em qualquer definição.</string>
 
 
 <string name="start_activity_error">Não foi possível abrir a aplicação</string>
@@ -43,14 +78,21 @@
 <string name="mi_widget_options">Opções do widget</string>
 <string name="mi_move_out_of_folder">Mover fora da pasta</string>
 <string name="first_use_title">Bem-vindo!</string>
-<string name="first_use_message">Lightning Launcher é uma leve, rápida e personalizável reposição do ecrã principal do Android\n\nLL vai agora preparar a lista de aplicações definitivamente.\n\nVeja os vídeos de tutorial para aprender mais.\n\nEspero que goste!</string>
+<string name="first_use_message">Lightning Launcher é uma leve, rápida e personalizável reposição do ecrã principal do Android
+\n
+\nLL vai agora preparar a lista de aplicações definitivamente.
+\n
+\nVeja os vídeos de tutorial para aprender mais.
+\n
+\nEspero que goste!</string>
 <string name="all_apps">Todas as aplicações</string>
 <string name="menu_refresh">Recarregar</string>
 <string name="menu_zoom">Aproximar</string>
 <string name="menu_see_only_visible">Apenas visivel</string>
 <string name="menu_see_only_hidden">Apenas invisivel</string>
 <string name="menu_see_all">Todas as aplicações</string>
-<string name="empty_folder">Toque longo para adicionar itens a esta pasta\nPersonalize o item de pasta para mais opções</string>
+<string name="empty_folder">Toque longo para adicionar itens a esta pasta
+\nPersonalize o item de pasta para mais opções</string>
 <string name="file_picker_activity_up">CIMA</string>
 
 <string name="settings">Todas as definições</string>
@@ -361,7 +403,8 @@
 <item>Custom</item>
 </string-array>
 
-<string name="b_hint">Seleccione uma ou mais áreas,\ndepois escolha cor/tamanho abaixo</string>
+<string name="b_hint">Seleccione uma ou mais áreas,
+\ndepois escolha cor/tamanho abaixo</string>
 <string name="b_size">Size of selected areas</string>
 <string name="b_color_normal">Normal color</string>
 <string name="b_color_selected">Selected color</string>
@@ -380,8 +423,10 @@
 <item>Focused</item>
 </string-array>
 
-<string name="il_preview">Modo de pré-visualização\n(pode diferir do aspecto final)</string>
-<string name="preview_toast">Modo de pré-visualização\nNão é possível efectuar acções</string>
+<string name="il_preview">Modo de pré-visualização
+\n(pode diferir do aspecto final)</string>
+<string name="preview_toast">Modo de pré-visualização
+\nNão é possível efectuar acções</string>
 <string name="pick_a_font">Choose a .TTF or .OTF file</string>
 <string name="system_font">Default font</string>
 <string name="left">left</string>
@@ -416,7 +461,8 @@
 <string name="no_backup_archive">No backup available</string>
 <string name="backup_in_progress">Backup in progress…</string>
 <string name="restore_in_progress">Restore in progress…</string>
-<string name="backup_done">Backup saved to:\n%s</string>
+<string name="backup_done">Backup saved to:
+\n%s</string>
 <string name="backup_error">Backup error, please check that there is enough storage space on the sdcard</string>
 <string name="restore_error">Restore error, please check that the backup archive is valid and can be read</string>
 
@@ -478,17 +524,23 @@
 <string name="mi_mode_recent_apps">Recently launched</string>
 <string name="mi_mode_recently_updated">Recently updated</string>
 <string name="mi_mode_frequently_used">Used often</string>
-<string name="mi_mode_running">Currently running</string>
 <string name="mi_es_edit_layout">Edit layout</string>
 <string name="mi_es_refresh">Refresh</string>
 <string name="mi_es_settings">Settings</string>
 <string name="mi_es_folder_settings">Folder settings</string>
 <string name="mi_uninstall">Uninstall</string>
 <string name="my_drawer_title">My Drawer</string>
-<string name="my_drawer_message">A vista de "Minha Gaveta" permite personalizar a sua gaveta de aplicações\n\nNeste modo, os itens podem ser movidos livremente, e as pastas podem ser utilizadas para organizar aplicações\n\nExperimente diminuir o zoom e seleccionar "Edição de layout": as aplicações podem ser colocadas em páginas à esquerda, à direita, no topo e em baixo, permitindo-lhe gerir as aplicações à sua maneira</string>
-<string name="empty_folder_x">Pasta vazia\nArraste e largue itens para a pasta</string>
+<string name="my_drawer_message">A vista de "Minha Gaveta" permite personalizar a sua gaveta de aplicações
+\n
+\nNeste modo, os itens podem ser movidos livremente, e as pastas podem ser utilizadas para organizar aplicações
+\n
+\nExperimente diminuir o zoom e seleccionar "Edição de layout": as aplicações podem ser colocadas em páginas à esquerda, à direita, no topo e em baixo, permitindo-lhe gerir as aplicações à sua maneira</string>
+<string name="empty_folder_x">Pasta vazia
+\nArraste e largue itens para a pasta</string>
 <string name="ll_import_title">Importing LL setup</string>
-<string name="ll_import_message">An installation of Lightning Launcher has been detected.\n\nAll data will now be imported. When this is done you can safely uninstall Lightning Launcher and use Lightning Launcher eXtreme instead.</string>
+<string name="ll_import_message">An installation of Lightning Launcher has been detected.
+\n
+\nAll data will now be imported. When this is done you can safely uninstall Lightning Launcher and use Lightning Launcher eXtreme instead.</string>
 <string name="init_ok">Ready!</string>
 <string name="init_ko">Something went wrong during file copy!</string>
 <string name="auto_exit_t">Auto exit</string>
@@ -604,7 +656,9 @@
 <string name="tmpl_warn_llx">- this template has been designed with Lightning Launcher eXtreme, it may use some features not available in this version.</string>
 <string name="tmpl_warn_screen">- this template does not exactly match your screen characteristics. Some elements may not be displayed correctly.</string>
 <string name="tmpl_warn_widget">- your device is not able to restore widgets automatically, you will need to manually recreate them.</string>
-<string name="widget_e">O widget não foi encontrado\n\nPressione para escolher outro</string>
+<string name="widget_e">O widget não foi encontrado
+\n
+\nPressione para escolher outro</string>
 <string name="tmpl_s_p">Select desktops to export</string>
 <string name="an_ctf">Close topmost folder</string>
 <string name="an_caf">Close all folders</string>
@@ -820,11 +874,25 @@
 <string name="rs_t">Run scripts</string>
 <string name="rs_s">Allow scripts execution</string>
 <string name="rs_w">Warning: script execution is currently disabled in general settings</string>
-<string name="h_ad">Your apps are here.\nYou can launch apps from there and start adding apps to the desktop: long press on some app and select \"Add to launcher\".\n\nTap to learn more.</string>
-<string name="h_f">You just added a folder. Folders can contain apps, widgets or even other folders.\n\nDrag some item over it, wait a bit for the move to be confirmed (at the end of the animation), then drop the object: it will be moved inside the folder.\n\nTap to learn more on folders.</string>
-<string name="h_p">Your first panel is here.\nPanels behave a bit like folders: drag item over it, wait a bit for the move to be confirmed (end of the animation), then drop the object.\n\nTap to learn more on panels.</string>
+<string name="h_ad">Your apps are here.
+\nYou can launch apps from there and start adding apps to the desktop: long press on some app and select \"Add to launcher\".
+\n
+\nTap to learn more.</string>
+<string name="h_f">You just added a folder. Folders can contain apps, widgets or even other folders.
+\n
+\nDrag some item over it, wait a bit for the move to be confirmed (at the end of the animation), then drop the object: it will be moved inside the folder.
+\n
+\nTap to learn more on folders.</string>
+<string name="h_p">Your first panel is here.
+\nPanels behave a bit like folders: drag item over it, wait a bit for the move to be confirmed (end of the animation), then drop the object.
+\n
+\nTap to learn more on panels.</string>
 <string name="h_t">Hint</string>
-<string name="h_k">This is your desktop. Long tap to add objects (apps, widgets, folders, more) and access settings.\n\nPages are created as soon as you drag objects over them: to the left and right sides, but also to the top and bottom sides.\n\nTap to learn more on LL concepts.</string>
+<string name="h_k">This is your desktop. Long tap to add objects (apps, widgets, folders, more) and access settings.
+\n
+\nPages are created as soon as you drag objects over them: to the left and right sides, but also to the top and bottom sides.
+\n
+\nTap to learn more on LL concepts.</string>
 <string name="tut_concepts">Concepts</string>
 <string name="tut_wiki">Wiki</string>
 
@@ -955,7 +1023,8 @@
 <string name="sc_w">Word wrap</string>
 <string name="wrapx_t">Seamless mode X</string>
 <string name="wrapy_t">Seamless mode Y</string>
-<string name="h_w">The seamless mode is automatically disabled in edit mode, otherwise empty pages wouldn\'t be reachable. Be aware that some items may then suddenly disappear when entering edit mode: they are just displayed at their original position in the desktop instead of being "wrapped".\nSeamless mode is enabled again when exiting edit mode.</string>
+<string name="h_w">The seamless mode is automatically disabled in edit mode, otherwise empty pages wouldn\'t be reachable. Be aware that some items may then suddenly disappear when entering edit mode: they are just displayed at their original position in the desktop instead of being "wrapped".
+\nSeamless mode is enabled again when exiting edit mode.</string>
 <string name="ad_bc">Selected:</string>
 <string name="an_wt">Wallpaper tap</string>
 <string name="an_wst">Wallpaper secondary tap</string>
@@ -963,8 +1032,13 @@
 <string name="ds_uc">User community</string>
 <string name="ds_tt">Tips &amp; tricks</string>
 <string name="ds_br">Backup &amp; Restore</string>
-<string name="ds_hn">Hint: in order to create a new page, simply add or drag some item on it.\nThis works for pages above and below too, try it!\n\n(you can safely delete this hint)</string>
-<string name="ds_um">Hint: use one or two fingers swipe up to reveal the user menu (you can customize it), long tap somewhere to display a contextual menu.\n\n(you can safely delete this hint)</string>
+<string name="ds_hn">Hint: in order to create a new page, simply add or drag some item on it.
+\nThis works for pages above and below too, try it!
+\n
+\n(you can safely delete this hint)</string>
+<string name="ds_um">Hint: use one or two fingers swipe up to reveal the user menu (you can customize it), long tap somewhere to display a contextual menu.
+\n
+\n(you can safely delete this hint)</string>
 <string name="ds_z">Zoom</string>
 <string name="sc_import">Import…</string>
 <string name="sc_si_t">The Script Importer is not installed</string>
@@ -975,7 +1049,16 @@
 
 <!-- added 224 -->
 <string name="tr_fl_t">Please unlock Lightning to use this feature</string>
-<string name="tr_fl_m">Upgrade to the Full Lightning version to benefit from more features:\n\n- Advanced app drawer (folders, action bar, categories).\n- Add, remove, rearrange desktops at will.\n- Per desktop wallpaper.\n- Unread count, badges and dynamic text.\n- Customizable lock screen.\n- Integrated app killer.\n\nIf you already unlocked Lightning in the past, please select "OK" to re-activate this version.</string>
+<string name="tr_fl_m">Upgrade to the Full Lightning version to benefit from more features:
+\n
+\n- Advanced app drawer (folders, action bar, categories).
+\n- Add, remove, rearrange desktops at will.
+\n- Per desktop wallpaper.
+\n- Unread count, badges and dynamic text.
+\n- Customizable lock screen.
+\n- Integrated app killer.
+\n
+\nIf you already unlocked Lightning in the past, please select "OK" to re-activate this version.</string>
 <string name="tr_pw">Please wait…</string>
 <string name="tr_ty">Thank you for supporting Lightning!</string>
 <string name="tr_eu">Sorry, an error occurred…</string>
@@ -983,12 +1066,28 @@
 <string name="tr_br_s">This feature is not available in the trial version</string>
 <string name="tr_rs_t">Unleash Lightning</string>
 <string name="tr_rs_s">Upgrade to get the most out of Lightning</string>
-<string name="tr_w">Thank you for testing Lightning!\n\nThe app will run in trial mode for 7 days: all features are enabled and can be used without restriction during this period. After the trial period, the app will still be usable but editing will not be enabled anymore.\n\nIf you like this app and wish to support it, please consider purchasing the key to unlock it.\n\nThank you!</string>
+<string name="tr_w">Thank you for testing Lightning!
+\n
+\nThe app will run in trial mode for 7 days: all features are enabled and can be used without restriction during this period. After the trial period, the app will still be usable but editing will not be enabled anymore.
+\n
+\nIf you like this app and wish to support it, please consider purchasing the key to unlock it.
+\n
+\nThank you!</string>
 <string name="tr_ut">About Lightning</string>
-<string name="tr_um">You are a long time user of the free version of Lighting Launcher, thank you.\n\nAlthough this version has been replaced with a trial version, you will still benefit from all previously existing features for free, as well as most improvements made in the full app since the last update.\n\nIf you wish to support this app, please consider purchasing the unlock key at a discounted loyalty price.\n\nThanks!</string>
+<string name="tr_um">You are a long time user of the free version of Lighting Launcher, thank you.
+\n
+\nAlthough this version has been replaced with a trial version, you will still benefit from all previously existing features for free, as well as most improvements made in the full app since the last update.
+\n
+\nIf you wish to support this app, please consider purchasing the unlock key at a discounted loyalty price.
+\n
+\nThanks!</string>
 <string name="tr_l">%d days left for the trial</string>
-<string name="tr_rm">Lightning need your feedback!\n\nWould you like to take a few seconds to rate this app on the Play Store?\n</string>
-<string name="ds_hls">This is a sample lock screen that you can customize at will.\nAdd apps or widgets then activate it through the lock screen settings (tap here).</string>
+<string name="tr_rm">Lightning need your feedback!
+\n
+\nWould you like to take a few seconds to rate this app on the Play Store?
+\n</string>
+<string name="ds_hls">This is a sample lock screen that you can customize at will.
+\nAdd apps or widgets then activate it through the lock screen settings (tap here).</string>
 <string name="ic">Image cropper</string>
 <string name="bg_st">Position</string>
 <string-array name="bg_st_e">
@@ -1059,7 +1158,8 @@
 <string name="sm_an">New desktop</string>
 <string name="ip_bic">Broken icon pack</string>
 <string name="ip_e">No icon to display</string>
-<string name="cv_dfl">No custom view.\nTap to try again.</string>
+<string name="cv_dfl">No custom view.
+\nTap to try again.</string>
 <string name="ad_mdh">Switching to \'My Drawer\' view for customization</string>
 <string name="tab_bind">Bindings</string>
 <string name="bd_a">Add binding…</string>

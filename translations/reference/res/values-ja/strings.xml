@@ -5,7 +5,50 @@
 <string name="pack_name_short">日本語</string>
 <string name="tranlator_name">池田 朋矢 / Ryo Aramaki</string>
 
-<string name="description">add new translations at 8 October 2013 (by Ryo Aramaki)\n\n池田 朋矢さんによる翻訳（14 June 2013 21:57）に新たな翻訳を追加。\n------\nOct. 9, 2013 : added new translations for LL Version 8 &amp; fixed some problems(error: right &amp; left , Japanese expression: "下さい"→"ください")  - by Ryo Aramaki\n\nOct. 13, 2013 : add new translation for LL extreme and fix some problems(e.g. "Facebook"→"Google+", "ホーム画面に移動"→"別のスクリーンに移動") - by Ryo Aramaki\nSorry for many minor changes.\n\nOct. 15, 2013 : unified some expressions ("スクリーン"→"デスクトップ", "オブジェクト"→"アイテム")\n\nOct. 18, 2013 : unified some expressions\n \nOct. 24, 2013 : fix some problems\n\nOct. 30, 2013 : add new translation for LL/LLX 8.4\n\nNov. 1, 2013 : add new translation for LL/LLX 8.5\n\nNov. 16, 2013 : add new translation for LL/LLX 8.7.1 and fix some problems\n\nNov. 23, 2013 : fix some problems and expressions.\n\nDec. 15, 2013 : fix some expressions.\n\nDec. 20, 2013 : add new translations for new version\n\nDec. 22, 2013 : add new translations for v9.0 and fix some expressions.\n\nJan. 6, 2014 : fix some expressions.\n\nJan. 17, 2014 : add new translations for v9.1 and fix some expressions.\n\nJan. 23, 2014 : add &amp; fix new translations for v9.2\n\nJan. 26, 2014 : update some translation : "Nine Patch" to "Background Image"\n\nJan. 29, 2014 : fix some expressions.\n\nJul. 13, 2014 : add translations\n\nNov. 16, 2014 : add translations\n\nMar. 23, 2015 : add translations</string>
+<string name="description">add new translations at 8 October 2013 (by Ryo Aramaki)
+\n
+\n池田 朋矢さんによる翻訳（14 June 2013 21:57）に新たな翻訳を追加。
+\n------
+\nOct. 9, 2013 : added new translations for LL Version 8 &amp; fixed some problems(error: right &amp; left , Japanese expression: "下さい"→"ください")  - by Ryo Aramaki
+\n
+\nOct. 13, 2013 : add new translation for LL extreme and fix some problems(e.g. "Facebook"→"Google+", "ホーム画面に移動"→"別のスクリーンに移動") - by Ryo Aramaki
+\nSorry for many minor changes.
+\n
+\nOct. 15, 2013 : unified some expressions ("スクリーン"→"デスクトップ", "オブジェクト"→"アイテム")
+\n
+\nOct. 18, 2013 : unified some expressions
+\n 
+\nOct. 24, 2013 : fix some problems
+\n
+\nOct. 30, 2013 : add new translation for LL/LLX 8.4
+\n
+\nNov. 1, 2013 : add new translation for LL/LLX 8.5
+\n
+\nNov. 16, 2013 : add new translation for LL/LLX 8.7.1 and fix some problems
+\n
+\nNov. 23, 2013 : fix some problems and expressions.
+\n
+\nDec. 15, 2013 : fix some expressions.
+\n
+\nDec. 20, 2013 : add new translations for new version
+\n
+\nDec. 22, 2013 : add new translations for v9.0 and fix some expressions.
+\n
+\nJan. 6, 2014 : fix some expressions.
+\n
+\nJan. 17, 2014 : add new translations for v9.1 and fix some expressions.
+\n
+\nJan. 23, 2014 : add &amp; fix new translations for v9.2
+\n
+\nJan. 26, 2014 : update some translation : "Nine Patch" to "Background Image"
+\n
+\nJan. 29, 2014 : fix some expressions.
+\n
+\nJul. 13, 2014 : add translations
+\n
+\nNov. 16, 2014 : add translations
+\n
+\nMar. 23, 2015 : add translations</string>
 
 
 <string name="start_activity_error">このアプリを起動できませんでした。</string>
@@ -45,14 +88,23 @@
 <string name="mi_move_out_of_folder">フォルダから出す</string>
 <string name="mi_zorder">前面／背面に移動</string>
 <string name="first_use_title">ようこそ！</string>
-<string name="first_use_message">Lightning Launcher（ライトニングランチャー、LL）は、高速かつ軽量で、そのうえ細かくカスタマイズできるAndroid用ホームアプリです。\n\n現在、LLはインストール済みアプリの一覧を準備しています。\n\nまずはデスクトップに配置されているチュートリアルをご覧ください。\n操作方法を把握したら、自由にカスタマイズしてみましょう。慣れるまでは少し大変かもしれませんが、しばらく触っていれば次第にLLを操れるようになるでしょう。\n\nあなただけのホーム画面カスタマイズをお楽しみください。</string>
+<string name="first_use_message">Lightning Launcher（ライトニングランチャー、LL）は、高速かつ軽量で、そのうえ細かくカスタマイズできるAndroid用ホームアプリです。
+\n
+\n現在、LLはインストール済みアプリの一覧を準備しています。
+\n
+\nまずはデスクトップに配置されているチュートリアルをご覧ください。
+\n操作方法を把握したら、自由にカスタマイズしてみましょう。慣れるまでは少し大変かもしれませんが、しばらく触っていれば次第にLLを操れるようになるでしょう。
+\n
+\nあなただけのホーム画面カスタマイズをお楽しみください。</string>
 <string name="all_apps">全てのアプリ</string>
 <string name="menu_refresh">再読み込み</string>
 <string name="menu_zoom">ズーム</string>
 <string name="menu_see_only_visible">表示にしたアプリ</string>
 <string name="menu_see_only_hidden">非表示にしたアプリ</string>
 <string name="menu_see_all">全てのアプリ</string>
-<string name="empty_folder">アイテムを追加するには\nロングタップしてください。\nその他はメニューを押してください。</string>
+<string name="empty_folder">アイテムを追加するには
+\nロングタップしてください。
+\nその他はメニューを押してください。</string>
 <string name="file_picker_activity_up">上に行く</string>
 
 <string name="copy_style_toast">このスタイルをコピーする先のアイテムをタップ</string>
@@ -378,7 +430,8 @@
 <item>カスタム</item>
 </string-array>
 
-<string name="b_hint">変更したい部分をタップすると（複数選択可）\n以下の項目を設定することができます。</string>
+<string name="b_hint">変更したい部分をタップすると（複数選択可）
+\n以下の項目を設定することができます。</string>
 <string name="b_size">サイズ</string>
 <string name="b_color_normal">普段の色</string>
 <string name="b_color_selected">選択時の色</string>
@@ -397,8 +450,10 @@
 <item>カーソルを当てた時</item>
 </string-array>
 
-<string name="il_preview">プレビュー\n（実際のデスクトップとは異なる場合があります）</string>
-<string name="preview_toast">プレビューモード\n（実際には動作しません）</string>
+<string name="il_preview">プレビュー
+\n（実際のデスクトップとは異なる場合があります）</string>
+<string name="preview_toast">プレビューモード
+\n（実際には動作しません）</string>
 <string name="pick_a_font">フォントファイル(TTF)を選択</string>
 <string name="system_font">システムフォントを使用する</string>
 <string name="left">左</string>
@@ -434,7 +489,8 @@
 <string name="no_backup_archive">復元に利用できるバックアップデータが存在しません</string>
 <string name="backup_in_progress">バックアップ中…</string>
 <string name="restore_in_progress">復元中…</string>
-<string name="backup_done">バックアップが保存されました:\n%s</string>
+<string name="backup_done">バックアップが保存されました:
+\n%s</string>
 <string name="backup_error">バックアップに失敗しました。SDカードに十分な空き容量があるか確認してください。</string>
 <string name="restore_error">復元に失敗しました。バックアップデータが有効で読み込み可能か確認してください。</string>
 
@@ -495,7 +551,6 @@
 <string name="mi_mode_recent_apps">最近起動したアプリ</string>
 <string name="mi_mode_recently_updated">最近更新したアプリ</string>
 <string name="mi_mode_frequently_used">よく使うアプリ</string>
-<string name="mi_mode_running">起動中のアプリ</string>
 <string name="mi_es_add_folder">フォルダを追加</string>
 <string name="mi_es_edit_layout">レイアウトを編集</string>
 <string name="mi_es_refresh">更新</string>
@@ -503,10 +558,19 @@
 <string name="mi_es_folder_settings">フォルダの設定</string>
 <string name="mi_uninstall">アンインストール</string>
 <string name="my_drawer_title">My Drawer</string>
-<string name="my_drawer_message">My Drawer（マイドロワー）モードでは、アプリの配置を自由にカスタマイズできます。\n\nアイテム（アプリ）はデスクトップ（ホーム画面）と同様に大きなキャンバス上を自由に移動可能で、フォルダを配置してアイテムを整理することも可能です。\n\nメニューから「レイアウトを編集」を選択してみてください。あなた好みにアイテムを配置し、カスタマイズしてみましょう。</string>
-<string name="empty_folder_x">空のフォルダです。\nアイテムをフォルダのアイコンまでドラッグ&amp;ドロップしてください</string>
+<string name="my_drawer_message">My Drawer（マイドロワー）モードでは、アプリの配置を自由にカスタマイズできます。
+\n
+\nアイテム（アプリ）はデスクトップ（ホーム画面）と同様に大きなキャンバス上を自由に移動可能で、フォルダを配置してアイテムを整理することも可能です。
+\n
+\nメニューから「レイアウトを編集」を選択してみてください。あなた好みにアイテムを配置し、カスタマイズしてみましょう。</string>
+<string name="empty_folder_x">空のフォルダです。
+\nアイテムをフォルダのアイコンまでドラッグ&amp;ドロップしてください</string>
 <string name="ll_import_title">設定の移行</string>
-<string name="ll_import_message">お使いの端末にLightning Launcher（通常版）がインストールされています。\n現在、通常版の設定をLightning Launcher eXtremeに移行中です。\n\n移行完了後、Lightning Launcher eXtremeやお使いのウィジェットなどが問題なく動作するようであれば、通常版をアンインストールしても構いません。\n通常版と併存させることも不可能ではありませんが、混乱や予期せぬ不具合を防ぐために一本化することを推奨します。</string>
+<string name="ll_import_message">お使いの端末にLightning Launcher（通常版）がインストールされています。
+\n現在、通常版の設定をLightning Launcher eXtremeに移行中です。
+\n
+\n移行完了後、Lightning Launcher eXtremeやお使いのウィジェットなどが問題なく動作するようであれば、通常版をアンインストールしても構いません。
+\n通常版と併存させることも不可能ではありませんが、混乱や予期せぬ不具合を防ぐために一本化することを推奨します。</string>
 <string name="init_ok">設定の移行が完了しました！</string>
 <string name="init_ko">ファイルのコピー中に何らかの問題が発生しました。</string>
 <string name="auto_exit_t">自動で閉じる</string>
@@ -622,7 +686,8 @@
 <string name="tmpl_warn_llx">- このテンプレートはLightning Launcher eXtreme(LLX)用に作成されているため、通常版のLLでは動作しない機能が使用されている可能性があります。</string>
 <string name="tmpl_warn_screen">- このテンプレートはお使いの端末の画面仕様に適合していません。 一部の要素が正常に表示されない可能性があります。</string>
 <string name="tmpl_warn_widget">- お使いの端末においてウィジェットが自動的に復元されないため、手動でウィジェットを再配置および再設定する必要が生じる可能性があります。</string>
-<string name="widget_e">ウィジェットを読み込めませんでした。\n再配置または新しいウィジェットを選択するにはタップしてください</string>
+<string name="widget_e">ウィジェットを読み込めませんでした。
+\n再配置または新しいウィジェットを選択するにはタップしてください</string>
 <string name="tmpl_s_p">エクスポートするデスクトップを選択</string>
 <string name="an_ctf">一番上のフォルダを閉じる</string>
 <string name="an_caf">すべてのフォルダを閉じる</string>
@@ -843,11 +908,27 @@
 <string name="rs_t">スクリプトを実行</string>
 <string name="rs_s">スクリプトの例外を許可</string>
 <string name="rs_w">警告:現在の設定において、スクリプトの実行が無効になっています</string>
-<string name="h_ad">アプリのショートカットです。\nここからアプリを起動することが可能です。\nランチャー画面でアプリのアイコンを長押して「ホーム画面に追加」をタップすることでアプリのショートカットを追加できます。\n\nタップするとさらに解説を表示します。</string>
-<string name="h_f">フォルダを追加しました。\nフォルダにはアプリへのショートカット、ウィジェット、他のフォルダを格納できます。\n\nアイテムをフォルダまでドラッグし、少し待って（アニメーション表示が終わる頃に）指を離せばアイテムをフォルダに格納することができます。\n\nタップするとさらに解説を表示します。</string>
-<string name="h_p">これがパネルです。\nパネルはドラッグ&amp;ドロップを行うことでショートカットやウィジェットなどのアイテムを配置することができます。\n\nタップするとさらに解説を表示します。</string>
+<string name="h_ad">アプリのショートカットです。
+\nここからアプリを起動することが可能です。
+\nランチャー画面でアプリのアイコンを長押して「ホーム画面に追加」をタップすることでアプリのショートカットを追加できます。
+\n
+\nタップするとさらに解説を表示します。</string>
+<string name="h_f">フォルダを追加しました。
+\nフォルダにはアプリへのショートカット、ウィジェット、他のフォルダを格納できます。
+\n
+\nアイテムをフォルダまでドラッグし、少し待って（アニメーション表示が終わる頃に）指を離せばアイテムをフォルダに格納することができます。
+\n
+\nタップするとさらに解説を表示します。</string>
+<string name="h_p">これがパネルです。
+\nパネルはドラッグ&amp;ドロップを行うことでショートカットやウィジェットなどのアイテムを配置することができます。
+\n
+\nタップするとさらに解説を表示します。</string>
 <string name="h_t">ヒント</string>
-<string name="h_k">これがあなたのデスクトップです。ロングタップ（長押し）でアイテム（アプリ、ウィジェット、フォルダなど）を追加したり、設定画面を表示したりできます。\n\nPages are created as soon as you drag objects over them: to the left and right sides, but also to the top and bottom sides.\n\nTap to learn more on LL concepts.</string>
+<string name="h_k">これがあなたのデスクトップです。ロングタップ（長押し）でアイテム（アプリ、ウィジェット、フォルダなど）を追加したり、設定画面を表示したりできます。
+\n
+\nPages are created as soon as you drag objects over them: to the left and right sides, but also to the top and bottom sides.
+\n
+\nTap to learn more on LL concepts.</string>
 <string name="tut_concepts">コンセプト</string>
 <string name="tut_wiki">Wiki</string>
 
@@ -978,7 +1059,8 @@
 <string name="sc_w">Word wrap</string>
 <string name="wrapx_t">Seamless mode X</string>
 <string name="wrapy_t">Seamless mode Y</string>
-<string name="h_w">The seamless mode is automatically disabled in edit mode, otherwise empty pages wouldn\'t be reachable. Be aware that some items may then suddenly disappear when entering edit mode: they are just displayed at their original position in the desktop instead of being "wrapped".\nSeamless mode is enabled again when exiting edit mode.</string>
+<string name="h_w">The seamless mode is automatically disabled in edit mode, otherwise empty pages wouldn\'t be reachable. Be aware that some items may then suddenly disappear when entering edit mode: they are just displayed at their original position in the desktop instead of being "wrapped".
+\nSeamless mode is enabled again when exiting edit mode.</string>
 <string name="ad_bc">Selected:</string>
 <string name="an_wt">壁紙をタップ</string>
 <string name="an_wst">壁紙をダブルタップ</string>
@@ -986,8 +1068,15 @@
 <string name="ds_uc">ユーザーコミュニティ</string>
 <string name="ds_tt">Tips &amp; tricks</string>
 <string name="ds_br">バックアップ &amp; 復元</string>
-<string name="ds_hn">ヒント:アイテムを追加するかドラッグすることで新しいページを作成できます。\nページは左右だけでなく上下方向にも作成できます。お試しください！\n\n（このヒントは削除しても問題ありません）\n</string>
-<string name="ds_um">ヒント:ホーム画面において、1本指または2本指で上にスワイプするとユーザーメニューが表示されます。このユーザーメニューはカスタマイズ可能です。また、ホーム画面でロングタップするとコンテクストメニューが表示されます。コンテクストメニューからはAndroidの設定やLLの設定などにアクセスできます。\n\n（このヒントは削除しても問題ありません）\n</string>
+<string name="ds_hn">ヒント:アイテムを追加するかドラッグすることで新しいページを作成できます。
+\nページは左右だけでなく上下方向にも作成できます。お試しください！
+\n
+\n（このヒントは削除しても問題ありません）
+\n</string>
+<string name="ds_um">ヒント:ホーム画面において、1本指または2本指で上にスワイプするとユーザーメニューが表示されます。このユーザーメニューはカスタマイズ可能です。また、ホーム画面でロングタップするとコンテクストメニューが表示されます。コンテクストメニューからはAndroidの設定やLLの設定などにアクセスできます。
+\n
+\n（このヒントは削除しても問題ありません）
+\n</string>
 <string name="ds_z">ズーム</string>
 <string name="sc_import">インポート</string>
 <string name="sc_si_t">スクリプト読み込みツール（Script Importer）がインストールされていません</string>
@@ -999,7 +1088,16 @@
 <!-- added 224 -->
 <string name="mi_es_add_pi">Add page indicator</string>
 <string name="tr_fl_t">この機能を使うには完全版をご購入ください</string>
-<string name="tr_fl_m">Lightning Launcher(LL)の完全版にアップグレードすることで以下の機能が利用可能になります。\n\n-拡張されたドロワー（フォルダ、アクションバー、カテゴリなどが利用できます）\n-デスクトップの追加・削除\n-デスクトップごとに異なる壁紙\n-未読カウントやバッジを表示できる"Dynamic text"\n-カスタマイズ可能なロック画面\n-LLに統合されたタスクキラー\n\n以前、この端末や別の端末でLLの完全版を導入されたことがある場合は「OK」を選択すると再認証を行います。</string>
+<string name="tr_fl_m">Lightning Launcher(LL)の完全版にアップグレードすることで以下の機能が利用可能になります。
+\n
+\n-拡張されたドロワー（フォルダ、アクションバー、カテゴリなどが利用できます）
+\n-デスクトップの追加・削除
+\n-デスクトップごとに異なる壁紙
+\n-未読カウントやバッジを表示できる"Dynamic text"
+\n-カスタマイズ可能なロック画面
+\n-LLに統合されたタスクキラー
+\n
+\n以前、この端末や別の端末でLLの完全版を導入されたことがある場合は「OK」を選択すると再認証を行います。</string>
 <string name="tr_pw">お待ちください</string>
 <string name="tr_ty">Lightningの開発にご協力いただきまして誠にありがとうございます！</string>
 <string name="tr_eu">申し訳ありません。エラーが発生しました。</string>
@@ -1007,12 +1105,24 @@
 <string name="tr_br_s">この機能は体験版では利用できません</string>
 <string name="tr_rs_t">Unleash Lightning</string>
 <string name="tr_rs_s">Upgrade to get the most out of Lightning</string>
-<string name="tr_w">Lightning Launcher(LL)をお試しいただきましてありがとうございます！\n\nこのアプリは試用版として7日間動作します。その間、LLの全機能を制限なしにご利用いただけます。\n試用版の期限が切れた後もアプリが動作しなくなることはありませんが、カスタマイズが不可能になります。\n\nもしLLをお気に召しましたなら、アンロック用のキーをご購入いただければ製品版としてご利用いただけます。</string>
+<string name="tr_w">Lightning Launcher(LL)をお試しいただきましてありがとうございます！
+\n
+\nこのアプリは試用版として7日間動作します。その間、LLの全機能を制限なしにご利用いただけます。
+\n試用版の期限が切れた後もアプリが動作しなくなることはありませんが、カスタマイズが不可能になります。
+\n
+\nもしLLをお気に召しましたなら、アンロック用のキーをご購入いただければ製品版としてご利用いただけます。</string>
 <string name="tr_ut">Lightning Launcherについて</string>
-<string name="tr_um">長い間Lightning Launcherをご利用いただきまして本当にありがとうございます。\n\nこの無償版はLightning Launcher有料版の体験版に置き換えられますが、従来よりご利用いただいていたユーザには無償版にて利用可能だった機能をそのまま継続してご利用になれます。\n\nLightning Launcher有料版は更に機能を拡大しておりますので、もし開発をサポートいただけるならアンロック用のキーをご購入いただけると嬉しく思います。従来からのユーザには有料版を割引価格でご提供しております。</string>
+<string name="tr_um">長い間Lightning Launcherをご利用いただきまして本当にありがとうございます。
+\n
+\nこの無償版はLightning Launcher有料版の体験版に置き換えられますが、従来よりご利用いただいていたユーザには無償版にて利用可能だった機能をそのまま継続してご利用になれます。
+\n
+\nLightning Launcher有料版は更に機能を拡大しておりますので、もし開発をサポートいただけるならアンロック用のキーをご購入いただけると嬉しく思います。従来からのユーザには有料版を割引価格でご提供しております。</string>
 <string name="tr_l">試用版としてあと %d 日ご利用になれます</string>
-<string name="tr_rm">Lightningはユーザからのレビューをお待ちしております。\n\nPlayStoreで評価をいただけますでしょうか？</string>
-<string name="ds_hls">これはロック画面のサンプルです。自由にカスタマイズできます。\nアプリやウィジェットを追加し、ロック画面の設定から有効化できます（ここをタップ）</string>
+<string name="tr_rm">Lightningはユーザからのレビューをお待ちしております。
+\n
+\nPlayStoreで評価をいただけますでしょうか？</string>
+<string name="ds_hls">これはロック画面のサンプルです。自由にカスタマイズできます。
+\nアプリやウィジェットを追加し、ロック画面の設定から有効化できます（ここをタップ）</string>
 <string name="ic">画像のトリミング</string>
 <string name="bg_st">位置</string>
 <string-array name="bg_st_e">
