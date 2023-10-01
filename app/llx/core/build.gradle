@@ -38,5 +38,7 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation files('libs/dx.jar')
     implementation libs.lsvg
+    implementation libs.androidx.appcomat
+    implementation libs.androidx.material
     implementation project(':plugin-api')
 }

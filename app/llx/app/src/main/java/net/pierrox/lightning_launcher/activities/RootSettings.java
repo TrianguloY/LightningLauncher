@@ -42,7 +42,6 @@ import net.pierrox.lightning_launcher.LLApp;
 import net.pierrox.lightning_launcher.Version;
 import net.pierrox.lightning_launcher.data.ContainerPath;
 import net.pierrox.lightning_launcher.data.Page;
-import net.pierrox.lightning_launcher.data.Utils;
 import net.pierrox.lightning_launcher.template.LLTemplateAPI;
 import net.pierrox.lightning_launcher.util.PhoneUtils;
 import net.pierrox.lightning_launcher_extreme.R;
@@ -77,8 +76,6 @@ public class RootSettings extends PreferenceActivity implements OnPreferenceClic
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-        Utils.setTheme(this, Utils.APP_THEME);
-
 		super.onCreate(savedInstanceState);
 		
 		addPreferencesFromResource(R.xml.preference_root);

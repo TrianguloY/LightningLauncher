@@ -66,7 +66,7 @@ public class ImageCropper extends ResourceWrapperActivity implements View.OnClic
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Utils.setTheme(this, Utils.APP_THEME_NO_ACTION_BAR);
+
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.image_cropper);

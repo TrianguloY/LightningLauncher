@@ -133,7 +133,7 @@ public class ApplyTemplate extends ResourceWrapperActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Utils.setTheme(this, Utils.APP_THEME);
+
 
         super.onCreate(savedInstanceState);
 

@@ -122,7 +122,7 @@ public class EventActionSetup extends ResourceWrapperActivity implements Adapter
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Utils.setTheme(this, Utils.APP_THEME_NO_ACTION_BAR);
+
 
         super.onCreate(savedInstanceState);
 

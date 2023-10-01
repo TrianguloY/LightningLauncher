@@ -485,8 +485,6 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-//        Utils.setTheme(this, Utils.APP_THEME_NO_ACTION_BAR_WALLPAPER);
-
         super.onCreate(savedInstanceState);
 
         mHandler = new Handler();
