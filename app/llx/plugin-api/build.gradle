@@ -1,4 +1,6 @@
-apply plugin: 'com.android.library'
+plugins {
+    alias(libs.plugins.androlib)
+}
 
 android {
     compileSdk 33
@@ -13,8 +15,8 @@ android {
 }
 
 dependencies {
-    implementation 'com.josesamuel:remoter-annotations:1.2.0'
-    annotationProcessor 'com.josesamuel:remoter:1.2.0'
-    implementation 'org.parceler:parceler-api:1.1.12'
-    annotationProcessor 'org.parceler:parceler:1.1.12'
+    implementation libs.remoter
+    annotationProcessor libs.remoter.compiler
+    implementation libs.parceler
+    annotationProcessor libs.parceler.compiler
 }

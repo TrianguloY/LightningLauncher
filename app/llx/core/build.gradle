@@ -1,4 +1,6 @@
-apply plugin: 'com.android.library'
+plugins {
+    alias(libs.plugins.androlib)
+}
 
 android {
     compileSdk 33
@@ -35,6 +37,6 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation files('libs/dx.jar')
-    implementation 'net.pierrox.android:lsvg:1.0'
+    implementation libs.lsvg
     implementation project(':plugin-api')
 }
