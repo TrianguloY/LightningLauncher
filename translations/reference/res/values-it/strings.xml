@@ -5,7 +5,42 @@
 <string name="pack_name_short">Italiano</string>
 <string name="tranlator_name">Antonio Russo Lagnese</string>
 
-<string name="description">Lightning Launcher è un launcher veloce, leggero ed estremamente personalizzabile.\nOccupa poca memoria e non la rallenta.\n\nNon si limita a inserire più pagine. Il desktop, invece, è pensato come un\'opera d\'arte su una tela infinita.\nLe possibilità sono illimitate.\n\nLe caratteristiche principali sono:\n• Differenti layout e dimensioni della griglia per orientamento verticale e orizzontale\n• Pannelli, desktop scorrevoli sulla parte superiore della pagina corrente\n• Possibilità di bloccare gli elementi in modo che non si muovano mai durante lo scorrimento del desktop\n• Impostazioni Box: personalizzazione del colore di sfondo, bordi e margini di qualsiasi elemento\n• Modalità libera: Una griglia? Che cos\'è? La modalità libera si libera delle linee , e consente la rotazione degli oggetti\n• Più griglie per desktop\n• 22 diversi gesti con 29 diverse azioni (che possono anche essere lanciati con le scorciatoie)\n• Utilizzare uno dei vostri desktop come lockscreen! (solo beta)\n• Punti di arresto: dire a Lightning quando interrompere lo scorrimento\n• Direzioni di scorrimento personalizzabili\n• Pieno controllo su ogni elemento, tra cui:\n1. Carattere del testo, ombra e colore\n2. Icone personalizzate dalla vostra galleria, con possibilità di modifica della scala e della scala interna\n3. Possibilità di scegliere come chiudere e cosa avviare con icona e etichetta personalizzata\n4. Impostazioni della casella, con supporto per .9 .png come sfondo (cercare su .9s per vedere come sono cool)\n5. Trasparenze e gesti direzionali per avviare qualsiasi azione (es. scorrere verso l\'alto sull\'icona Chrome  e lanciare Dolphin Browser)\n• Salvataggio del desktop personalizzato con un backup completo o come stile personalizzato\n• Esportazione della configurazione come un APK\n------\nLightning supporta la trasparenza delle barre di stato e di navigazione disponibili in KitKat.\n------\nCome con la maggior parte degli strumenti potenti come Tasker, anche Lightning ha bisogno di un periodo di apprendimento. Ma non ci sono altri launcher che offrono le potenzialità di Lightning.\n\nZap!\n\nEventuali commenti, suggerimenti e segnalazioni di errori sono i benvenuti.\nPotete scrivermi, Pierre Hébert, all\'indirizzo pierrox@pierrox.net.\nSe ti va puoi iscriverti alla mia pagina di G+ per ottenere feedback dagli altri utenti, discutere le caratteristiche, consultare le risposte alle domande oppure entrare nel gruppo dei beta testing.\nI files della guida si possono trovare online cliccando a lungo su una qualsiasi impostazione.</string>
+<string name="description">Lightning Launcher è un launcher veloce, leggero ed estremamente personalizzabile.
+\nOccupa poca memoria e non la rallenta.
+\n
+\nNon si limita a inserire più pagine. Il desktop, invece, è pensato come un\'opera d\'arte su una tela infinita.
+\nLe possibilità sono illimitate.
+\n
+\nLe caratteristiche principali sono:
+\n• Differenti layout e dimensioni della griglia per orientamento verticale e orizzontale
+\n• Pannelli, desktop scorrevoli sulla parte superiore della pagina corrente
+\n• Possibilità di bloccare gli elementi in modo che non si muovano mai durante lo scorrimento del desktop
+\n• Impostazioni Box: personalizzazione del colore di sfondo, bordi e margini di qualsiasi elemento
+\n• Modalità libera: Una griglia? Che cos\'è? La modalità libera si libera delle linee , e consente la rotazione degli oggetti
+\n• Più griglie per desktop
+\n• 22 diversi gesti con 29 diverse azioni (che possono anche essere lanciati con le scorciatoie)
+\n• Utilizzare uno dei vostri desktop come lockscreen! (solo beta)
+\n• Punti di arresto: dire a Lightning quando interrompere lo scorrimento
+\n• Direzioni di scorrimento personalizzabili
+\n• Pieno controllo su ogni elemento, tra cui:
+\n1. Carattere del testo, ombra e colore
+\n2. Icone personalizzate dalla vostra galleria, con possibilità di modifica della scala e della scala interna
+\n3. Possibilità di scegliere come chiudere e cosa avviare con icona e etichetta personalizzata
+\n4. Impostazioni della casella, con supporto per .9 .png come sfondo (cercare su .9s per vedere come sono cool)
+\n5. Trasparenze e gesti direzionali per avviare qualsiasi azione (es. scorrere verso l\'alto sull\'icona Chrome  e lanciare Dolphin Browser)
+\n• Salvataggio del desktop personalizzato con un backup completo o come stile personalizzato
+\n• Esportazione della configurazione come un APK
+\n------
+\nLightning supporta la trasparenza delle barre di stato e di navigazione disponibili in KitKat.
+\n------
+\nCome con la maggior parte degli strumenti potenti come Tasker, anche Lightning ha bisogno di un periodo di apprendimento. Ma non ci sono altri launcher che offrono le potenzialità di Lightning.
+\n
+\nZap!
+\n
+\nEventuali commenti, suggerimenti e segnalazioni di errori sono i benvenuti.
+\nPotete scrivermi, Pierre Hébert, all\'indirizzo pierrox@pierrox.net.
+\nSe ti va puoi iscriverti alla mia pagina di G+ per ottenere feedback dagli altri utenti, discutere le caratteristiche, consultare le risposte alle domande oppure entrare nel gruppo dei beta testing.
+\nI files della guida si possono trovare online cliccando a lungo su una qualsiasi impostazione.</string>
 
 
 <string name="start_activity_error">Non posso avviare questa applicazione</string>
@@ -43,14 +78,21 @@
 <string name="mi_widget_options">Opzioni widget</string>
 <string name="mi_move_out_of_folder">Sposta fuori dalla cartella</string>
 <string name="first_use_title">Benvenuto!</string>
-<string name="first_use_message">Lightning Launcher è un launcher leggero, veloce ed estremamente personalizzabile per Android.\n\nStai eseguendo la modalità normale. Ciò significa che alcune opzioni avanzate sono nascoste. Passa alla modalità esperto per accedere a tutte le funzioni e le opzioni (Impostazioni generali).\n\nLL sta preparando l\'elenco delle applicazioni una volta per tutte.\n\nGrazie per l\'utilizzo di LL!</string>
+<string name="first_use_message">Lightning Launcher è un launcher leggero, veloce ed estremamente personalizzabile per Android.
+\n
+\nStai eseguendo la modalità normale. Ciò significa che alcune opzioni avanzate sono nascoste. Passa alla modalità esperto per accedere a tutte le funzioni e le opzioni (Impostazioni generali).
+\n
+\nLL sta preparando l\'elenco delle applicazioni una volta per tutte.
+\n
+\nGrazie per l\'utilizzo di LL!</string>
 <string name="all_apps">Tutte le applicazioni</string>
 <string name="menu_refresh">Rigenera</string>
 <string name="menu_zoom">Zoom</string>
 <string name="menu_see_only_visible">Solo visibili</string>
 <string name="menu_see_only_hidden">Solo nascoste</string>
 <string name="menu_see_all">Tutte le applicazioni</string>
-<string name="empty_folder">Clicca a lungo per aggiungere oggetti in questa cartella\nPersonalizza gli oggetti nella cartella stessa per maggiori opzioni</string>
+<string name="empty_folder">Clicca a lungo per aggiungere oggetti in questa cartella
+\nPersonalizza gli oggetti nella cartella stessa per maggiori opzioni</string>
 <string name="file_picker_activity_up">SU</string>
 
 <string name="settings">Tutte</string>
@@ -167,7 +209,8 @@
 <string name="select_launcher_title">Seleziona il launcher predefinito</string>
 <string name="extras">Extra</string>
 <string name="permission_denied">Permesso negato. Per utilizzare la scorciatoia di chiamata diretta installare "LL - Direct Call shortcut"</string>
-<string name="appearance">Anteprima\nScorri a sinistra per vedere l\'anteprima delle modifiche</string>
+<string name="appearance">Anteprima
+\nScorri a sinistra per vedere l\'anteprima delle modifiche</string>
 <string name="background_t">Sfondo</string>
 <string name="background_s">Scegli lo sfondo, il colore ed gli effetti di scorrimento</string>
 <string name="grid_t">Linee griglia</string>
@@ -380,8 +423,10 @@
 <item>Focalizzato</item>
 </string-array>
 
-<string name="il_preview">Anteprima desktop\n(Potrebbe essere leggermente differente da quello reale)</string>
-<string name="preview_toast">Modalità anteprima.\nNon possono essere eseguite azioni in questa modalità</string>
+<string name="il_preview">Anteprima desktop
+\n(Potrebbe essere leggermente differente da quello reale)</string>
+<string name="preview_toast">Modalità anteprima.
+\nNon possono essere eseguite azioni in questa modalità</string>
 <string name="pick_a_font">Importa un file .TTF o .OTF...</string>
 <string name="system_font">Caratteri predefiniti</string>
 <string name="left">sinistra</string>
@@ -416,11 +461,13 @@
 <string name="no_backup_archive">Nessun backup disponibile</string>
 <string name="backup_in_progress">Backup in corso…</string>
 <string name="restore_in_progress">Ripristino in corso…</string>
-<string name="backup_done">Backup salvato in:\n%s</string>
+<string name="backup_done">Backup salvato in:
+\n%s</string>
 <string name="backup_error">Errore di backup. Controlla che vi sia spazio sufficiente sulla sdcard</string>
 <string name="restore_error">Errore di ripristino. Verifica che il file di backup sia valido e che possa essere letto</string>
 
-<string name="confirm_delete">Sei sicuro di voler cancellare questo desktop?\nQuesta operazione non può essere annullata.</string>
+<string name="confirm_delete">Sei sicuro di voler cancellare questo desktop?
+\nQuesta operazione non può essere annullata.</string>
 
 
 <!-- added: 90 -->
@@ -478,17 +525,23 @@
 <string name="mi_mode_recent_apps">Avviate di recente</string>
 <string name="mi_mode_recently_updated">Aggiornate di recente</string>
 <string name="mi_mode_frequently_used">Utilizzate frequentemente</string>
-<string name="mi_mode_running">In esecuzione</string>
 <string name="mi_es_edit_layout">Modifica layout</string>
 <string name="mi_es_refresh">Aggiorna</string>
 <string name="mi_es_settings">Impostazioni</string>
 <string name="mi_es_folder_settings">Impostazioni cartella</string>
 <string name="mi_uninstall">Disinstalla</string>
 <string name="my_drawer_title">My Drawer</string>
-<string name="my_drawer_message">"My Dawer" permette di personalizzare completamente il tuo app drawer.\n\nIn questo modalità gli oggetti possono essere spostati liberamente su uno spazio infinito e le cartelle possono essere usate per organizzare le applicazioni.\n\nProva ad zoomare in fuori e selezionare "Modifica layout": scoprirai che le applicazioni possono essere posizionate sulla pagine a sinistra, a destra, sopra e sotto, permettendo di gestire la disposizione in modo molto personale.</string>
-<string name="empty_folder_x">Cartella vuota.\nTrascina gli oggetti sull\'icona della cartella per inserirli al suo interno.</string>
+<string name="my_drawer_message">"My Dawer" permette di personalizzare completamente il tuo app drawer.
+\n
+\nIn questo modalità gli oggetti possono essere spostati liberamente su uno spazio infinito e le cartelle possono essere usate per organizzare le applicazioni.
+\n
+\nProva ad zoomare in fuori e selezionare "Modifica layout": scoprirai che le applicazioni possono essere posizionate sulla pagine a sinistra, a destra, sopra e sotto, permettendo di gestire la disposizione in modo molto personale.</string>
+<string name="empty_folder_x">Cartella vuota.
+\nTrascina gli oggetti sull\'icona della cartella per inserirli al suo interno.</string>
 <string name="ll_import_title">Installazione LL</string>
-<string name="ll_import_message">È stata rilevata un\'installazione di Lightning Launcher.\n\nVerranno importati tutti i dati. Al termine dell\'operazione sarà possibile disinstallare la versione classica di Lightning Launcher in modo sicuro ed utilizzare questa versione.</string>
+<string name="ll_import_message">È stata rilevata un\'installazione di Lightning Launcher.
+\n
+\nVerranno importati tutti i dati. Al termine dell\'operazione sarà possibile disinstallare la versione classica di Lightning Launcher in modo sicuro ed utilizzare questa versione.</string>
 <string name="init_ok">Pronto!</string>
 <string name="init_ko">Qualcosa è andato storto durante la copia del file!</string>
 <string name="auto_exit_t">Chiusura automatica</string>
@@ -604,7 +657,8 @@
 <string name="tmpl_warn_llx">- questo modello è stato progettato per la versione completa di Lightning Launcher, è possibile utilizzarlo ma alcune funzioni non saranno disponibili.</string>
 <string name="tmpl_warn_screen">- questo modello non corrisponde esattamente alle caratteristiche del tuo schermo. Alcuni elementi potrebbero non essere visualizzati correttamente.</string>
 <string name="tmpl_warn_widget">- il tuo dispositivo non è in grado di ripristinare automaticamente i widgets, sarà necessario ricrearli manualmente.</string>
-<string name="widget_e">Non è stato possibile caricare questo widget.\nClicca per installarlo o selezionane un altro.</string>
+<string name="widget_e">Non è stato possibile caricare questo widget.
+\nClicca per installarlo o selezionane un altro.</string>
 <string name="tmpl_s_p">Seleziona i desktop da esportare</string>
 <string name="an_ctf">Chiudi la cartella più in alto</string>
 <string name="an_caf">Chiudi tutte le cartelle</string>
@@ -820,11 +874,25 @@
 <string name="rs_t">Avvia scripts</string>
 <string name="rs_s">Consenti l\'esecuzione degli scripts</string>
 <string name="rs_w">Attenzione: l\'esecuzione degli scripts è disabilitata nelle impostazioni generali</string>
-<string name="h_ad">Le tue applicazioni sono qui.\nPuoi avviare le applicazioni da qui e iniziare ad aggiungere applicazioni sul desktop: premere a lungo sull\'applicazione e selezionare "Aggiungi al desktop".\n\nClicca per maggiori informazioni.</string>
-<string name="h_f">Hai aggiunto una cartella. Le cartelle possono contenere applicazioni, widget o altre cartelle. \n\nTrascina un oggetto su di essa, attendi qualche istante per confermare lo spostamento (alla fine dell\'animazione), dopo rilascia l\'oggetto: verrà spostato all\'interno della cartella. \n\nClicca per maggiori informazioni sulle cartelle.</string>
-<string name="h_p">Il tuo primo pannello è qui.\nI pannelli si comportano come le cartelle: trascina un oggetto su di esso, attendi qualche istante per confermare lo spostamento (alla fine dell\'animazione), quindi rilascia l\'oggetto. \n\nClicca per maggiori informazioni sui pannelli.</string>
+<string name="h_ad">Le tue applicazioni sono qui.
+\nPuoi avviare le applicazioni da qui e iniziare ad aggiungere applicazioni sul desktop: premere a lungo sull\'applicazione e selezionare "Aggiungi al desktop".
+\n
+\nClicca per maggiori informazioni.</string>
+<string name="h_f">Hai aggiunto una cartella. Le cartelle possono contenere applicazioni, widget o altre cartelle. 
+\n
+\nTrascina un oggetto su di essa, attendi qualche istante per confermare lo spostamento (alla fine dell\'animazione), dopo rilascia l\'oggetto: verrà spostato all\'interno della cartella. 
+\n
+\nClicca per maggiori informazioni sulle cartelle.</string>
+<string name="h_p">Il tuo primo pannello è qui.
+\nI pannelli si comportano come le cartelle: trascina un oggetto su di esso, attendi qualche istante per confermare lo spostamento (alla fine dell\'animazione), quindi rilascia l\'oggetto. 
+\n
+\nClicca per maggiori informazioni sui pannelli.</string>
 <string name="h_t">Suggerimento</string>
-<string name="h_k">Questo è il tuo desktop. Clicca a lungo per aggiungere oggetti (applicazioni, widget, cartelle e altro) e accedere alle impostazioni. \n\nLe pagine sono create appena si trascinano gli oggetti su di esse: sul lato sinistro, destro, superiore o inferiore.\n\nClicca per maggiori informazioni sui concetti di LL.</string>
+<string name="h_k">Questo è il tuo desktop. Clicca a lungo per aggiungere oggetti (applicazioni, widget, cartelle e altro) e accedere alle impostazioni. 
+\n
+\nLe pagine sono create appena si trascinano gli oggetti su di esse: sul lato sinistro, destro, superiore o inferiore.
+\n
+\nClicca per maggiori informazioni sui concetti di LL.</string>
 <string name="tut_concepts">Leggimi per primo!</string>
 <string name="tut_wiki">Wiki</string>
 
@@ -954,7 +1022,9 @@
 <string name="sc_w">A capo automatico</string>
 <string name="wrapx_t">Scorrimento continuo X</string>
 <string name="wrapy_t">Scorrimento continuo Y</string>
-<string name="h_w">Lo scorrimento continuo è automaticamente disabilitato in modalità modifica, altrimenti le pagine vuote non potrebbero essere visualizzate.\nAlcuni elementi potrebbero scomparire quando si entra in modalità modifica: essi sono visualizzati nella loro posizione originale invece di essere "avvolti".\nLo scorrimento continuo si abilita di nuovo quando si esce dalla modalità modifica.</string>
+<string name="h_w">Lo scorrimento continuo è automaticamente disabilitato in modalità modifica, altrimenti le pagine vuote non potrebbero essere visualizzate.
+\nAlcuni elementi potrebbero scomparire quando si entra in modalità modifica: essi sono visualizzati nella loro posizione originale invece di essere "avvolti".
+\nLo scorrimento continuo si abilita di nuovo quando si esce dalla modalità modifica.</string>
 <string name="ad_bc">Selezione:</string>
 <string name="an_wt">Clicca sfondo</string>
 <string name="an_wst">Click secondario sfondo</string>
@@ -962,8 +1032,14 @@
 <string name="ds_uc">Comunità utenti</string>
 <string name="ds_tt">Consigli e trucchi</string>
 <string name="ds_br">Backup e Ripristino</string>
-<string name="ds_hn">Suggerimento: per aggiungere o creare una nuova pagina basta aggiungere o trascinare un oggetto su di essa.\nQuesto trucco funziona anche per le pagine in alto o in basso; provare per credere!\n\n(Si può tranquillamente eliminare questo suggerimento)</string>
-<string name="ds_um">Suggerimento: scorri verso l\'alto con una o due dita per visualizzare il menu utente (personalizzabile).\nClicca a lungo sullo schermo per visualizzare il menu contestuale\n\n(Si può tranquillamente eliminare questo suggerimento)</string>
+<string name="ds_hn">Suggerimento: per aggiungere o creare una nuova pagina basta aggiungere o trascinare un oggetto su di essa.
+\nQuesto trucco funziona anche per le pagine in alto o in basso; provare per credere!
+\n
+\n(Si può tranquillamente eliminare questo suggerimento)</string>
+<string name="ds_um">Suggerimento: scorri verso l\'alto con una o due dita per visualizzare il menu utente (personalizzabile).
+\nClicca a lungo sullo schermo per visualizzare il menu contestuale
+\n
+\n(Si può tranquillamente eliminare questo suggerimento)</string>
 <string name="ds_z">Zoom</string>
 <string name="sc_import">Importa...</string>
 <string name="sc_si_t">L\'app per importare gli script non è installata</string>
@@ -974,7 +1050,16 @@
 
 <!-- added 224 -->
 <string name="tr_fl_t">Sbloccare Lightning per utilizzare questa funzione</string>
-<string name="tr_fl_m">Aggiornando alla versione completa si beneficerà delle seguenti funzioni:\n\n- App drawer avanzato (cartelle, barra delle azioni, categorie)\n- Aggiungere, rimuovere riorganizzare i desktops\n- Modifiche sfondo del desktop\n- Contatori, notifiche e testi dinamici\n- Schermata di blocco personalizzable\n- App killer integrata\n\nSe Lightning è stato già sbloccato precedentemente, cliccare su "OK" per riattivarlo.</string>
+<string name="tr_fl_m">Aggiornando alla versione completa si beneficerà delle seguenti funzioni:
+\n
+\n- App drawer avanzato (cartelle, barra delle azioni, categorie)
+\n- Aggiungere, rimuovere riorganizzare i desktops
+\n- Modifiche sfondo del desktop
+\n- Contatori, notifiche e testi dinamici
+\n- Schermata di blocco personalizzable
+\n- App killer integrata
+\n
+\nSe Lightning è stato già sbloccato precedentemente, cliccare su "OK" per riattivarlo.</string>
 <string name="tr_pw">Attendere...</string>
 <string name="tr_ty">Grazie per aver supportato Lightning!</string>
 <string name="tr_eu">Spiacente, si è verificato un errore...</string>
@@ -982,10 +1067,19 @@
 <string name="tr_br_s">Questa funzione non è attiva nella versione trial</string>
 <string name="tr_rs_t">Scatena Lightninig</string>
 <string name="tr_rs_s">Aggiorna per ottenere il massimo da Lightning</string>
-<string name="tr_w">Grazie per aver testato Lightning!\n\nQuesta app funzionerà completamente per 7 giorni: tutte le funzioni sono abilitate e possono essere utilizzate senza restrizioni durante questo periodo. Dopo il periodo di prova, sarà possibile continuare ad utilizzare l\'applicazione ma le modifiche non saranno più attive.\n\nSe ti piace questa applicazione e vuoi sostenerci, si prega di considerare l\'acquisto la chiave per sbloccarlo.\n\nGrazie</string>
+<string name="tr_w">Grazie per aver testato Lightning!
+\n
+\nQuesta app funzionerà completamente per 7 giorni: tutte le funzioni sono abilitate e possono essere utilizzate senza restrizioni durante questo periodo. Dopo il periodo di prova, sarà possibile continuare ad utilizzare l\'applicazione ma le modifiche non saranno più attive.
+\n
+\nSe ti piace questa applicazione e vuoi sostenerci, si prega di considerare l\'acquisto la chiave per sbloccarlo.
+\n
+\nGrazie</string>
 <string name="tr_l">%d giorni rimanenti</string>
-<string name="tr_rm">Lightning ha bisogno del tuo feedback!\n\nVorresti dedicargli qualche secondo e votarlo sul Play Store?</string>
-<string name="ds_hls">Questo è un esempio di schermata di blocco ed è possibile personalizzarla a proprio piacimento.\nAggiungi applicazioni o widget poi attivala tramite le impostazioni del blocco schermo (clicca qui).</string>
+<string name="tr_rm">Lightning ha bisogno del tuo feedback!
+\n
+\nVorresti dedicargli qualche secondo e votarlo sul Play Store?</string>
+<string name="ds_hls">Questo è un esempio di schermata di blocco ed è possibile personalizzarla a proprio piacimento.
+\nAggiungi applicazioni o widget poi attivala tramite le impostazioni del blocco schermo (clicca qui).</string>
 <string name="ic">Ritaglia immagine</string>
 <string name="bg_st">Posizione</string>
 <string-array name="bg_st_e">
@@ -1055,7 +1149,8 @@
 <string name="sm_cn">Copia di</string>
 <string name="sm_an">Nuovo desktop</string>
 <string name="ip_e">Nessuna icona da visualizzare</string>
-<string name="cv_dfl">Nessuna vista personalizzata.\nClicca per provare di nuovo.</string>
+<string name="cv_dfl">Nessuna vista personalizzata.
+\nClicca per provare di nuovo.</string>
 <string name="ad_mdh">Passa alla vista "My Drawer" per la personalizzazione</string>
 <string name="tab_bind">Bindings</string>
 <string name="bd_a">Add binding…</string>
@@ -1165,7 +1260,8 @@
 <item>Slide right</item>
 <item>Scale from center</item>
 </string-array>
-<string name="lh">Imposta un\'etichetta personalizzata\n(Si può utilizzare il linguaggio HTML di base)</string>
+<string name="lh">Imposta un\'etichetta personalizzata
+\n(Si può utilizzare il linguaggio HTML di base)</string>
 <string name="hs_ed">Modifica...</string>
 <string name="an_ohs">Apri la finestra elenco oggetti</string>
 <string name="ov_pt">Impostazioni</string>
@@ -1217,7 +1313,8 @@
 <string name="nfh">Niente da visualizzare</string>
 <string name="sc_path">Percorso corrente</string>
 <string name="lwp">Lightning Live Wallpaper</string>
-<string name="sd">Seleziona un desktop da\nutilizzare come sfondo animato</string>
+<string name="sd">Seleziona un desktop da
+\nutilizzare come sfondo animato</string>
 <string name="ad_b">Installati</string>
 <string name="ad_p">Plugins</string>
 <string name="ev_m">Menu</string>
@@ -1227,11 +1324,15 @@
 <string name="iab_y_key">Si (chiave)</string>
 <string name="iab_y_app">Si (in-app)</string>
 <string name="iab_ul_lwp_t">Non ancora attivato</string>
-<string name="iab_ul_lwp_m">Lightning Live Wallpaper non è stato ancora attivato.\n\nSostieni lo sviluppatore e contribuisci a rendere Lightning il miglior launcher di sempre!</string>
+<string name="iab_ul_lwp_m">Lightning Live Wallpaper non è stato ancora attivato.
+\n
+\nSostieni lo sviluppatore e contribuisci a rendere Lightning il miglior launcher di sempre!</string>
 <string name="an_i_as">Visualizza scorciatoie</string>
 <string name="as_no_s">Nessuna scorciatoia per questo oggetto</string>
 <string name="as_no_hp_t">Nessun permesso per le scorciatoie</string>
-<string name="as_no_hp_m">Per accedere alle scorciatoie, Lightning deve essere impostato come launcher prededinito, altrimenti non può ottenere i permessi per accedervi.\n\nNota: è possibile che questo messaggio venga visualizzato due volte prima che possa essere selezionato \'Sempre\' nella casella corrispondente.</string>
+<string name="as_no_hp_m">Per accedere alle scorciatoie, Lightning deve essere impostato come launcher prededinito, altrimenti non può ottenere i permessi per accedervi.
+\n
+\nNota: è possibile che questo messaggio venga visualizzato due volte prima che possa essere selezionato \'Sempre\' nella casella corrispondente.</string>
 <string name="as_nf">Scorciatoia disabilitata</string>
 <string name="widget_count">(%d widgets)</string>
 <string name="eas_done">Fatto</string>
@@ -1376,7 +1477,13 @@
 <string name="hide_statusbar_s">Clicca il tasto Menu per mostrarla</string>
 <string name="mph"></string>
 <string name="tr_ut">Info</string>
-<string name="tr_um">Sei un utente della versione gratuita di Lightning Launcher da tanto tempo, grazie.\n\nAnche se questa versione è stata sostituita con una versione di prova, potrai continuare a beneficiare di tutte le funzionalità già presenti nella versione gratuita, così come la maggior parte dei miglioramenti apportati con la versione completa.\n\nSe si desidera supportare questa applicazione, si prega di considerare l\'acquisto della chiave di sblocco ad un prezzo scontato.\n\nGrazie!</string>
+<string name="tr_um">Sei un utente della versione gratuita di Lightning Launcher da tanto tempo, grazie.
+\n
+\nAnche se questa versione è stata sostituita con una versione di prova, potrai continuare a beneficiare di tutte le funzionalità già presenti nella versione gratuita, così come la maggior parte dei miglioramenti apportati con la versione completa.
+\n
+\nSe si desidera supportare questa applicazione, si prega di considerare l\'acquisto della chiave di sblocco ad un prezzo scontato.
+\n
+\nGrazie!</string>
 <string name="ip_bic">Pacchetto icone corrotto</string>
 <string name="sp_none">Nessuno script</string>
 <string name="mi_pick_sh">Seleziona scorciatoia</string>

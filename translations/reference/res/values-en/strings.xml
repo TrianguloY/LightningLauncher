@@ -5,7 +5,44 @@
 <string name="pack_name_short">English</string>
 <string name="tranlator_name">Josh Gray</string>
 
-<string name="description">Lightning is a blazing fast launcher that is customizable to the extreme.\nIt\'s light on memory and never slows down.\n\nYou\'re not restricted to pages anymore. Instead, your desktop is a beautiful work of art on an infinite canvas.\nThe possibilities are endless.\n\nMajor features include:\n•Different layouts and grid sizes for both portrait and landscape orientation\n•Panels, scrollable desktops on top of your current page\n•The ability to pin items so they never move\n•Box settings: customize the background color, borders, and margins of any item\n•Free mode: A grid? What\'s that? Free mode gets rid of the lines, and allows for rotation of items\n•Multiple desktop grids\n•22 different gestures with 29 different actions (which can also be launched with shortcuts)\n•Use one of your desktops as your lockscreen! (beta only)\n•Stop points: tell Lightning when to stop scrolling\n•Custom scroll directions\n•Full control over any item, including:\n1. text font, shadow and color\n2. custom icons from your gallery, plus scale and inner scale\n3. choose how close and what side your icon is to your label\n4. box settings, with support for .9.png as the background (look this up. .9s are cool.)\n5. transparency, and direction gestures to launch any action (ex. Swipe up on the Chrome Icon launches Dolphin Browser)\n•Save your custom desktop to either a full backup or as a style option\n•Export your setup as an APK\n------\nLightning does support transparency of the status and navigation bars available in KitKat.\n------\nAs with most power tools like Tasker and such, Lightning has a bit of a learning curve. But there\'s no other launcher which offers the power of Lightning.\n\nZap!\n\nAny comments, suggestions, and bug reports are welcome.\nYou can email me, Pierre Hébert, at pierrox@pierrox.net.\nIf you\'d like, join our G+ page to get feedback from other users, discuss features, have questions answered, or enter the beta testing group.\nHelp files can be found online by long-pressing on any setting.\n\n</string>
+<string name="description">Lightning is a blazing fast launcher that is customizable to the extreme.
+\nIt\'s light on memory and never slows down.
+\n
+\nYou\'re not restricted to pages anymore. Instead, your desktop is a beautiful work of art on an infinite canvas.
+\nThe possibilities are endless.
+\n
+\nMajor features include:
+\n•Different layouts and grid sizes for both portrait and landscape orientation
+\n•Panels, scrollable desktops on top of your current page
+\n•The ability to pin items so they never move
+\n•Box settings: customize the background color, borders, and margins of any item
+\n•Free mode: A grid? What\'s that? Free mode gets rid of the lines, and allows for rotation of items
+\n•Multiple desktop grids
+\n•22 different gestures with 29 different actions (which can also be launched with shortcuts)
+\n•Use one of your desktops as your lockscreen! (beta only)
+\n•Stop points: tell Lightning when to stop scrolling
+\n•Custom scroll directions
+\n•Full control over any item, including:
+\n1. text font, shadow and color
+\n2. custom icons from your gallery, plus scale and inner scale
+\n3. choose how close and what side your icon is to your label
+\n4. box settings, with support for .9.png as the background (look this up. .9s are cool.)
+\n5. transparency, and direction gestures to launch any action (ex. Swipe up on the Chrome Icon launches Dolphin Browser)
+\n•Save your custom desktop to either a full backup or as a style option
+\n•Export your setup as an APK
+\n------
+\nLightning does support transparency of the status and navigation bars available in KitKat.
+\n------
+\nAs with most power tools like Tasker and such, Lightning has a bit of a learning curve. But there\'s no other launcher which offers the power of Lightning.
+\n
+\nZap!
+\n
+\nAny comments, suggestions, and bug reports are welcome.
+\nYou can email me, Pierre Hébert, at pierrox@pierrox.net.
+\nIf you\'d like, join our G+ page to get feedback from other users, discuss features, have questions answered, or enter the beta testing group.
+\nHelp files can be found online by long-pressing on any setting.
+\n
+\n</string>
 
 
 <string name="start_activity_error">Could not start this app</string>
@@ -43,14 +80,21 @@
 <string name="mi_widget_options">Widget options</string>
 <string name="mi_move_out_of_folder">Move out of folder</string>
 <string name="first_use_title">Welcome!</string>
-<string name="first_use_message">Lightning Launcher is a lightweight and extremely customizable home screen replacement for Android.\n\nYou are now running in normal mode, meaning that some advanced options are hidden. Switch to expert mode to access all features and options (General settings).\n\nLL is now preparing the list of apps once and for all.\n\nThank you for reading and using LL!</string>
+<string name="first_use_message">Lightning Launcher is a lightweight and extremely customizable home screen replacement for Android.
+\n
+\nYou are now running in normal mode, meaning that some advanced options are hidden. Switch to expert mode to access all features and options (General settings).
+\n
+\nLL is now preparing the list of apps once and for all.
+\n
+\nThank you for reading and using LL!</string>
 <string name="all_apps">All Apps</string>
 <string name="menu_refresh">Refresh</string>
 <string name="menu_zoom">Zoom</string>
 <string name="menu_see_only_visible">Only visible</string>
 <string name="menu_see_only_hidden">Only hidden</string>
 <string name="menu_see_all">All Apps</string>
-<string name="empty_folder">Long-press to add stuff into this folder\nCustomize the folder item itself for more options</string>
+<string name="empty_folder">Long-press to add stuff into this folder
+\nCustomize the folder item itself for more options</string>
 <string name="file_picker_activity_up">UP</string>
 
 <string name="settings">All settings</string>
@@ -167,7 +211,8 @@
 <string name="select_launcher_title">Select the default launcher</string>
 <string name="extras">Extras</string>
 <string name="permission_denied">Permission denied. For call shortcuts please install the LL direct call plugin</string>
-<string name="appearance">Appearance\nSwipe left to preview changes</string>
+<string name="appearance">Appearance
+\nSwipe left to preview changes</string>
 <string name="background_t">Wallpaper </string>
 <string name="background_s">Select a wallpaper, its tint color, or enable scrolling</string>
 <string name="grid_t">Grid lines</string>
@@ -362,7 +407,8 @@
 <item>Custom</item>
 </string-array>
 
-<string name="b_hint">Select one or more areas,\nthen choose color/size below</string>
+<string name="b_hint">Select one or more areas,
+\nthen choose color/size below</string>
 <string name="b_size">Size of selected areas</string>
 <string name="b_color_normal">Normal color</string>
 <string name="b_color_selected">Selected color</string>
@@ -381,8 +427,10 @@
 <item>Focused</item>
 </string-array>
 
-<string name="il_preview">Preview mode\n(this might differ from the real thing)</string>
-<string name="preview_toast">Preview mode\nYou can\'t actually do anything here</string>
+<string name="il_preview">Preview mode
+\n(this might differ from the real thing)</string>
+<string name="preview_toast">Preview mode
+\nYou can\'t actually do anything here</string>
 <string name="pick_a_font">Choose a .TTF or .OTF file</string>
 <string name="system_font">Default font</string>
 <string name="left">left</string>
@@ -418,7 +466,8 @@
 <string name="no_backup_archive">No backup available</string>
 <string name="backup_in_progress">Backup in progress…</string>
 <string name="restore_in_progress">Restore in progress…</string>
-<string name="backup_done">Backup saved to:\n%s</string>
+<string name="backup_done">Backup saved to:
+\n%s</string>
 <string name="backup_error">Backup error, please check that there is enough storage space on the sdcard</string>
 <string name="restore_error">Restore error, please check that the backup archive is valid and can be read</string>
 
@@ -480,17 +529,23 @@
 <string name="mi_mode_recent_apps">Recently launched</string>
 <string name="mi_mode_recently_updated">Recently updated</string>
 <string name="mi_mode_frequently_used">Used often</string>
-<string name="mi_mode_running">Currently running</string>
 <string name="mi_es_edit_layout">Edit layout</string>
 <string name="mi_es_refresh">Refresh</string>
 <string name="mi_es_settings">Settings</string>
 <string name="mi_es_folder_settings">Folder settings</string>
 <string name="mi_uninstall">Uninstall</string>
 <string name="my_drawer_title">My Drawer</string>
-<string name="my_drawer_message">The "My Drawer" view lets you fully customize your app drawer.\n\nIn this mode, items can be freely moved around, and folders can be used to organize apps.\n\nTry zooming out and selecting "Edit layout": apps can be put on left, right, top and bottom pages too, letting you manage apps in your very own way.</string>
-<string name="empty_folder_x">empty folder\nDrag and drop items into the folder</string>
+<string name="my_drawer_message">The "My Drawer" view lets you fully customize your app drawer.
+\n
+\nIn this mode, items can be freely moved around, and folders can be used to organize apps.
+\n
+\nTry zooming out and selecting "Edit layout": apps can be put on left, right, top and bottom pages too, letting you manage apps in your very own way.</string>
+<string name="empty_folder_x">empty folder
+\nDrag and drop items into the folder</string>
 <string name="ll_import_title">Importing LL setup</string>
-<string name="ll_import_message">An installation of Lightning Launcher has been detected.\n\nAll data will now be imported. When this is done you can safely uninstall Lightning Launcher and use Lightning Launcher eXtreme instead.</string>
+<string name="ll_import_message">An installation of Lightning Launcher has been detected.
+\n
+\nAll data will now be imported. When this is done you can safely uninstall Lightning Launcher and use Lightning Launcher eXtreme instead.</string>
 <string name="init_ok">Ready!</string>
 <string name="init_ko">Something went wrong during file copy!</string>
 <string name="auto_exit_t">Auto exit</string>
@@ -606,7 +661,8 @@
 <string name="tmpl_warn_llx">• this template has been designed with Lightning Launcher eXtreme, it may use some features not available in this version.</string>
 <string name="tmpl_warn_screen">• this template does not exactly match your screen characteristics. Some elements may be scaled and displayed incorrectly, or look blurry.</string>
 <string name="tmpl_warn_widget">• your device is not able to restore widgets automatically, you will need to manually recreate them.</string>
-<string name="widget_e">Couldn\'t find the widget :(\nTap to pick another one</string>
+<string name="widget_e">Couldn\'t find the widget :(
+\nTap to pick another one</string>
 <string name="tmpl_s_p">Select desktops to export</string>
 <string name="an_ctf">Close topmost folder</string>
 <string name="an_caf">Close all folders</string>
@@ -822,11 +878,25 @@
 <string name="rs_t">Run scripts</string>
 <string name="rs_s">Allow scripts execution</string>
 <string name="rs_w">Warning: script execution is currently disabled in general settings</string>
-<string name="h_ad">Your apps are here.\nYou can launch apps from there and start adding apps to the desktop: long press on some app and select \"Add to launcher\".\n\nTap to learn more.</string>
-<string name="h_f">You just added a folder. Folders can contain apps, widgets or even other folders.\n\nDrag some item over it, wait a bit for the move to be confirmed (at the end of the animation), then drop the object: it will be moved inside the folder.\n\nTap to learn more on folders.</string>
-<string name="h_p">Your first panel is here.\nPanels behave a bit like folders: drag item over it, wait a bit for the move to be confirmed (end of the animation), then drop the object.\n\nTap to learn more on panels.</string>
+<string name="h_ad">Your apps are here.
+\nYou can launch apps from there and start adding apps to the desktop: long press on some app and select \"Add to launcher\".
+\n
+\nTap to learn more.</string>
+<string name="h_f">You just added a folder. Folders can contain apps, widgets or even other folders.
+\n
+\nDrag some item over it, wait a bit for the move to be confirmed (at the end of the animation), then drop the object: it will be moved inside the folder.
+\n
+\nTap to learn more on folders.</string>
+<string name="h_p">Your first panel is here.
+\nPanels behave a bit like folders: drag item over it, wait a bit for the move to be confirmed (end of the animation), then drop the object.
+\n
+\nTap to learn more on panels.</string>
 <string name="h_t">Hint</string>
-<string name="h_k">This is your desktop. Long tap to add objects (apps, widgets, folders, more) and access settings.\n\nPages are created as soon as you drag objects over them: to the left and right sides, but also to the top and bottom sides.\n\nTap to learn more on LL concepts.</string>
+<string name="h_k">This is your desktop. Long tap to add objects (apps, widgets, folders, more) and access settings.
+\n
+\nPages are created as soon as you drag objects over them: to the left and right sides, but also to the top and bottom sides.
+\n
+\nTap to learn more on LL concepts.</string>
 <string name="tut_concepts">Concepts</string>
 <string name="tut_wiki">Wiki</string>
 

@@ -46,14 +46,22 @@
 <string name="mi_move_out_of_folder">Μετακίνηση εκτός φακέλου</string>
 <string name="mi_zorder">Μετακίνηση μπροστά/πίσω</string>
 <string name="first_use_title">Καλωσορίσατε !</string>
-<string name="first_use_message">Lightning Launcher είναι μια γρήγορη, ελαφριά και πλήρως προσαρμόσιμη αρχική οθόνη αντικατάστασης για το Android.\n\nLL θα προετοιμάσει τώρα τον κατάλογο των εφαρμογών μια για πάντα.\n\nΜην παραλείψετε να επισκεφθείτε τα σεμινάρια βίντεο για να μάθετε περισσότερα.\n\nΑπολαύστε τη !</string>
+<string name="first_use_message">Lightning Launcher είναι μια γρήγορη, ελαφριά και πλήρως προσαρμόσιμη αρχική οθόνη αντικατάστασης για το Android.
+\n
+\nLL θα προετοιμάσει τώρα τον κατάλογο των εφαρμογών μια για πάντα.
+\n
+\nΜην παραλείψετε να επισκεφθείτε τα σεμινάρια βίντεο για να μάθετε περισσότερα.
+\n
+\nΑπολαύστε τη !</string>
 <string name="all_apps">Όλες οι εφαρμογές</string>
 <string name="menu_refresh">Ανανέωση</string>
 <string name="menu_zoom">Μεγέθυνση</string>
 <string name="menu_see_only_visible">Μόνο το ορατό τμήμα</string>
 <string name="menu_see_only_hidden">Μόνο το κρυμμένο τμήμα</string>
 <string name="menu_see_all">Όλες οι εφαρμογές</string>
-<string name="empty_folder">κρατήστε το πατημένο για να\nπροσθέσετε στοιχεία\nΠλήκτρο Μενού για περισσότερα</string>
+<string name="empty_folder">κρατήστε το πατημένο για να
+\nπροσθέσετε στοιχεία
+\nΠλήκτρο Μενού για περισσότερα</string>
 <string name="file_picker_activity_up">Επάνω</string>
 
 <string name="copy_style_toast">Tap on an item to copy its style</string>
@@ -388,7 +396,8 @@
 <item>Κάτω</item>
 </string-array>
 
-<string name="b_hint">Πατήστε μία ή περισσότερες περιοχές\nκαι στη συνέχεια επιλέξτε μια παρακάτω ενέργεια</string>
+<string name="b_hint">Πατήστε μία ή περισσότερες περιοχές
+\nκαι στη συνέχεια επιλέξτε μια παρακάτω ενέργεια</string>
 <string name="b_size">Ρυθμίστε το μέγεθος των επιλεγμένων περιοχών</string>
 <string name="b_color_normal">Κανονικό χρώμα</string>
 <string name="b_color_selected">Επιλεγμένο χρώμα</string>
@@ -407,8 +416,10 @@
 <item>Εστιασμένη</item>
 </string-array>
 
-<string name="il_preview">Οθόνη προεπισκόπησης\n(μπορεί να διαφέρει από την πραγματική επιφάνεια εργασίας)</string>
-<string name="preview_toast">Προεπισκόπηση του τρόπου λειτουργίας\nόλες οι ενέργειες είναι απενεργοποιημένες</string>
+<string name="il_preview">Οθόνη προεπισκόπησης
+\n(μπορεί να διαφέρει από την πραγματική επιφάνεια εργασίας)</string>
+<string name="preview_toast">Προεπισκόπηση του τρόπου λειτουργίας
+\nόλες οι ενέργειες είναι απενεργοποιημένες</string>
 <string name="pick_a_font">Διαλέξτε ένα αρχείο TTF…</string>
 <string name="system_font">Γραμματοσειρά του συστήματος</string>
 <string name="left">αριστερά</string>
@@ -432,11 +443,13 @@
 <string name="other_apps">Άλλες εφαρμογές</string>
 <string name="tut_intro">Εισαγωγή</string>
 <string name="tut_basic_editing">Πρώτα βήματα</string>
-<string name="tut_custo">Προσαρμογή\nαντικείμενα</string>
+<string name="tut_custo">Προσαρμογή
+\nαντικείμενα</string>
 <string name="tut_free_mode">Ελεύθερη λειτουργία</string>
 <string name="tut_lock">Κλειδώστε την οθόνη</string>
 <string name="tut_pin">Καρφίτσωμα/άραγμα στοιχείων</string>
-<string name="tut_scroll">Οθόνες και\nπλοήγηση</string>
+<string name="tut_scroll">Οθόνες και
+\nπλοήγηση</string>
 <string name="dialog_color_picker">Επιλογή χρωμάτων</string>
 
 <string name="shortcut_settings">LL - Setting</string>
@@ -507,7 +520,6 @@
 <string name="mi_mode_recent_apps">Recently launched</string>
 <string name="mi_mode_recently_updated">Recently Updated</string>
 <string name="mi_mode_frequently_used">Frequently Used</string>
-<string name="mi_mode_running">Running</string>
 <string name="mi_es_add_folder">Add folder</string>
 <string name="mi_es_edit_layout">Edit layout</string>
 <string name="mi_es_show_hidden">Show hidden</string>

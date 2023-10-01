@@ -5,7 +5,26 @@
 <string name="pack_name_short">Svenska</string>
 <string name="tranlator_name">Henrik Danielsson</string>
 
-<string name="description">Lightning Launcher is a fast, light and extremely customizable launcher (also known as "home screen replacement", or "shell"). \n\nLightning is the launcher of choice for people who wants a butter smooth, light on memory and tailor-made home screen replacement. \n\nUnlike most traditional launchers, Lightning lets you place items everywhere on the desktop, not only to the left or right sides, but also on pages above and below. Think at the desktop as an unlimited canvas extending in both horizontal and vertical directions instead of a strip, and you will get the idea. \n\nThis mean: as many pages as you need, more space for your apps, and faster navigation. \n\nLightning has some interesting features, such as being able to put widgets in folders (and even other folders for hierarchical navigation), or letting you freely move, scale and rotate any items (note: please switch to "free mode" first to enable rotate/scale). \n\nOh, and did I mentioned that LL was light on memory, leaving more RAM for your apps ? \n\nWith its wide set of options and switches, LL is one of the most customizable launcher, albeit perhaps not the easiest to configure yet ! Agreed, as most powerful tools, LL has a learning curve. But isn\'t that a small price to pay to get the most exciting and unique home screen ;-) \n\nAll comments, suggestions and bug reports are welcome. Please email your questions and bug reports to me (Pierre Hébert) at pierrox@pierrox.net, or visit the facebook page at http://www.facebook.com/LightningLauncher to learn more on what I am currently working on, or request for some feature, or simply ask a question. \n\Enjoy ! \n\Permission: \n- EXPAND_STATUS_BAR: as its name says, used for the "Show status bar" action. \n- SET_WALLPAPER_HINTS: used to set the wallpaper dimension \n- no other permission needed !</string>
+<string name="description">Lightning Launcher is a fast, light and extremely customizable launcher (also known as "home screen replacement", or "shell"). 
+\n
+\nLightning is the launcher of choice for people who wants a butter smooth, light on memory and tailor-made home screen replacement. 
+\n
+\nUnlike most traditional launchers, Lightning lets you place items everywhere on the desktop, not only to the left or right sides, but also on pages above and below. Think at the desktop as an unlimited canvas extending in both horizontal and vertical directions instead of a strip, and you will get the idea. 
+\n
+\nThis mean: as many pages as you need, more space for your apps, and faster navigation. 
+\n
+\nLightning has some interesting features, such as being able to put widgets in folders (and even other folders for hierarchical navigation), or letting you freely move, scale and rotate any items (note: please switch to "free mode" first to enable rotate/scale). 
+\n
+\nOh, and did I mentioned that LL was light on memory, leaving more RAM for your apps ? 
+\n
+\nWith its wide set of options and switches, LL is one of the most customizable launcher, albeit perhaps not the easiest to configure yet ! Agreed, as most powerful tools, LL has a learning curve. But isn\'t that a small price to pay to get the most exciting and unique home screen ;-) 
+\n
+\nAll comments, suggestions and bug reports are welcome. Please email your questions and bug reports to me (Pierre Hébert) at pierrox@pierrox.net, or visit the facebook page at http://www.facebook.com/LightningLauncher to learn more on what I am currently working on, or request for some feature, or simply ask a question. 
+\n\Enjoy ! 
+\n\Permission: 
+\n- EXPAND_STATUS_BAR: as its name says, used for the "Show status bar" action. 
+\n- SET_WALLPAPER_HINTS: used to set the wallpaper dimension 
+\n- no other permission needed !</string>
 
 
 <string name="start_activity_error">Kan inte starta appen</string>
@@ -45,14 +64,22 @@
 <string name="mi_move_out_of_folder">Flytta ut ur katalog</string>
 <string name="mi_zorder">Flytta framför/bakom</string>
 <string name="first_use_title">Välkommen!</string>
-<string name="first_use_message">Lightning Launcher är en nätt, snabb och anpassningsbar ersättare för Androids hemskärm.\n\nLL kommer nu att förbereda listan över appar en gång för alla.\n\nMissa inte videohandledningenarna för att lära dig mer.\n\nHa så kul!</string>
+<string name="first_use_message">Lightning Launcher är en nätt, snabb och anpassningsbar ersättare för Androids hemskärm.
+\n
+\nLL kommer nu att förbereda listan över appar en gång för alla.
+\n
+\nMissa inte videohandledningenarna för att lära dig mer.
+\n
+\nHa så kul!</string>
 <string name="all_apps">Alla appar</string>
 <string name="menu_refresh">Uppdatera</string>
 <string name="menu_zoom">Zooma</string>
 <string name="menu_see_only_visible">Endast synliga</string>
 <string name="menu_see_only_hidden">Endast osynliga</string>
 <string name="menu_see_all">Alla appar</string>
-<string name="empty_folder">långtryck för att\nlägga till objekt,\nmeny för mer</string>
+<string name="empty_folder">långtryck för att
+\nlägga till objekt,
+\nmeny för mer</string>
 <string name="file_picker_activity_up">Upp</string>
 
 <string name="copy_style_toast">Tryck på ett objekt för att kopiera dess stil</string>
@@ -380,7 +407,8 @@
 <item>Custom</item>
 </string-array>
 
-<string name="b_hint">Tryck på en eller flera skärmar,\nvälj sen en åtgärd nedan</string>
+<string name="b_hint">Tryck på en eller flera skärmar,
+\nvälj sen en åtgärd nedan</string>
 <string name="b_size">Sätt storleken på valda områden</string>
 <string name="b_color_normal">Normal färg</string>
 <string name="b_color_selected">Vald färg</string>
@@ -399,8 +427,10 @@
 <item>Fokuserad</item>
 </string-array>
 
-<string name="il_preview">Förhandsvisning av skärm\n(kan skilja från verkligheten)</string>
-<string name="preview_toast">Förhanssvisningsläge\nalla åtgärder avstängda</string>
+<string name="il_preview">Förhandsvisning av skärm
+\n(kan skilja från verkligheten)</string>
+<string name="preview_toast">Förhanssvisningsläge
+\nalla åtgärder avstängda</string>
 <string name="pick_a_font">Välj en TTF-fil…</string>
 <string name="system_font">Systemtypsnitt</string>
 <string name="left">vänster</string>
@@ -437,7 +467,8 @@
 <string name="no_backup_archive">Inga sparade säkerhetskopieringar än</string>
 <string name="backup_in_progress">Säkerhetskopiering pågår...</string>
 <string name="restore_in_progress">Återställning pågår...</string>
-<string name="backup_done">Säkerhetskopiering sparad till:\n%s</string>
+<string name="backup_done">Säkerhetskopiering sparad till:
+\n%s</string>
 <string name="backup_error">Säkerhetskopiering misslyckades, kontrollera att det finns tillräckligt minne på sd-kort</string>
 <string name="restore_error">Återställning misslyckades, kontrollera att säkerhetskopian är giltig och kan läsas</string>
 
@@ -498,7 +529,6 @@
 <string name="mi_mode_recent_apps">Senast startade</string>
 <string name="mi_mode_recently_updated">Senast uppdaterade</string>
 <string name="mi_mode_frequently_used">Mest använda</string>
-<string name="mi_mode_running">Igång</string>
 <string name="mi_es_add_folder">Lägg till mapp</string>
 <string name="mi_es_edit_layout">Anpassa utseende</string>
 <string name="mi_es_show_hidden">Visa dolda</string>
@@ -508,10 +538,18 @@
 <string name="mi_es_folder_settings">Mappinställningar</string>
 <string name="mi_uninstall">Avinstallera</string>
 <string name="my_drawer_title">Min applåda</string>
-<string name="my_drawer_message">"Min applåda" ger dig fria tyglar över din applåda.\n\nI detta läge kan appar flyttas runt obegränsat på en stor måladruk och mappar kan användas för att organisera appar.\n\nTesta att zooma ut och väl "Anpassa utseende": du kommer upptäcka att appar kan placeras på högra, vänstra, övre och nedre skärmarna och anpassa apparna precis som du vill ha dem.</string>
-<string name="empty_folder_x">tom mapp\ndrag-och-släpp appar över mappikonen\nför att lägga till</string>
+<string name="my_drawer_message">"Min applåda" ger dig fria tyglar över din applåda.
+\n
+\nI detta läge kan appar flyttas runt obegränsat på en stor måladruk och mappar kan användas för att organisera appar.
+\n
+\nTesta att zooma ut och väl "Anpassa utseende": du kommer upptäcka att appar kan placeras på högra, vänstra, övre och nedre skärmarna och anpassa apparna precis som du vill ha dem.</string>
+<string name="empty_folder_x">tom mapp
+\ndrag-och-släpp appar över mappikonen
+\nför att lägga till</string>
 <string name="ll_import_title">Importing LL setup</string>
-<string name="ll_import_message">En installation av Lightning Launcher har upptäckts.\n\nAll data kommer nu att importeras. När detta är slutfört kan du avinstallera Lightning Launcher och använda Lightning Launcher eXtreme istället.</string>
+<string name="ll_import_message">En installation av Lightning Launcher har upptäckts.
+\n
+\nAll data kommer nu att importeras. När detta är slutfört kan du avinstallera Lightning Launcher och använda Lightning Launcher eXtreme istället.</string>
 <string name="init_ok">Färdig!</string>
 <string name="init_ko">Något gick snett vid filkopiering!</string>
 <string name="auto_exit_t">Stäng automatiskt</string>
@@ -630,7 +668,8 @@
 <string name="tmpl_warn_llx">- this template has been designed with Lightning Launcher eXtreme, it may use some features not available in this version.</string>
 <string name="tmpl_warn_screen">- this template does not exactly match your screen characteristics. Some elements may not be displayed correctly.</string>
 <string name="tmpl_warn_widget">- your device is not able to restore widgets automatically, you will need to manually recreate them.</string>
-<string name="widget_e">Could not load this widget\nTap to install or pick a new one</string>
+<string name="widget_e">Could not load this widget
+\nTap to install or pick a new one</string>
 <string name="tmpl_s_p">Select desktops to export</string>
 <string name="an_ctf">Close topmost folder</string>
 <string name="an_caf">Close all folders</string>

@@ -5,7 +5,40 @@
 <string name="pack_name_short">한국어</string>
 <string name="tranlator_name">ZeroRay</string>
 
-<string name="description">라이트닝 런처는 극단적으로 빠르며 여러분이 원하는대로 설정 가능합니다.\n메모리를 적게 차지하며 절대 느려지지 않습니다.\n\n여러분들은 이제 더이상 페이지에 얽매이지 않습니다. 대신, 여러분들의 홈 화면은 무한한 캔버스 위에 펼쳐진 아름다운 에술품이 됩니다.\n가능성은 무한합니다.\n\n주요 특징들 :\n•가로 화면과 세로 화면 각각 개별적으로 설정 가능한 레이아웃과 격자 크기\n•현재 화면 맨 위의 패널 혹은 스크롤 가능한 화면\n•아이템을 고정시켜 움직이지 못하게 하는 기능\n•칸 설정 : 어떤 아이템이던 배경색, 경계, 여백 설정 가능\n•자유 모드 : 격자? 먹는건가요? 자유 모드는 격자를 제거하고 아이템의 회전을 가능하게 합니다\n•여러개의 홈 화면 격자\n•22개의 제스쳐와 29개의 액션(바로가기로도 실행 가능합니다)\n•홈 화면 중 하나를 잠금화면으로 사용하기! (베타 전용)\n•정지 지점 : 런처에게 언제 스크롤을 멈춰야 할지 알려주세요\n•설정 가능한 스크롤 방향\n•어떤 아이템이라도 다음과 같은 설정이 가능합니다 :\n1. 글씨의 폰트, 그림자와 색깔\n2. 갤러리에서 아이콘을 고르거나 아이콘의 크기 조절\n3. 라벨이 아이콘에 얼마나 가까운지, 어디에 있을지 선택\n4. 나인패치된 이미지(.9.png)를 배경으로 설정 가능한 칸 설정\n5. 투명도 설정 그리고 방향 제스처로 어떠한 액션이던 실행(ex. Chrome 아이콘을 위로 쓸어올리면 Dolphin Browser가 실행됨)\n•여러분의 홈 화면을 전체 백업하거나 스타일 옵션으로 저장하기\n•여러분의 설정을 APK 파일로 내보내기\n------\n라이트닝 런처는 킷캣에서 사용 가능한 투명한 상태바와 소프트키를 지원합니다.\n------\nTasker처럼 강력한 도구들처럼 라이트닝 런처도 배우는데 시간이 좀 걸립니다만 라이트닝 런처만큼 강력한 런처는 없습니다.\n\n어떤 의견, 제안, 버그 리포트던 환영합니다.\n여러분들은 저, Pierre Hébert에게 pierrox@pierrox.net. 로 이메일을 보낼 수 있습니다.\n만약 원한다면 Google+ 페이지에 가입해서 다른 유저로부터 피드백을 받거나, 기능에 대해 토론하거나, 질문에 답변받거나 혹은 베타 테스트에 참여할 수도 있습니다.\n도움말은 어떠한 설정이던 길게 눌러 온라인에서 찾아볼 수 있습니다.</string>
+<string name="description">라이트닝 런처는 극단적으로 빠르며 여러분이 원하는대로 설정 가능합니다.
+\n메모리를 적게 차지하며 절대 느려지지 않습니다.
+\n
+\n여러분들은 이제 더이상 페이지에 얽매이지 않습니다. 대신, 여러분들의 홈 화면은 무한한 캔버스 위에 펼쳐진 아름다운 에술품이 됩니다.
+\n가능성은 무한합니다.
+\n
+\n주요 특징들 :
+\n•가로 화면과 세로 화면 각각 개별적으로 설정 가능한 레이아웃과 격자 크기
+\n•현재 화면 맨 위의 패널 혹은 스크롤 가능한 화면
+\n•아이템을 고정시켜 움직이지 못하게 하는 기능
+\n•칸 설정 : 어떤 아이템이던 배경색, 경계, 여백 설정 가능
+\n•자유 모드 : 격자? 먹는건가요? 자유 모드는 격자를 제거하고 아이템의 회전을 가능하게 합니다
+\n•여러개의 홈 화면 격자
+\n•22개의 제스쳐와 29개의 액션(바로가기로도 실행 가능합니다)
+\n•홈 화면 중 하나를 잠금화면으로 사용하기! (베타 전용)
+\n•정지 지점 : 런처에게 언제 스크롤을 멈춰야 할지 알려주세요
+\n•설정 가능한 스크롤 방향
+\n•어떤 아이템이라도 다음과 같은 설정이 가능합니다 :
+\n1. 글씨의 폰트, 그림자와 색깔
+\n2. 갤러리에서 아이콘을 고르거나 아이콘의 크기 조절
+\n3. 라벨이 아이콘에 얼마나 가까운지, 어디에 있을지 선택
+\n4. 나인패치된 이미지(.9.png)를 배경으로 설정 가능한 칸 설정
+\n5. 투명도 설정 그리고 방향 제스처로 어떠한 액션이던 실행(ex. Chrome 아이콘을 위로 쓸어올리면 Dolphin Browser가 실행됨)
+\n•여러분의 홈 화면을 전체 백업하거나 스타일 옵션으로 저장하기
+\n•여러분의 설정을 APK 파일로 내보내기
+\n------
+\n라이트닝 런처는 킷캣에서 사용 가능한 투명한 상태바와 소프트키를 지원합니다.
+\n------
+\nTasker처럼 강력한 도구들처럼 라이트닝 런처도 배우는데 시간이 좀 걸립니다만 라이트닝 런처만큼 강력한 런처는 없습니다.
+\n
+\n어떤 의견, 제안, 버그 리포트던 환영합니다.
+\n여러분들은 저, Pierre Hébert에게 pierrox@pierrox.net. 로 이메일을 보낼 수 있습니다.
+\n만약 원한다면 Google+ 페이지에 가입해서 다른 유저로부터 피드백을 받거나, 기능에 대해 토론하거나, 질문에 답변받거나 혹은 베타 테스트에 참여할 수도 있습니다.
+\n도움말은 어떠한 설정이던 길게 눌러 온라인에서 찾아볼 수 있습니다.</string>
 
 
 <string name="start_activity_error">앱을 시작할 수 없습니다</string>
@@ -43,14 +76,21 @@
 <string name="mi_widget_options">위젯 설정</string>
 <string name="mi_move_out_of_folder">폴더 밖으로 이동</string>
 <string name="first_use_title">환영합니다!</string>
-<string name="first_use_message">라이트닝 런처는 가볍고 무엇이던 설정 가능한 안드로이드 홈 화면 런처입니다.\n\n당신은 현재 기본 모드를 사용중이며 따라서 몇몇 고급 설정들이 숨겨져있습니다. 전문가 모드로 바꾸어 모든 기능과 설정에 접근할 수 있습니다.\n\n라이트닝 런처가 현재 앱 목록을 준비중이며 이는 한번만 하면 됩니다.\n\n읽어주셔서 감사드리며 라이트닝 런처를 써주셔서 감사합니다!</string>
+<string name="first_use_message">라이트닝 런처는 가볍고 무엇이던 설정 가능한 안드로이드 홈 화면 런처입니다.
+\n
+\n당신은 현재 기본 모드를 사용중이며 따라서 몇몇 고급 설정들이 숨겨져있습니다. 전문가 모드로 바꾸어 모든 기능과 설정에 접근할 수 있습니다.
+\n
+\n라이트닝 런처가 현재 앱 목록을 준비중이며 이는 한번만 하면 됩니다.
+\n
+\n읽어주셔서 감사드리며 라이트닝 런처를 써주셔서 감사합니다!</string>
 <string name="all_apps">모든 앱</string>
 <string name="menu_refresh">새로고침</string>
 <string name="menu_zoom">확대</string>
 <string name="menu_see_only_visible">보이는 것만</string>
 <string name="menu_see_only_hidden">숨겨진 것만</string>
 <string name="menu_see_all">모든 앱</string>
-<string name="empty_folder">아이템을 추가하기 위해 길게 터치\n더 많은 옵션을 위해 폴더 아이콘을 설정하십시오</string>
+<string name="empty_folder">아이템을 추가하기 위해 길게 터치
+\n더 많은 옵션을 위해 폴더 아이콘을 설정하십시오</string>
 <string name="file_picker_activity_up">위로</string>
 
 <string name="settings">설정</string>
@@ -167,7 +207,8 @@
 <string name="select_launcher_title">기본 런처 선택</string>
 <string name="extras">기타</string>
 <string name="permission_denied">권한이 거부되었습니다. 전화 바로가기를 원하신다면 LL direct call 플러그인을 설치해 주세요.</string>
-<string name="appearance">외관\n왼쪽으로 스와이프해 변경 사항 미리보기</string>
+<string name="appearance">외관
+\n왼쪽으로 스와이프해 변경 사항 미리보기</string>
 <string name="background_t">배경화면</string>
 <string name="background_s">배경화면, 색 투명도, 스크롤 효과 설정</string>
 <string name="grid_t">격자 선</string>
@@ -361,7 +402,8 @@
 <item>개인 설정</item>
 </string-array>
 
-<string name="b_hint">하나 이상의 영역을 선택한 후\n색상과 크기를 선택하세요.</string>
+<string name="b_hint">하나 이상의 영역을 선택한 후
+\n색상과 크기를 선택하세요.</string>
 <string name="b_size">선택된 영역의 크기 설정</string>
 <string name="b_color_normal">기본 색상</string>
 <string name="b_color_selected">선택 색상</string>
@@ -380,8 +422,10 @@
 <item>포커스</item>
 </string-array>
 
-<string name="il_preview">미리보기 모드\n(실제와 다를수도 있습니다)</string>
-<string name="preview_toast">미리보기 모드\n모든 활동은 비활성화되었습니다</string>
+<string name="il_preview">미리보기 모드
+\n(실제와 다를수도 있습니다)</string>
+<string name="preview_toast">미리보기 모드
+\n모든 활동은 비활성화되었습니다</string>
 <string name="pick_a_font">TTF파일이나 OTF파일 선택</string>
 <string name="system_font">기본 폰트</string>
 <string name="left">왼쪽</string>
@@ -416,11 +460,13 @@
 <string name="no_backup_archive">복원할 백업 파일이 없습니다</string>
 <string name="backup_in_progress">백업하는중...</string>
 <string name="restore_in_progress">복원하는중...</string>
-<string name="backup_done">백업 저장됨:\n%s</string>
+<string name="backup_done">백업 저장됨:
+\n%s</string>
 <string name="backup_error">백업 오류. SD카드에 넉넉한 공간이 있는지 확인하세요</string>
 <string name="restore_error">복원 오류. 백업 파일이 유효한지, 읽기 가능인지 확인하세요</string>
 
-<string name="confirm_delete">정말로 이 홈 화면을 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.</string>
+<string name="confirm_delete">정말로 이 홈 화면을 삭제하시겠습니까?
+\n이 작업은 되돌릴 수 없습니다.</string>
 
 
 <!-- added: 90 -->
@@ -478,17 +524,24 @@
 <string name="mi_mode_recent_apps">최근 실행됨</string>
 <string name="mi_mode_recently_updated">최근 업데이트됨</string>
 <string name="mi_mode_frequently_used">자주 사용됨</string>
-<string name="mi_mode_running">실행중</string>
 <string name="mi_es_edit_layout">레이아웃 설정</string>
 <string name="mi_es_refresh">새로고침</string>
 <string name="mi_es_settings">설정</string>
 <string name="mi_es_folder_settings">폴더 설정</string>
 <string name="mi_uninstall">삭제</string>
 <string name="my_drawer_title">내 앱 목록</string>
-<string name="my_drawer_message">"내 앱 목록"은 당신으로 하여금 앱 목록을 마음껏 설정할수 있게 해줍니다.\n\n이 모드에서 아이템은 자유로이 배치될 수 있으며 폴더들은 앱들을 정리하는데 쓰일 수 있습니다.\n\n줌 아웃하고 "레이아웃 설정"을 선택해보세요. 당신은 앱들이 왼쪽, 오른쪽, 위쪽, 아래쪽 페이지에도 놓일수 있음을 발견할것입니다. 마음껏 앱들을 배치하세요.</string>
-<string name="empty_folder_x">빈 폴더\n개체를 폴더 안에 넣으려면\n개체를 폴더 위에 끌어다 놓으세요</string>
+<string name="my_drawer_message">"내 앱 목록"은 당신으로 하여금 앱 목록을 마음껏 설정할수 있게 해줍니다.
+\n
+\n이 모드에서 아이템은 자유로이 배치될 수 있으며 폴더들은 앱들을 정리하는데 쓰일 수 있습니다.
+\n
+\n줌 아웃하고 "레이아웃 설정"을 선택해보세요. 당신은 앱들이 왼쪽, 오른쪽, 위쪽, 아래쪽 페이지에도 놓일수 있음을 발견할것입니다. 마음껏 앱들을 배치하세요.</string>
+<string name="empty_folder_x">빈 폴더
+\n개체를 폴더 안에 넣으려면
+\n개체를 폴더 위에 끌어다 놓으세요</string>
 <string name="ll_import_title">LL 설정 불러오기</string>
-<string name="ll_import_message">라이트닝 런처가 감지되었습니다.\n\n모든 데이터가 불러오기 됩니다. 이 작업이 끝나면 당신은 안전하게 이전 라이트닝 런처를 제거하고 새로운 라이트닝 런처를 사용할수 있습니다.</string>
+<string name="ll_import_message">라이트닝 런처가 감지되었습니다.
+\n
+\n모든 데이터가 불러오기 됩니다. 이 작업이 끝나면 당신은 안전하게 이전 라이트닝 런처를 제거하고 새로운 라이트닝 런처를 사용할수 있습니다.</string>
 <string name="init_ok">완료됨!</string>
 <string name="init_ko">파일 복사중 오류가 발생했습니다.</string>
 <string name="auto_exit_t">자동으로 닫기</string>
@@ -604,7 +657,8 @@
 <string name="tmpl_warn_llx">- 이 템플릿은 라이트닝 런처 eXtream을 위해 디자인되었습니다. 이 버전에서 사용할수 없는 기능을 템플릿이 사용할수도 있습니다.</string>
 <string name="tmpl_warn_screen">- 이 템플릿은 당신의 화면 설정과 일치하지 않습니다. 몇몇 개체가 제대로 표시되지 않을수도 있습니다.</string>
 <string name="tmpl_warn_widget">- 당신의 기기가 위젯을 자동으로 복구할수 없습니다. 직접 수동으로 복구하셔야 합니다.</string>
-<string name="widget_e">위젯을 불러오는걸 실패하였습니다.\n터치해서 다른걸 선택하세요.</string>
+<string name="widget_e">위젯을 불러오는걸 실패하였습니다.
+\n터치해서 다른걸 선택하세요.</string>
 <string name="tmpl_s_p">내보낼 데스크탑 선택</string>
 <string name="an_ctf">가장 높은 폴더 닫기</string>
 <string name="an_caf">모든 폴더 닫기</string>
@@ -820,11 +874,25 @@
 <string name="rs_t">스크립트 실행</string>
 <string name="rs_s">스크립트 실행 허용</string>
 <string name="rs_w">경고 : 스크립트 실행은 현재 설정에서 비활성화 되어있습니다.</string>
-<string name="h_ad">당신의 앱들은 여기 있습니다.\n당신은 여기서 앱을 실행할 수 있으며 앱들을 길게 눌러 '런처에 추가'를 누름으로서 홈 화면에 앱을 추가할 수 있습니다.\n\n탭 하여 더 자세히 알아보세요. </string>
-<string name="h_f">당신은 이제 막 폴더를 추가했습니다. 폴더는 앱, 위젯, 다른 폴더들을 포함할 수 있습니다.\n\n다른 아이템들을 폴더 위로 드래그한 후 조금 기다려서 애니메이션이 다 끝나 이동이 확정되길 기다리세요. 그 다음 아이템을 놓으면 아이템이 폴더 안으로 들어갈겁니다.\n\n탭 하여 폴더에 대해 더 자세히 알아보세요.</string>
-<string name="h_p">당신의 첫번째 패널이 여기있습니다.\n패널은 폴더처럼 작동합니다. 아이템을 드래그하고 애니메이션이 끝날때까지 조금 기다려 이동이 확정되기까지 기다린 다음에 아이템을 놓으면 됩니다.\n\n탭 하여 패널에 대해 더 자세히 알아보세요</string>
+<string name="h_ad">당신의 앱들은 여기 있습니다.
+\n당신은 여기서 앱을 실행할 수 있으며 앱들을 길게 눌러 '런처에 추가'를 누름으로서 홈 화면에 앱을 추가할 수 있습니다.
+\n
+\n탭 하여 더 자세히 알아보세요. </string>
+<string name="h_f">당신은 이제 막 폴더를 추가했습니다. 폴더는 앱, 위젯, 다른 폴더들을 포함할 수 있습니다.
+\n
+\n다른 아이템들을 폴더 위로 드래그한 후 조금 기다려서 애니메이션이 다 끝나 이동이 확정되길 기다리세요. 그 다음 아이템을 놓으면 아이템이 폴더 안으로 들어갈겁니다.
+\n
+\n탭 하여 폴더에 대해 더 자세히 알아보세요.</string>
+<string name="h_p">당신의 첫번째 패널이 여기있습니다.
+\n패널은 폴더처럼 작동합니다. 아이템을 드래그하고 애니메이션이 끝날때까지 조금 기다려 이동이 확정되기까지 기다린 다음에 아이템을 놓으면 됩니다.
+\n
+\n탭 하여 패널에 대해 더 자세히 알아보세요</string>
 <string name="h_t">힌트</string>
-<string name="h_k">이것은 당신의 홈 화면입니다. 길게 눌러 앱, 위젯, 폴더같은 아이템들을 추가할 수 있으며 또한 설정에 진입할 수 있습니다.\n\n페이지들은 당신이 아이템을 상하좌우로 옮겨 그 위에 아이템을 놓을때 생깁니다.\n\n탭 하여 라이트닝 런처의 컨셉에 대해 더 자세히 알아보세요.</string>
+<string name="h_k">이것은 당신의 홈 화면입니다. 길게 눌러 앱, 위젯, 폴더같은 아이템들을 추가할 수 있으며 또한 설정에 진입할 수 있습니다.
+\n
+\n페이지들은 당신이 아이템을 상하좌우로 옮겨 그 위에 아이템을 놓을때 생깁니다.
+\n
+\n탭 하여 라이트닝 런처의 컨셉에 대해 더 자세히 알아보세요.</string>
 <string name="tut_concepts">먼저 읽어주세요!</string>
 <string name="tut_wiki">위키</string>
 

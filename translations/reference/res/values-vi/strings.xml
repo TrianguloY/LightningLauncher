@@ -5,7 +5,20 @@
 <string name="pack_name_short">Việt Nam</string>
 <string name="tranlator_name">Hayatuan</string>
 
-<string name="description">Lightning Launcher là một launcher có thể tùy chỉnh đầy đủ, nhẹ và nhanh (còn được biết như là "sự thay thế màn hình chủ", hoặc "shell").\nLightning là launcher chọn lựa cho những ai muốn sự thay thế màn hình chủ mượt mà, nhẹ bộ nhớ, thiết kế sẵn.\nKhông giống như hầu hết các launcher truyền thống, Lightning cho phép bạn đặt đối tượng ở khắp mọi nơi trên màn hình, không chỉ để các bên trái hoặc phải, mà còn trên các trang trên và dưới. Hãy suy nghĩ màn hình như là một khung không giới hạn kéo dài theo hai hướng chiều ngang và dọc thay vì một dải, và bạn sẽ có được ý tưởng.\nĐiều này có nghĩa: khi nhiều trang bạn cần, nhiều không gian hơn cho các ứng dụng của bạn, và điều hướng nhanh hơn.\nLightning có một số tính năng thú vị, chẳng hạn như có thể đặt widgets trong thư mục (và thậm chí cả các thư mục khác cho việc điều hướng phân cấp), hoặc cho phép bạn tự do di chuyển, thu phóng và xoay bất kì đối tượng (lưu ý: xin vui lòng chuyển sang "chế độ tự do" trước để kích hoạt xoay/ thu phóng).\nÀ, và tôi đã đề cập rằng LL là rất nhẹ cho bộ nhớ, để RAM nhiều hơn cho các ứng dụng của bạn?\n\nVới một tập hợp rộng lớn của các tùy chọn và chuyển chuyển đổi, LL là một trong các launcher tùy biến nhất, mặc dù có lẽ không phải là dễ nhất để cấu hình nhất! Đồng ý, như hầu hết các công cụ mạnh mẽ, LL có một lộ trình học hỏi. Nhưng đó là một giá nhỏ để trả cho một màn hình chủ thú vị và độc đáo nhất;-), phải không?\nTất cả các ý kiến, đề xuất và báo cáo lỗi được hoan nghênh. Vui lòng gửi email câu hỏi hay báo lỗi cho tôi (Pierre Hébert) tại pierrox@pierrox.net, hoặc ghé thăm trang facebook http://www.facebook.com/LightningLauncher để tìm hiểu thêm những gì tôi đang thực hiện, hoặc yêu cầu một số tính năng, hay đơn giản là đặt một câu hỏi.\n\Hãy thưởng thức\n\Cho phép:\n- EXPAND_STATUS_BAR: như tên của nó nói, được sử dụng cho hành động \"Hiển thị thanh trạng thái\".\n- SET_WALLPAPER_HINTS: được sử dụng để thiết lập kích thước hình nền.\n- Không có sự cho phép cần thiết khác!</string>
+<string name="description">Lightning Launcher là một launcher có thể tùy chỉnh đầy đủ, nhẹ và nhanh (còn được biết như là "sự thay thế màn hình chủ", hoặc "shell").
+\nLightning là launcher chọn lựa cho những ai muốn sự thay thế màn hình chủ mượt mà, nhẹ bộ nhớ, thiết kế sẵn.
+\nKhông giống như hầu hết các launcher truyền thống, Lightning cho phép bạn đặt đối tượng ở khắp mọi nơi trên màn hình, không chỉ để các bên trái hoặc phải, mà còn trên các trang trên và dưới. Hãy suy nghĩ màn hình như là một khung không giới hạn kéo dài theo hai hướng chiều ngang và dọc thay vì một dải, và bạn sẽ có được ý tưởng.
+\nĐiều này có nghĩa: khi nhiều trang bạn cần, nhiều không gian hơn cho các ứng dụng của bạn, và điều hướng nhanh hơn.
+\nLightning có một số tính năng thú vị, chẳng hạn như có thể đặt widgets trong thư mục (và thậm chí cả các thư mục khác cho việc điều hướng phân cấp), hoặc cho phép bạn tự do di chuyển, thu phóng và xoay bất kì đối tượng (lưu ý: xin vui lòng chuyển sang "chế độ tự do" trước để kích hoạt xoay/ thu phóng).
+\nÀ, và tôi đã đề cập rằng LL là rất nhẹ cho bộ nhớ, để RAM nhiều hơn cho các ứng dụng của bạn?
+\n
+\nVới một tập hợp rộng lớn của các tùy chọn và chuyển chuyển đổi, LL là một trong các launcher tùy biến nhất, mặc dù có lẽ không phải là dễ nhất để cấu hình nhất! Đồng ý, như hầu hết các công cụ mạnh mẽ, LL có một lộ trình học hỏi. Nhưng đó là một giá nhỏ để trả cho một màn hình chủ thú vị và độc đáo nhất;-), phải không?
+\nTất cả các ý kiến, đề xuất và báo cáo lỗi được hoan nghênh. Vui lòng gửi email câu hỏi hay báo lỗi cho tôi (Pierre Hébert) tại pierrox@pierrox.net, hoặc ghé thăm trang facebook http://www.facebook.com/LightningLauncher để tìm hiểu thêm những gì tôi đang thực hiện, hoặc yêu cầu một số tính năng, hay đơn giản là đặt một câu hỏi.
+\n\Hãy thưởng thức
+\n\Cho phép:
+\n- EXPAND_STATUS_BAR: như tên của nó nói, được sử dụng cho hành động \"Hiển thị thanh trạng thái\".
+\n- SET_WALLPAPER_HINTS: được sử dụng để thiết lập kích thước hình nền.
+\n- Không có sự cho phép cần thiết khác!</string>
 
 
 <string name="start_activity_error">Không thể khởi động ứng dụng này</string>
@@ -45,14 +58,22 @@
 <string name="mi_move_out_of_folder">Dời khỏi thư mục</string>
 <string name="mi_zorder">Dời về trước/sau</string>
 <string name="first_use_title">Xin chào</string>
-<string name="first_use_message">Lightning Launcher là một sự thay thay thế cho home screen (màn hình chính) của Android có thể tùy chỉnh một cách đầy đủ, nhẹ và nhanh.\n\nLL bây giờ sẽ chuẩn bị bảng liệt kê những ứng dụng chỉ một lần và cho tất cả.\n\n Đừng bỏ lỡ video hướng dẫn để học thêm.\n\nTận hưởng thôi</string>
+<string name="first_use_message">Lightning Launcher là một sự thay thay thế cho home screen (màn hình chính) của Android có thể tùy chỉnh một cách đầy đủ, nhẹ và nhanh.
+\n
+\nLL bây giờ sẽ chuẩn bị bảng liệt kê những ứng dụng chỉ một lần và cho tất cả.
+\n
+\n Đừng bỏ lỡ video hướng dẫn để học thêm.
+\n
+\nTận hưởng thôi</string>
 <string name="all_apps">Ứng dụng</string>
 <string name="menu_refresh">Làm mới</string>
 <string name="menu_zoom">Thu phóng</string>
 <string name="menu_see_only_visible">Chỉ nhìn thấy</string>
 <string name="menu_see_only_hidden">Chỉ ẩn </string>
 <string name="menu_see_all">Ứng dụng</string>
-<string name="empty_folder">Chạm lâu để \nthêm bảng\ndanh mục nhiều hơn</string>
+<string name="empty_folder">Chạm lâu để 
+\nthêm bảng
+\ndanh mục nhiều hơn</string>
 <string name="file_picker_activity_up">Lên trên</string>
 
 <string name="copy_style_toast">Tap on an item to copy its style</string>
@@ -380,7 +401,8 @@
 <item>Custom</item>
 </string-array>
 
-<string name="b_hint">Chạm vào một hoặc nhiều khu vực\n sau đó chọn một hành động dưới đây</string>
+<string name="b_hint">Chạm vào một hoặc nhiều khu vực
+\n sau đó chọn một hành động dưới đây</string>
 <string name="b_size">Thiết lập kích thước của các khu vực được lựa chọn</string>
 <string name="b_color_normal">Màu bình thường</string>
 <string name="b_color_selected">Màu được chọn</string>
@@ -399,8 +421,10 @@
 <item>Tập trung</item>
 </string-array>
 
-<string name="il_preview">Xem trước màn hình\n(có thể khác so với màn hình thực)</string>
-<string name="preview_toast">Kiểu xem trước\ntất cả hành động bị vô hiệu</string>
+<string name="il_preview">Xem trước màn hình
+\n(có thể khác so với màn hình thực)</string>
+<string name="preview_toast">Kiểu xem trước
+\ntất cả hành động bị vô hiệu</string>
 <string name="pick_a_font">Chọn một tập tin TTF ...</string>
 <string name="system_font">Font hệ thống</string>
 <string name="left">trái</string>
@@ -436,7 +460,8 @@
 <string name="no_backup_archive">No backup archive to restore yet</string>
 <string name="backup_in_progress">Backup in progress…</string>
 <string name="restore_in_progress">Restore in progress…</string>
-<string name="backup_done">Backup saved to:\n%s</string>
+<string name="backup_done">Backup saved to:
+\n%s</string>
 <string name="backup_error">Backup error, please check that there is enough storage space on the sdcard</string>
 <string name="restore_error">Restore error, please check that the backup archive is valid and can be read</string>
 
@@ -497,7 +522,6 @@
 <string name="mi_mode_recent_apps">Recently launched</string>
 <string name="mi_mode_recently_updated">Recently Updated</string>
 <string name="mi_mode_frequently_used">Frequently Used</string>
-<string name="mi_mode_running">Running</string>
 <string name="mi_es_add_folder">Add folder</string>
 <string name="mi_es_edit_layout">Edit layout</string>
 <string name="mi_es_show_hidden">Show hidden</string>
@@ -507,10 +531,18 @@
 <string name="mi_es_folder_settings">Folder settings</string>
 <string name="mi_uninstall">Uninstall</string>
 <string name="my_drawer_title">My Drawer</string>
-<string name="my_drawer_message">The "My Drawer" view lets you fully customize your app drawer.\n\nIn this mode items can be freely moved on a large canvas and folder can be used to organize apps.\n\nTry to zoom out and select "Edit layout" : you will discover that apps can be put on left, right, top and bottom pages too, letting you manage apps in your very own way.</string>
-<string name="empty_folder_x">empty folder\ndrag&amp;drop items over the folder icon\nto populate it</string>
+<string name="my_drawer_message">The "My Drawer" view lets you fully customize your app drawer.
+\n
+\nIn this mode items can be freely moved on a large canvas and folder can be used to organize apps.
+\n
+\nTry to zoom out and select "Edit layout" : you will discover that apps can be put on left, right, top and bottom pages too, letting you manage apps in your very own way.</string>
+<string name="empty_folder_x">empty folder
+\ndrag&amp;drop items over the folder icon
+\nto populate it</string>
 <string name="ll_import_title">Importing LL setup</string>
-<string name="ll_import_message">An installation of Lightning Launcher has been detected.\n\nAll data will now be imported. When this is done you can safely uninstall Lightning Launcher and use Lightning Launcher eXtreme instead.</string>
+<string name="ll_import_message">An installation of Lightning Launcher has been detected.
+\n
+\nAll data will now be imported. When this is done you can safely uninstall Lightning Launcher and use Lightning Launcher eXtreme instead.</string>
 <string name="init_ok">Ready!</string>
 <string name="init_ko">Something went wrong during file copy!</string>
 <string name="auto_exit_t">Auto exit</string>
@@ -846,11 +878,25 @@
 <string name="rs_t">Run scripts</string>
 <string name="rs_s">Allow scripts execution</string>
 <string name="rs_w">Warning: script execution is currently disabled in general settings</string>
-<string name="h_ad">Your apps are here.\nYou can launch apps from there and start adding apps to the desktop: long press on some app and select \"Add to launcher\".\n\nTap to learn more.</string>
-<string name="h_f">You just added a folder. Folders can contain apps, widgets or even other folders.\n\nDrag some item over it, wait a bit for the move to be confirmed (at the end of the animation), then drop the object: it will be moved inside the folder.\n\nTap to learn more on folders.</string>
-<string name="h_p">Your first panel is here.\nPanels behave a bit like folders: drag item over it, wait a bit for the move to be confirmed (end of the animation), then drop the object.\n\nTap to learn more on panels.</string>
+<string name="h_ad">Your apps are here.
+\nYou can launch apps from there and start adding apps to the desktop: long press on some app and select \"Add to launcher\".
+\n
+\nTap to learn more.</string>
+<string name="h_f">You just added a folder. Folders can contain apps, widgets or even other folders.
+\n
+\nDrag some item over it, wait a bit for the move to be confirmed (at the end of the animation), then drop the object: it will be moved inside the folder.
+\n
+\nTap to learn more on folders.</string>
+<string name="h_p">Your first panel is here.
+\nPanels behave a bit like folders: drag item over it, wait a bit for the move to be confirmed (end of the animation), then drop the object.
+\n
+\nTap to learn more on panels.</string>
 <string name="h_t">Hint</string>
-<string name="h_k">This is your desktop. Long tap to add objects (apps, widgets, folders, more) and access settings.\n\nPages are created as soon as you drag objects over them: to the left and right sides, but also to the top and bottom sides.\n\nTap to learn more on LL concepts.</string>
+<string name="h_k">This is your desktop. Long tap to add objects (apps, widgets, folders, more) and access settings.
+\n
+\nPages are created as soon as you drag objects over them: to the left and right sides, but also to the top and bottom sides.
+\n
+\nTap to learn more on LL concepts.</string>
 <string name="tut_concepts">Concepts</string>
 <string name="tut_wiki">Wiki</string>
 <string name="bo_t">Transparent bars and content overlap</string>

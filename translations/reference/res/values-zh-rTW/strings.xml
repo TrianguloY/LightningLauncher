@@ -45,7 +45,11 @@
 <string name="mi_move_out_of_folder">移出資料夾</string>
 <string name="mi_zorder">モンクレール新作激安</string>
 <string name="first_use_title">歡迎！</string>
-<string name="first_use_message">閃電桌面是一個輕量的，速度很快的，並可自定義主畫面的android桌面\n\n閃電桌面將要進行一次性的準備應用程式列表，請觀看接下來的教學影片\n\n好好享受閃電桌面吧</string>
+<string name="first_use_message">閃電桌面是一個輕量的，速度很快的，並可自定義主畫面的android桌面
+\n
+\n閃電桌面將要進行一次性的準備應用程式列表，請觀看接下來的教學影片
+\n
+\n好好享受閃電桌面吧</string>
 <string name="all_apps">モンクレール新作激安</string>
 <string name="menu_refresh">モンクレール新作激安</string>
 <string name="menu_zoom">モンクレール新作激安</string>
@@ -436,7 +440,8 @@
 <string name="no_backup_archive">モンクレール新作激安</string>
 <string name="backup_in_progress">モンクレール新作激安</string>
 <string name="restore_in_progress">モンクレール新作激安</string>
-<string name="backup_done">Backup saved to:\n%s</string>
+<string name="backup_done">Backup saved to:
+\n%s</string>
 <string name="backup_error">モンクレール新作激安</string>
 <string name="restore_error">モンクレール新作激安</string>
 
@@ -497,7 +502,6 @@
 <string name="mi_mode_recent_apps">モンクレール新作激安</string>
 <string name="mi_mode_recently_updated">モンクレール新作激安</string>
 <string name="mi_mode_frequently_used">モンクレール新作激安</string>
-<string name="mi_mode_running">モンクレール新作激安</string>
 <string name="mi_es_add_folder">モンクレール新作激安</string>
 <string name="mi_es_edit_layout">モンクレール新作激安</string>
 <string name="mi_es_show_hidden">モンクレール新作激安</string>
@@ -510,7 +514,9 @@
 \nTry zooming out and selecting "Edit layout": apps can be put on left, right, top and bottom pages too, letting you manage apps in your very own way.</string>
 \nDrag and drop items into the folder</string>
 <string name="ll_import_title">モンクレール新作激安</string>
-<string name="ll_import_message">An installation of Lightning Launcher has been detected.\n\nAll data will now be imported. When this is done you can safely uninstall Lightning Launcher and use Lightning Launcher eXtreme instead.</string>
+<string name="ll_import_message">An installation of Lightning Launcher has been detected.
+\n
+\nAll data will now be imported. When this is done you can safely uninstall Lightning Launcher and use Lightning Launcher eXtreme instead.</string>
 <string name="init_ok">モンクレール新作激安</string>
 <string name="init_ko">モンクレール新作激安</string>
 <string name="auto_exit_t">モンクレール新作激安</string>
@@ -847,11 +853,25 @@
 <string name="rs_t">Run scripts</string>
 <string name="rs_s">Allow scripts execution</string>
 <string name="rs_w">Warning: script execution is currently disabled in general settings</string>
-<string name="h_ad">Your apps are here.\nYou can launch apps from there and start adding apps to the desktop: long press on some app and select \"Add to launcher\".\n\nTap to learn more.</string>
-<string name="h_f">You just added a folder. Folders can contain apps, widgets or even other folders.\n\nDrag some item over it, wait a bit for the move to be confirmed (at the end of the animation), then drop the object: it will be moved inside the folder.\n\nTap to learn more on folders.</string>
-<string name="h_p">Your first panel is here.\nA panel behaves a bit like a folder: drag item over it, wait a bit for the move to be confirmed (end of the animation), then drop the object.\n\nTap to learn more on panels.</string>
+<string name="h_ad">Your apps are here.
+\nYou can launch apps from there and start adding apps to the desktop: long press on some app and select \"Add to launcher\".
+\n
+\nTap to learn more.</string>
+<string name="h_f">You just added a folder. Folders can contain apps, widgets or even other folders.
+\n
+\nDrag some item over it, wait a bit for the move to be confirmed (at the end of the animation), then drop the object: it will be moved inside the folder.
+\n
+\nTap to learn more on folders.</string>
+<string name="h_p">Your first panel is here.
+\nA panel behaves a bit like a folder: drag item over it, wait a bit for the move to be confirmed (end of the animation), then drop the object.
+\n
+\nTap to learn more on panels.</string>
 <string name="h_t">Hint</string>
-<string name="h_k">This is your desktop. Long tap to add objects (apps, widgets, folders, more) and access settings.\n\nPages are created as soon as you drag objects over them: to the left and right sides, but also to the top and bottom sides.\n\nTap to learn more on LL concepts.</string>
+<string name="h_k">This is your desktop. Long tap to add objects (apps, widgets, folders, more) and access settings.
+\n
+\nPages are created as soon as you drag objects over them: to the left and right sides, but also to the top and bottom sides.
+\n
+\nTap to learn more on LL concepts.</string>
 <string name="tut_concepts">Read me first!</string>
 <string name="tut_wiki">Wiki</string>
 
@@ -982,7 +1002,8 @@
 <string name="sc_w">Word wrap</string>
 <string name="wrapx_t">Seamless mode X</string>
 <string name="wrapy_t">Seamless mode Y</string>
-<string name="h_w">The seamless mode is automatically disabled in edit mode, otherwise empty pages wouldn\'t be reachable. Be aware that some items may then suddenly disappear when entering edit mode: they are just displayed at their original position in the desktop instead of being "wrapped".\nSeamless mode is enabled again when exiting edit mode.</string>
+<string name="h_w">The seamless mode is automatically disabled in edit mode, otherwise empty pages wouldn\'t be reachable. Be aware that some items may then suddenly disappear when entering edit mode: they are just displayed at their original position in the desktop instead of being "wrapped".
+\nSeamless mode is enabled again when exiting edit mode.</string>
 <string name="ad_bc">Selected:</string>
 <string name="an_wt">Wallpaper tap</string>
 <string name="an_wst">Wallpaper secondary tap</string>
@@ -990,8 +1011,13 @@
 <string name="ds_uc">User community</string>
 <string name="ds_tt">Tips &amp; tricks</string>
 <string name="ds_br">Backup &amp; Restore</string>
-<string name="ds_hn">Hint: in order to create a new page, simply add or drag some item on it.\nThis works for pages above and below too, try it!\n\n(you can safely delete this hint)</string>
-<string name="ds_um">Hint: use one or two fingers swipe up to reveal the user menu (you can customize it), long tap somewhere to display a contextual menu.\n\n(you can safely delete this hint)</string>
+<string name="ds_hn">Hint: in order to create a new page, simply add or drag some item on it.
+\nThis works for pages above and below too, try it!
+\n
+\n(you can safely delete this hint)</string>
+<string name="ds_um">Hint: use one or two fingers swipe up to reveal the user menu (you can customize it), long tap somewhere to display a contextual menu.
+\n
+\n(you can safely delete this hint)</string>
 <string name="ds_z">Zoom</string>
 <string name="sc_import">Import…</string>
 <string name="sc_si_t">The Script Importer is not installed</string>
@@ -1003,7 +1029,16 @@
 <!-- added 224 -->
 <string name="mi_es_add_pi">Add page indicator</string>
 <string name="tr_fl_t">Please unlock Lightning to use this feature</string>
-<string name="tr_fl_m">Upgrade to the Full Lightning version to benefit from more features:\n\n- Advanced app drawer (folders, action bar, categories).\n- Add, remove, rearrange desktops at will.\n- Per desktop wallpaper.\n- Unread count, badges and dynamic text.\n- Customizable lock screen.\n- Integrated app killer.\n\nIf you already unlocked Lightning in the past, please select "OK" to re-activate this version.</string>
+<string name="tr_fl_m">Upgrade to the Full Lightning version to benefit from more features:
+\n
+\n- Advanced app drawer (folders, action bar, categories).
+\n- Add, remove, rearrange desktops at will.
+\n- Per desktop wallpaper.
+\n- Unread count, badges and dynamic text.
+\n- Customizable lock screen.
+\n- Integrated app killer.
+\n
+\nIf you already unlocked Lightning in the past, please select "OK" to re-activate this version.</string>
 <string name="tr_pw">Please wait…</string>
 <string name="tr_ty">Thank you for supporting Lightning!</string>
 <string name="tr_eu">Sorry, an error occurred…</string>
@@ -1011,12 +1046,28 @@
 <string name="tr_br_s">This feature is not available in the trial version</string>
 <string name="tr_rs_t">Unleash Lightning</string>
 <string name="tr_rs_s">Upgrade to get the most out of Lightning</string>
-<string name="tr_w">Thank you for testing Lightning!\n\nThe app will run in trial mode for 7 days: all features are enabled and can be used without restriction during this period. After the trial period, the app will still be usable but editing will not be enabled anymore.\n\nIf you like this app and wish to support it, please consider purchasing the key to unlock it.\n\nThank you!</string>
+<string name="tr_w">Thank you for testing Lightning!
+\n
+\nThe app will run in trial mode for 7 days: all features are enabled and can be used without restriction during this period. After the trial period, the app will still be usable but editing will not be enabled anymore.
+\n
+\nIf you like this app and wish to support it, please consider purchasing the key to unlock it.
+\n
+\nThank you!</string>
 <string name="tr_ut">About Lightning</string>
-<string name="tr_um">You are a long time user of the free version of Lighting Launcher, thank you.\n\nAlthough this version has been replaced with a trial version, you will still benefit from all previously existing features for free, as well as most improvements made in the full app since the last update.\n\nIf you wish to support this app, please consider purchasing the unlock key at a discounted loyalty price.\n\nThanks!</string>
+<string name="tr_um">You are a long time user of the free version of Lighting Launcher, thank you.
+\n
+\nAlthough this version has been replaced with a trial version, you will still benefit from all previously existing features for free, as well as most improvements made in the full app since the last update.
+\n
+\nIf you wish to support this app, please consider purchasing the unlock key at a discounted loyalty price.
+\n
+\nThanks!</string>
 <string name="tr_l">%d days left for the trial</string>
-<string name="tr_rm">Lightning need your feedback!\n\nWould you like to take a few seconds to rate this app on the Play Store?\n</string>
-<string name="ds_hls">This is a sample lock screen that you can customize at will.\nAdd apps or widgets then activate it through the lock screen settings (tap here).</string>
+<string name="tr_rm">Lightning need your feedback!
+\n
+\nWould you like to take a few seconds to rate this app on the Play Store?
+\n</string>
+<string name="ds_hls">This is a sample lock screen that you can customize at will.
+\nAdd apps or widgets then activate it through the lock screen settings (tap here).</string>
 <string name="ic">Image cropper</string>
 <string name="bg_st">Position</string>
 <string-array name="bg_st_e">

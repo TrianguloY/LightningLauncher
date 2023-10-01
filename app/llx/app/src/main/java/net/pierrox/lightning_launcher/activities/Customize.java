@@ -492,7 +492,6 @@ public class Customize extends ResourceWrapperActivity implements
     private LLPreferenceCheckBox mPGADModeFrequentlyUsed;
     private LLPreferenceCheckBox mPGADModeRecentApps;
     private LLPreferenceCheckBox mPGADModeRecentlyUpdated;
-    private LLPreferenceCheckBox mPGADModeRunning;
     private LLPreference mPGMisc;
     private LLPreferenceList mPGMiscScreenOrientation;
     private LLPreferenceCheckBox mPGMiscSwapItems;
@@ -1629,7 +1628,6 @@ public class Customize extends ResourceWrapperActivity implements
             mPreferencesPageADModes.add(mPGADModeByName = new LLPreferenceCheckBox(this, 0, R.string.mi_mode_by_name, 0, Utils.hasAppDrawerMode(modes, Utils.LAYOUT_MODE_BY_NAME), null));
             mPreferencesPageADModes.add(mPGADModeFrequentlyUsed = new LLPreferenceCheckBox(this, 0, R.string.mi_mode_frequently_used, 0, Utils.hasAppDrawerMode(modes, Utils.LAYOUT_MODE_FREQUENTLY_USED), null));
             mPreferencesPageADModes.add(mPGADModeRecentlyUpdated = new LLPreferenceCheckBox(this, 0, R.string.mi_mode_recently_updated, 0, Utils.hasAppDrawerMode(modes, Utils.LAYOUT_MODE_RECENTLY_UPDATED), null));
-            mPreferencesPageADModes.add(mPGADModeRunning = new LLPreferenceCheckBox(this, 0, R.string.mi_mode_running, 0, Utils.hasAppDrawerMode(modes, Utils.LAYOUT_MODE_RUNNING), null));
         }
 
         if ((!is_folder_page && !is_embedded_folder_page) || mSystemConfig.expertMode) {
@@ -2034,7 +2032,6 @@ public class Customize extends ResourceWrapperActivity implements
             modes |= (1 << Utils.LAYOUT_MODE_RECENT_APPS);
         if (mPGADModeRecentlyUpdated.isChecked())
             modes |= (1 << Utils.LAYOUT_MODE_RECENTLY_UPDATED);
-        if (mPGADModeRunning.isChecked()) modes |= (1 << Utils.LAYOUT_MODE_RUNNING);
 
         return modes;
     }
