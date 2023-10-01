@@ -1,0 +1,24 @@
+[versions]
+agp = "8.1.1"
+kotlin = "1.9.10"
+remoter_version = "1.2.0"
+parceler_version = "1.1.12"
+
+[libraries]
+lsvg = { module = "net.pierrox.android:lsvg", version = "1.0" }
+
+remoter = { module = "com.josesamuel:remoter-annotations", version.ref = "remoter_version" }
+remoter-compiler = { module = "com.josesamuel:remoter", version.ref = "remoter_version" }
+
+parceler = { module = "org.parceler:parceler-api", version.ref = "parceler_version" }
+parceler-compiler = { module = "org.parceler:parceler", version.ref = "parceler_version" }
+
+
+[plugins]
+android = { id = "com.android.application", version.ref = "agp" }
+kotlin = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+androlib = { id = "com.android.library", version.ref = "agp" }
+
+
+[bundles]
+
