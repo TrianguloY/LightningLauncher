@@ -54,7 +54,7 @@
     <application
         android:name="net.pierrox.lightning_launcher.${app_name}"
     	android:icon="@drawable/icon"
-        android:theme="@style/AppLightTranslucent"
+        android:theme="@style/AppLight"
     	android:label="@string/app_name">
 
         <activity
@@ -184,8 +184,7 @@
     	    android:name="net.pierrox.lightning_launcher.activities.CustomizeA"
             android:configChanges="keyboardHidden|screenSize"
             android:excludeFromRecents="true"
-            android:label="@string/customize_ll"
-    	    android:theme="@style/AppLightTranslucent" />
+            android:label="@string/customize_ll" />
 
 		<activity
             android:name="net.pierrox.lightning_launcher.activities.ScriptEditor"

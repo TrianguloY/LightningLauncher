@@ -24,22 +24,23 @@ SOFTWARE.
 
 package net.pierrox.lightning_launcher;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-import net.pierrox.lightning_launcher_extreme.R;
+import androidx.appcompat.app.AppCompatActivity;
+
 import net.pierrox.lightning_launcher.iab.IabHelper;
 import net.pierrox.lightning_launcher.iab.IabResult;
 import net.pierrox.lightning_launcher.iab.Inventory;
 import net.pierrox.lightning_launcher.iab.Purchase;
+import net.pierrox.lightning_launcher_extreme.R;
 
 import java.util.ArrayList;
 
-public class PurchaseProcess extends Activity {
+public class PurchaseProcess extends AppCompatActivity {
     private static final int REQUEST_PURCHASE_UNLOCK = 1;
     private static final String INTENT_EXTRA_SKU = "sku";
 

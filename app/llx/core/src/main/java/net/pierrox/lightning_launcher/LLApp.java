@@ -103,8 +103,6 @@ public abstract class LLApp extends Application {
 
         SharedAsyncGraphicsDrawable.setPoolSize((long) (mSystemConfig.imagePoolSize * Runtime.getRuntime().maxMemory()));
 
-//        Utils.setTheme(this, Utils.APP_THEME);
-
 
         if (mSystemConfig.language != null) {
             mLanguage = mSystemConfig.language;

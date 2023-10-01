@@ -506,7 +506,7 @@ public class Customize extends ResourceWrapperActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         // do not set the theme if we are a subclass
         if (getClass() == Customize.class) {
-            Utils.setTheme(this, Utils.APP_THEME);
+
         }
 
         super.onCreate(savedInstanceState);

@@ -63,7 +63,6 @@ import net.pierrox.lightning_launcher.configuration.ItemConfig;
 import net.pierrox.lightning_launcher.configuration.JsonFields;
 import net.pierrox.lightning_launcher.configuration.PageConfig;
 import net.pierrox.lightning_launcher.configuration.ShortcutConfig;
-import net.pierrox.lightning_launcher.configuration.SystemConfig;
 import net.pierrox.lightning_launcher.engine.LightningEngine;
 import net.pierrox.lightning_launcher.engine.Screen;
 import net.pierrox.lightning_launcher.script.Script;
@@ -172,20 +171,10 @@ public class Utils {
     //    public static int getPageForOrientation(int p, int degrees) {
 //    	return p%ORIENTATION_SHIFT + ORIENTATION_SHIFT*degrees;
 //    }
-    public static final int APP_THEME = 0;
-    public static final int APP_THEME_TRANSLUCENT = 1;
-    public static final int APP_THEME_NO_ACTION_BAR = 2;
-    public static final int APP_THEME_NO_ACTION_BAR_WALLPAPER = 3;
     private static final Rect sTmpRect1 = new Rect();
     private static final float DYNAMIC_FOLDER_BG_MARGIN = 0.03125f;
     private static final Matrix sTempMatrix = new Matrix();
     private static final RectF sTempRectF = new RectF();
-    private static final int[] sThemes = new int[]{
-            R.style.AppLight, R.style.AppDark,
-            R.style.AppLightTranslucent, R.style.AppDarkTranslucent,
-            R.style.AppLightNoActionBar, R.style.AppDarkNoActionBar,
-            R.style.AppLightNoActionBarWallpaper, R.style.AppDarkNoActionBarWallpaper,
-    };
     public static Method sGetDrawableForDensity;
     private static int sStandardIconSize;
     private static int sLauncherIconDensity;
@@ -2426,12 +2415,6 @@ public class Utils {
 
         // unknown
         return 0;
-    }
-
-    public static void setTheme(Context context, int theme) {
-        boolean is_light = LLApp.get().getSystemConfig().appStyle == SystemConfig.AppStyle.LIGHT;
-        int style = sThemes[theme * 2 + (is_light ? 0 : 1)];
-        context.setTheme(style);
     }
 
     public static void copyResourceToFile(Resources resources, int id, File out) {

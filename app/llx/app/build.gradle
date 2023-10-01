@@ -142,4 +142,6 @@ dependencies {
     implementation libs.lsvg
     implementation libs.flows
     implementation libs.koin.android
+    implementation libs.androidx.appcomat
+    implementation libs.androidx.material
 }

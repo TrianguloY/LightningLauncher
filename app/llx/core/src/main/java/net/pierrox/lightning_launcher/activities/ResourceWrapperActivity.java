@@ -1,29 +1,40 @@
 package net.pierrox.lightning_launcher.activities;
 
-import android.annotation.TargetApi;
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Typeface;
-import android.os.Build;
+import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+
+import net.pierrox.lightning_launcher.LLApp;
 import net.pierrox.lightning_launcher.R;
+import net.pierrox.lightning_launcher.configuration.SystemConfig;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class ResourceWrapperActivity extends Activity {
+public abstract class ResourceWrapperActivity extends AppCompatActivity {
     public static final int REQUEST_PERMISSION_BASE = 1000000;
     public static final int REQUEST_PERMISSION_FONT_PICKER = REQUEST_PERMISSION_BASE + 1;
 
     private ResourcesWrapperHelper mResourcesWrapperHelper;
+
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setTheme();
+    }
 
     @Override
     public final Resources getResources() {
@@ -35,6 +46,11 @@ public abstract class ResourceWrapperActivity extends Activity {
 
     public final Resources getRealResources() {
         return super.getResources();
+    }
+
+    private void setTheme() {
+        boolean isLight = LLApp.get().getSystemConfig().appStyle == SystemConfig.AppStyle.LIGHT;
+        AppCompatDelegate.setDefaultNightMode(isLight ? AppCompatDelegate.MODE_NIGHT_NO : AppCompatDelegate.MODE_NIGHT_YES);
     }
 
     public boolean checkPermissions(String[] permissions, int[] rationales, final int requestCode) {

@@ -59,7 +59,6 @@ import net.pierrox.lightning_launcher.data.FileUtils;
 import net.pierrox.lightning_launcher.data.Folder;
 import net.pierrox.lightning_launcher.data.Item;
 import net.pierrox.lightning_launcher.data.Page;
-import net.pierrox.lightning_launcher.data.Utils;
 import net.pierrox.lightning_launcher.util.FileProvider;
 import net.pierrox.lightning_launcher_extreme.R;
 
@@ -100,7 +99,7 @@ public class BackupRestore extends ResourceWrapperActivity implements View.OnCli
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Utils.setTheme(this, Utils.APP_THEME);
+
 
         super.onCreate(savedInstanceState);
 

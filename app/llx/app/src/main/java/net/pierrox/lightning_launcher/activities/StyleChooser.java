@@ -44,7 +44,6 @@ import net.pierrox.lightning_launcher.configuration.ShortcutConfig;
 import net.pierrox.lightning_launcher.data.Box;
 import net.pierrox.lightning_launcher.data.FileUtils;
 import net.pierrox.lightning_launcher.data.JsonLoader;
-import net.pierrox.lightning_launcher.data.Utils;
 import net.pierrox.lightning_launcher_extreme.R;
 
 import org.json.JSONException;
@@ -68,9 +67,9 @@ public class StyleChooser extends ResourceWrapperListActivity implements OnItemL
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-        Utils.setTheme(this, Utils.APP_THEME);
 
-		super.onCreate(savedInstanceState);
+
+        super.onCreate(savedInstanceState);
 		
 		getListView().setOnItemLongClickListener(this);
 		

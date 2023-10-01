@@ -1,16 +1,40 @@
 <resources>
-    <style name="AppDark" parent="android:Theme" />
-    <style name="AppLight" parent="AppDark" />
 
-    <style name="AppDarkNoActionBarWallpaper" parent="android:Theme.Wallpaper.NoTitleBar" />
-    <style name="AppDarkNoActionBar" parent="android:Theme.NoTitleBar" />
-    <style name="AppDarkTranslucent" parent="android:Theme.Translucent.NoTitleBar" />
+    <style name="AppDark" parent="@style/Theme.AppCompat.NoActionBar">
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorPrimaryDark">@color/color_primary_dark</item>
+        <item name="colorAccent">@color/color_accent</item>
+    </style>
 
-    <style name="AppLightNoActionBarWallpaper" parent="AppDarkNoActionBarWallpaper" />
-    <style name="AppLightNoActionBar" parent="AppDarkNoActionBar" />
-    <style name="AppLightTranslucent" parent="AppDarkTranslucent" />
-    <style name="AppDialog" parent="android:Theme.Dialog" />
+    <style name="AppLight" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorPrimaryDark">@color/color_primary_dark</item>
+        <item name="colorAccent">@color/color_accent</item>
+    </style>
 
+    <style name="AppDarkNoActionBarWallpaper" parent="AppDark">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowShowWallpaper">true</item>
+    </style>
+
+    <style name="AppDarkNoActionBar" parent="Theme.AppCompat.NoActionBar" />
+
+    <style name="AppLightNoActionBar" parent="Theme.AppCompat.Light.NoActionBar" />
+
+    <style name="AppLightNoActionBarWallpaper" parent="AppLight">
+        <!--<item name="android:windowNoTitle">true</item>-->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowShowWallpaper">true</item>
+    </style>
+
+    <style name="AppDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorPrimaryDark">@color/color_primary_dark</item>
+        <item name="colorAccent">@color/color_accent</item>
+    </style>
 
     <style name="NoDisplay" parent="AppLightNoActionBarWallpaper">
         <!--<item name="android:windowBackground">@android:color/transparent</item>-->

@@ -39,7 +39,6 @@ import net.pierrox.lightning_launcher.data.ContainerPath;
 import net.pierrox.lightning_launcher.data.LightningIntent;
 import net.pierrox.lightning_launcher.data.Page;
 import net.pierrox.lightning_launcher.data.TaskerPlugin;
-import net.pierrox.lightning_launcher.data.Utils;
 import net.pierrox.lightning_launcher.engine.variable.Variable;
 import net.pierrox.lightning_launcher.script.Script;
 import net.pierrox.lightning_launcher.util.ScriptPickerDialog;
@@ -94,7 +93,6 @@ public class Shortcuts extends ResourceWrapperListActivity {
         mIsForTaskerScript = className.endsWith("TS");
         mIsForTaskerVariable = className.endsWith("TV");
 
-        Utils.setTheme(this, mIsForTaskerScript ? Utils.APP_THEME_TRANSLUCENT : Utils.APP_THEME);
 
         super.onCreate(savedInstanceState);
 
