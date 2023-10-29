@@ -3,6 +3,7 @@ agp = "8.1.1"
 kotlin = "1.9.10"
 remoter_version = "1.2.0"
 parceler_version = "1.1.12"
+koin_version = "3.5.0"
 
 [libraries]
 lsvg = { module = "net.pierrox.android:lsvg", version = "1.0" }
@@ -13,6 +14,9 @@ remoter-compiler = { module = "com.josesamuel:remoter", version.ref = "remoter_v
 parceler = { module = "org.parceler:parceler-api", version.ref = "parceler_version" }
 parceler-compiler = { module = "org.parceler:parceler", version.ref = "parceler_version" }
 
+flows = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version = "1.7.3" }
+
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin_version" }
 
 [plugins]
 android = { id = "com.android.application", version.ref = "agp" }

@@ -139,4 +139,6 @@ dependencies {
     implementation project(':core')
     implementation project(':plugin-api')
     implementation libs.lsvg
+    implementation libs.flows
+    implementation libs.koin.android
 }
