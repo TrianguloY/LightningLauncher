@@ -86,12 +86,13 @@ android {
             dimension "version"
             buildConfigField "boolean", "IS_TRIAL", "false"
         }
-        trial {
-            manifestPlaceholders += [app_name: "LLAppTrial"]
-            applicationId "net.pierrox.lightning_launcher"
-            dimension "version"
-            buildConfigField "boolean", "IS_TRIAL", "true"
-        }
+        // trial debug app fails to build, disabled until fixed (or deleted)
+        // trial {
+        //     manifestPlaceholders += [app_name: "LLAppTrial"]
+        //     applicationId "net.pierrox.lightning_launcher"
+        //     dimension "version"
+        //     buildConfigField "boolean", "IS_TRIAL", "true"
+        // }
 
         x86 {
             dimension "abi"
