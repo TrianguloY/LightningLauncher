@@ -1,0 +1,64 @@
+# This action builds a specific variant version,
+# Adapted from https://github.com/amirisback/automated-build-android-app-with-github-action
+name: Build debug apks
+
+on:
+  # Triggers when pushing to the developer branch
+  push:
+    branches:
+      - developer
+
+  # Triggers for pull requests
+  pull_request:
+
+  # Run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# parameters
+env:
+  VARIANT: debug
+  TAG: debug
+
+permissions:
+  contents: write # needed to update tag and release
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./app/llx
+    steps:
+      - name: Get the repository files
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Build & assemble with gradle
+        run: |
+          chmod +x ./gradlew
+          ./gradlew assemble${{ env.VARIANT }}
+
+      - name: Upload apks as artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: apks
+          path: app/llx/app/build/outputs/apk/*/${{ env.VARIANT }}/*.apk
+          if-no-files-found: error
+
+      - name: Update ${{ env.TAG }} tag to current commit
+        if: github.ref == 'refs/heads/developer'
+        run: |
+          git tag --force ${{ env.TAG }}
+          git push --force origin tag ${{ env.TAG }}
+
+      - name: Upload apks to ${{ env.TAG }} release
+        if: github.ref == 'refs/heads/developer'
+        run: |
+          gh release upload ${{ env.TAG }} app/build/outputs/apk/*/${{ env.VARIANT }}/*.apk --clobber
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
