@@ -43,6 +43,8 @@ import net.pierrox.lightning_launcher.script.Script;
 import net.pierrox.lightning_launcher.util.EmptyService;
 import net.pierrox.lightning_launcher.util.MPReceiver;
 
+import org.koin.android.java.KoinAndroidApplication;
+
 public abstract class LLAppPhone extends LLApp {
 
     private MPReceiver mMPReceiver;
@@ -50,6 +52,12 @@ public abstract class LLAppPhone extends LLApp {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        KoinAndroidApplication
+                .create(this)
+                .modules(
+                        // Define vararg of modules...
+                );
 
         // Implicit broadcasts cannot be registered anymore in the manifest starting at Android O,
         // however it is still possible to register them at runtime.
