@@ -51,6 +51,8 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.widget.Toolbar;
+
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import net.pierrox.lightning_launcher.API;
@@ -123,7 +125,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 public class Customize extends ResourceWrapperActivity implements
@@ -515,6 +516,9 @@ public class Customize extends ResourceWrapperActivity implements
 
         setContentView(R.layout.customize);
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         mMyViewPager = findViewById(R.id.view_pager);
         mMyViewPager.setOnPageChangeListener(this);
         mPreferenceScreens = new LLPreferenceListView[2];
@@ -674,13 +678,6 @@ public class Customize extends ResourceWrapperActivity implements
 
     private void setScreenTitle(String title) {
         setTitle(title);
-        try {
-            Method getActionBar = getClass().getMethod("getActionBar");
-            Object action_bar = getActionBar.invoke(this, (Object[]) null);
-            action_bar.getClass().getMethod("setTitle", String.class).invoke(action_bar, title);
-        } catch (Exception e) {
-            // pass, API level 11
-        }
     }
 
     @Override

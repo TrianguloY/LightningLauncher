@@ -126,7 +126,7 @@
             android:grantUriPermissions="true"/>
 
     	<activity
-            android:name="net.pierrox.lightning_launcher.activities.RootSettings"
+            android:name="net.pierrox.lightning_launcher.feature.settings.RootSettings"
             android:excludeFromRecents="true"
             android:configChanges="keyboardHidden|orientation|screenSize"/>
 
