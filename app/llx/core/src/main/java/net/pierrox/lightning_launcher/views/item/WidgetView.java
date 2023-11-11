@@ -52,7 +52,8 @@ public class WidgetView extends ItemView {
         AppWidgetProviderInfo app_widget_info=app_widget_manager.getAppWidgetInfo(mAppWidgetId);
 
         if(app_widget_info != null) {
-            AppWidgetHostView app_widget_host_view=LLApp.get().getAppWidgetHost().getWidgetView(context, mAppWidgetId, app_widget_info);
+            // Application context is needed with AppCompat theme for properly inflating RemoteViews
+            AppWidgetHostView app_widget_host_view = LLApp.get().getAppWidgetHost().getWidgetView(context.getApplicationContext(), mAppWidgetId, app_widget_info);
             app_widget_host_view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
             app_widget_host_view.setAppWidget(mAppWidgetId, app_widget_info);
             // used to store last widget size, in order to filter calls to updateAppWidgetHostViewSize

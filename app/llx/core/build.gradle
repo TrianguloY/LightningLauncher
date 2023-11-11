@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.androlib)
+    alias(libs.plugins.kotlin)
 }
 
 android {
@@ -32,6 +33,15 @@ android {
         }
     }
     namespace 'net.pierrox.lightning_launcher'
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    kotlinOptions {
+        jvmTarget = '11'
+    }
 }
 
 dependencies {

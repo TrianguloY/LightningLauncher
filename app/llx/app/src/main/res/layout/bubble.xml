@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<net.pierrox.lightning_launcher.views.BubbleLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<net.pierrox.lightning_launcher.views.BubbleLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/bubble"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:visibility="gone"
-    android:elevation="9dp">
+    android:elevation="9dp"
+    tools:visibility="visible">
 
     <ScrollView
         android:layout_width="wrap_content"
@@ -29,7 +30,8 @@
                         android:id="@+id/bbl_ttl"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        style="@style/bbl_ttl" />
+                        style="@style/bbl_ttl"
+                        tools:text="Test" />
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1px"
@@ -49,7 +51,7 @@
                         <Button
                             android:id="@+id/bbl_edit"
                             android:text="O"
-                            style="@style/bubble_item_icon"/>
+                            style="@style/bubble_item_icon" />
                         <Button
                             android:id="@+id/bbl_add"
                             android:text="7"

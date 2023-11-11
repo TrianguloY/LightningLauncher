@@ -46,7 +46,7 @@
         <intent
             android:action="android.intent.action.VIEW"
             android:targetPackage="net.pierrox.lightning_launcher_extreme"
-            android:targetClass="net.pierrox.lightning_launcher.activities.RootSettings" />
+            android:targetClass="net.pierrox.lightning_launcher.feature.settings.RootSettings" />
     </shortcut>
 
 

@@ -40,6 +40,7 @@ import net.pierrox.lightning_launcher.data.LightningIntent;
 import net.pierrox.lightning_launcher.data.Page;
 import net.pierrox.lightning_launcher.data.TaskerPlugin;
 import net.pierrox.lightning_launcher.engine.variable.Variable;
+import net.pierrox.lightning_launcher.feature.settings.RootSettings;
 import net.pierrox.lightning_launcher.script.Script;
 import net.pierrox.lightning_launcher.util.ScriptPickerDialog;
 import net.pierrox.lightning_launcher.util.SetVariableDialog;
