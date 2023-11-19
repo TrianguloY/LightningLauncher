@@ -1044,11 +1044,6 @@ public class AppDrawerX extends Dashboard implements EditTextIme.OnEditTextImeLi
 
     @Override
     protected void addFolder() {
-        if (LLApp.get().isFreeVersion()) {
-            LLApp.get().showFeatureLockedDialog(this);
-            return;
-        }
-
         ItemLayout il = mScreen.getTargetOrTopmostItemLayout();
         Page page = il.getPage();
 
@@ -1338,12 +1333,7 @@ public class AppDrawerX extends Dashboard implements EditTextIme.OnEditTextImeLi
                 break;
 
             case R.id.mi_kill:
-                if (LLApp.get().isFreeVersion()) {
-                    LLApp.get().showFeatureLockedDialog(this);
-                } else {
-                    // use super class behavior
-                    super.onClick(v);
-                }
+                super.onClick(v);
                 break;
 
             case R.id.mi_i:

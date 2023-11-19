@@ -423,10 +423,6 @@ public class ScreenManager extends ResourceWrapperActivity implements OnClickLis
     @SuppressWarnings("deprecation")
     @Override
     public void onClick(final View v) {
-        if (LLApp.get().isFreeVersion()) {
-            LLApp.get().showFeatureLockedDialog(this);
-            return;
-        }
 
         if (mMode == SCREEN_MODE_SELECT) {
             int page = (Integer) v.getTag();

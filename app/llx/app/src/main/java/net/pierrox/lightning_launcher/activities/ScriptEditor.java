@@ -582,7 +582,7 @@ public class ScriptEditor extends ResourceWrapperActivity implements View.OnClic
             mScriptText.scrollToLine(goToLine);
         }
 
-        if (!engine.getGlobalConfig().runScripts || LLApp.get().isFreeVersion()) {
+        if (!engine.getGlobalConfig().runScripts) {
             Toast.makeText(this, R.string.rs_w, Toast.LENGTH_SHORT).show();
         }
     }

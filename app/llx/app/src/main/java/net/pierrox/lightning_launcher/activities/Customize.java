@@ -31,8 +31,6 @@ import android.app.WallpaperManager;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -116,7 +114,6 @@ import net.pierrox.lightning_launcher.views.MyViewPager.OnPageChangeListener;
 import net.pierrox.lightning_launcher.views.NativeImage;
 import net.pierrox.lightning_launcher.views.NativeWallpaperView;
 import net.pierrox.lightning_launcher.views.item.ItemView;
-import net.pierrox.lightning_launcher_extreme.BuildConfig;
 import net.pierrox.lightning_launcher_extreme.R;
 
 import org.json.JSONException;
@@ -126,7 +123,6 @@ import org.koin.java.KoinJavaComponent;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 public class Customize extends ResourceWrapperActivity implements
@@ -649,24 +645,6 @@ public class Customize extends ResourceWrapperActivity implements
                 pushPreferenceScreen(mPreferencesPageADModes);
             } else if (mIntentGoto.equals(INTENT_EXTRA_GOTO_DASHBOARD_ICONS)) {
                 pushPreferenceScreen(mPreferencesPageIcons);
-            }
-        }
-
-        if (app.isTrialVersionExpired()) {
-            app.showFeatureLockedDialog(this);
-        } else {
-            if ((mSystemConfig.hints & SystemConfig.HINT_CUSTOMIZE_HELP) == 0) {
-                showDialog(DIALOG_HELP_HINT);
-            } else if ((mSystemConfig.hints & SystemConfig.HINT_RATE) == 0 && BuildConfig.IS_TRIAL) {
-                try {
-                    PackageInfo pi = getPackageManager().getPackageInfo(getPackageName(), 0);
-                    Field f = pi.getClass().getField("firstInstallTime");
-                    long firstInstallTime = f.getLong(pi);
-                    if ((System.currentTimeMillis() - firstInstallTime) > 20 * 86400 * 1000) {
-                        showDialog(DIALOG_RATE);
-                    }
-                } catch (Exception e) {
-                }
             }
         }
     }
@@ -1335,19 +1313,6 @@ public class Customize extends ResourceWrapperActivity implements
         // pass
     }
 
-    private void setPreferenceLockFlag(ArrayList<LLPreference> preferences) {
-        if (preferences != null) {
-            setPreferenceLockFlag(preferences.toArray());
-        }
-    }
-
-    private void setPreferenceLockFlag(Object[] preferences) {
-        final boolean need_lock = LLApp.get().isFreeVersion();
-        for (Object p : preferences) {
-            if (p != null && p instanceof LLPreference) ((LLPreference) p).setLocked(need_lock);
-        }
-    }
-
     private boolean isLaunchedFromAppDrawer() {
         ComponentName cn = getIntent().getParcelableExtra(INTENT_EXTRA_LAUNCHED_FROM);
         return cn != null && cn.equals(new ComponentName(this, AppDrawerX.class));
@@ -1659,16 +1624,6 @@ public class Customize extends ResourceWrapperActivity implements
 
         mPreferenceScreenLevel = -1;
         pushPreferenceScreen(mPreferencesPage);
-
-        if (is_app_drawer) {
-            setPreferenceLockFlag(new LLPreference[]{mPGBackgroundSelectScreenWallpaper, mPGBackgroundScaleType, mPGZoomScrollWrapX, mPGZoomScrollWrapY, mPGFolderLook, mPGFolderFeel, mPGAppDrawerABBackground, mPGAppDrawerABDisplayOnScroll, mPGAppDrawerABHide, mPGEvents, mPGADModes, mPGAppDrawerABTextColor});
-            setPreferenceLockFlag(mPreferencesPageFolderLook);
-            setPreferenceLockFlag(mPreferencesPageEvents);
-            setPreferenceLockFlag(mPreferencesPageFolderFeel);
-            setPreferenceLockFlag(mPreferencesPageADModes);
-        } else {
-            setPreferenceLockFlag(new LLPreference[]{mPGBackgroundSelectScreenWallpaper, mPGZoomScrollWrapX, mPGZoomScrollWrapY});
-        }
     }
 
     private void loadGlobalConfig() {
@@ -1714,7 +1669,7 @@ public class Customize extends ResourceWrapperActivity implements
         mPreferencesGlobalConfig.add(mGCHotwords = new LLPreferenceCheckBox(this, ID_mGCHotwords, R.string.hw_t, R.string.hw_s, mSystemConfig.hotwords, null));
 
         if (mSystemConfig.expertMode) {
-            mPreferencesGlobalConfig.add(mGCRunScripts = new LLPreferenceCheckBox(this, ID_mGCRunScripts, R.string.rs_t, R.string.rs_s, mGlobalConfig.runScripts && !LLApp.get().isFreeVersion(), null));
+            mPreferencesGlobalConfig.add(mGCRunScripts = new LLPreferenceCheckBox(this, ID_mGCRunScripts, R.string.rs_t, R.string.rs_s, mGlobalConfig.runScripts, null));
             mPreferencesGlobalConfig.add(mGCKeepInMemory = new LLPreferenceCheckBox(this, ID_mGCKeepInMemory, R.string.keep_in_memory_t, R.string.keep_in_memory_s, mSystemConfig.keepInMemory, null));
             mPreferencesGlobalConfig.add(mGCImagePoolSize = new LLPreferenceSlider(this, ID_mGCImagePoolSize, R.string.ips_t, R.string.ips_s, mSystemConfig.imagePoolSize, null, ValueType.FLOAT, 0, 1, 0.1f, "%"));
 
@@ -1766,22 +1721,9 @@ public class Customize extends ResourceWrapperActivity implements
         }
 
         pushPreferenceScreen(mPreferencesGlobalConfig);
-
-        setPreferenceLockFlag(new LLPreference[]{
-                mGCRunScripts
-        });
-        if (LLApp.get().isFreeVersion() && getPackageManager().checkSignatures(getPackageName(), LLApp.LKP_PKG_NAME) != PackageManager.SIGNATURE_MATCH) {
-            setPreferenceLockFlag(new LLPreference[]{
-                    mGCLockScreenCategory, mGCLockScreenSelect, mGCLockScreenLaunchUnlock
-            });
-        }
     }
 
     private void savePage() {
-        if (LLApp.get().isTrialVersionExpired()) {
-            return;
-        }
-
         mPage.setModified();
 
         final boolean is_folder_page = mOpenerItem != null && mOpenerItem.getClass() == Folder.class;
@@ -1805,10 +1747,6 @@ public class Customize extends ResourceWrapperActivity implements
     }
 
     private void saveSystemAndGlobalConfig() {
-        if (LLApp.get().isTrialVersionExpired()) {
-            return;
-        }
-
         copyPreferencesToSystemAndGlobalConfiguration();
 
         LLApp.get().notifySystemConfigChanged();
@@ -1821,7 +1759,7 @@ public class Customize extends ResourceWrapperActivity implements
         mGlobalConfig.pageAnimation = (PageAnimation) mGCPageAnimation.getValueEnum();
         if (mGCHotwords != null) mSystemConfig.hotwords = mGCHotwords.isChecked();
         if (mSystemConfig.expertMode) {
-            if (!LLApp.get().isFreeVersion()) mGlobalConfig.runScripts = mGCRunScripts.isChecked();
+            mGlobalConfig.runScripts = mGCRunScripts.isChecked();
             mSystemConfig.keepInMemory = mGCKeepInMemory.isChecked();
             mSystemConfig.imagePoolSize = mGCImagePoolSize.getValue();
             mSystemConfig.autoEdit = mGCAutoEdit.isChecked();

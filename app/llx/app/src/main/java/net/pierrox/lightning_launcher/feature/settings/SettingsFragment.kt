@@ -36,7 +36,6 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
         private const val KEY_CAT_TEMPLATES = "tc"
         private const val KEY_TEMPLATES_BROWSE = "tb"
         private const val KEY_TEMPLATES_APPLY = "ta"
-        private const val KEY_UPGRADE = "u"
     }
 
     private val templateLauncher =
@@ -64,12 +63,12 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
         setupPreference(
             KEY_CONFIGURE_PAGES,
             R.string.configure_pages_t,
-            if (app.isFreeVersion()) R.string.tr_br_s else R.string.configure_pages_s
+            R.string.configure_pages_s
         )
         setupPreference(
             KEY_BACKUP_RESTORE,
             R.string.backup_restore_t,
-            if (app.isTrialVersion()) R.string.tr_br_s else 0
+            0
         )
 
         setupPreference(KEY_CAT_INFOS, R.string.app_name, 0)
@@ -77,26 +76,15 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
         setupPreference(KEY_COMMUNITY, R.string.facebook_t, R.string.facebook_s)
         setupPreference(KEY_RATE, R.string.rate_t, R.string.rate_s)
 
-        setupPreference(KEY_UPGRADE, R.string.tr_rs_t, R.string.tr_rs_s)
-        if (app.isTrialVersion()) {
-            val left = app.getTrialLeft()
-            val d = if (left == 0L) 0 else 1 + left / 86400000L
-            findPreference<Preference>(KEY_UPGRADE)?.setSummary(getString(R.string.tr_l, d))
-        }
-
         setupPreference(KEY_CAT_TEMPLATES, R.string.tmpl_t, R.string.tmpl_s)
         setupPreference(KEY_TEMPLATES_BROWSE, R.string.tmpl_b_t, R.string.tmpl_b_s)
         setupPreference(KEY_TEMPLATES_APPLY, R.string.tmpl_a_t, R.string.tmpl_a_s)
 
         val pc = preferenceScreen.findPreference(KEY_CAT_INFOS) as PreferenceCategory?
         val ratePreference = findPreference<Preference>(KEY_RATE)
-        val upgradePreference = findPreference<Preference>(KEY_UPGRADE)
 
-        if (!Version.HAS_RATE_LINK || app.isFreeVersion() || app.isTrialVersion()) {
+        if (!Version.HAS_RATE_LINK) {
             ratePreference?.let { pc?.removePreference(it) }
-        }
-        if (!app.isFreeVersion() && !app.isTrialVersion()) {
-            upgradePreference?.let { pc?.removePreference(it) }
         }
     }
 
@@ -128,8 +116,6 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
             startActivity(Intent(activity, BackupRestore::class.java))
         } else if (KEY_SELECT_LAUNCHER == key) {
             PhoneUtils.selectLauncher(activity, true)
-        } else if (KEY_UPGRADE == key) {
-            LLApp.get().startUnlockProcess(activity)
         } else if (KEY_TEMPLATES_BROWSE == key) {
             startActivity(
                 Intent.createChooser(

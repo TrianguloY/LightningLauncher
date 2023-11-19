@@ -333,22 +333,6 @@ public abstract class LLApp extends Application {
 
     public abstract Intent getWindowServiceIntent();
 
-    public abstract boolean isFreeVersion();
-
-    public abstract boolean isTrialVersion();
-
-    public abstract boolean isTrialVersionExpired();
-
-    public abstract long getTrialLeft();
-
-    public abstract void showFeatureLockedDialog(Context context);
-
-    public abstract void startUnlockProcess(Context context);
-
-    public abstract void installPromotionalIcons(Page dashboard);
-
-    public abstract void checkLicense();
-
     public abstract boolean hasScriptEditor();
 
     public abstract void startScriptEditor(int script_id, int line);

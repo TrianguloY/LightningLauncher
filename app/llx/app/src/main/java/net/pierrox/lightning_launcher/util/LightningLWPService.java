@@ -45,7 +45,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import net.pierrox.lightning_launcher.LLApp;
-import net.pierrox.lightning_launcher.LLAppExtreme;
 import net.pierrox.lightning_launcher.LWPSettings;
 import net.pierrox.lightning_launcher.activities.ResourcesWrapperHelper;
 import net.pierrox.lightning_launcher.api.ScreenIdentity;
@@ -280,9 +279,6 @@ public class LightningLWPService extends WallpaperService {
         }
 
         private void configurePage() {
-            if (!((LLAppExtreme) LLApp.get()).hasLWP()) {
-                mLWPDesktopId = Page.NONE;
-            }
             boolean hasPage = mLWPDesktopId != Page.NONE;
             mContentView.findViewById(R.id.empty_c).setVisibility(hasPage ? View.GONE : View.VISIBLE);
             LightningEngine lightningEngine = LLApp.get().getAppEngine();

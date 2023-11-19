@@ -128,14 +128,10 @@ public class BackupRestore extends ResourceWrapperActivity implements View.OnCli
 
         loadArchivesList();
 
-        if (LLApp.get().isTrialVersion()) {
-            Toast.makeText(this, R.string.tr_fl_t, Toast.LENGTH_SHORT).show();
-        } else {
-            checkPermissions(
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    new int[]{R.string.pr_r1, R.string.pr_r2},
-                    REQUEST_PERMISSION_BASE);
-        }
+        checkPermissions(
+                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                new int[]{R.string.pr_r1, R.string.pr_r2},
+                REQUEST_PERMISSION_BASE);
     }
 
     @Override
@@ -377,17 +373,13 @@ public class BackupRestore extends ResourceWrapperActivity implements View.OnCli
     }
 
     private void loadArchive(Uri archiveUri, String archiveName) {
-        if (LLApp.get().isTrialVersion()) {
-            LLApp.get().showFeatureLockedDialog(this);
-        } else {
-            mArchiveUri = archiveUri;
-            mArchiveName = archiveName;
-            try {
-                removeDialog(DIALOG_CONFIRM_RESTORE);
-            } catch (Exception e) {
-            }
-            showDialog(DIALOG_CONFIRM_RESTORE);
+        mArchiveUri = archiveUri;
+        mArchiveName = archiveName;
+        try {
+            removeDialog(DIALOG_CONFIRM_RESTORE);
+        } catch (Exception e) {
         }
+        showDialog(DIALOG_CONFIRM_RESTORE);
     }
 
     @Override

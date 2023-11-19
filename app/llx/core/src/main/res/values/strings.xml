@@ -1032,11 +1032,6 @@
     <string name="tr_ty">Thank you for supporting Lightning!</string>
     <string name="tr_eu">Sorry, an error occurred…</string>
     <string name="tr_c">Canceled</string>
-    <string name="tr_br_s">This feature is not available in the trial version</string>
-    <string name="tr_rs_t">Unleash Lightning</string>
-    <string name="tr_rs_s">Upgrade to get the most out of Lightning</string>
-    <string name="tr_w">Thank you for testing Lightning!\n\nThe app will run in trial mode for 7 days: all features are enabled and can be used without restriction during this period. After the trial period, the app will still be usable but editing will not be enabled anymore.\n\nIf you like this app and wish to support it, please consider purchasing the key to unlock it.\n\nThank you!</string>
-    <string name="tr_l">%d days left for the trial</string>
     <string name="tr_rm">Lightning need your feedback!\n\nWould you like to take a few seconds to rate this app on the Play Store?\n</string>
     <string name="ds_hls">This is a sample lock screen that you can customize at will.\nAdd apps or widgets then activate it through the lock screen settings (tap here).</string>
     <string name="ic">Image cropper</string>

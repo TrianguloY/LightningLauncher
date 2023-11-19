@@ -1399,10 +1399,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                 Utils.startAppStore(this, targetItemPackageName);
                 break;
 
-            case R.id.mi_kill:
-                if (LLApp.get().isFreeVersion()) {
-                    LLApp.get().showFeatureLockedDialog(this);
-                } else {
+            case R.id.mi_kill: {
                     if (!checkPermissions(new String[]{Manifest.permission.KILL_BACKGROUND_PROCESSES}, new int[]{R.string.pr_r9}, REQUEST_PERMISSION_BASE)) {
                         Toast.makeText(this, R.string.pr_f5, Toast.LENGTH_LONG).show();
                         break;
@@ -1796,14 +1793,10 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
 
             case R.id.mi_s:
                 close_bubble = false;
-                if (LLApp.get().isFreeVersion()) {
-                    LLApp.get().showFeatureLockedDialog(this);
+                if (targetItem != null) {
+                    openBubble(BUBBLE_MODE_SCRIPTS, targetItemView);
                 } else {
-                    if (targetItem != null) {
-                        openBubble(BUBBLE_MODE_SCRIPTS, targetItemView);
-                    } else {
-                        openBubble(BUBBLE_MODE_SCRIPTS, mBubbleItemLayout, null);
-                    }
+                    openBubble(BUBBLE_MODE_SCRIPTS, mBubbleItemLayout, null);
                 }
                 break;
 
@@ -2385,7 +2378,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
             case DIALOG_FIRST_USE:
                 builder = new AlertDialog.Builder(this);
                 builder.setTitle(R.string.first_use_title);
-                builder.setMessage(LLApp.get().isTrialVersion() && BuildConfig.IS_TRIAL ? R.string.tr_w : R.string.first_use_message);
+                builder.setMessage(R.string.first_use_message);
                 builder.setPositiveButton(android.R.string.ok, null);
                 builder.setCancelable(false);
                 return builder.create();
@@ -3202,10 +3195,6 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
     }
 
     protected void addPageIndicator() {
-        if (LLApp.get().isFreeVersion()) {
-            LLApp.get().showFeatureLockedDialog(this);
-            return;
-        }
         ItemLayout il = mScreen.getTargetOrTopmostItemLayout();
         Page page = il.getPage();
         PageIndicator item = Utils.addPageIndicator(page, mScreen.getLastTouchedAddX(), mScreen.getLastTouchedAddY(), il.getCurrentScale(), true);
@@ -3226,10 +3215,6 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
     }
 
     private void addDynamicText() {
-        if (LLApp.get().isFreeVersion()) {
-            LLApp.get().showFeatureLockedDialog(this);
-            return;
-        }
         ItemLayout il = mScreen.getTargetOrTopmostItemLayout();
         Page page = il.getPage();
         DynamicText item = Utils.addDynamicText(page, DynamicTextConfig.Source.DATE, page.config.newOnGrid);
@@ -3313,10 +3298,6 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
     }
 
     private void addUnlocker() {
-        if (LLApp.get().isFreeVersion()) {
-            LLApp.get().showFeatureLockedDialog(this);
-            return;
-        }
         ItemLayout il = mScreen.getTargetOrTopmostItemLayout();
         Page page = il.getPage();
         float itemLayoutScale = il.getCurrentScale();
@@ -3374,10 +3355,6 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
     }
 
     private void addBadge() {
-        if (LLApp.get().isFreeVersion()) {
-            LLApp.get().showFeatureLockedDialog(this);
-            return;
-        }
         ItemLayout il = mScreen.getTargetOrTopmostItemLayout();
         Page page = il.getPage();
         DynamicText item = Utils.addDynamicText(page, DynamicTextConfig.Source.MISSED_CALLS, false);
@@ -3520,12 +3497,6 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                     configureHandlesForItemView(itemView, HandleView.Mode.CONTENT_SIZE, true);
                 }
             }
-            return;
-        }
-
-        final LLApp app = LLApp.get();
-        if (app.isTrialVersionExpired()) {
-            app.showFeatureLockedDialog(this);
             return;
         }
 
@@ -7559,16 +7530,8 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
             return true;
         }
 
-
         @Override
         protected void launchIntent(Intent intent, ItemView itemView) {
-            ComponentName cn = intent.getComponent();
-            ComponentName app_drawer = new ComponentName(mContext, AppDrawerX.class);
-            if (BuildConfig.IS_TRIAL && cn != null && cn.getClassName().equals(LLApp.LL_PKG_NAME + ".activities.AppDrawer")) {
-                // translate app drawer intent in the trial version into app drawer intent in the extreme version
-                intent.setComponent(app_drawer);
-            }
-
             if (itemView != null) {
                 mLastLaunchAnimation = itemView.getItem().getItemConfig().launchAnimation;
             } else {

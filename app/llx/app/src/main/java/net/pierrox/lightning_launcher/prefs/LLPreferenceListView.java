@@ -55,7 +55,6 @@ import net.margaritov.preference.colorpicker.ColorPickerDialog;
 import net.margaritov.preference.colorpicker.ColorPickerDialog.OnColorChangedListener;
 import net.margaritov.preference.colorpicker.ColorPickerPanelView;
 import net.pierrox.lightning_launcher.LLApp;
-import net.pierrox.lightning_launcher.LLAppPhone;
 import net.pierrox.lightning_launcher.engine.variable.Binding;
 import net.pierrox.lightning_launcher.script.api.Property;
 import net.pierrox.lightning_launcher.views.BoxEditorView;
@@ -98,10 +97,6 @@ public class LLPreferenceListView extends ListView implements OnItemClickListene
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Context context = getContext();
         LLPreference p = (LLPreference) parent.getItemAtPosition(position);
-        if (p.isLocked()) {
-            LLApp.get().showFeatureLockedDialog(context);
-            return;
-        }
         if (p.isDisabled()) {
             return;
         }
@@ -347,7 +342,6 @@ public class LLPreferenceListView extends ListView implements OnItemClickListene
                             preference_view.setMinimumHeight(getResources().getDimensionPixelSize(R.dimen.pref_height));
                         }
                     }
-                    preference_view = ((LLAppPhone) LLApp.get()).managePreferenceViewLockedFlag(p, preference_view);
                     View icon = preference_view.findViewById(android.R.id.icon);
                     if (icon != null) {
                         ((View) icon.getParent()).setVisibility(View.GONE);

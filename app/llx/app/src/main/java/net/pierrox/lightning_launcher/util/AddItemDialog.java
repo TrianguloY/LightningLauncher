@@ -222,8 +222,6 @@ public class AddItemDialog extends AlertDialog implements View.OnClickListener, 
         item.setOnClickListener(this);
         item.setTag(id);
         Utils.setEnabledStateOnViews(item, mAddItemDialogInterface.isDialogAddItemEnabled(id));
-        final boolean is_locked = app.isFreeVersion() && (id == AI_BADGE || id == AI_DYNAMIC_TEXT || id == AI_PAGE_INDICATOR || id == AI_UNLOCKER || id == AI_CUSTOM_VIEW);
-        app.manageAddItemDialogLockedFlag(item, is_locked);
         root.addView(item);
     }
 

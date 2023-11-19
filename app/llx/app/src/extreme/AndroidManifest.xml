@@ -9,9 +9,6 @@
         <provider android:name="net.pierrox.lightning_launcher.util.ApiProvider" android:authorities="net.pierrox.lightning_launcher_extreme.api"
             android:exported="true" />
 
-        <activity android:name="net.pierrox.lightning_launcher.PurchaseProcess"
-                  android:theme="@style/AppDialog"/>
-
         <activity
             android:name="net.pierrox.lightning_launcher.LWPSettings"
             android:exported="true"
