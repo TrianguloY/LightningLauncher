@@ -44,7 +44,7 @@ public class FileUtils {
     };
 
     public static final File LL_EXT_DIR = new File(Environment.getExternalStorageDirectory(), "LightningLauncher");
-    public static final File LL_TMP_DIR = new File(LL_EXT_DIR, "tmp");
+    public static final File LL_TMP_DIR = new File(Environment.getDataDirectory(), "tmp");
     public static final File LL_EXT_SCRIPT_DIR = new File(LL_EXT_DIR, "script");
     public static final String THEMES_DIR = "LightningLauncher/themes";
     private static final byte[] copy_buffer = new byte[4096];

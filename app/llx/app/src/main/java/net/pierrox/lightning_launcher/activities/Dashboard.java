@@ -149,6 +149,7 @@ import net.pierrox.lightning_launcher.script.ScriptExecutor;
 import net.pierrox.lightning_launcher.script.ScriptManager;
 import net.pierrox.lightning_launcher.script.api.ImageBitmap;
 import net.pierrox.lightning_launcher.util.AddItemDialog;
+import net.pierrox.lightning_launcher.util.FilesHolder;
 import net.pierrox.lightning_launcher.util.PhoneUtils;
 import net.pierrox.lightning_launcher.util.Setup;
 import net.pierrox.lightning_launcher.views.BubbleLayout;
@@ -169,6 +170,7 @@ import net.pierrox.lightning_launcher.views.item.WidgetView;
 import net.pierrox.lightning_launcher_extreme.BuildConfig;
 import net.pierrox.lightning_launcher_extreme.R;
 
+import org.koin.java.KoinJavaComponent;
 import org.mozilla.javascript.Function;
 
 import java.io.File;
@@ -187,6 +189,7 @@ import java.util.Stack;
 
 public class Dashboard extends ResourceWrapperActivity implements OnLongClickListener, OnClickListener, View.OnTouchListener, Setup.OnFirstTimeInitEvent, UndoStack.UndoListener, HierarchyScreen.HierarchyScreenListener {
 
+    private final FilesHolder filesHolder = KoinJavaComponent.get(FilesHolder.class);
     public static final int REQUEST_FROM_CUSTOMIZE_VIEW = 100;
     public static final String BROADCAST_ACTION_LOCKED = LLApp.LLX_PKG_NAME + ".ACTION_LOCKED";
     public static final String BROADCAST_ACTION_UNLOCKED = LLApp.LLX_PKG_NAME + ".ACTION_UNLOCKED";
@@ -1197,12 +1200,12 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                         break;
 
                     case REQUEST_SCRIPT_PICK_IMAGE:
-                        mScriptExecutorForCallback.setFileForPickImage(Utils.getTmpImageFile());
+                        mScriptExecutorForCallback.setFileForPickImage(filesHolder.getTempImageFile());
                         mScriptExecutorForCallback = null;
                         break;
 
                     case REQUEST_SCRIPT_CROP_IMAGE:
-                        Bitmap bitmap = Utils.loadBitmap(Utils.getTmpImageFile(), 0, 0, 0);
+                        Bitmap bitmap = Utils.loadBitmap(filesHolder.getTempImageFile(), 0, 0, 0);
                         ImageBitmap image = new ImageBitmap(mScriptExecutorForCallback.getLightning(), bitmap);
                         mScriptExecutorForCallback.setImageForCropImage(image);
                         mScriptExecutorForCallback = null;
@@ -1215,7 +1218,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                             if (item instanceof Shortcut) {
                                 Shortcut shortcut = (Shortcut) item;
                                 File icon_file = shortcut.getCustomIconFile();
-                                File tmp_image_file = Utils.getTmpImageFile();
+                                File tmp_image_file = filesHolder.getTempImageFile();
                                 boolean copied = false;
                                 if (tmp_image_file.exists()) {
                                     FileOutputStream fos = null;
@@ -6461,7 +6464,7 @@ public class Dashboard extends ResourceWrapperActivity implements OnLongClickLis
                 return;
             }
 
-            final File file = Utils.getTmpImageFile();
+            final File file = filesHolder.getTempImageFile();
 
             final ProgressDialog d = new ProgressDialog(Dashboard.this);
             d.setMessage(getString(R.string.please_wait));

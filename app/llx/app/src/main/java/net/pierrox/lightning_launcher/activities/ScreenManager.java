@@ -71,10 +71,13 @@ import net.pierrox.lightning_launcher.data.Screen;
 import net.pierrox.lightning_launcher.data.Shortcut;
 import net.pierrox.lightning_launcher.data.Utils;
 import net.pierrox.lightning_launcher.engine.LightningEngine;
+import net.pierrox.lightning_launcher.util.FilesHolder;
 import net.pierrox.lightning_launcher.util.PhoneUtils;
 import net.pierrox.lightning_launcher.views.ItemLayout;
 import net.pierrox.lightning_launcher.views.item.ItemView;
 import net.pierrox.lightning_launcher_extreme.R;
+
+import org.koin.java.KoinJavaComponent;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -83,6 +86,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ScreenManager extends ResourceWrapperActivity implements OnClickListener, View.OnLongClickListener {
+
+    private final FilesHolder filesHolder = KoinJavaComponent.get(FilesHolder.class);
     protected static final int SCREEN_MODE_LWP = 6;
     private static final int DIALOG_LABEL = 2;
     private static final int DIALOG_CONFIRM_DELETE = 3;
@@ -381,7 +386,7 @@ public class ScreenManager extends ResourceWrapperActivity implements OnClickLis
             if (resultCode == RESULT_OK) {
                 FileOutputStream fos = null;
                 try {
-                    File tmpImageFile = Utils.getTmpImageFile();
+                    File tmpImageFile = filesHolder.getTempImageFile();
                     File icon_file = Page.getPageIconFile(mLightningEngine.getBaseDir(), mCurrentPage);
                     Screen screen = mScreens.get(getScreenIndex(mCurrentPage));
                     if (tmpImageFile.exists()) {

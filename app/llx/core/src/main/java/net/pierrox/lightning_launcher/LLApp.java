@@ -1,5 +1,7 @@
 package net.pierrox.lightning_launcher;
 
+import static org.koin.core.context.DefaultContextExtKt.startKoin;
+
 import android.app.Application;
 import android.appwidget.AppWidgetHost;
 import android.appwidget.AppWidgetHostView;
@@ -21,6 +23,7 @@ import net.pierrox.lightning_launcher.data.Item;
 import net.pierrox.lightning_launcher.data.JsonLoader;
 import net.pierrox.lightning_launcher.data.Page;
 import net.pierrox.lightning_launcher.data.Utils;
+import net.pierrox.lightning_launcher.di.UtilitiesModule;
 import net.pierrox.lightning_launcher.engine.LightningEngine;
 import net.pierrox.lightning_launcher.engine.Screen;
 import net.pierrox.lightning_launcher.script.api.Property;
@@ -29,11 +32,15 @@ import net.pierrox.lightning_launcher.views.NativeImage;
 import net.pierrox.lightning_launcher.views.SharedAsyncGraphicsDrawable;
 
 import org.json.JSONObject;
+import org.koin.android.java.KoinAndroidApplication;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class LLApp extends Application {
     public static final String LL_PKG_NAME = "net.pierrox.lightning_launcher";
@@ -81,6 +88,18 @@ public abstract class LLApp extends Application {
         super.onCreate();
 
         sThis = this;
+
+        final var allModules = Stream.of(
+                        UtilitiesModule.INSTANCE.getModules()
+                )
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+
+        final var koin = KoinAndroidApplication
+                .create(this)
+                .modules(allModules);
+
+        startKoin(koin);
 
         NativeImage.init(this);
 
