@@ -647,6 +647,10 @@ public class Customize extends ResourceWrapperActivity implements
                 pushPreferenceScreen(mPreferencesPageIcons);
             }
         }
+
+        if ((mSystemConfig.hints & SystemConfig.HINT_CUSTOMIZE_HELP) == 0) {
+            showDialog(DIALOG_HELP_HINT);
+        }
     }
 
     @Override
