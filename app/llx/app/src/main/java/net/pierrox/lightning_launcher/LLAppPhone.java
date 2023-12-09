@@ -42,7 +42,7 @@ import net.pierrox.lightning_launcher.util.EmptyService;
 import net.pierrox.lightning_launcher.util.MPReceiver;
 
 
-public abstract class LLAppPhone extends LLApp {
+public class LLAppPhone extends LLApp {
 
     private MPReceiver mMPReceiver;
 
