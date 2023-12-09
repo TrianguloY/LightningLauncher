@@ -10,7 +10,7 @@ import java.io.File
  **/
 class FilesHolder(private val context: Context) {
 
-    private fun getTempDir() = File(context.filesDir, "tmp").also { it.mkdirs() }
+    private fun getTempDir() = File(context.filesDir, "tmp").apply { mkdirs() }
 
     /**
      * Gets a temporary picked image file
