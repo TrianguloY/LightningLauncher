@@ -757,7 +757,7 @@ public class ScriptExecutor {
     }
 
     public boolean canRunScriptGlobally() {
-        return mEngine.canRunScripts() && !LLApp.get().isFreeVersion();
+        return mEngine.canRunScripts();
     }
 
     private boolean canRunScript(Script script) {

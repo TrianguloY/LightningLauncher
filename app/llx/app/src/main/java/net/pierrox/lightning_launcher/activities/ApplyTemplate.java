@@ -115,7 +115,6 @@ public class ApplyTemplate extends ResourceWrapperActivity {
     private ApplyMode mApplyMode = ApplyMode.MERGE;
     private boolean mLoadWallpaper;
     private int mLLVersionFrom;
-    private boolean mWarningFreeVersion;
     private boolean mWarningScreen;
     private boolean mWarningWidget;
     private SparseArray<ComponentName> mAppWidgetsToBind;
@@ -171,7 +170,6 @@ public class ApplyTemplate extends ResourceWrapperActivity {
             mFromStatusBarHeight = savedInstanceState.getInt("sbh");
             mTemplateDisplayName = savedInstanceState.getString("tn");
             mTemplateUri = savedInstanceState.getParcelable("tu");
-            mWarningFreeVersion = savedInstanceState.getBoolean("wx");
             mWarningScreen = savedInstanceState.getBoolean("ws");
             mWarningWidget = savedInstanceState.getBoolean("ww");
 
@@ -214,7 +212,6 @@ public class ApplyTemplate extends ResourceWrapperActivity {
         outState.putInt("sbh", mFromStatusBarHeight);
         outState.putString("tn", mTemplateDisplayName);
         outState.putParcelable("tu", mTemplateUri);
-        outState.putBoolean("wx", mWarningFreeVersion);
         outState.putBoolean("ws", mWarningScreen);
         outState.putBoolean("ww", mWarningWidget);
 
@@ -301,10 +298,6 @@ public class ApplyTemplate extends ResourceWrapperActivity {
                 builder = new AlertDialog.Builder(this);
                 builder.setTitle(R.string.tmpl_warn_t);
                 String msg = getString(R.string.tmpl_warn_m);
-
-                if (mWarningFreeVersion) {
-                    msg += "\n\n" + getString(R.string.tmpl_warn_llx);
-                }
                 if (mWarningScreen) {
                     msg += "\n\n" + getString(R.string.tmpl_warn_screen);
                 }
@@ -318,15 +311,6 @@ public class ApplyTemplate extends ResourceWrapperActivity {
                         applyTemplate();
                     }
                 });
-                if (mWarningFreeVersion) {
-                    builder.setNeutralButton(R.string.tmpl_get_llx, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            Utils.startAppStore(ApplyTemplate.this, getPackageName());
-                            finish();
-                        }
-                    });
-                }
                 builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -381,8 +365,6 @@ public class ApplyTemplate extends ResourceWrapperActivity {
                             return;
                         }
 
-                        mWarningFreeVersion = LLApp.get().isFreeVersion();
-
                         DisplayMetrics dm = getResources().getDisplayMetrics();
                         mFromScreenDpi = manifest.getInt(BackupRestoreTool.MANIFEST_SCREEN_DENSITY);
                         mFromScreenWidth = manifest.getInt(BackupRestoreTool.MANIFEST_SCREEN_WIDTH);
@@ -393,11 +375,12 @@ public class ApplyTemplate extends ResourceWrapperActivity {
 
                         mWarningWidget = sBindAppWidgetIdIfAllowed == null;
 
-                        if (mWarningFreeVersion || mWarningScreen || mWarningWidget) {
+                        if (mWarningScreen || mWarningWidget) {
                             showDialog(DIALOG_WARNING);
                         } else {
                             applyTemplate();
                         }
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

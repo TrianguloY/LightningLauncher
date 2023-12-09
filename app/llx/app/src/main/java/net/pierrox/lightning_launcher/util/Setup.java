@@ -64,7 +64,6 @@ import net.pierrox.lightning_launcher.data.Utils;
 import net.pierrox.lightning_launcher.engine.LightningEngine;
 import net.pierrox.lightning_launcher.feature.settings.RootSettings;
 import net.pierrox.lightning_launcher.script.ScriptManager;
-import net.pierrox.lightning_launcher_extreme.BuildConfig;
 import net.pierrox.lightning_launcher_extreme.R;
 
 import java.io.File;
@@ -118,11 +117,9 @@ public class Setup {
         final LightningEngine engine = LLApp.get().getAppEngine();
 
         Context tmp = null;
-        if (!BuildConfig.IS_TRIAL) {
-            try {
-                tmp = LLApp.get().createPackageContext(LLApp.LL_PKG_NAME, 0);
-            } catch (PackageManager.NameNotFoundException e) {
-            }
+        try {
+            tmp = LLApp.get().createPackageContext(LLApp.LL_PKG_NAME, 0);
+        } catch (PackageManager.NameNotFoundException e) {
         }
         final Context classic_ll_context = tmp;
 
@@ -212,19 +209,14 @@ public class Setup {
 
         GlobalConfig globalConfig = engine.getGlobalConfig();
 
-        if (!BuildConfig.IS_TRIAL || LLApp.get().isTrialVersion()) {
-            Page lockscreen = engine.getOrLoadPage(Page.FIRST_DASHBOARD_PAGE + 1);
-            setupLockScreen(lockscreen);
+        Page lockscreen = engine.getOrLoadPage(Page.FIRST_DASHBOARD_PAGE + 1);
+        setupLockScreen(lockscreen);
 
-            globalConfig.screensOrder = new int[2];
-            globalConfig.screensNames = new String[2];
+        globalConfig.screensOrder = new int[2];
+        globalConfig.screensNames = new String[2];
 
-            globalConfig.screensOrder[1] = lockscreen.id;
-            globalConfig.screensNames[1] = engine.getContext().getString(R.string.ds_1);
-        } else {
-            globalConfig.screensOrder = new int[1];
-            globalConfig.screensNames = new String[1];
-        }
+        globalConfig.screensOrder[1] = lockscreen.id;
+        globalConfig.screensNames[1] = engine.getContext().getString(R.string.ds_1);
 
         // create dashboard default config
         int page = Page.FIRST_DASHBOARD_PAGE;
@@ -294,39 +286,34 @@ public class Setup {
         ic.box_s = ic.box.toString(dashboard_config.defaultItemConfig.box);
         pi.notifyChanged();
 
-        if (!LLApp.get().isFreeVersion()) {
-            // install date and time dynamic texts
-            DynamicText dt = Utils.addDynamicText(dashboard, DynamicTextConfig.Source.DATE, true);
-            dt.getCell().set(3, 4, 5, 5);
-            ic = dt.modifyItemConfig();
-            ic.box.ah = Box.AlignH.RIGHT;
-            ic.box.size[Box.MR] = (int) (5 * density);
-            ic.box_s = ic.box.toString(null);
-            ic.pinMode = ItemConfig.PinMode.X;
-            dt.getDynamicTextConfig().dateFormat = "HH:mm";
-            sc = dt.modifyShortcutConfig();
-            sc.labelFontSize = displayMetrics.widthPixels / (10 * density);
-            sc.labelShadowRadius = sc.labelShadowOffsetX = sc.labelShadowOffsetY = 5;
-            sc.labelShadowColor = 0x80000000;
-            dt.notifyChanged();
+        // install date and time dynamic texts
+        DynamicText dt = Utils.addDynamicText(dashboard, DynamicTextConfig.Source.DATE, true);
+        dt.getCell().set(3, 4, 5, 5);
+        ic = dt.modifyItemConfig();
+        ic.box.ah = Box.AlignH.RIGHT;
+        ic.box.size[Box.MR] = (int) (5 * density);
+        ic.box_s = ic.box.toString(null);
+        ic.pinMode = ItemConfig.PinMode.X;
+        dt.getDynamicTextConfig().dateFormat = "HH:mm";
+        sc = dt.modifyShortcutConfig();
+        sc.labelFontSize = displayMetrics.widthPixels / (10 * density);
+        sc.labelShadowRadius = sc.labelShadowOffsetX = sc.labelShadowOffsetY = 5;
+        sc.labelShadowColor = 0x80000000;
+        dt.notifyChanged();
 
-            dt = Utils.addDynamicText(dashboard, DynamicTextConfig.Source.DATE, true);
-            ic = dt.modifyItemConfig();
-            ic.box.av = Box.AlignV.BOTTOM;
-            ic.box.ah = Box.AlignH.RIGHT;
-            ic.box.size[Box.MR] = (int) (10 * density);
-            ic.box.size[Box.MB] = (int) (7 * density);
-            ic.box_s = ic.box.toString(null);
-            ic.pinMode = ItemConfig.PinMode.X;
-            dt.getCell().set(3, 4, 5, 5);
-            dt.getDynamicTextConfig().dateFormat = "yyyy-MM-dd";
-            sc = dt.modifyShortcutConfig();
-            sc.labelFontSize = displayMetrics.widthPixels / (25 * density);
-            dt.notifyChanged();
-        }
-
-        // install promotional icons such as mgoid, baby games, mcompass, let's dance
-        LLApp.get().installPromotionalIcons(dashboard);
+        dt = Utils.addDynamicText(dashboard, DynamicTextConfig.Source.DATE, true);
+        ic = dt.modifyItemConfig();
+        ic.box.av = Box.AlignV.BOTTOM;
+        ic.box.ah = Box.AlignH.RIGHT;
+        ic.box.size[Box.MR] = (int) (10 * density);
+        ic.box.size[Box.MB] = (int) (7 * density);
+        ic.box_s = ic.box.toString(null);
+        ic.pinMode = ItemConfig.PinMode.X;
+        dt.getCell().set(3, 4, 5, 5);
+        dt.getDynamicTextConfig().dateFormat = "yyyy-MM-dd";
+        sc = dt.modifyShortcutConfig();
+        sc.labelFontSize = displayMetrics.widthPixels / (25 * density);
+        dt.notifyChanged();
 
         // various shortcuts (backup/restore, all settings, script editor)
         installShortcut(dashboard, -5, 0, "N", resources.getString(R.string.mi_es_settings), null, new Intent(context, RootSettings.class));

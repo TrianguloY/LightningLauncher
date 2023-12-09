@@ -27,7 +27,6 @@ package net.pierrox.lightning_launcher;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.view.View;
 import android.widget.Toast;
 
 import net.pierrox.lightning_launcher.activities.AppDrawerX;
@@ -38,12 +37,12 @@ import net.pierrox.lightning_launcher.api.ScreenIdentity;
 import net.pierrox.lightning_launcher.data.Page;
 import net.pierrox.lightning_launcher.engine.Screen;
 import net.pierrox.lightning_launcher.overlay.WindowService;
-import net.pierrox.lightning_launcher.prefs.LLPreference;
 import net.pierrox.lightning_launcher.script.Script;
 import net.pierrox.lightning_launcher.util.EmptyService;
 import net.pierrox.lightning_launcher.util.MPReceiver;
 
-public abstract class LLAppPhone extends LLApp {
+
+public class LLAppPhone extends LLApp {
 
     private MPReceiver mMPReceiver;
 
@@ -159,8 +158,4 @@ public abstract class LLAppPhone extends LLApp {
             mAppEngine.writeCurrentPage(page);
         }
     }
-
-    public abstract View managePreferenceViewLockedFlag(LLPreference preference, View preference_view);
-
-    public abstract void manageAddItemDialogLockedFlag(View add_item_view, boolean locked);
 }

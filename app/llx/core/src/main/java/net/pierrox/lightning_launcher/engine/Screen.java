@@ -1461,7 +1461,7 @@ public abstract class Screen implements ItemLayout.ItemLayoutListener, ItemView.
         }
 
         PageConfig c = page.config;
-        if (NativeImage.isAvailable() && !LLApp.get().isFreeVersion() && mWallpaperView != null) {
+        if (NativeImage.isAvailable() && mWallpaperView != null) {
             int alpha = Color.alpha(c.bgColor);
             if (alpha == 255) {
                 mWallpaperView.setVisibility(View.GONE);

@@ -54,9 +54,6 @@
 				
 		<Preference 
 		    android:key="s"/>
-
-		<Preference
-		    android:key="u"/>
 		
     </PreferenceCategory>
     

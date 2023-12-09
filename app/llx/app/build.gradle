@@ -85,15 +85,7 @@ android {
             manifestPlaceholders += [app_name: "LLAppExtreme"]
             applicationId "net.pierrox.lightning_launcher_extreme"
             dimension "version"
-            buildConfigField "boolean", "IS_TRIAL", "false"
         }
-        // trial debug app fails to build, disabled until fixed (or deleted)
-        // trial {
-        //     manifestPlaceholders += [app_name: "LLAppTrial"]
-        //     applicationId "net.pierrox.lightning_launcher"
-        //     dimension "version"
-        //     buildConfigField "boolean", "IS_TRIAL", "true"
-        // }
     }
     buildFeatures {
         aidl true
