@@ -78,7 +78,7 @@ android {
         }
     }
 
-    flavorDimensions "version", "abi"
+    flavorDimensions "version"
 
     productFlavors {
         extreme {
@@ -94,42 +94,6 @@ android {
         //     dimension "version"
         //     buildConfigField "boolean", "IS_TRIAL", "true"
         // }
-
-        x86 {
-            dimension "abi"
-            versionCode Integer.parseInt("8" + defaultConfig.versionCode)
-            ndk {
-                abiFilter "x86"
-            }
-        }
-        armv7 {
-            dimension "abi"
-            versionCode Integer.parseInt("2" + defaultConfig.versionCode)
-            ndk {
-                abiFilter "armeabi-v7a"
-            }
-        }
-        arm {
-            dimension "abi"
-            versionCode Integer.parseInt("1" + defaultConfig.versionCode)
-            ndk {
-                abiFilter "armeabi"
-            }
-        }
-        armv64 {
-            dimension "abi"
-            versionCode Integer.parseInt("3" + defaultConfig.versionCode)
-            ndk {
-                abiFilter "arm64-v8a"
-            }
-        }
-        x86_64 {
-            dimension "abi"
-            versionCode Integer.parseInt("9" + defaultConfig.versionCode)
-            ndk {
-                abiFilter "x86_64"
-            }
-        }
     }
     buildFeatures {
         aidl true
@@ -137,12 +101,12 @@ android {
     namespace 'net.pierrox.lightning_launcher_extreme'
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = '11'
+        jvmTarget = '17'
     }
 }
 

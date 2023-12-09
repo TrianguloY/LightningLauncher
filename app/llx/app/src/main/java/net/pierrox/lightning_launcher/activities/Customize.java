@@ -103,6 +103,7 @@ import net.pierrox.lightning_launcher.prefs.LLPreferenceListView;
 import net.pierrox.lightning_launcher.prefs.LLPreferenceListView.OnLLPreferenceListViewEventListener;
 import net.pierrox.lightning_launcher.prefs.LLPreferenceSlider;
 import net.pierrox.lightning_launcher.prefs.LLPreferenceSlider.ValueType;
+import net.pierrox.lightning_launcher.util.FilesHolder;
 import net.pierrox.lightning_launcher.util.PhoneUtils;
 import net.pierrox.lightning_launcher.util.Setup;
 import net.pierrox.lightning_launcher.views.BoxEditorView;
@@ -120,6 +121,7 @@ import net.pierrox.lightning_launcher_extreme.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.koin.java.KoinJavaComponent;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -130,6 +132,8 @@ import java.util.ArrayList;
 public class Customize extends ResourceWrapperActivity implements
         OnLLPreferenceListViewEventListener, ItemLayoutListener,
         OnPageChangeListener {
+
+    private final FilesHolder filesHolder = KoinJavaComponent.get(FilesHolder.class);
     /* package */public static final String INTENT_EXTRA_PAGE_ID = "p";
     /* package */public static final String INTENT_EXTRA_PAGE_PATH = "t";
     /* package */public static final String INTENT_EXTRA_LAUNCHED_FROM = "f";
@@ -1020,7 +1024,7 @@ public class Customize extends ResourceWrapperActivity implements
             }
         } else if (requestCode == REQUEST_PICK_SCREEN_WALLPAPER) {
             if (resultCode == RESULT_OK) {
-                File tmp_image_file = Utils.getTmpImageFile();
+                File tmp_image_file = filesHolder.getTempImageFile();
                 final File wallpaperFile = mPage.getWallpaperFile();
                 if (tmp_image_file.exists()) {
                     Utils.copyFileSafe(null, tmp_image_file, wallpaperFile);
@@ -1043,7 +1047,7 @@ public class Customize extends ResourceWrapperActivity implements
             if (resultCode == RESULT_OK) {
                 FileOutputStream fos = null;
                 File icon_dir = mPage.getAndCreateIconDir();
-                File tmp_image_file = Utils.getTmpImageFile();
+                File tmp_image_file = filesHolder.getTempImageFile();
                 byte[] buffer = new byte[4096];
                 try {
                     if (mPickedPreference == mPGFolderBoxNpNormal || mPickedPreference == mPGAppDrawerABBackground) {

@@ -350,6 +350,7 @@ public class Utils {
             copyFile(buffer, from, to);
             return true;
         } catch (IOException e) {
+            e.printStackTrace();
             return false;
         }
     }
@@ -1003,12 +1004,6 @@ public class Utils {
             e.printStackTrace();
             return null;
         }
-    }
-
-    public static File getTmpImageFile() {
-        File tmp_dir = FileUtils.LL_TMP_DIR;
-        tmp_dir.mkdirs();
-        return new File(tmp_dir, "pick_me");
     }
 
     public static EventAction decodeEventActionFromLightningIntent(Intent intent) {

@@ -43,14 +43,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import net.pierrox.lightning_launcher.data.Utils;
+import net.pierrox.lightning_launcher.util.FilesHolder;
 import net.pierrox.lightning_launcher.views.CropperView;
 import net.pierrox.lightning_launcher_extreme.R;
+
+import org.koin.java.KoinJavaComponent;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class ImageCropper extends ResourceWrapperActivity implements View.OnClickListener, CropperView.OnCropperViewEvent {
+
+    private FilesHolder filesHolder = KoinJavaComponent.get(FilesHolder.class);
     public static final String INTENT_EXTRA_IMAGE = "i";
     public static final String INTENT_EXTRA_FULL_SIZE = "f";
 
@@ -58,10 +63,10 @@ public class ImageCropper extends ResourceWrapperActivity implements View.OnClic
     private TextView mSelectionText;
     private CropperView mCropperView;
 
-    public static void startActivity(Activity from, File image, int requestCode) {
+    public static Intent genIntent(Activity from, File image) {
         final Intent intent = new Intent(from, ImageCropper.class);
         intent.putExtra(INTENT_EXTRA_IMAGE, image.getAbsolutePath());
-        from.startActivityForResult(intent, requestCode);
+        return intent;
     }
 
     @Override
@@ -96,7 +101,7 @@ public class ImageCropper extends ResourceWrapperActivity implements View.OnClic
             case R.id.ok:
                 final Rect r = mCropperView.getSelection();
                 final Bitmap original_image = ((BitmapDrawable) mCropperView.getDrawable()).getBitmap();
-                final File destinationFile = Utils.getTmpImageFile();
+                final File destinationFile = filesHolder.getTempImageFile();
 
                 if (r.left == 0 && r.top == 0 && r.width() == original_image.getWidth() && r.height() == original_image.getHeight()) {
                     boolean success;
@@ -141,6 +146,7 @@ public class ImageCropper extends ResourceWrapperActivity implements View.OnClic
                                 if (fos != null) try {
                                     fos.close();
                                 } catch (IOException e) {
+                                    e.printStackTrace();
                                 }
                             }
                         }

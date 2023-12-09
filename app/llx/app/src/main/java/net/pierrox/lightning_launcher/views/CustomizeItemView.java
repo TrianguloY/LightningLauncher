@@ -101,9 +101,12 @@ import net.pierrox.lightning_launcher.prefs.LLPreferenceText;
 import net.pierrox.lightning_launcher.script.Script;
 import net.pierrox.lightning_launcher.util.BindingEditDialog;
 import net.pierrox.lightning_launcher.util.FileAndDirectoryPickerDialog;
+import net.pierrox.lightning_launcher.util.FilesHolder;
 import net.pierrox.lightning_launcher.util.PhoneUtils;
 import net.pierrox.lightning_launcher.util.ScriptPickerDialog;
 import net.pierrox.lightning_launcher_extreme.R;
+
+import org.koin.java.KoinJavaComponent;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -117,6 +120,7 @@ import java.util.HashMap;
 
 public class CustomizeItemView extends MyViewPager implements LLPreferenceListView.OnLLPreferenceListViewEventListener, LLApp.SystemConfigListener {
 
+    private final FilesHolder filesHolder = KoinJavaComponent.get(FilesHolder.class);
     private static final int REQUEST_EDIT_EVENT_ACTION = Dashboard.REQUEST_FROM_CUSTOMIZE_VIEW + 1;
     private static final int REQUEST_PICK_ICON_EFFECT_B = Dashboard.REQUEST_FROM_CUSTOMIZE_VIEW + 5;
     private static final int REQUEST_PICK_ICON_EFFECT_O = Dashboard.REQUEST_FROM_CUSTOMIZE_VIEW + 6;
@@ -1929,7 +1933,7 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
                         file = ShortcutConfig.getIconMaskFile(icon_dir, Item.NO_ID);
                     }
 
-                    Utils.copyOrDeleteFile(Utils.getTmpImageFile(), file);
+                    Utils.copyOrDeleteFile(filesHolder.getTempImageFile(), file);
 
 
                     pageShortcutConfig.iconBack = null;
@@ -1956,7 +1960,7 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
                                 file = ShortcutConfig.getIconMaskFile(icon_dir, itemId);
                             }
 
-                            Utils.copyOrDeleteFile(Utils.getTmpImageFile(), file);
+                            Utils.copyOrDeleteFile(filesHolder.getTempImageFile(), file);
 
                             ShortcutConfig shortcutConfig = ((Shortcut) item).getShortcutConfig();
                             shortcutConfig.iconBack = pageShortcutConfig.iconBack;
@@ -1974,7 +1978,7 @@ public class CustomizeItemView extends MyViewPager implements LLPreferenceListVi
             if (resultCode == Activity.RESULT_OK) {
 
                 File icon_dir = mPage.getAndCreateIconDir();
-                File tmp_image_file = Utils.getTmpImageFile();
+                File tmp_image_file = filesHolder.getTempImageFile();
 
                 if (mForPage) {
                     mUndoStack.storePageState(mPage);

@@ -49,10 +49,10 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
-import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -70,13 +70,21 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.PickVisualMediaRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.core.content.FileProvider;
+
 import net.margaritov.preference.colorpicker.ColorPickerDialog;
 import net.pierrox.lightning_launcher.LLApp;
 import net.pierrox.lightning_launcher.data.Page;
 import net.pierrox.lightning_launcher.data.Utils;
+import net.pierrox.lightning_launcher.util.FilesHolder;
 import net.pierrox.lightning_launcher.util.LruCache;
 import net.pierrox.lightning_launcher.views.EditTextIme;
 import net.pierrox.lightning_launcher_extreme.R;
+
+import org.koin.java.KoinJavaComponent;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -91,6 +99,7 @@ import java.util.List;
 
 
 public class ImagePicker extends ResourceWrapperActivity implements AdapterView.OnItemSelectedListener, AdapterView.OnItemClickListener, View.OnClickListener, ColorPickerDialog.OnColorChangedListener, View.OnLongClickListener, AdapterView.OnItemLongClickListener, EditTextIme.OnEditTextImeListener, TextWatcher {
+    private FilesHolder filesHolder = KoinJavaComponent.get(FilesHolder.class);
     private static final int MODE_NONE = -1;
     private static final int MODE_ICON_PACK = 0;
     private static final int MODE_PATH = 1;
@@ -100,11 +109,6 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
     private static final String ANDROID = "Android";
 
     private static final String INTENT_EXTRA_CROP = "c";
-
-    private static final int REQUEST_CAPTURE_IMAGE = 1;
-    private static final int REQUEST_PICK_IMAGE = 2;
-    private static final int REQUEST_CROP_IMAGE = 3;
-
 
     private static final String PREF_CURRENT_MODE = "ip_m";
     private static final String PREF_CURRENT_PATH = "ip_pa";
@@ -152,6 +156,35 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
     private View mClickedView;
     private LruCache<String, BitmapInfo> mThumbnailCache;
 
+    private final ActivityResultLauncher<PickVisualMediaRequest> imageRequest = registerForActivityResult(
+            new ActivityResultContracts.PickVisualMedia(),
+            uri -> {
+                if (uri != null) {
+                    copyToTempFile(uri);
+                    imagePicked(true);
+                }
+            }
+    );
+
+    private final ActivityResultLauncher<Uri> cameraRequest = registerForActivityResult(
+            new ActivityResultContracts.TakePicture(),
+            captured -> {
+                if (captured) {
+                    imagePicked(true);
+                }
+            }
+    );
+
+    private final ActivityResultLauncher<Intent> cropRequest = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    setResult(RESULT_OK);
+                    finish();
+                }
+            }
+    );
+
     public static void startActivity(Activity from, int requestCode) {
         final Intent intent = new Intent(from, ImagePicker.class);
         intent.putExtra(INTENT_EXTRA_CROP, true);
@@ -160,14 +193,12 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState == null) {
             // if recreated because the activity has been disposed by the framework, don't remove
             // the temp file, it will be used for instance in the activity result callback
-            Utils.getTmpImageFile().delete();
+            filesHolder.getTempImageFile().delete();
         }
 
         final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
@@ -315,14 +346,21 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
 
         setSearchMode(false);
 
+        String[] permissions;
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            permissions = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        } else {
+            permissions = new String[]{Manifest.permission.READ_MEDIA_IMAGES};
+        }
         checkPermissions(
-                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                permissions,
                 new int[]{R.string.pr_r4, R.string.pr_r5},
                 REQUEST_PERMISSION_BASE);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (areAllPermissionsGranted(grantResults, R.string.pr_f3)) {
             if (mCurrentMode == MODE_PATH) {
                 setMode(MODE_PATH);
@@ -382,7 +420,7 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
         if (adapterView == mGridView) {
             byte[] buffer = new byte[4096];
             Object item = mGridView.getItemAtPosition(position);
-            File tmp_image_file = Utils.getTmpImageFile();
+            File tmp_image_file = filesHolder.getTempImageFile();
             if (mCurrentMode == MODE_PATH) {
                 ImageFile imf = (ImageFile) item;
                 if (imf.file.isDirectory()) {
@@ -479,8 +517,6 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
 
     @Override
     public void onClick(View view) {
-        Intent intent;
-        Intent chooser;
         ColorPickerDialog color_picker_dialog;
 
         mClickedView = view;
@@ -488,25 +524,20 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
         final int id = view.getId();
         switch (id) {
             case R.id.none:
-                Utils.getTmpImageFile().delete();
+                filesHolder.getTempImageFile().delete();
                 imagePicked(false);
                 break;
 
             case R.id.ext_file:
-                intent = new Intent();
-                intent.setType("*/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-//                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                chooser = Intent.createChooser(intent, null);
-                startActivityForResult(chooser, REQUEST_PICK_IMAGE);
+                final var builder = new PickVisualMediaRequest.Builder()
+                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+                        .build();
+                imageRequest.launch(builder);
                 break;
 
             case R.id.camera:
-                File out = Utils.getTmpImageFile();
-                intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(out));
-                chooser = Intent.createChooser(intent, null);
-                startActivityForResult(chooser, REQUEST_CAPTURE_IMAGE);
+                final var uri = FileProvider.getUriForFile(this, filesHolder.getFileProviderName(), filesHolder.getTempImageFile());
+                cameraRequest.launch(uri);
                 break;
 
             case R.id.bgcolor:
@@ -556,56 +587,6 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
         }
         Toast.makeText(this, label_res, Toast.LENGTH_SHORT).show();
         return true;
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case REQUEST_CAPTURE_IMAGE:
-                if (resultCode == RESULT_OK) {
-                    imagePicked(true);
-                }
-                break;
-
-            case REQUEST_PICK_IMAGE:
-                if (resultCode == RESULT_OK) {
-                    FileOutputStream fos = null;
-                    InputStream is = null;
-                    try {
-                        fos = new FileOutputStream(Utils.getTmpImageFile());
-                        is = getContentResolver().openInputStream(data.getData());
-                        byte[] buffer = new byte[4096];
-                        int n;
-                        while ((n = is.read(buffer)) > 0) {
-                            fos.write(buffer, 0, n);
-                        }
-                        imagePicked(true);
-                    } catch (IOException e) {
-                        // pass
-                    } finally {
-                        if (fos != null) try {
-                            fos.close();
-                        } catch (IOException e) {
-                        }
-                        if (is != null) try {
-                            is.close();
-                        } catch (IOException e) {
-                        }
-                    }
-                }
-                break;
-
-            case REQUEST_CROP_IMAGE:
-                if (resultCode == RESULT_OK) {
-                    setResult(RESULT_OK);
-                    finish();
-                }
-                break;
-
-            default:
-                super.onActivityResult(requestCode, resultCode, data);
-                break;
-        }
     }
 
     private void setGridViewAdapter(ListAdapter adapter) {
@@ -887,7 +868,7 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
                 b.eraseColor(color);
                 FileOutputStream fos = null;
                 try {
-                    fos = new FileOutputStream(Utils.getTmpImageFile());
+                    fos = new FileOutputStream(filesHolder.getTempImageFile());
                     b.compress(Bitmap.CompressFormat.PNG, 100, fos);
                     imagePicked(false);
                 } catch (FileNotFoundException e) {
@@ -922,7 +903,7 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
 
     private void imagePicked(boolean allow_crop) {
 //        if(getIntent().getBooleanExtra(INTENT_EXTRA_CROP, false) && allow_crop) {
-        File file = Utils.getTmpImageFile();
+        File file = filesHolder.getTempImageFile();
         if (allow_crop) {
             if (Utils.isSvgFile(file)) {
                 allow_crop = false;
@@ -930,7 +911,8 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
         }
 
         if (allow_crop) {
-            ImageCropper.startActivity(this, file, REQUEST_CROP_IMAGE);
+            final var intent = ImageCropper.genIntent(this, file);
+            cropRequest.launch(intent);
         } else {
             setResult(RESULT_OK);
             finish();
@@ -977,6 +959,31 @@ public class ImagePicker extends ResourceWrapperActivity implements AdapterView.
     @Override
     public void afterTextChanged(Editable s) {
 
+    }
+
+    private void copyToTempFile(Uri contentUri) {
+        InputStream is = null;
+        FileOutputStream fos = null;
+        try {
+            is = getContentResolver().openInputStream(contentUri);
+            fos = new FileOutputStream(filesHolder.getTempImageFile());
+            byte[] buffer = new byte[8192];
+            int n;
+            while ((n = is.read(buffer)) > 0) {
+                fos.write(buffer, 0, n);
+            }
+        } catch (IOException ignored) {
+            // pass
+        } finally {
+            if (fos != null) try {
+                fos.close();
+            } catch (IOException ignored) {
+            }
+            if (is != null) try {
+                is.close();
+            } catch (IOException ignored) {
+            }
+        }
     }
 
     private static class BitmapInfo {
