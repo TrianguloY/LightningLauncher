@@ -2,6 +2,7 @@
     package="net.pierrox.lightning_launcher.permission.cumulative"
     android:sharedUserId="net.pierrox.lightning_launcher">
 
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
