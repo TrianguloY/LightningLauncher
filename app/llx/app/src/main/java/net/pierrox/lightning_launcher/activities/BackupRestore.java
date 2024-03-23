@@ -24,7 +24,6 @@ SOFTWARE.
 
 package net.pierrox.lightning_launcher.activities;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -128,10 +127,11 @@ public class BackupRestore extends ResourceWrapperActivity implements View.OnCli
 
         loadArchivesList();
 
-        checkPermissions(
-                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                new int[]{R.string.pr_r1, R.string.pr_r2},
-                REQUEST_PERMISSION_BASE);
+        // WORKAROUND to allow restoring (still no backup)
+//        checkPermissions(
+//                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},
+//                new int[]{R.string.pr_r1, R.string.pr_r2},
+//                REQUEST_PERMISSION_BASE);
     }
 
     @Override
