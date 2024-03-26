@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="net.pierrox.lightning_launcher_extreme"
-      android:sharedUserId="net.pierrox.lightning_launcher" >
+      android:sharedUserId="net.pierrox.lightning_launcher_community" >
 
     <uses-permission android:name="android.permission.EXPAND_STATUS_BAR" />
     <uses-permission android:name="android.permission.SET_WALLPAPER"/>
@@ -29,7 +29,7 @@
     <uses-permission android:name="net.dinglisch.android.tasker.PERMISSION_RUN_TASKS"/>
 
     <permission
-            android:name="net.pierrox.lightning_launcher.USE_SCRIPT_SERVICE"
+            android:name="net.pierrox.lightning_launcher_community.USE_SCRIPT_SERVICE"
             android:protectionLevel="dangerous"
             android:label="@string/permission_label"
             android:description="@string/permission_description"/>
@@ -110,7 +110,7 @@
 
  		<provider
  			android:name="net.pierrox.lightning_launcher.util.FileProvider"
- 			android:authorities="net.pierrox.lightning_launcher.files"
+ 			android:authorities="net.pierrox.lightning_launcher_community.files"
  			android:exported="true"
             android:grantUriPermissions="true"/>
 
@@ -360,7 +360,7 @@
         </activity>
 
         <service android:name="net.pierrox.lightning_launcher.util.ScriptService"
-                 android:permission="net.pierrox.lightning_launcher.USE_SCRIPT_SERVICE"
+                 android:permission="net.pierrox.lightning_launcher_community.USE_SCRIPT_SERVICE"
                  android:exported="true"/>
 
 	</application>

@@ -79,7 +79,7 @@ android {
     productFlavors {
         extreme {
             manifestPlaceholders += [app_name: "LLAppExtreme"]
-            applicationId "net.pierrox.lightning_launcher_extreme"
+            applicationId "net.pierrox.lightning_launcher_community"
             dimension "version"
             buildConfigField "boolean", "IS_TRIAL", "false"
         }

@@ -16,7 +16,7 @@ import java.util.List;
  */
 @Remoter
 public interface IScriptService {
-	String PERMISSION = "net.pierrox.lightning_launcher.USE_SCRIPT_SERVICE";
+	String PERMISSION = "net.pierrox.lightning_launcher_community.USE_SCRIPT_SERVICE";
 
 	/**
 	 * Creates a script
