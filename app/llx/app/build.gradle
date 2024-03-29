@@ -46,7 +46,7 @@ android {
 
     defaultConfig {
         versionCode 330
-        versionName "14.3 (patch)"
+        versionName "14.3 (patch) (community)"
         buildConfigField "boolean", "IS_BETA", "false" //  change in core too
         buildConfigField "boolean", "HAS_UEC", "false"
 
