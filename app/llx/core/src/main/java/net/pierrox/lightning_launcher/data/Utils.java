@@ -1706,8 +1706,20 @@ public class Utils {
         cell_to.right = cell_to.left + cell_from.width();
         cell_to.bottom = cell_to.top + cell_from.height();
 
-        pageFrom.removeItem(item, true);
-        pageTo.addItem(itemTo);
+        LightningEngine engine = pageFrom.getEngine();
+        boolean sameEngine = engine == pageTo.getEngine();
+
+        if (sameEngine) {
+            engine.pinShortcutForMove(item);
+        }
+        try {
+            pageFrom.removeItem(item, true);
+            pageTo.addItem(itemTo);
+        } finally {
+            if (sameEngine) {
+                engine.unpinShortcutAfterMove(item);
+            }
+        }
 
         return itemTo;
     }

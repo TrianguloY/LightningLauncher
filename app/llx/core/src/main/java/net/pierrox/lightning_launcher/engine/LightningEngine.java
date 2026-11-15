@@ -552,7 +552,23 @@ public class LightningEngine implements Page.PageListener {
             // pass
         }
     }
+    public void pinShortcutForMove(Item item) {
+        Intent intent = getAppShortcutIntent(item);
+        if (intent != null) {
+            pinAppShortcut(
+                    intent.getStringExtra(Shortcut.INTENT_EXTRA_APP_SHORTCUT_PKG),
+                    intent.getStringExtra(Shortcut.INTENT_EXTRA_APP_SHORTCUT_ID));
+        }
+    }
 
+    public void unpinShortcutAfterMove(Item item) {
+        Intent intent = getAppShortcutIntent(item);
+        if (intent != null) {
+            unpinAppShortcut(
+                    intent.getStringExtra(Shortcut.INTENT_EXTRA_APP_SHORTCUT_PKG),
+                    intent.getStringExtra(Shortcut.INTENT_EXTRA_APP_SHORTCUT_ID));
+        }
+    }
     private void pinAppShortcut(String pkg, String id) {
         int pinCount = adjustAppShortcutPinCount(pkg, id, 1);
         if (pinCount == 1) {
